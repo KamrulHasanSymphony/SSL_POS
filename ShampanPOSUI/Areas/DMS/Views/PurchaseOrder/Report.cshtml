@@ -1,0 +1,156 @@
+﻿@model ShampanPOS.Models.PurchaseOrderVM
+@{
+    ViewBag.Title = "Purchase Order Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="modal fade" id="myModal1" data-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-header">
+                                <p class="card-title"><strong>&nbsp; <span id="txt"></span> </strong></p>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="detailHeadRow">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card-body p-2">
+                                                <div class="form-group row">
+                                                    @Html.HiddenFor(model => model.BranchId)
+                                                    @Html.HiddenFor(model => model.Id)
+                                                    @Html.HiddenFor(model => model.TransactionType)
+                                                    <div class="col-sm-4">
+                                                        @Html.LabelFor(model => model.Branchs)
+                                                        <div class="input-group">
+                                                            @Html.TextBoxFor(model => model.Branchs, new { @class = "KDropDown", @placeholder = "Select Branch...", @validationmessage = "*" })
+                                                            @Html.ValidationMessageFor(model => model.Branchs)
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-1">
+                                                        @Html.LabelFor(model => model.IsPosted)
+                                                        @Html.DropDownListFor(model => model.IsPosted, Enumerable.Empty<SelectListItem>(), new { @class = " form-control form-control-sm", @data_selected = Model.IsPosted })
+                                                        @Html.ValidationMessageFor(model => model.IsPosted)
+                                                    </div>
+
+                                                    <div class="col-sm-2">
+                                                        @Html.LabelFor(model => model.FromDate)
+                                                        <div class="input-group date">
+                                                            @Html.TextBoxFor(model => model.FromDate, new { @class = " form-control form-control-sm dateRange" })
+                                                            <div class="input-group-append">
+                                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-2">
+                                                        @Html.LabelFor(model => model.ToDate)
+                                                        <div class="input-group date">
+                                                            @Html.TextBoxFor(model => model.ToDate, new { @class = " form-control form-control-sm dateRange" })
+                                                            <div class="input-group-append">
+                                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-3">
+                                                        <label>Summary Report Type</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="SummaryReportType" id="productWise" value="ProductWise" checked>
+                                                            <label class="form-check-label" for="productWise">ProductWise</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="SummaryReportType" id="customerWise" value="CustomerWise">
+                                                            <label class="form-check-label" for="customerWise">CustomerWise</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="SummaryReportType" id="branchWise" value="BranchWise">
+                                                            <label class="form-check-label" for="branchWise">BranchWise</label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button style="display:none" type="submit" class="btn btn-success downloadButton btnDownLoad"> DownLoad </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container-fluid">
+    <div class="card-body">
+        <div class=" detailHeadRow ">
+            <div class="row">
+                <div class="card col-md-12">
+                    <div class="clearfix"> &nbsp; </div>
+                    <div class="card-body p-2">
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+
+                                <div class="input-group">
+                                    <button class="btn btn-info button sslPreview" id="btnPurchaseOrder" data-style="expand-left" type="button" data-toggle="modal"
+                                            data-target="#myModal1">
+                                        &nbsp; Purchase Order
+                                    </button>
+
+                                    <button class="btn btn-info button sslPreview" id="btnPurchase" data-style="expand-left" type="button" data-toggle="modal"
+                                            data-target="#myModal1">
+                                        &nbsp; Purchase
+                                    </button>
+
+                                    <button class="btn btn-info button sslPreview" id="btnPurchaseReturn" data-style="expand-left" type="button" data-toggle="modal"
+                                            data-target="#myModal1">
+                                        &nbsp; Purchase Return
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/PurchaseReportController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            PurchaseReportController.init();
+        });
+
+    </script>
+
+
+}
+
+

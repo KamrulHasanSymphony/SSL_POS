@@ -1,0 +1,117 @@
+﻿@model ShampanPOS.Models.SalePersonCampaignAchievementVM
+@{
+    ViewBag.Title = "Campaign Achievement Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .k-window-titlebar {
+        color: #fff !important;
+        background-color: #6c757d !important
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Sale Person Campaign Achievement Data List </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    @*<li class="breadcrumb-item"><a href="/DMS/SalePersonCampaignAchievement/Index">Index</a></li>
+                        <li class="breadcrumb-item active">Index</li>*@
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header p-2">
+            <button type="button" title="Process" @*data-url="/DMS/SalePersonCampaignAchievement/Create" onclick="GoTo(this)"*@ class="button processButton" style="background-color: #17a2b8; color: white;">
+                <i class="fas fa-cog"></i> Process
+            </button>
+            <button type="button" title="Post data" id="btnPost" class="button sslPost"> Post </button>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container-fluid">
+    <div class="card card-secondary">
+        <div class="card-header">
+            <h3 class="card-title">
+                List Of Data
+            </h3>
+        </div>
+        <div class="card-body">
+            <div id="GridDataList"></div>
+        </div>
+    </div>
+</div>
+<div id="myWindow" style="display:none">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <!-- general form elements -->
+                <div class="card card-primary" style="width:97%;">
+                    <form id="paramForm" class="k-form">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="cmboSalePerson">Sale Person</label>
+                                        <div class="input-group">
+                                            <input type="text" id="cmboSalePerson" name="SalePersonId" class="" style="width:100%; height:34px;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtStartDate">Date</label>
+                                        <div class="input-group date">
+                                            <input type="text" id="txtStartDate" name="StartDate" placeholder="day.month.year hours:minutes" style="width:100%;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" id="prcsButton" class="btn btn-primary" style="margin-top:28px;">
+                                            <i class="fas fa-cog"></i>&nbsp;Process
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <button type="button" id="cancelButton" class="btn btn-danger">
+            <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Close
+        </button>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SalePersonCampaignAchievementController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            
+            SalePersonCampaignAchievementController.init();
+        });
+
+    </script>
+
+
+}
+
+

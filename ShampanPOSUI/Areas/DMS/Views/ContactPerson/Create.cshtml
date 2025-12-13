@@ -1,0 +1,306 @@
+﻿@model ShampanPOS.Models.ContactPersonVM
+
+@{
+    ViewBag.Title = "Contact Person Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Contact Person Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Contact Person Info</h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2 codeWidth">
+                        @Html.LabelFor(model => model.Code)
+                        <div style="display: flex; align-items: center;">
+                            <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Code Auto Generate", @class = " csCode  form-control form-control-sm", @readonly = "readonly", @style = "width:140px;" }) &nbsp;
+                            <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Name)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Contact Person Name ", @class = "  form-control form-control-sm " })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Designation)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Designation, new { placeholder = "Enter Designation ", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CountryId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.CountryId, new { placeholder = "Enter CountryId", @class = "   ", @style = "width:100%" })
+
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DivisionId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.DivisionId, new { placeholder = "Enter DivisionId", @class = "   ", @style = "width:100%" })
+
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DistrictId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.DistrictId, new { placeholder = "Enter DistrictId", @class = "  ", @style = "width:100%" })
+
+                        </div>
+                        <span id="titleError3" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.ThanaId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.ThanaId, new { placeholder = "Enter ThanaId ", @class = " ", @style = "width:100%" })
+
+                        </div>
+                        <span id="titleError4" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Phone)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Phone, new { placeholder = "Enter Phone Number", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Phone)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Phone2)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Phone2, new { placeholder = "Enter Alternate Phone Number ", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Phone2)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.EmailAddress)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.EmailAddress, new { placeholder = "Enter Email Address", @class = "form-control form-control-sm" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.EmailAddress)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.EmailAddress2)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.EmailAddress2, new { placeholder = "Enter Alternate Email Address", @class = "form-control form-control-sm" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.EmailAddress2)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Fax)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Fax, new { placeholder = "Enter Fax ", @class = "form-control form-control-sm" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Fax)
+                    </div>
+
+                </div>
+
+                @*<div class="form-group row">
+
+
+                    </div>*@
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    @Html.LabelFor(model => model.Address)
+                    <div class="input-group">
+                        @Html.TextBoxFor(model => model.Address, new { placeholder = "Enter Address", @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    @Html.LabelFor(model => model.Mobile)
+                    <div class="input-group">
+                        @Html.TextBoxFor(model => model.Mobile, new { placeholder = "Enter Mobile Number ", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Mobile)
+                </div>
+
+                <div class="col-sm-2">
+                    @Html.LabelFor(model => model.Mobile2)
+                    <div class="input-group">
+                        @Html.TextBoxFor(model => model.Mobile2, new { placeholder = "Enter Alternate Mobile Number ", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Mobile2)
+                </div>
+
+                <div class="col-sm-2">
+                    @Html.LabelFor(model => model.ZipCode)
+                    <div class="input-group">
+                        @Html.TextBoxFor(model => model.ZipCode, new { placeholder = "Enter Zip Code", @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+
+                <div class="Onoffbtn" style="flex-direction: column">
+                    @Html.LabelFor(model => model.IsActive)
+                    <div class="input-group" style="margin-bottom: -10px; width: 79%;">
+                        <input id="IsActive"
+                               value="@Model.IsActive"
+                               type="checkbox"
+                               name="my-checkbox"
+                               @(Model.IsActive ? "checked" : "")
+                               data-bootstrap-switch
+                               data-off-color="danger"
+                               data-on-color="success"
+                               data-on-text="ON"
+                               data-off-text="OFF">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/Customer/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                    <button class="button sslPrintC" data-id="@Model.Id">Print</button>
+                </div>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/ContactPerson/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+        </div>
+
+        <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/ContactPersonController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#IsActive").bootstrapSwitch();
+            ContactPersonController.init();
+        });
+
+    </script>
+
+
+}
+
+

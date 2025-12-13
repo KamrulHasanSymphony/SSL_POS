@@ -1,0 +1,354 @@
+﻿@model ShampanPOS.Models.SalePersonYearlyTargetVM
+@{
+    ViewBag.Title = "Yearly Target Create Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var serial = 1;
+}
+<style>
+    .k-dropdown-wrap .k-input {
+        line-height: 1.6em !important;
+    }
+
+    #SalePersonYearly .k-select {
+        display: none !important;
+    }
+
+    #SalePersonYearly .k-input {
+        background-color: #e9ecef;
+        pointer-events: none;
+        width: 111%;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Sale Person Yearly Target Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/DMS/SalePersonYearlyTarget/Index">Index</a></li>
+                    <li class="breadcrumb-item active">Index</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header p-2">
+
+        @if (Model.IsPost)
+        {
+            <button type="button" class="button sslPush mr-1">Already Posted</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SalePersonYearlyTarget/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+        else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+        {
+            <button type="button" class="button btnsave sslUpdate">Update</button>
+
+            <button type="button" class="button btnPost sslPost editPagePost">Post</button>
+
+            <button type="button" style="display:none;" class="button sslPush mr-1">Already Posted</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SalePersonYearlyTarget/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+        else
+        {
+            <div style="display:none;" class="divUpdate">
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+                <button type="button" class="button btnPost sslPost editPagePost">Post</button>
+                <button type="button" style="display:none;" class="button sslPush mr-1">Already Posted</button>
+
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SalePersonYearlyTarget/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+
+            </div>
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
+        }
+
+    </div>
+</div>
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Sale Person Yearly Target Info </h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.IsPost)
+
+                @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+                {
+                    @Html.HiddenFor(model => model.Year)
+                }
+
+                @Html.HiddenFor(model => model.YearStart)
+                @Html.HiddenFor(model => model.YearEnd)
+
+
+                <div class="form-group row">
+
+
+                    <div class="col-sm-3">
+                        @Html.LabelFor(model => model.SalePersonId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.SalePersonId, new { @class = "   ", @style = "width: 100%;" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SalePersonId)
+                    </div>
+
+
+
+                    <div class="col-sm-3">
+                        @Html.LabelFor(model => model.YearlyTarget)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.YearlyTarget, new { @class = " dFormat NumericCheck  form-control form-control-sm  ", @style = "width: 100%;" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.YearlyTarget)
+                    </div>
+
+
+                    <div class="col-sm-3">
+                        @Html.LabelFor(model => model.SelfSaleCommissionRate)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.SelfSaleCommissionRate, new { @class = " dFormat NumericCheck  form-control form-control-sm ", @style = "width: 100%;" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SelfSaleCommissionRate)
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.LabelFor(model => model.OtherSaleCommissionRate)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.OtherSaleCommissionRate, new { @class = " dFormat NumericCheck  form-control form-control-sm ", @style = "width: 100%;" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.OtherSaleCommissionRate)
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-2" id="SalePersonYearly">
+                        @Html.LabelFor(model => model.FiscalYearForSaleId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.FiscalYearForSaleId, new { @class = " form-control form-control-sm  ", @style = "width: 100%;", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.YearStart)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.YearStart, new { @class = "  form-control form-control-sm dateRange", @disabled = "disabled" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.YearEnd)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.YearEnd, new { @class = "  form-control form-control-sm dateRange", @disabled = "disabled" })
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        @if (Model.SalePersonYearlyTargetDetailList.Count > 0)
+        {
+            <div class="card card-secondary">
+
+                <div class="card-header">
+                    <h3 class="card-title">Details</h3>
+                </div>
+                <div class="card-body">
+                    <div id="fiscalYearDRows">
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-2">
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.SalePersonYearlyTargetDetailList.FirstOrDefault().MonthName)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.SalePersonYearlyTargetDetailList.FirstOrDefault().MonthStart)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.SalePersonYearlyTargetDetailList.FirstOrDefault().MonthEnd)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.SalePersonYearlyTargetDetailList.FirstOrDefault().MonthlyTarget)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.SalePersonYearlyTargetDetailList.FirstOrDefault().SelfSaleCommissionRate)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.SalePersonYearlyTargetDetailList.FirstOrDefault().OtherSaleCommissionRate)
+                                </div>
+                            </div>
+                            @*@if (Model.SalePersonYearlyTargetDetailList != null)
+                            {
+
+                                Html.RenderPartial("_period", Model.SalePersonYearlyTargetDetailList);
+
+                            }*@
+                            <div class="card-body">
+                                <div id="fiscalYearDRows">
+                                    @if (Model.SalePersonYearlyTargetDetailList != null)
+                                    {
+                                        Html.RenderPartial("_period", Model.SalePersonYearlyTargetDetailList);
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </form>
+
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+
+            @if (Model.IsPost)
+            {
+                <button type="button" class="button sslPush mr-1">Already Posted</button>
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SalePersonYearlyTarget/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button type="button" class="button btnPost sslPost editPagePost mr-1">Post</button>
+
+                <button type="button" style="display:none;" class="button sslPush mr-1">Already Posted</button>
+
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SalePersonYearlyTarget/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button type="button" class="button btnPost sslPost editPagePost">Post</button>
+                    <button type="button" style="display:none;" class="button sslPush mr-1">Already Posted</button>
+
+                    <button style="float:right;" type="button" title="Add New" data-url="/DMS/SalePersonYearlyTarget/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+
+        </div>
+        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+
+    </div>
+
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Posted")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.PostBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.PosteOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+
+    <script src="~/Areas/DMS/js/Controllers/SalePersonYearlyTargetController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            SalePersonYearlyTargetController.init();
+        });
+
+    </script>
+
+
+}
+

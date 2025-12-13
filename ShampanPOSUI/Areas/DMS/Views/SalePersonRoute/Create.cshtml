@@ -1,0 +1,190 @@
+﻿@model ShampanPOS.Models.SalePersonRouteVM
+@{
+    ViewBag.Title = "Sale Person Route Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #SalePersonInputArea .k-select {
+        display: none !important;
+    }
+
+    #SalePersonInputArea .k-input {
+        background-color: #e9ecef;
+        pointer-events: none;
+        width: 111%;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Sales Person Route Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+
+            <div class="card-header">
+
+                <span style="font-size:initial;">
+                    <strong style="color:antiquewhite">
+                        @((!string.IsNullOrEmpty(Model.SalePersonName) ? Model.SalePersonName : "Name") + "'s Route " + (Model.Operation == "update" ? "Edit" : "Entry"))
+                    </strong>
+                </span>
+            </div>
+
+
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.IsIndex)
+                @Html.HiddenFor(model => model.BranchId)
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        <div id="SalePersonInputArea">
+                            @Html.LabelFor(model => model.SalePersonId)
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.SalePersonId, new { @class = "clsSalesPerson", @readonly = "readonly", @style = "width:100%;" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.SalePersonId)
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.RouteId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.RouteId, new { @class = "", @style = "width:100%;" })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="Onoffbtn" style="margin-top:18px;">
+                        <div class="input-group" style="margin-bottom: -10px; width: 79%;">
+                            <input id="IsActive"
+                                   value="@Model.IsActive"
+                                   type="checkbox"
+                                   name="my-checkbox"
+                                   @(Model.IsActive ? "checked" : "")
+                                   data-bootstrap-switch
+                                   data-off-color="danger"
+                                   data-on-color="success"
+                                   data-on-text="ON"
+                                   data-off-text="OFF">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SalePersonRoute/Create?SalePersonId=@Model.SalePersonId&SalePersonName=@Model.SalePersonName" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SalePersonRoute/Create?SalePersonId=@Model.SalePersonId&SalePersonName=@Model.SalePersonName" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+        </div>
+
+        <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+
+    </div>
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SalePersonRouteController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#IsActive").bootstrapSwitch();
+            SalePersonRouteController.init();
+        });
+    </script>
+
+}

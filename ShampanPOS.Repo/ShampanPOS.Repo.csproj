@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3F68312C-FAC0-4901-84B6-28DFCD506712}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShampanPOS.Repo</RootNamespace>
+    <AssemblyName>ShampanPOS.Repo</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.9.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FocalPointRepo.cs" />
+    <Compile Include="AreasRepo.cs" />
+    <Compile Include="AuthRepo.cs" />
+    <Compile Include="CustomerJournalRepo.cs" />
+    <Compile Include="DayEndRepo.cs" />
+    <Compile Include="MISReportRepo.cs" />
+    <Compile Include="ProductPriceGroupRepo.cs" />
+    <Compile Include="ProductReplaceIssueRepo.cs" />
+    <Compile Include="ProductReplaceReceiveRepo.cs" />
+    <Compile Include="ProductStockRepo.cs" />
+    <Compile Include="ProductUOMConversionRepo.cs" />
+    <Compile Include="ProductPurchasePriceBatchHistorieRepo.cs" />
+    <Compile Include="CustomerPaymentCollectionRepo.cs" />
+    <Compile Include="UserBranchProfileRepo.cs" />
+    <Compile Include="UserProfileRepo.cs" />
+    <Compile Include="CompanyProfileRepo.cs" />
+    <Compile Include="FiscalYearForSaleRepo.cs" />
+    <Compile Include="SalePersonVisitHistrieRepo.cs" />
+    <Compile Include="SupplierRepo.cs" />
+    <Compile Include="CustomerGroupRepo.cs" />
+    <Compile Include="CurrencieRepo.cs" />
+    <Compile Include="FiscalYearsRepo.cs" />
+    <Compile Include="BranchAdvanceRepo.cs" />
+    <Compile Include="SalePersonCampaignAchievementRepo.cs" />
+    <Compile Include="SalePersonYearlyTargetRepo.cs" />
+    <Compile Include="SupplierGroupRepo.cs" />
+    <Compile Include="CustomerRepo.cs" />
+    <Compile Include="SalePersonCampaignTargetRepo.cs" />
+    <Compile Include="PurchaseReturnRepo.cs" />
+    <Compile Include="PurchaseRepo.cs" />
+    <Compile Include="ContactPersonRepo.cs" />
+    <Compile Include="SaleDeliveryReturnRepo.cs" />
+    <Compile Include="SalePersonMonthlyAchievementRepo.cs" />
+    <Compile Include="SaleReturnRepo.cs" />
+    <Compile Include="SettingsRepo.cs" />
+    <Compile Include="CurrencyConversationRepo.cs" />
+    <Compile Include="UOMConversationRepo.cs" />
+    <Compile Include="SalesPersonRepo.cs" />
+    <Compile Include="SalePersonRouteRepo.cs" />
+    <Compile Include="RouteRepo.cs" />
+    <Compile Include="DeliveryPersonRepo.cs" />
+    <Compile Include="SaleDeliveryRepo.cs" />
+    <Compile Include="SaleRepo.cs" />
+    <Compile Include="SaleOrderRepo.cs" />
+    <Compile Include="CampaignRepo.cs" />
+    <Compile Include="UOMRepo.cs" />
+    <Compile Include="PaymentTypeRepo.cs" />
+    <Compile Include="LocationRepo.cs" />
+    <Compile Include="ProductBatchHistoryRepo.cs" />
+    <Compile Include="CustomerCreditLimitRepo.cs" />
+    <Compile Include="CustomerAdvanceRepo.cs" />
+    <Compile Include="CommonKendo\CommonDataService.cs" />
+    <Compile Include="MenuAuthorizationRepo.cs" />
+    <Compile Include="Helper\Ordinary.cs" />
+    <Compile Include="BranchCreditLimitRepo.cs" />
+    <Compile Include="CommonRepo.cs" />
+    <Compile Include="BusinessTypeRepo.cs" />
+    <Compile Include="PurchaseOrderRepo.cs" />
+    <Compile Include="ProductRepo.cs" />
+    <Compile Include="ProductGroupRepo.cs" />
+    <Compile Include="BranchProfileRepo.cs" />
+    <Compile Include="Configuration\HttpRequestHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShampanPOS.Models\ShampanPOS.Models.csproj">
+      <Project>{9ea5be9b-b683-4c9d-8cde-0d8497c1612c}</Project>
+      <Name>ShampanPOS.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

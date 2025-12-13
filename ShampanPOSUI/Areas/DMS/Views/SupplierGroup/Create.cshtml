@@ -1,0 +1,197 @@
+﻿@model ShampanPOS.Models.SupplierGroupVM
+
+@{
+    ViewBag.Title = "Supplier Group Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Supplier Group Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Supplier Group Info</h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2 codeWidth">
+                        @Html.LabelFor(model => model.Code)
+                        <div style="display: flex; align-items: center;">
+                            <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Code Auto Generate", @class = " csCode  form-control form-control-sm", @readonly = "readonly", @style = "width:140px;" }) &nbsp;
+                            <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Name)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Group Name", @class = "  form-control form-control-sm " })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Description)
+                        <div class="input-group ">
+                            @Html.TextAreaFor(model => model.Description, new { placeholder = " Enter Description", @class = "  form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Comments)
+                        <div class="input-group ">
+                            @Html.TextAreaFor(model => model.Comments, new { placeholder = " Enter Comments", @class = "  form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                    <div class="col-sm-2" style="flex-direction: column">
+                        @Html.LabelFor(model => model.IsActive)
+                        <div class="Onoffbtn">
+                            <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                <input id="IsActive"
+                                       value="@Model.IsActive"
+                                       type="checkbox"
+                                       name="my-checkbox"
+                                       @(Model.IsActive ? "checked" : "")
+                                       data-bootstrap-switch
+                                       data-off-color="danger"
+                                       data-on-color="success"
+                                       data-on-text="ON"
+                                       data-off-text="OFF">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+
+            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SupplierGroup/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SupplierGroup/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+
+        </div>
+        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SupplierGroupController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#IsActive").bootstrapSwitch();
+            SupplierGroupController.init();
+
+        });
+
+    </script>
+
+
+}
+
+

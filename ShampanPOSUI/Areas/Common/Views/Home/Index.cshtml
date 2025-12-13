@@ -1,0 +1,644 @@
+﻿@model List<ShampanPOS.Models.BranchProfile>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var branchChanged = TempData["BranchChanged"] as bool?;
+}
+<style>
+
+    .chart-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 10px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .pie-chart-container {
+        width: 100%;
+        max-width: 400px;
+        margin: auto;
+    }
+
+    .small-box {
+        position: relative;
+        overflow: hidden;
+        Prevents content from overflowing padding: 15px;
+        Adds spacing inside
+    }
+
+        .small-box .inner {
+            text-align: center;
+        }
+
+    #orderPurchasePieChart {
+        width: 100% !important; /* Ensures it fills the container */
+        height: 80% !important; /* Fixed height */
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #salesPieChart {
+        width: 100% !important; /* Ensures it fills the container */
+        height: 80% !important; /* Fixed height */
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+
+    /*#pendingSalesChartCanvas {
+        background-color: white;
+        border: 1px solid #ddd;*/ /* Optional: Adds a light border around the canvas */
+    /*}*/
+
+    /* Set the background to white */
+    .small-box.bg-info {
+        background-color: white !important;
+        color: #333; /* Dark text for contrast */
+        border: 1px solid #ccc; /* Optional: Add a subtle border */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+    }
+
+        /* Adjust text color for visibility */
+        .small-box.bg-info h3,
+        .small-box.bg-info p {
+            color: #333 !important; /* Dark grey for readability */
+        }
+
+        /* Change the icon color for contrast */
+        .small-box.bg-info .icon i {
+            color: #007bff !important; /* A bold blue for better visibility */
+        }
+
+
+    .lbl {
+        text-align: left !important;
+    }
+
+    .small-box {
+        height: 330px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .small-box.bg-info.PO {
+            height: 420px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .small-box table {
+            height: 100%;
+            margin: 0;
+            table-layout: fixed;
+        }
+
+            .small-box table th, .small-box table td {
+                vertical-align: middle;
+            }
+</style>
+
+
+<!--<div class="container-fluid">-->
+<!-- Filter Accordion -->
+<!--<div class="accordion" id="filterAccordion">
+    <div class="card">
+        <div class="card-header p-2" id="filtersHeading">
+            <div class="card card-primary">
+                <div class="card-header" id="responseTab">
+                    <h3 class="card-title" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">
+                        Filters
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div id="filtersCollapse" class="collapse" aria-labelledby="filtersHeading" data-bs-parent="#filterAccordion">
+            <div class="card-body p-2">
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <label for="Branchs">Select Branch</label>-->
+<!-- Kendo ComboBox uses an input element, not a select -->
+<!--<input id="Branchs" name="Branchs" class="" placeholder="Select Branch..." style="width:100% !important" />-->
+<!-- Optional hidden field to store the selected branch ID -->
+<!--<input type="hidden" id="BranchId" name="BranchId" />
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="Options">Select Options</label>
+
+                            <input id="Options" name="Options" class="" placeholder="Select Options..." style="width:100% !important" />
+
+                            <input type="hidden" id="OptionsId" name="OptionsId" />
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="fromDate">From Date</label>
+                            <div class="input-group date">
+                                <input type="text" id="fromDate" class="form-control form-control-sm dateRange" placeholder="From Date" style="height:33px;" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="toDate">To Date</label>
+                            <div class="input-group date">
+                                <input type="text" id="toDate" class="form-control form-control-sm dateRange" placeholder="To Date" style="height:33px;" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2" style="margin-top: 26px;">
+                            <button type="button" id="indexSearch" class="btn btn-primary btn-sm" style="height:36px;">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- Small Box with Chart -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Top 10 Customers</h3>
+                    <p>Based on Grand Total Amount</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+
+                <!-- Canvas for Chart -->
+                <canvas id="topCustomersChart" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Small Box with Chart -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Bottom 10 Customers</h3>
+                    <p>Based on Grand Total Amount</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+
+                <!-- Canvas for Chart -->
+                <canvas id="bottomCustomersChart" height="200"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <!-- Small Box with Chart -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Top 10 Sale Products</h3>
+                    <p>Based on Sale Value</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+
+                <!-- Canvas for Chart -->
+                <canvas id="topProductChart" height="200"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- Small Box with Chart -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Bottom 10 Sale Products</h3>
+                    <p>Based on Sale Value</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+
+                <!-- Canvas for Chart -->
+                <canvas id="bottomProductChart" height="200"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Top 10 Sale Person</h3>
+                    <p>Based on Sale Value</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+
+                <!-- Canvas for Chart -->
+                <canvas id="topSalePersonChart" height="200"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Bottom 10 Sale Person</h3>
+                    <p>Based on Sale Value</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+
+                <!-- Canvas for Chart -->
+                <canvas id="bottomSalePersonChart" height="200"></canvas>
+            </div>
+        </div>
+        <!--<div class="col-lg-4">-->
+        <!-- Small Box with Chart -->
+        <!--<div class="small-box bg-info">
+        <div class="inner">
+            <h3>Pending Sales</h3>
+            <p>Not Delivered</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-bag"></i>
+        </div>-->
+        <!-- Canvas for Chart -->
+        <!--<canvas id="pendingSalesChartCanvas" height="200"></canvas>
+            </div>
+        </div>-->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Purchase </h3>
+                    @*<p>Distribution Overview</p>*@
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+
+                <!-- Canvas for Pie Chart -->
+                <canvas id="orderPurchasePieChart" height="600"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Sales</h3>
+                    @*<p>Distribution Overview</p>*@
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+
+                <!-- Canvas for Pie Chart -->
+                <canvas id="salesPieChart" height="600"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="modal fade" id="branchProfiles" tabindex="-1" role="dialog" aria-labelledby="Branch Profiles" data-backdrop="static">
+        <div class="modal-dialog draggable modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"> Select Branch </h4>
+                    @if (branchChanged == true)
+                    {
+                        <!-- Close icon -->
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    }
+
+                </div>
+                <div class="modal-body">
+                    @Html.Hidden("md-branch", Model)
+                    <table class="table table-bordered  table-sm table-hover full-width" id="tBranchProfiles">
+                        <thead>
+                            <tr>
+                                <th> Branch Code</th>
+                                <th> Branch Name</th>
+                                <th style="display: none;">User Id</th>  <!-- Hides the header for 'User Id' -->
+                            </tr>
+                        </thead>
+                        <tbody id="tbdBranchProfiles" class="cursorHand">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/Content/js/app/Controllers/DashController.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            // Dashboard Initialization
+            DashController.init(@Model.Count);
+
+            // TempData Message Handling
+            var message = '@(TempData["DbUpdate"])';
+            if (message) {
+                alert(message);
+                if (window.location.search.includes('message=')) {
+                    var urlWithoutMessage = window.location.origin + window.location.pathname;
+                    window.location.href = urlWithoutMessage + "?branchChange=False";
+                }
+            }
+
+
+            //Branch Combo
+            var branch = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetBranchList?value=",
+                        dataType: "json"
+                    }
+                },
+                schema: {
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { type: "number" },
+                            Name: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            $("#Branchs").kendoComboBox({
+                dataTextField: "Name",
+                dataValueField: "Id",
+                dataSource: branch,
+                filter: "contains",
+                suggest: true,
+                index: 0,
+                dataBound: function () {
+                    var comboBox = this;
+                    var branchId = $("#BranchId").val() || 0;
+                    setTimeout(function () {
+                        if (comboBox.dataSource.data().length > 0) {
+                            var item = comboBox.dataSource.get(branchId);
+                            if (item) {
+                                comboBox.value(branchId);
+                                comboBox.text(item.Name);
+                                comboBox.trigger("change");
+                            }
+                        }
+                    }, 300);
+                },
+                change: function () {
+                    // Update the hidden field with the selected branch id
+                    var selectedValue = this.value();
+                    $("#BranchId").val(selectedValue);
+                }
+            });
+
+            //Options Combo
+            var optionsData = [
+                { Id: 10, Text: "Top 10" },
+                { Id: 20, Text: "Top 20" },
+                { Id: 30, Text: "Top 30" },
+                { Id: 40, Text: "Top 40" },
+                { Id: 50, Text: "Top 50" }
+            ];
+
+            // Initialize the Kendo ComboBox on the input with id "Options"
+            $("#Options").kendoComboBox({
+                dataTextField: "Text",
+                dataValueField: "Id",
+                dataSource: optionsData,
+                filter: "contains",
+                suggest: true,
+                index: 0,
+                change: function () {
+                    // Update the hidden field with the selected option's value
+                    var selectedValue = this.value();
+                    $("#OptionsId").val(selectedValue);
+                }
+            });
+
+            //------------Dashboard-------------//
+            window.charts = {};
+
+            // Utility function to create a bar chart
+            function createBarChart(ctx, labels, data, label, colors) {
+                return new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: data,
+                            backgroundColor: colors,
+                            borderColor: colors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 2000 }
+                            }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // Utility function to create a pie chart
+            function createPieChart(ctx, labels, data, colors) {
+                return new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data.map(Number),
+                            backgroundColor: colors,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const value = tooltipItem.raw || 0;
+                                        const total = data.reduce((a, b) => a + b, 1);
+                                        return `${tooltipItem.label}: ${value} (${((value / total) * 100).toFixed(2)}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Generic function to fetch data and create charts
+            function fetchAndCreateChart(url, chartId, label, isPieChart = false) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (data) {
+
+                        console.log(`Received Data from ${url}:`, data);
+
+                        let labels, values;
+                        if (isPieChart) {
+                            labels = Object.keys(data);
+                            values = Object.values(data).map(Number);
+                        } else {
+                            labels = data.map(item => item.CustomerName || item.ProductName || item.SalePersonName);
+                            values = data.map(item => item.TotalGrandTotalAmount || item.TotalSaleValue || item.GrandTotalAmount);
+                        }
+
+                        if (values.some(v => isNaN(v))) {
+                            console.error(`Invalid data from ${url}:`, data);
+                            return;
+                        }
+
+                        const colors = ['#007bff', '#28a745', '#dc3545', '#ff5733', '#17a2b8', '#ffc107', '#6610f2', '#e83e8c', '#6f42c1', '#20c997'];
+                        const ctx = document.getElementById(chartId)?.getContext('2d');
+
+                        if (!ctx) {
+                            console.error(`Canvas element not found: ${chartId}`);
+                            return;
+                        }
+
+                        if (window[chartId] instanceof Chart) {
+                            window[chartId].destroy();
+                        }
+
+                        window[chartId] = isPieChart
+                            ? createPieChart(ctx, labels, values, colors)
+                            : createBarChart(ctx, labels, values, label, colors);
+                    },
+                    error: function (error) {
+                        console.error(`Error fetching data from ${url}:`, error);
+                    }
+                });
+            }
+
+            // Function to fetch Pending Sales data and create a bar chart
+            function fetchAndCreatePendingSalesChart() {
+                $.ajax({
+                    url: '/Home/GetPendingSalesData', // Replace with your actual endpoint
+                    type: 'GET',
+                    success: function (data) {
+                        console.log('Received Pending Sales Data:', data);
+
+                        if (!data || data.length === 0) {
+                            //console.error('No data available for Pending Sales.');
+                            //document.getElementById('pendingSalesChartCanvas').innerHTML = "No data available";
+                            return;
+                        }
+
+                        let labels = data.map(item => item.CustomerName);
+                        let values = data.map(item => item.OrderedButNotDelivered);
+
+                        if (values.some(v => isNaN(v))) {
+                            console.error('Invalid data for Pending Sales:', data);
+                            return;
+                        }
+
+                        const colors = ['#007bff', '#28a745', '#dc3545', '#ff5733', '#17a2b8', '#ffc107', '#6610f2', '#e83e8c', '#6f42c1', '#20c997'];
+                        const ctx = document.getElementById('pendingSalesChartCanvas');
+
+                        if (!ctx) {
+                            console.error('Canvas element not found: pendingSalesChartCanvas');
+                            return;
+                        }
+
+                        const chartContext = ctx.getContext('2d');
+
+                        // Destroy existing chart if present
+                        if (window.pendingSalesChart instanceof Chart) {
+                            window.pendingSalesChart.destroy();
+                        }
+
+                        // Create the chart
+                        window.pendingSalesChart = new Chart(chartContext, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Pending Sales',
+                                    data: values,
+                                    backgroundColor: colors.slice(0, labels.length),
+                                    borderColor: colors.slice(0, labels.length),
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { stepSize: 5 }
+                                    }
+                                },
+                                plugins: { legend: { display: false } }
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error fetching pending sales data:', error);
+                    }
+                });
+            }
+
+            if (@Model.Count > 0) {
+                // Fetch data and create charts
+                fetchAndCreateChart('/Home/GetTop10Customers', 'topCustomersChart', 'Grand Total Amount');
+                fetchAndCreateChart('/Home/GetBottom10Customers', 'bottomCustomersChart', 'Grand Total Amount');
+                fetchAndCreateChart('/Home/GetTop10Products', 'topProductChart', 'Sale Value');
+                fetchAndCreateChart('/Home/GetBottom10Products', 'bottomProductChart', 'Sale Value');
+                fetchAndCreateChart('/Home/GetTop10SalePersons', 'topSalePersonChart', 'Total Sale Value');
+                fetchAndCreateChart('/Home/GetBottom10SalePersons', 'bottomSalePersonChart', 'Total Sale Value');
+                fetchAndCreateChart('/Home/GetOrderPurchasePOReturnData', 'orderPurchasePieChart', '', true);
+                fetchAndCreateChart('/Home/GetSalesData', 'salesPieChart', '', true);
+
+                fetchAndCreatePendingSalesChart();
+            };
+
+});
+    </script>
+}
+

@@ -1,0 +1,107 @@
+﻿
+@model List<ShampanPOS.Models.ProductPriceGroupDetailVM>
+
+@{
+    Layout = null;
+}
+
+
+@foreach (var item in Model)
+    {
+        <div class="card-body">
+
+            @*<div class="row period-row fiscalYearRow">*@
+            <div class="row period-row productPriceGroupDRows">
+
+                <div class="col-md-1">
+                    <div class="editor-field">
+                        @Html.HiddenFor(model => item.Id)
+                        @Html.HiddenFor(model => item.ProductId)
+                        @Html.HiddenFor(model => item.ProductPriceGroupId)
+                        @Html.TextBoxFor(model => item.Code, new { @readonly = "readonly", @class = "periodName form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => item.Name, new { @readonly = "readonly", @class = "Start  form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => item.BanglaName, new { @readonly = "readonly", @class = "End form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => item.CosePrice, new { @placeholder = "Cose Price", @class = " form-control" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => item.SalePrice, new { @placeholder = "Sale Price", @class = " form-control" })
+                    </div>
+                </div>
+                @*<div class="col-md-2">
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => item.VATRate, new { @placeholder = "VAT Rate", @class = " form-control" })
+                    </div>
+                </div>*@
+
+            </div>
+        </div>
+    }
+
+
+@*<div class="card-body">
+
+        <div class="row period-row fiscalYearRow font-weight-bold">
+            <div class="col-md-2">Product Code</div>
+            <div class="col-md-2">Product Name</div>
+            <div class="col-md-2">Product Bangla Name</div>
+            <div class="col-md-2">Cost Price</div>
+            <div class="col-md-2">Sale Price</div>
+            <div class="col-md-2">VAT Rate</div>
+        </div>
+
+        @foreach (var item in Model)
+        {
+            <div class="row period-row fiscalYearRow">
+                <div class="col-md-2">
+                    @Html.HiddenFor(model => item.Id)
+                    @Html.HiddenFor(model => item.ProductId)
+                    @Html.HiddenFor(model => item.ProductPriceGroupId)
+                    @Html.TextBoxFor(model => item.Code, new { @readonly = "readonly", @class = "periodName form-control" })
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => item.Name, new { @readonly = "readonly", @class = "Start  form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    @Html.TextBoxFor(model => item.BanglaName, new { @readonly = "readonly", @class = "End form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(model => item.CosePrice, new { @placeholder = "Cost Price", @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(model => item.SalePrice, new { @placeholder = "Sale Price", @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(model => item.VATRate, new { @placeholder = "VAT Rate", @class = "form-control" })
+                </div>
+            </div>
+        }
+    </div>*@
+
+
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

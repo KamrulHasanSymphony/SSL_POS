@@ -1,0 +1,75 @@
+﻿@model ShampanPOS.Models.CustomerAdvanceVM
+@{
+    ViewBag.Title = "Customer Advance Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @Html.HiddenFor(model => model.CustomerId)
+    @Html.HiddenFor(model => model.CustomerName)
+    @Html.HiddenFor(model => model.CustomerCode)
+    @Html.HiddenFor(model => model.IsIndex)
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Customer Advance List </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header p-2">
+            <button type="button" title="Add New" data-url="/DMS/CustomerAdvance/Create?CustomerId=@Model.CustomerId" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+
+            <button type="button" title="Post data" id="btnPost" class="button sslPost"> Post </button>
+
+            @*<button type="button" title="Delete" class="button sslUnPost btnDelete"> Delete </button>*@
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="card card-secondary">
+        <div class="card-header">
+            Customer Info
+            <span style="font-size:initial;">
+                <strong style="color:antiquewhite">
+                    : @(!string.IsNullOrEmpty(Model.CustomerName) && !string.IsNullOrEmpty(Model.CustomerCode) ? $"{Model.CustomerName} ({Model.CustomerCode})" : "Customer (Code)")
+                </strong>
+            </span>
+        </div>
+        <div class="card-body">
+            <div id="GridDataList"></div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/CustomerAdvanceController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            CustomerAdvanceController.init();
+        });
+
+    </script>
+
+
+}
+
+

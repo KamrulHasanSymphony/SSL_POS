@@ -1,0 +1,123 @@
+﻿@model ShampanPOS.Models.SalePaymentVM
+@{
+    ViewBag.Title = "CreatePartial";
+}
+
+
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                    <h3 class="card-title"> Sale Payment </h3>
+                </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-8">
+                        @Html.LabelFor(model => model.CustomerId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.CustomerId, new { @class = "clsCustomer", @style = "width: 100%;" })
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-4">
+                        @Html.LabelFor(model => model.DateFrom)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.DateFrom, new { @class = "form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        @Html.LabelFor(model => model.DateTo)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.DateTo, new { @class = "form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-1 mt-3">
+                        <button type="button" id="ReportGenerate" class="btn btn-primary w-100">Details</button>
+                    </div>
+                    @*<div class="col-sm-1 mt-3">
+                        <button type="button" id="ReportGenerateSummary" class="btn btn-secondary w-100">Summary</button>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        var getCustomerId = $("#CustomerId").val() || 0;
+        GetCustomerComboBox()
+
+        $("#ReportGenerate").on("click", function () {
+            var params = {
+                CustomerId: $("#CustomerId").val(),
+                DateTo: $("#DateTo").val(),
+                DateFrom: $("#DateFrom").val()
+            };
+            var query = $.param(params);
+            var url = '/DMS/MISReport/ExportSaleAndPayment?' + query;
+            window.open(url, "_blank");
+        });
+
+        $("#ReportGenerateSummary").on("click", function () {
+            var params = {
+                CustomerId: $("#CustomerId").val(),
+                DateTo: $("#DateTo").val(),
+                DateFrom: $("#DateFrom").val()
+            };
+            var query = $.param(params);
+            var url = '/DMS/MISReport/ExportSaleAndPaymentSummary?' + query;
+            window.open(url, "_blank");
+        });
+
+        function GetCustomerComboBox() {
+            var CustomerComboBox = $(".clsCustomer").kendoMultiColumnComboBox({
+                dataTextField: "Name",
+                dataValueField: "Id",
+                height: 400,
+                columns: [
+
+                    { field: "Code", title: "Code", width: 100 },
+                    { field: "Name", title: "Name", width: 100 },
+                    { field: "Address", title: "Address", width: 150 },
+                    { field: "Email", title: "Email", width: 150 },
+                    { field: "City", title: "City", width: 150 }
+
+                ],
+                filter: "contains",
+                filterFields: ["Code", "Name", "Address", "Email", "City"],
+                dataSource: {
+                    transport: {
+                        read: "/Common/Common/GetCustomerList"
+                    }
+                },
+                placeholder: "Select Customer", // Set the placeholder
+                value: "",
+                dataBound: function (e) {
+
+                    if (getCustomerId) {
+                        this.value(parseInt(getCustomerId));
+                    }
+                }
+            }).data("kendoMultiColumnComboBox");
+        }
+
+    });
+
+</script>
+
+

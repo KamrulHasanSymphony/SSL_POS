@@ -1,0 +1,402 @@
+﻿@model ShampanPOS.Models.PurchaseOrderVM
+@{
+    ViewBag.Title = "Purchase Order Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var serial = 1;
+}
+<style>
+    .k-dropdown-wrap .k-input {
+        line-height: 1.6em !important;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Purchase Order Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header p-2">
+
+        @if (Model.IsPost)
+        {
+            <button type="button" class="button sslPush">Already Posted</button>
+        }
+        else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+        {
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/PurchaseOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+
+            <button type="button" class="button btnsave sslUpdate">Update</button>
+
+            <button type="button" class="button btnPost sslPost">Post</button>
+
+            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+        }
+        else
+        {
+            <div style="display:none;" class="divUpdate">
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+                <button type="button" class="button btnPost sslPost">Post</button>
+                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/PurchaseOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            </div>
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
+        }
+
+    </div>
+
+</div>
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Purchase Order Info</h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.ProductGroupId)
+                @Html.HiddenFor(model => model.DecimalPlace)
+                @Html.HiddenFor(model => model.UOMId)
+                @Html.HiddenFor(model => model.IsPost)
+                @Html.HiddenFor(model => model.BranchId)
+                @Html.HiddenFor(model => model.TransactionType)
+                @Html.HiddenFor(model => model.FromDate)
+
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2 codeWidth">
+                        @Html.LabelFor(model => model.Code)
+                        <div style="display: flex; align-items: center;">
+                            <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
+                            @Html.TextBoxFor(model => model.Code, new { placeholder="Code Auto Generate",@class = " csCode  form-control form-control-sm", @readonly = "readonly", @style = "width:100% !important;" }) &nbsp;
+                            <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.SupplierId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.SupplierId, new { @class = "", @style = "width: 100%;" })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.OrderDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.OrderDate, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DeliveryDateTime)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.DeliveryDateTime, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CurrencyId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.CurrencyId, new { @class = "" , @style = "width: 100%;" })
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>
+
+
+
+                </div>
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Comments)
+                        <div class="input-group">
+                            @Html.TextAreaFor(model => model.Comments, new { placeholder="Enter Comment Here" ,@class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Details </h3>
+            </div>
+            <div class="card-body">
+
+                <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+
+                <div style="overflow-x: auto; white-space: nowrap;">
+                    <table class="table table-bordered table-striped table-sm" id="details">
+                        <thead>
+                            <tr>
+                                <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                <th hidden data-type="text" data-search="false" data-required="false" data-computed="true" style="width:20%;" data-name="ProductCode"> Product Code </th>
+                                <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="ProductName"> Product Name </th>
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
+
+                                <th data-type="text" data-search="true" data-computed="false" data-required="true" style="width:10%;" data-name="UOMName"> UOM  </th>
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="UOMId"> UOMId </th>
+                                <th data-type="decimal" style="width: 10%;" data-required="true" data-name="CtnQuantity">Ctn Qty </th>
+                                <th data-type="decimal" style="width: 10%;" data-required="true" data-name="InputQuantity"> Input Qty </th>
+                                <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="true" data-name="PcsQuantity"> Pcs Qty </th>
+                                <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="true" data-name="Quantity"> Total Qty </th>
+                                <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="UnitPrice"> Unit Price </th>
+                                <th data-type="decimal" style="width: 14%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
+                                <th hidden data-type="decimal" style="width: 8%;" data-computed="true" data-name="SD"> SD Rate </th>
+                                <th hidden data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
+                                <th hidden data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATRate"> VAT Rate </th>
+                                <th hidden data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
+                                <th hidden data-type="decimal" style="width: 8%;" data-computed="false" data-name="OthersAmount"> Others Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
+
+                                <th data-type="text" style="width: 15%;" data-name="Comments">Comments</th>
+                                <th hidden data-type="text" style="width: 5%;" data-name="UOMConversion">UOMConversion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lst">
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model.purchaseOrderDetailsList)
+                                {
+                                    <tr>
+                                        <td> @serial </td>
+                                        <td hidden> @item.ProductCode </td>
+                                        <td> @item.ProductName </td>
+                                        <td hidden> @item.ProductId </td>
+
+                                        <td> @item.UOMName </td>
+                                        <td hidden> @item.UOMId </td>
+                                        <td class=" dFormat "> @item.CtnQuantity </td>
+                                        <td class=" dFormat "> @item.InputQuantity </td>
+                                        <td class=" dFormat "> @item.PcsQuantity </td>
+                                        <td class=" dFormat "> @item.Quantity </td>
+                                        <td class=" dFormat "> @item.UnitPrice</td>
+                                        <td class=" dFormat "> @item.SubTotal</td>
+                                        <td hidden class=" dFormat "> @item.SD</td>
+                                        <td hidden class=" dFormat "> @item.SDAmount</td>
+                                        <td hidden class=" dFormat "> @item.VATRate</td>
+                                        <td hidden class=" dFormat "> @item.VATAmount</td>
+                                        <td hidden class=" dFormat "> @item.OthersAmount</td>
+                                        <td class=" dFormat "> @item.LineTotal</td>
+
+                                        <td> @item.Comments</td>
+                                        <td hidden> @item.UOMConversion</td>
+                                        <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
+
+                                    </tr>
+
+                                    { serial++; }
+                                }
+                            }
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header p-2">
+
+                <div class="card-body">
+                    <div class="row grndBlock">
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Grand Total Quantity </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotalAmount", 0, new { @placeholder = "Grand Total Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Grand SubTotal </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandSubTotal", 0, new { @placeholder = "Grand SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Grand Total SD Amount </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotalSDAmount", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Grand Total VAT Amount </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotalVATAmount", 0, new { @placeholder = "Grand Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Grand Line Total</label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Line Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+
+            @if (Model.IsPost)
+            {
+                <button type="button" class="button sslPush">Already Posted</button>
+            }
+            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    <button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>
+
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                </div>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+
+        </div>
+        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+    </div>
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Posted")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.PostBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.PosteOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/PurchaseOrderController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            PurchaseOrderController.init();
+        });
+
+    </script>
+
+
+}
+

@@ -1,0 +1,450 @@
+﻿@model ShampanPOS.Models.SaleDeliveryReturnVM
+@{
+    ViewBag.Title = "Sale Delivery Return Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var serial = 1;
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Sale Delivery Return Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header p-2">
+
+        @if (Model.IsPost)
+        {
+            <button type="button" class="button sslPush">Already Posted</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleDeliveryReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+        else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+        {
+            <button type="button" class="button btnsave sslUpdate">Update</button>
+
+            <button type="button" class="button btnPost sslPost">Post</button>
+
+            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleDeliveryReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+        else
+        {
+            <div style="display:none;" class="divUpdate">
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+                <button type="button" class="button btnPost sslPost">Post</button>
+                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleDeliveryReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+
+            </div>
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
+        }
+
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Sale Delivery Return Info </h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.SaleDeliveryId)
+                @Html.HiddenFor(model => model.UOMId)
+                @Html.HiddenFor(model => model.DecimalPlace)
+                @Html.HiddenFor(model => model.IsPost)
+                @Html.HiddenFor(model => model.BranchId)
+                @Html.HiddenFor(model => model.TransactionType)
+                @Html.HiddenFor(model => model.FromDate)
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2 codeWidth">
+                        @Html.LabelFor(model => model.Code)
+                        <div style="display: flex; align-items: center;">
+                            <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Code Auto Generate", @class = " csCode  form-control form-control-sm", @readonly = "readonly", @style = "width:140px;" }) &nbsp;
+                            <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CustomerId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.CustomerId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.SalePersonId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.SalePersonId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DeliveryPersonId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.DeliveryPersonId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError3" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DriverPersonId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.DriverPersonId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError4" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.RouteId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.RouteId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError5" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.InvoiceDateTime)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.InvoiceDateTime, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DeliveryDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CurrencyId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.CurrencyId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError6" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DeliveryAddress)
+                        <div class="input-group">
+                            @Html.TextAreaFor(model => model.DeliveryAddress, new { placeholder = "Enter delivery address", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Comments)
+                        <div class="input-group">
+                            @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter comments", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Details </h3>
+            </div>
+            <div class="card-body">
+
+                <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+
+                <div class="clearfix">&nbsp;</div>
+
+                <div style="overflow-x: auto; white-space: nowrap;">
+                    <table class="table table-bordered table-striped table-sm" id="details">
+                        <thead>
+                            <tr>
+                                <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                <th data-type="text" data-computed="true" data-required="false" style="width:20%;" data-name="ProductCode"> Product Code </th>
+                                <th data-type="text" data-search="true" data-required="true" style="width:12%;" data-name="ProductName"> Product Name </th>
+
+
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
+                                <th data-type="text" data-search="true" data-computed="false" data-required="true" style="width:10%;" data-name="UOMName"> UOM</th>
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="UOMId"> UOMId </th>
+                                <th data-type="decimal" style="width: 10%;" data-required="true" data-name="UnitRate"> Unit Rate </th>
+                                <th data-type="decimal" style="width: 10%;" data-required="true" data-name="Quantity"> Quantity </th>
+                                <th data-type="decimal" style="width: 14%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SD"> SD Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATRate"> VAT Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
+                                <th data-type="text" style="width: 15%;" data-name="Comments">Comments</th>
+                                <th data-type="text" style="width: 10%;" data-required="true" data-name="ReasonOfReturn">Reason Of Return</th>
+                                <th hidden data-type="text" style="width: 5%;" data-name="SaleDeliveryId">SaleDeliveryId</th>
+                                <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderDetailId">SaleDeliveryDetailId</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="lst">
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model.saleDeliveryReturnDetailList)
+                                {
+                                    <tr>
+                                        <td> @serial </td>
+                                        <td> @item.ProductCode </td>
+                                        <td> @item.ProductName </td>
+
+
+                                        <td hidden> @item.ProductId </td>
+                                        <td> @item.UOMName </td>
+                                        <td hidden>@item.UOMId</td>
+                                        <td class=" dFormat "> @item.UnitRate </td>
+                                        <td class=" dFormat "> @item.Quantity </td>
+                                        <td class=" dFormat "> @item.SubTotal</td>
+                                        <td class=" dFormat "> @item.SD</td>
+                                        <td class=" dFormat "> @item.SDAmount</td>
+                                        <td class=" dFormat "> @item.VATRate</td>
+                                        <td class=" dFormat "> @item.VATAmount</td>
+                                        <td class=" dFormat ">@item.LineTotal</td>
+                                        <td hidden> @item.SaleDeliveryId</td>
+                                        <td hidden> @item.SaleDeliveryDetailId</td>
+                                        <td> @item.Comments</td>
+                                        <td> @item.ReasonOfReturn</td>
+                                        <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
+
+                                    </tr>
+
+                                    { serial++; }
+                                }
+                            }
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header p-2">
+
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Grand Total Quantity </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotalAmount", 0, new { @placeholder = "Grand Total Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Grand SubTotal </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandSubTotal", 0, new { @placeholder = "Grand SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Grand Total SD Amount </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotalSDAmount", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Grand Total VAT Amount </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotalVATAmount", 0, new { @placeholder = "Grand Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Grand Line Total</label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Line Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+
+            @if (Model.IsPost)
+            {
+                <button type="button" class="button sslPush">Already Posted</button>
+
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleDeliveryReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                {
+                    <button style="float:left; margin-right: 5px;" type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="float:left; margin-right: 5px;" type="button" class="button btnPost sslPost">Post</button>
+                    <button class="button sslPrintC " data-id="@Model.Id" style="float:left;">Print</button>
+                    @*<button type="button" class="button btnPost sslPost">Post</button>*@
+                }
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+
+        </div>
+                <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+            </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Posted")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.PostedBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.PostedOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SaleDeliveryReturnController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            SaleDeliveryReturnController.init();
+
+        });
+
+    </script>
+
+
+}
+

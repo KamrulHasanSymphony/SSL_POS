@@ -1,0 +1,498 @@
+﻿@model ShampanPOS.Models.SalesPersonVM
+@{
+    ViewBag.Title = "Sales Person Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+    /* Tab Container */
+    .tab-container {
+        width: 433px;
+        background: #fff;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tab List */
+    .tab-list {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        list-style: none;
+        background-color: #f8f8f8;
+        border-radius: 8px 8px 0 0;
+        border-bottom: 2px solid #ddd;
+    }
+
+    /* Tab Item */
+    .tab-item {
+        margin: 0;
+    }
+
+    /* Tab Link */
+    .tab-link {
+        display: inline-block;
+        padding: 15px 40px;
+        text-decoration: none;
+        color: #777;
+        font-weight: bold;
+        text-align: center;
+        transition: color 0.3s ease, background-color 0.3s ease;
+        border-right: 1px solid #ddd;
+        cursor: pointer;
+        border-radius: 8px 8px 0 0;
+    }
+
+    /* Remove border for the last tab */
+    .tab-item:last-child .tab-link {
+        border-right: none;
+    }
+
+    /* Tab Hover Effect */
+    .tab-link:hover {
+        background-color: #e9e9e9;
+        color: #333;
+    }
+
+    /* Active Tab */
+    .tab-link.active {
+        background-color: #e2f0f7;
+        /*color: #ddd;*/
+        border-bottom: 2px solid #1790D2;
+    }
+
+    /* Tab Content Wrapper */
+    .tab-content-wrapper {
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tab Content */
+    .tab-content {
+        display: none;
+        text-align: center;
+        color: #888;
+        font-weight: 300;
+        font-size: 15px;
+        opacity: 0;
+        transform: translateY(15px);
+        animation: fadeIn 0.5s ease 1 forwards;
+    }
+
+        /* Show Active Tab Content */
+        .tab-content.active {
+            display: block;
+        }
+</style>
+
+
+
+@*<div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0"> Sales Person Entry </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+<div id="tabs">
+
+    @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+    {
+
+        <div class="container-fluid d-flex justify-content-between">
+            <div class="tab-container">
+                <ul class="tab-list">
+                    <li class="tab-item">
+                        <a href="#tabs-1" class="tab-link active" data-tab="1">Sales Person </a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#tabs-2" class="tab-link" data-tab="2" id="btnSalePersonRoute">  Route</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#tabs-3" class="tab-link" data-tab="3" id="btnSalePersonVisitHistory">  Visit History </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+
+
+        </div>
+    }
+    else
+    {
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0"> Sales Person Entry </h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="container-fluid">
+        <div class="mt-3">
+            <div id="tabs-1">
+                <form id="frmEntry">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+
+                            <span style="font-size:initial;">
+                                <strong style="color:antiquewhite">
+                                    @if (Model.Operation == "update")
+                                    {
+                                        @(!string.IsNullOrEmpty(Model.Name) ? Model.Name+"'s Info" : "Name")
+                                    }
+                                    else
+                                    {
+                                        @:Sales Person Entry
+                                    }
+                                </strong>
+                            </span>
+                        </div>
+                        <div class="card-body">
+
+                            @Html.HiddenFor(model => model.Id)
+                            @Html.HiddenFor(model => model.Operation)
+                            @Html.HiddenFor(model => model.BranchId)
+                            @Html.HiddenFor(model => model.ImagePath)
+                            @Html.HiddenFor(model => model.Name)
+
+
+                            <div class="form-group row">
+                                <div class="col-sm-2 codeWidth">
+                                    @Html.LabelFor(model => model.Code)
+                                    <div style="display: flex; align-items: center;">
+                                        <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
+                                        @Html.TextBoxFor(model => model.Code, new { placeholder = "Auto Generate", @class = "csCode form-control form-control-sm", @readonly = "readonly", @style = "width:140px;" }) &nbsp;
+                                        <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.Name)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Sales Person Name", @class = "form-control form-control-sm" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+
+                                @*<div class="col-sm-2">
+                @Html.LabelFor(model => model.BranchId)
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.BranchId, new { @class = "form-control form-control-sm" })
+                </div>
+                @Html.ValidationMessageFor(model => model.BranchId)
+            </div>*@
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.ParentId)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.ParentId, new { @class = "form-control form-control-sm" })
+                                    </div>
+                                    <span id="titleError1" class="text-danger" style="display:none;"></span>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.EnumTypeId)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.EnumTypeId, new { @class = "form-control form-control-sm" })
+                                    </div>
+                                    <span id="titleError2" class="text-danger" style="display:none;"></span>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.BanglaName)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.BanglaName, new { placeholder = "Enter Sales Person Bangla Name" , @class = "form-control form-control-sm" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.BanglaName)
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.Mobile)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.Mobile, new { placeholder = "Enter Mobile Number" , @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Mobile)
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.EmailAddress)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.EmailAddress, new { placeholder = "Enter Email Address", @class = "form-control form-control-sm" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.EmailAddress)
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.Address)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.Address, new { placeholder = "Enter Address", @class = "form-control form-control-sm" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Address)
+                                </div>
+
+                                @*<div class="col-sm-2">
+                                    @Html.LabelFor(model => model.ZipCode)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.ZipCode, new { placeholder = "Enter ZipCode", @class = "form-control form-control-sm" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ZipCode)
+                                </div>*@
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.ImagePath)
+                                    <div class="input-group">
+                                        <input type="file" id="imageUpload" class="form-control form-control-sm" accept="image/*" style="height:1%;" />
+                                        <input type="hidden" id="ImagePath" name="ImagePath" value="@Model.ImagePath" />
+                                    </div>
+
+                                    <!-- Ensure the preview image always exists -->
+                                    <img id="imagePreview" src="@(!string.IsNullOrEmpty(Model.ImagePath) ? Url.Content(Model.ImagePath) : "")"
+                                         alt="Customer Image" width="100" style="display: @(string.IsNullOrEmpty(Model.ImagePath) ? "none" : "block");" />
+
+                                    <!-- Delete button, hidden by default -->
+                                    <button type="button" id="deleteImageBtn" class="btn btn-danger" style="display: @(string.IsNullOrEmpty(Model.ImagePath) ? "none" : "inline-block");">
+                                        <i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete
+                                    </button>
+                                </div>
+                                <div class="Onoffbtn" style="flex-direction:column">
+                                    @Html.LabelFor(model => model.IsActive)
+                                    <div class="input-group" style="margin-bottom: -10px; width: 79%;">
+                                        <input id="IsActive"
+                                               value="@Model.IsActive"
+                                               type="checkbox"
+                                               name="my-checkbox"
+                                               @(Model.IsActive ? "checked" : "")
+                                               data-bootstrap-switch
+                                               data-off-color="danger"
+                                               data-on-color="success"
+                                               data-on-text="ON"
+                                               data-off-text="OFF">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                    <div class="card-header p-2">
+                        @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <button type="button" class="button btnsave sslUpdate">Update</button>
+                                <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/SalesPerson/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                                    New
+                                </button>
+                                <button class="button sslPrintC" data-id="@Model.Id">Print</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display:none;" class="divUpdate">
+                                <button type="button" class="button btnsave sslUpdate">Update</button>
+                                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SalesPerson/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                                    New
+                                </button>
+                            </div>
+                            <div class="divSave">
+                                <button class="button btnsave sslSave" type="button" id="">Save</button>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+
+                </div>
+                <div class="card card-secondary auditcard">
+
+                    <div class="card-header">
+                        <h3 class="card-title">Audit Details</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="row">
+                                    @Html.Label("Type")
+                                </div>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        @Html.Label("Created")
+                                    </div>
+                                    <div class="col-sm-3">
+                                        @Html.Label("Updated")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                                        @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                                        <div class="clearfix">&nbsp;</div>
+                                        @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                                        <div class="clearfix">&nbsp;</div>
+                                        @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+    {
+
+        <div id="tabs-2">
+
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header p-2">
+                        <button type="button" title="Add New" data-url="/DMS/SalePersonRoute/Create?SalePersonId=@Model.Id&SalePersonName=@Model.Name" onclick="GoTo(this)" class="button NewButton addNewButton">
+                            New
+                        </button>
+                        <button type="button" id="routeDelete" title="Delete" class="button sslUnPost"> Delete </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mt-3">
+                <div class="container-fluid">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">
+
+                                <span style="font-size:initial;">
+                                    <strong style="color:antiquewhite">
+                                        @(!string.IsNullOrEmpty(Model.Name) ? Model.Name : "Name")'s Route List
+                                    </strong>
+                                </span>
+
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="GridDataListoSalePersonRoute"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabs-3">
+
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header p-2">
+                        <button type="button" title="Add New" data-url="/DMS/SalePersonVisitHistrie/Create?SalePersonId=@Model.Id&SalePersonName=@Model.Name" onclick="GoTo(this)" class="button NewButton addNewButton">
+                            New
+                        </button>
+                        @*<button type="button" title="Delete" id="visitHistoryDelete"  class="button sslUnPost"> Delete </button>*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="container-fluid">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span style="font-size:initial;">
+                                    <strong style="color:antiquewhite">
+                                        @(!string.IsNullOrEmpty(Model.Name) ? Model.Name : "Name")'s    Visit History  List
+                                    </strong>
+                                </span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="GridDataListofSalePersonVisitHistory"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SalesPersonController.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(function () {
+                $("#tabs").tabs();
+            });
+
+            $('ul.tab-list li').on('click', function () {
+                var tab_id = $(this).find('a').attr('data-tab');
+
+                $('ul.tab-list li a').removeClass('active');
+                $('.tab-content').removeClass('active');
+
+                $(this).find('a').addClass('active');
+                $('#tabs-' + tab_id).addClass('active');
+            });
+
+            $("#IsActive").bootstrapSwitch();
+            SalesPersonController.init();
+        });
+    </script>
+}

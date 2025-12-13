@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9EA5BE9B-B683-4C9D-8CDE-0D8497C1612C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShampanPOS.Models</RootNamespace>
+    <AssemblyName>ShampanPOS.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.4\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.9.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.3.0\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.3.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationUser.cs" />
+    <Compile Include="FocalPointVM.cs" />
+    <Compile Include="Audit.cs" />
+    <Compile Include="AspNetUsersVM.cs" />
+    <Compile Include="CampaignDetail.cs" />
+    <Compile Include="CampaignManagerVM.cs" />
+    <Compile Include="CampaignUtilty.cs" />
+    <Compile Include="CustomerDueListCustomerWiseVM.cs" />
+    <Compile Include="CustomerDueListVM.cs" />
+    <Compile Include="CustomerCategoryVM.cs" />
+    <Compile Include="CustomerData.cs" />
+    <Compile Include="CustomerSalesModel.cs" />
+    <Compile Include="DashboardData.cs" />
+    <Compile Include="DayEndDetailsVM.cs" />
+    <Compile Include="DayEndHeadersVM.cs" />
+    <Compile Include="MISReportVM.cs" />
+    <Compile Include="CustomerBillVM.cs" />
+    <Compile Include="MonthlySalesAndAmountCustomerWiseVM.cs" />
+    <Compile Include="ProductInventoryReportVM.cs" />
+    <Compile Include="ProductReplaceIssueVM.cs" />
+    <Compile Include="ProductReplaceIssueDetailsVM.cs" />
+    <Compile Include="ProductSalesReportVM.cs" />
+    <Compile Include="SinglePorductInventoryVM.cs" />
+    <Compile Include="ProductReportVM.cs" />
+    <Compile Include="ProductFileVm.cs" />
+    <Compile Include="ProductPriceGroupDetailVM.cs" />
+    <Compile Include="ProductPriceGroupVM.cs" />
+    <Compile Include="Helper\Ordinary.cs" />
+    <Compile Include="PendingSalesDataModel.cs" />
+    <Compile Include="ProductReplaceReceiveDetailsVM.cs" />
+    <Compile Include="ProductReplaceReceiveVM.cs" />
+    <Compile Include="ProductStockFileVM.cs" />
+    <Compile Include="ProductStockImportVM.cs" />
+    <Compile Include="ProductStockSummary.cs" />
+    <Compile Include="ProductStockVM.cs" />
+    <Compile Include="ProductUOMFactorsVM.cs" />
+    <Compile Include="PurchaseDetail.cs" />
+    <Compile Include="ProductImportVM.cs" />
+    <Compile Include="PurchaseDetailExportVM.cs" />
+    <Compile Include="PurchaseOrderDetail.cs" />
+    <Compile Include="PurchaseOrderReportVM.cs" />
+    <Compile Include="PurchaseReportVM.cs" />
+    <Compile Include="PurchaseReturnDetail.cs" />
+    <Compile Include="PurchaseReturnReportVM.cs" />
+    <Compile Include="ProductSummaryVM.cs" />
+    <Compile Include="PurchaseSummaryVM.cs" />
+    <Compile Include="SaleAndPaymentSummaryReportVM.cs" />
+    <Compile Include="MonthlySalesAndAmountProductWiseVM.cs" />
+    <Compile Include="SaleDeleveryInformationVM.cs" />
+    <Compile Include="SaleDeliveryReportVM.cs" />
+    <Compile Include="SaleDeliveryReturnDetails.cs" />
+    <Compile Include="SaleDevliveryReturnReportVM.cs" />
+    <Compile Include="SaleOrderReportVM.cs" />
+    <Compile Include="SalePaymentReportVM.cs" />
+    <Compile Include="SalePaymentVM.cs" />
+    <Compile Include="SaleReportVM.cs" />
+    <Compile Include="SaleReturnDetail.cs" />
+    <Compile Include="ProductSaleModel.cs" />
+    <Compile Include="PurchaseDataModel.cs" />
+    <Compile Include="SalePersonDataModel.cs" />
+    <Compile Include="SaleReturnReportVM.cs" />
+    <Compile Include="SalesDataModel.cs" />
+    <Compile Include="TransactionalReportVm.cs" />
+    <Compile Include="CustomerPaymentCollectionVM.cs" />
+    <Compile Include="UserBranchProfileVM.cs" />
+    <Compile Include="UserProfileVM.cs" />
+    <Compile Include="CompanyProfileVM.cs" />
+    <Compile Include="CurrencieVM.cs" />
+    <Compile Include="CommonVM.cs" />
+    <Compile Include="DateTimeExtensions.cs" />
+    <Compile Include="CustomerDataVM.cs" />
+    <Compile Include="DbUpdateModel.cs" />
+    <Compile Include="IndexModel.cs" />
+    <Compile Include="AreaVM.cs" />
+    <Compile Include="MessageModel.cs" />
+    <Compile Include="BranchAdvanceVM.cs" />
+    <Compile Include="BranchCreditLimitVM.cs" />
+    <Compile Include="BranchProfileVM.cs" />
+    <Compile Include="BusinessTypeVM.cs" />
+    <Compile Include="CampaignDetailByInvoiceValueVM.cs" />
+    <Compile Include="CampaignDetailByProductTotalValueVM.cs" />
+    <Compile Include="CampaignDetailByProductValueVM.cs" />
+    <Compile Include="CampaignDetailByQuantityVM.cs" />
+    <Compile Include="CampaignVM.cs" />
+    <Compile Include="CommonDropDown.cs" />
+    <Compile Include="ContactPersonVM.cs" />
+    <Compile Include="CurrencyConversationVM.cs" />
+    <Compile Include="CurrencyVM.cs" />
+    <Compile Include="CustomerAdvanceVM.cs" />
+    <Compile Include="CustomerCreditLimitVM.cs" />
+    <Compile Include="CustomerGroupVM.cs" />
+    <Compile Include="CustomerVM.cs" />
+    <Compile Include="DeliveryPersonVM.cs" />
+    <Compile Include="EnumTypeVM.cs" />
+    <Compile Include="FiscalYearDetailForSaleVM.cs" />
+    <Compile Include="FiscalYearDetailVM.cs" />
+    <Compile Include="FiscalYearForSaleVM.cs" />
+    <Compile Include="FiscalYearVM.cs" />
+    <Compile Include="KendoCommon\AzFilter.cs" />
+    <Compile Include="KendoCommon\CommonConnection.cs" />
+    <Compile Include="KendoCommon\DatabaseType.cs" />
+    <Compile Include="KendoCommon\GenericListGenerator.cs" />
+    <Compile Include="KendoCommon\GridDataBuilder.cs" />
+    <Compile Include="KendoCommon\GridFilterCondition.cs" />
+    <Compile Include="KendoCommon\GridFilterHelper.cs" />
+    <Compile Include="KendoCommon\GridOptions.cs" />
+    <Compile Include="KendoCommon\KendoDataSource.cs" />
+    <Compile Include="KendoCommon\KendoGrid.cs" />
+    <Compile Include="KendoCommon\KendoGridDBLDAT.cs" />
+    <Compile Include="KendoCommon\ListConversion.cs" />
+    <Compile Include="KendoCommon\UtilityCommon.cs" />
+    <Compile Include="LocationVM.cs" />
+    <Compile Include="PaymentTypeVM.cs" />
+    <Compile Include="PeramModel.cs" />
+    <Compile Include="ProductBatchHistoryVM.cs" />
+    <Compile Include="ProductGroupVM.cs" />
+    <Compile Include="BranchProfile.cs" />
+    <Compile Include="ClaimNames.cs" />
+    <Compile Include="CommonModel.cs" />
+    <Compile Include="CompanyInfo.cs" />
+    <Compile Include="DbConfig.cs" />
+    <Compile Include="LoginResource.cs" />
+    <Compile Include="ProductVM.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchaseDetailVM.cs" />
+    <Compile Include="PurchaseOrderDetailVM.cs" />
+    <Compile Include="PurchaseOrderVM.cs" />
+    <Compile Include="PurchaseReturnDetailVM.cs" />
+    <Compile Include="PurchaseReturnVM.cs" />
+    <Compile Include="PurchaseVM.cs" />
+    <Compile Include="ResultModel.cs" />
+    <Compile Include="HeaderModel.cs" />
+    <Compile Include="ResultVM.cs" />
+    <Compile Include="RouteVM.cs" />
+    <Compile Include="SaleDeliveryVM.cs" />
+    <Compile Include="ProductDataVM.cs" />
+    <Compile Include="SaleDeliveryDetailVM.cs" />
+    <Compile Include="SaleDeliveryReturnDetailVM.cs" />
+    <Compile Include="SaleDeliveryReturnVM.cs" />
+    <Compile Include="SaleDetailVM.cs" />
+    <Compile Include="SaleOrderDetailVM.cs" />
+    <Compile Include="SaleOrderVM.cs" />
+    <Compile Include="SalePersonCampaignAchievementVM.cs" />
+    <Compile Include="SalePersonCampaignTargetVM.cs" />
+    <Compile Include="SalePersonMonthlyAchievementVM.cs" />
+    <Compile Include="SalePersonRouteVM.cs" />
+    <Compile Include="SalePersonVisitHistrieDetailVM.cs" />
+    <Compile Include="SalePersonYearlyTargetDetailVM.cs" />
+    <Compile Include="SalePersonYearlyTargetVM.cs" />
+    <Compile Include="SaleReturnDetailVM.cs" />
+    <Compile Include="SaleReturnVM.cs" />
+    <Compile Include="SalesPersonVM.cs" />
+    <Compile Include="SalePersonVisitHistrieVM.cs" />
+    <Compile Include="SaleVM.cs" />
+    <Compile Include="SettingsModel.cs" />
+    <Compile Include="SupplierGroupVM.cs" />
+    <Compile Include="SupplierVM.cs" />
+    <Compile Include="UOMConversationVM.cs" />
+    <Compile Include="UOMVM.cs" />
+    <Compile Include="SessionClass.cs" />
+    <Compile Include="ResultStatus.cs" />
+    <Compile Include="Status.cs" />
+    <Compile Include="UserMenuAccess.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+</Project>

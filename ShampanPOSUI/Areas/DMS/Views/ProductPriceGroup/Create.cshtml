@@ -1,0 +1,217 @@
+﻿@model ShampanPOS.Models.ProductPriceGroupVM
+@{
+    ViewBag.Title = "Product Price Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Product Price Group Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header p-2">
+
+        @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+        {
+            <button type="button" class="button btnsave sslUpdate">Update</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/ProductPriceGroup/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+        else
+        {
+
+            <button style="float:left;" class="button btnsave sslSave" type="button" id="">Save</button>
+
+            <button style="float: right;" type="button" title="Add New" data-url="/DMS/ProductPriceGroup/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+
+    </div>
+</div>
+
+<div class="container-fluid">
+
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title">Product Price Group Info</h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+
+                <div class="form-group row">
+
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Name)
+                        <div class="input-group ">
+                            @Html.TextAreaFor(model => model.Name, new { placeholder = "Enter Name", @class = "  form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+
+
+                    <div class="col-sm-3">
+                        @Html.LabelFor(model => model.EffectDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.EffectDate, new { @class = "form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+   
+                    <div class="col-sm-1">
+                        <div class="input-group">
+
+                            <button type="button" title="Generate Details" class="btn btn-primary btn-sm" style="margin-top: 26%;" id="btnPGD">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+        <div class="card card-secondary" id="productPriceGroupDetails" style="display: none;">
+            <div class="card-header" id="dtHeader">
+                <h3 class="card-title">Product Price Group Details</h3>
+            </div>
+        </div>
+
+
+
+    </form>
+
+
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/ProductPriceGroup/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/ProductPriceGroup/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+        </div>
+
+        <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/ProductPriceGroupController.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            //$('#EffectDate').data('daterangepicker').isInvalidDate = function () {
+            //    return true;
+            //};     
+
+            ProductPriceGroupController.init();
+
+        });
+
+    </script>
+
+
+}
+

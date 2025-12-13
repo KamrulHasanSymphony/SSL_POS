@@ -1,0 +1,273 @@
+﻿@model ShampanPOS.Models.SalePersonCampaignAchievementVM
+@{
+    ViewBag.Title = "Campaign Achievement Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Sale Person Campaign Achievement Data Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Sale Person Campaign Achievement Info</h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.BranchId)
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.StartDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.StartDate, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.EndDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.EndDate, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.SalePersonId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.SalePersonId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CampaignId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.CampaignId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CampaignTargetId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.CampaignTargetId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError3" class="text-danger" style="display:none;"></span>
+                    </div>
+
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.TotalTarget)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.TotalTarget, new { @class = " dFormat NumericCheck form-control form-control-sm" })
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.TotalSale)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.TotalSale, new { @class = " dFormat NumericCheck form-control form-control-sm" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.SelfSaleCommissionRate)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.SelfSaleCommissionRate, new { @class = " dFormat NumericCheck form-control form-control-sm" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.OtherSaleCommissionRate)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.OtherSaleCommissionRate, new { @class = " dFormat NumericCheck form-control form-control-sm" })
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+
+            @if (Model.IsPost)
+            {
+                <button type="button" class="button sslPush">Already Posted</button>
+
+                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SalePersonCampaignAchievement/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button type="button" class="button btnPost sslPost">Post</button>
+
+                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SalePersonCampaignAchievement/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SalePersonCampaignAchievement/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+
+        </div>
+        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Posted")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.PostedBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.PostedOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SalePersonCampaignAchievementController.js"></script>
+
+    @*<script>
+        $(document).ready(function () {
+            var SalePersonComboBox = $("#cmboSalePerson").kendoMultiColumnComboBox({
+                dataTextField: "Name",
+                dataValueField: "Id",
+                height: 400,
+                columns: [
+                    { field: "Code", title: "Code", width: 100 },
+                    { field: "Name", title: "Name", width: 150 },
+                    { field: "BanglaName", title: "BanglaName", width: 200 },
+                ],
+                filter: "contains",
+                filterFields: ["Code", "Name", "BanglaName"],
+                dataSource: {
+                    transport: {
+                        read: "/Common/Common/GetSalePersonList"
+                    }
+                },
+                placeholder: "Select Person",
+                value: "",
+                dataBound: function (e) {
+                    if (getSalePersonId) {
+                        this.value(parseInt(getSalePersonId));
+                    }
+                },
+                change: function (e) {
+
+                }
+            }).data("kendoMultiColumnComboBox");
+            SalePersonCampaignAchievementController.init();
+        });
+
+    </script>*@
+
+
+}
+

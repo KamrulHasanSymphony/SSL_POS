@@ -1,0 +1,143 @@
+﻿@model ShampanPOS.Models.SaleDeliveryReturnVM
+@{
+    ViewBag.Title = "Sale Delivery Return Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Sale Delivery Return List </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    @*<li class="breadcrumb-item"><a href="/DMS/SaleDeliveryReturn/Index">Index</a></li>
+                    <li class="breadcrumb-item active">Index</li>*@
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="accordion" id="filterAccordion">
+        <div class="card">
+
+            <div class="card-header p-2" id="filtersHeading">
+                <div class="card card-primary">
+                    <div class="card-header" id="responseTab">
+                        <h3 class="card-title" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">Filters</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div id="filtersCollapse" class="collapse" aria-labelledby="filtersHeading" data-bs-parent="#filterAccordion">
+                <div class="card-body p-2">
+
+                    @Html.HiddenFor(model => model.BranchId)
+                    @Html.HiddenFor(model => model.Id)
+
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            @Html.LabelFor(model => model.Branchs)
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.Branchs, new { @class = "KDropDown form-control form-control-sm", @placeholder = "Select Branch...", @validationmessage = "*" })
+                                @Html.ValidationMessageFor(model => model.Branchs)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-1">
+                            @Html.LabelFor(model => model.IsPosted)
+                            @Html.DropDownListFor(model => model.IsPosted, Enumerable.Empty<SelectListItem>(), new {@class = " form-control form-control-sm", @data_selected = Model.IsPosted })
+                            @Html.ValidationMessageFor(model => model.IsPosted)
+                        </div>
+
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.FromDate)
+                            <div class="input-group date">
+                                @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm dateRange" })
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.ToDate)
+                            <div class="input-group date">
+                                @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm dateRange" })
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2" style="margin-top: 26px;">
+                            <button type="button" id="indexSearch" class="btn btn-primary btn-sm">
+                                Search
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header p-2">
+            <button type="button" title="Add New" data-url="/DMS/SaleDeliveryReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+            <button type="button" title="Post data" id="btnPost" class="button sslPost"> Post </button>
+            <button type="button" title="" data-url="/DMS/SaleDeliveryReturn/FromSaleDelivery" onclick="GoTo(this)" class="button from">
+                From Sale Delivery
+            </button>
+
+
+            <button style="float:right;" type="button" title="Add New"
+                    data-url="/DMS/SaleDeliveryReturn/DetailsIndex" onclick="GoTo(this)"
+                    id="CreateGL" class="button NewButton btnDetails">
+                &nbsp; Details
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="card card-secondary">
+        <div class="card-header">
+            <h3 class="card-title">
+                List Of Data
+            </h3>
+        </div>
+        <div class="card-body">
+            <div id="GridDataList"></div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SaleDeliveryReturnController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            SaleDeliveryReturnController.init();
+        });
+
+    </script>
+
+
+}
+
+

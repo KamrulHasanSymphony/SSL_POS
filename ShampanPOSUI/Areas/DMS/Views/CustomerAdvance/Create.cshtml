@@ -1,0 +1,255 @@
+﻿@model ShampanPOS.Models.CustomerAdvanceVM
+@{
+    ViewBag.Title = "Customer Advance Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @Html.HiddenFor(model => model.CustomerName)
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Customer Advance Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                Customer Advance
+                <span style="font-size:initial;">
+                    <strong style="color:antiquewhite">
+                        : @(!string.IsNullOrEmpty(Model.CustomerName) && !string.IsNullOrEmpty(Model.CustomerCode) ? $"{Model.CustomerName} ({Model.CustomerCode})" : "Customer (Code)")
+                    </strong>
+                </span>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.IsIndex)
+                @Html.HiddenFor(model => model.CustomerId)
+                @Html.HiddenFor(model => model.BranchId)
+
+                <div class="form-group row">
+
+                    @*<div class="col-sm-2">
+                            @Html.LabelFor(model => model.CustomerId)
+                            <div class="input-group ">
+                                @Html.TextBoxFor(model => model.CustomerId, new { @class = "  form-control form-control-sm " })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CustomerId)
+                        </div>*@
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.AdvanceEntryDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.AdvanceEntryDate, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.AdvanceAmount)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.AdvanceAmount, new { placeholder = "Enter advance amount", @class = "dFormat form-control form-control-sm ", min=1 })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdvanceAmount)
+
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.PaymentEnumTypeId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.PaymentEnumTypeId, new { @class = "  form-control form-control-sm " })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.PaymentDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.PaymentDate, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DocumentNo)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.DocumentNo, new { @class = "  form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.DocumentNo)
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.BankName)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.BankName, new { @class = "  form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.BankName)
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.BankBranchName)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.BankBranchName, new { @class = "  form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.BankBranchName)
+                    </div>
+
+                    @*<div class="col-sm-2">
+                        @Html.LabelFor(model => model.ReceiveByDeliveryPersonId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.ReceiveByDeliveryPersonId, new { @class = "  form-control form-control-sm " })
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>*@
+
+                    @*<div class="col-sm-2">
+                        @Html.LabelFor(model => model.ReceiveByEnumTypeId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.ReceiveByEnumTypeId, new { @class = "  form-control form-control-sm " })
+                        </div>
+                        <span id="titleError3" class="text-danger" style="display:none;"></span>
+                    </div>*@
+
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/CustomerAdvance/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/CustomerAdvance/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+        </div>
+
+        <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Posted")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("Remarks")
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.PostedBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.PostedOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/CustomerAdvanceController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            CustomerAdvanceController.init();
+        });
+
+    </script>
+
+
+}
+

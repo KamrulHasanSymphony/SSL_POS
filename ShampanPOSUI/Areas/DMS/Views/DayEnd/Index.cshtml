@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Day End Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Sale Day End Process</h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Day End Process</h3>
+            </div>
+            <div class="card-body">
+
+             
+
+                <div class="form-group row">          
+
+                    <div class="col-md-4">
+                        <label for="txtDate">Date</label>
+                        <div class="input-group date">
+                            <input type="text" id="txtDate" name="txtDate" placeholder="Select Date" style="width:100%;">
+                        </div>
+                    </div>   
+                    <div class="col-md-2">
+                        <button type="button" id="prcsButton" class="btn btn-primary" style="margin-top:11%">
+                            <i class="fas fa-cog"></i>&nbsp;Process
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+    @*<div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">          
+                <div class="divSave">
+                    <button type="button" id="prcsButton" class="btn btn-primary">
+                        <i class="fas fa-cog"></i>&nbsp;Process
+                    </button>
+                </div>
+        </div>
+
+
+    </div>*@
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/DayEndController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            DayEndController.init();
+        });
+
+    </script>
+
+
+}
+
+

@@ -1,0 +1,210 @@
+﻿@model ShampanPOS.Models.SalePersonVisitHistrieVM
+@{
+    ViewBag.Title = "Visit Histrie Create Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .hidden-dropwodn .k-select {
+        display: none !important;
+    }
+
+    .hidden-dropwodn .k-input {
+        background-color: #e9ecef;
+        pointer-events: none;
+        width: 111%;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Sale Person Visit  History Edit </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+                @*<ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("Index", "SalePersonVisitHistrie", new { id = Model.SalePersonId })">Index</a>
+            </li>
+            <li class="breadcrumb-item active">Create</li>
+        </ol>*@
+            </div>
+            @*<div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/DMS/SalePersonVisitHistrie/Index">Index</a></li>
+                <li class="breadcrumb-item active">Index</li>
+            </ol>
+        </div>*@
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header p-2">
+
+        @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+        {
+            <button type="button" class="button btnsave sslUpdate">Update</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SalePersonVisitHistrie/Create?SalePersonId=@Model.SalePersonId&SalePersonName=@Model.SalePersonName" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+        else
+        {
+
+            <button style="float:left;" class="button btnsave sslSave" type="button" id="">Save</button>
+
+            <button style="float: right;" type="button" title="Add New" data-url="/DMS/SalePersonVisitHistrie/Create?SalePersonId=@Model.SalePersonId&SalePersonName=@Model.SalePersonName" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                @*<h3 class="card-title">SalePerson Visit  Info</h3>*@
+
+
+                <span style="font-size:initial;">
+                    <strong style="color:antiquewhite">
+                        @(!string.IsNullOrEmpty(Model.SalePersonName) ? Model.SalePersonName + "'s": "Name")  Visit  History Edit
+                    </strong>
+                </span>
+            </div>
+            <div class="card-body">
+                @Html.HiddenFor(model => model.Id)
+
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.IsIndex)
+                @Html.HiddenFor(model => model.BranchId)
+
+
+                <div class="form-group row">
+
+                    @*<div class="col-sm-2">
+                        @Html.LabelFor(model => model.BranchId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.BranchId, new { @readonly = "readonly", @class = "  ", @style = "width:100%" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.BranchId)
+                    </div>*@
+
+                    <div class="col-sm-2">
+                        <div class="hidden-dropwodn">
+                            @Html.LabelFor(model => model.SalePersonId)
+                            <div class="input-group ">
+                                @Html.TextBoxFor(model => model.SalePersonId, new { @readonly = "readonly", @class = "  form-control form-control-sm " })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.SalePersonId)
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div class="hidden-dropwodn">
+                            @Html.LabelFor(model => model.RouteId)
+                            <div class="input-group ">
+                                @Html.TextBoxFor(model => model.RouteId, new { @readonly = "readonly", @class = "  form-control form-control-sm " })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.RouteId)
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Date)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.Date, new { @readonly = "readonly", @class = "  form-control form-control-sm dateRange", @type = "text" })
+                           
+                        </div>
+                    </div>
+
+                    @*<div class="col-sm-1">
+                        <div class="input-group">
+                            <button type="button" title="Generate Details" class="btn btn-primary btn-sm" style="margin-top: 26%;" id="btnFDt">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card card-secondary">
+            @*<div class="card-header">
+                <h3 class="card-title">Fiscal Year Details</h3>
+            </div>*@
+            <div class="card-body">
+                <div id="fiscalYearDRows">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.SalePersonVisitHistrieDetails.FirstOrDefault().Code)
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.SalePersonVisitHistrieDetails.FirstOrDefault().Name)
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.SalePersonVisitHistrieDetails.FirstOrDefault().Address)
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.SalePersonVisitHistrieDetails.FirstOrDefault().IsVisited)
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.SalePersonVisitHistrieDetails.FirstOrDefault().SaleOrderCode)
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    @if (Model.SalePersonVisitHistrieDetails != null)
+                    {
+
+                        Html.RenderPartial("_period", Model.SalePersonVisitHistrieDetails);
+
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+
+  
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SalePersonVisitHistrieController.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#Date').data('daterangepicker').isInvalidDate = function () {
+                return true;
+            };
+           
+
+            SalePersonVisitHistrieController.init();
+
+        });
+
+    </script>
+
+
+}

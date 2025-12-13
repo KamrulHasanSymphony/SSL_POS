@@ -1,0 +1,66 @@
+﻿@model ShampanPOS.Models.CustomerPaymentCollectionVM
+@{
+    ViewBag.Title = "Customer Payment Collection Inquery";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Customer Payment Collection Inquery </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-2">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="/DMS/CustomerPaymentCollection/Index">Payment List</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="/DMS/CustomerPaymentCollection/TabIndex">Payment Inquery</a>
+        </li>
+
+    </ul>
+</div>
+
+
+<div class="container-fluid">
+    <div class="card card-secondary">
+        <div class="card-header">
+            <h3 class="card-title">
+                List Of Data
+            </h3>
+        </div>
+        <div class="card-body">
+            <div id="GridDataList"></div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/CustomerPaymentTab.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            CustomerPaymentTab.init();
+        });
+
+    </script>
+
+
+}
+
+

@@ -1,0 +1,564 @@
+﻿@model ShampanPOS.Models.CampaignVM
+@{
+    ViewBag.Title = "Campaign Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var serial = 1;
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<style>
+    .k-dropdown-wrap .k-input {
+        line-height: 1.6em !important;
+    }
+
+    .k-grid td {
+        user-select: text; /* Standard */
+        -webkit-user-select: text; /* Chrome, Safari */
+        -moz-user-select: text; /* Firefox */
+        -ms-user-select: text; /* IE10+ */
+    }
+</style>
+<script>
+    var enumName = '@Model.EnumName';
+</script>
+@Html.HiddenFor(model => model.EnumTypeId)
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0" id="campaignTitle"></h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header p-2">
+
+        @if (Model.IsPost)
+        {
+            <button type="button" class="button sslPush">Already Posted</button>
+            <button type="button" title="Preview"
+                    class="NewButton ReportPreview" style="height:37px;">
+                <i class="fa-solid fa-print"></i>
+                Preview
+            </button>
+        }
+        else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+        {
+            <button type="button" class="button btnsave sslUpdate">Update</button>
+
+            <button type="button" class="button btnPost sslPost">Post</button>
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/Campaign/Create?EnumName=@Model.EnumName&EnumTypeId=@Model.EnumTypeId" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+            <button type="button" title="Preview"
+                    class="NewButton ReportPreview" style="height:37px;">
+                <i class="fa-solid fa-print"></i>
+                Preview
+            </button>
+        }
+        else
+        {
+            <div style="display:none;" class="divUpdate">
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+                <button type="button" class="button btnPost sslPost">Post</button>
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/Campaign/Create?EnumName=@Model.EnumName&EnumTypeId=@Model.EnumTypeId" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            </div>
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
+            <div style="display:none;" class="divPost">
+                <button type="button" class="button sslPush">Already Posted</button>
+            </div>
+            <button style="float:right;" type="button" title="Preview"
+                    data-url="/DMS/Campaign/ReportPreview?Id=@Model.Id"
+                    onclick="window.open(this.getAttribute('data-url'), '_blank')"
+                    class="button NewButton ReportPreview">
+                Preview
+            </button>
+
+        }
+
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Campaign Info</h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.EnumTypeId)
+                @Html.HiddenFor(model => model.BranchId)
+                @Html.HiddenFor(model => model.IsPost)
+                @Html.HiddenFor(model => model.EnumName)
+
+                <div class="form-group row">
+                    <div class="col-sm-2 codeWidth">
+                        @Html.LabelFor(model => model.Code)
+                        <div style="display: flex; align-items: center;">
+                            <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Code Auto Generate", @class = " csCode form-control form-control-sm", @readonly = "readonly", @style = "width:140px;" }) &nbsp;
+                            <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Name)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Name, new { placeHolder = "Enter Name Here.", @class = "form-control form-control-sm" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Name)
+
+                    </div>
+
+
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CampaignStartDate)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.CampaignStartDate, new { @class = "form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CampaignEndDate)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.CampaignEndDate, new { @class = "form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="col-sm-2">
+                            @Html.LabelFor(model => model.EnumName)
+                            <div class="input-group ">
+                                @Html.TextBoxFor(model => model.EnumName, new { @class = "  form-control form-control-sm  ", @readonly = "readonly" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.EnumName)
+                        </div>*@
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CampaignEntryDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.CampaignEntryDate, new { @class = "form-control form-control-sm dateRange" })
+                        </div>
+                        <small class="text-muted">This date cannot be changed.</small>
+                    </div>
+
+                    <div class="col-sm-1">
+                        @Html.LabelFor(model => model.IsActive)
+                        <div class="Onoffbtn">
+                            <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                <input id="IsActive"
+                                       value="@Model.IsActive"
+                                       type="checkbox"
+                                       name="my-checkbox"
+                                       @(Model.IsActive ? "checked" : "")
+                                       data-bootstrap-switch
+                                       data-off-color="danger"
+                                       data-on-color="success"
+                                       data-on-text="ON"
+                                       data-off-text="OFF">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        @Html.LabelFor(model => model.Description)
+                        <textarea id="Description" name="Description">
+                            @Html.Raw(Model.Description)
+                        </textarea>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        @if (Model.EnumName == "CampaignByProductQuantity")
+        {
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title"> Details </h3>
+                </div>
+                <div class="card-body">
+
+                    <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+
+                    <div class="clearfix">&nbsp;</div>
+
+                    <div style="overflow-x: auto; white-space: nowrap;">
+                        <table class="table table-bordered table-striped table-sm" id="details">
+                            <thead>
+                                <tr>
+                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width: 25%;" data-name="CustomerName"> Customer Name </th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="CustomerId"> CustomerId </th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width: 25%; " data-name="ProductName"> Product Name </th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
+                                    <th data-type="decimal" style="width: 8%;" data-required="true" data-name="FromQuantity"> Purchase Quantity </th>
+
+                                    <th data-type="text" data-search="true" data-required="true" style="width: 25%; " data-name="FreeProductName"> Free Product Name </th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="FreeProductId"> FreeProductId </th>
+                                    <th data-type="decimal" style="width: 8%;" data-required="true" data-name="FreeQuantity"> Free Quantity </th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="lst">
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.campaignDetailByQuantity)
+                                    {
+                                        <tr>
+                                            <td> @serial </td>
+                                            <td> @item.CustomerName </td>
+                                            <td hidden> @item.CustomerId </td>
+                                            <td> @item.ProductName </td>
+                                            <td hidden> @item.ProductId </td>
+                                            <td class=" dFormat "> @item.FromQuantity</td>
+                                            <td> @item.FreeProductName </td>
+                                            <td hidden> @item.FreeProductId </td>
+
+                                            <td class=" dFormat "> @item.FreeQuantity</td>
+
+                                            <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
+                                        </tr>
+
+                                        { serial++; }
+                                    }
+                                }
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+        else if (Model.EnumName == "CampaignByProductValue")
+        {
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title"> Details </h3>
+                </div>
+                <div class="card-body">
+
+                    <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+
+                    <div class="clearfix">&nbsp;</div>
+
+                    <div style="overflow-x: auto; white-space: nowrap;">
+                        <table class="tblCPV table table-bordered table-striped table-sm" id="details">
+                            <thead>
+                                <tr>
+                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width: 30%;" data-name="CustomerName"> Customer Name </th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="CustomerId"> CustomerId </th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width: 30%; " data-name="ProductName"> Product Name </th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
+                                    <th data-type="decimal" style="width: 10%;" data-required="true" data-name="FromQuantity"> FromQuantity </th>
+                                    <th data-type="decimal" style="width: 10%;" data-required="true" data-name="ToQuantity"> ToQuantity </th>
+                                    <th data-type="decimal" style="width: 10%;" data-required="true" data-name="DiscountRateBasedOnUnitPrice"> Discount Rate (%) </th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="lst">
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.campaignDetailByProductValue)
+                                    {
+                                        <tr>
+                                            <td> @serial </td>
+                                            <td> @item.CustomerName </td>
+                                            <td hidden> @item.CustomerId </td>
+                                            <td> @item.ProductName </td>
+                                            <td hidden> @item.ProductId </td>
+                                            <td class=" dFormat "> @item.FromQuantity</td>
+                                            <td class=" dFormat "> @item.ToQuantity</td>
+                                            <td class=" dFormat "> @item.DiscountRateBasedOnUnitPrice</td>
+
+                                            <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
+                                        </tr>
+
+                                        { serial++; }
+                                    }
+                                }
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+
+        else if (Model.EnumName == "CampaignByProductTotalValue")
+        {
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title"> Details </h3>
+                </div>
+                <div class="card-body">
+
+                    <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+
+                    <div class="clearfix">&nbsp;</div>
+
+                    <div style="overflow-x: auto; white-space: nowrap;">
+                        <table class="tblCIV table table-bordered table-striped table-sm" id="details">
+                            <thead>
+                                <tr>
+                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width: 30%;" data-name="CustomerName"> Customer Name </th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="CustomerId"> CustomerId </th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width: 30%; " data-name="ProductName"> Product Name </th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
+                                    <th data-type="decimal" style="width: 10%;" data-required="true" data-name="FromAmount"> From Amount </th>
+                                    <th data-type="decimal" style="width: 10%;" data-required="true" data-name="ToAmount"> To Amount </th>
+                                    <th data-type="decimal" style="width: 10%;" data-required="true" data-name="DiscountRateBasedOnTotalPrice"> Discount Rate (%) </th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="lst">
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.campaignDetailByProductTotalValue)
+                                    {
+                                        <tr>
+                                            <td> @serial </td>
+                                            <td> @item.CustomerName </td>
+                                            <td hidden> @item.CustomerId </td>
+                                            <td> @item.ProductName </td>
+                                            <td hidden> @item.ProductId </td>
+                                            <td class=" dFormat "> @item.FromAmount</td>
+                                            <td class=" dFormat "> @item.ToAmount</td>
+                                            <td class=" dFormat "> @item.DiscountRateBasedOnTotalPrice</td>
+
+                                            <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
+                                        </tr>
+
+                                        { serial++; }
+                                    }
+                                }
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+
+        else if (Model.EnumName == "CampaignByInvoiceValue")
+        {
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title"> Details </h3>
+                </div>
+                <div class="card-body">
+
+                    <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+
+                    <div class="clearfix">&nbsp;</div>
+
+                    <div style="overflow-x: auto; white-space: nowrap;">
+                        <table class="tblCIV table table-bordered table-striped table-sm" id="details">
+                            <thead>
+                                <tr>
+                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width: 35%;" data-name="CustomerName"> Customer Name </th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="CustomerId"> CustomerId </th>
+
+                                    <th data-type="decimal" style="width: 20%;" data-required="true" data-name="FromAmount"> From Amount </th>
+                                    <th data-type="decimal" style="width: 20%;" data-required="true" data-name="ToAmount"> To Amount </th>
+                                    <th data-type="decimal" style="width: 20%;" data-required="true" data-name="DiscountRateBasedOnTotalPrice"> Discount Rate (%) </th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="lst">
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.campaignDetailByInvoiceValue)
+                                    {
+                                        <tr>
+                                            <td> @serial </td>
+                                            <td> @item.CustomerName </td>
+                                            <td hidden> @item.CustomerId </td>
+
+                                            <td class=" dFormat "> @item.FromAmount</td>
+                                            <td class=" dFormat "> @item.ToAmount</td>
+                                            <td class=" dFormat "> @item.DiscountRateBasedOnTotalPrice</td>
+
+                                            <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
+                                        </tr>
+
+                                        { serial++; }
+                                    }
+                                }
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+
+
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+
+            @if (Model.IsPost)
+            {
+                <button type="button" class="button sslPush">Already Posted</button>
+            }
+            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button type="button" class="button btnPost sslPost">Post</button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                </div>
+                <div style="display:none;" class="divPost">
+                    <button type="button" class="button sslPush">Already Posted</button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+
+        </div>
+        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Posted")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.PostedBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.PostedOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/CampaignController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#CampaignEntryDate').data('daterangepicker').isInvalidDate = function () {
+                return true;
+            };
+            CampaignController.init();
+        });
+
+    </script>
+
+
+}
+

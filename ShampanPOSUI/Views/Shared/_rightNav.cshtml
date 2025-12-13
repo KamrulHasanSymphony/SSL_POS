@@ -1,0 +1,214 @@
+﻿@using System.Security.Claims;
+ @using ShampanPOS.Models
+
+@{
+
+
+
+    var currentBranchName = Session["CurrentBranchName"] != null ? Session["CurrentBranchName"].ToString() : "";
+    var UserId = Session["UserId"] != null ? Session["UserId"].ToString() : "";
+    var userImage = Session["UserImage"] != null ? Session["UserImage"].ToString() : "";
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <style>
+                .RboxScroll {
+                    position: fixed;
+                    top: -125px;
+                }
+
+                /*        .rnavmain {
+            top: -125px;
+            transition: 0.5s;
+            z-index: 9999;
+            right: 320px;
+            position: fixed;
+        }
+
+        .rnav {
+            position: absolute;
+            -webkit-box-shadow: 1px 1px 12px 0px rgba(50, 50, 50, 0.88);
+            -moz-box-shadow: 1px 1px 12px 0px rgba(50, 50, 50, 0.88);
+            box-shadow: 1px 1px 12px 0px rgba(50, 50, 50, 0.88);
+            border-radius: 0px 0px 5px 5px;
+            height: 120px;
+            width: 300px;
+            text-align: center;
+            background-color: #ffd800;
+        }
+
+        .Rbox {
+            position: absolute;
+            background-color: #FE5621;
+            border-radius: 0px 0px 22px 22px;
+            height: 40px;
+            width: 40px;
+            left: 250px;
+            top: 120px;
+            text-align: center;
+        }
+
+        .RboxScroll {
+            top: -120px;
+            transition: 0.5s;
+            right: 320px;
+            position: fixed;
+        }
+        */
+                .intop {
+                    top: 0px;
+                    transition: 0.5s;
+                }
+
+                .user-panel {
+                    text-align: left;
+                }
+
+                .image {
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+
+                .rnav div {
+                    text-align: left;
+                }
+
+                .custom-label {
+                    padding-left: 20px;
+                    display: block;
+                    width: 100%;
+                }
+
+                .adminProfi {
+                    right: 14px;
+                    position: fixed;
+                    top: 9px;
+                    z-index: 9999;
+                    cursor: pointer;
+                    padding: 0 10px;
+                }
+
+                .rnav {
+                    position: absolute;
+                    top: calc(100% + 17px);
+                    min-width: 250px;
+                    min-height: 100px;
+                    background: #fff;
+                    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+                    opacity: 0;
+                    transform: translateY(-10px);
+                    visibility: hidden;
+                    transition: 300ms;
+                    right: 0;
+                    padding: 6px;
+                }
+
+                    .rnav.active {
+                        opacity: 1;
+                        transform: translateY(0);
+                        visibility: visible;
+                    }
+
+                    .rnav::before {
+                        content: "";
+                        position: absolute;
+                        top: -10px;
+                        right: 14px;
+                        width: 20px;
+                        height: 20px;
+                        background: #fff;
+                        transform: rotate(45deg);
+                        z-index: -1;
+                    }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="adminProfi">
+        <div class="rnavmain">
+            <div class="user-panel d-flex">
+                @*<div class="image">
+            <img src="~/Content/AdminLte/dist/img/avatar.png" class="img-circle elevation-2" alt="User Image">
+        </div>*@
+                <div class="image">
+                    <img src="@(string.IsNullOrEmpty(userImage)
+                        ? Url.Content("~/Content/AdminLte/dist/img/avatar.png")
+                        : Url.Content(userImage))"
+                         class="img-circle elevation-2" alt="User Image" />
+                </div>
+            </div>
+        </div>
+        <div id="Rnav" class="rnav">
+
+            <div style="font-size:15px; text-align: left; margin-top: 10px;">
+
+                <div class="col-md-12">
+                    <label class="custom-label">
+                        <a href="#" class="d-block">
+                            <b>User : </b>  @UserId
+                        </a>
+                    </label>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="custom-label">
+                        <b style="color: darkcyan;">
+                            Branch Name : @currentBranchName
+                        </b>
+                        <br />
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="Rbox">
+                <div class="LogoutButton" style="margin-left: 21px;">
+                    <a title="User Logout" href="/Login/LogOff" style="text-align:center">
+                        <img src="~/Content/css/ButtonsIcons/exit.png" alt="Logout" />
+                        <span>
+                            Logout
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        $(function () {
+            var rnav = document.getElementById('rnav');
+            var ssm = document.getElementById('scroll-side-menu');
+            //$(window).scroll(function () {
+            //    if ($(this).scrollTop() > 0) {
+            //        $(".rnavmain").addClass('RboxScroll');
+            //    }
+            //    else {
+            //        $(".rnavmain").removeClass('RboxScroll');
+            //    }
+            //});
+            //$(".rnavmain").hover(function () {
+            //    $(".rnavmain").toggleClass("intop");
+            //});
+            $(".rnavmain").click(function (e) {
+                e.stopPropagation();
+                $(".rnav").toggleClass("active");
+            });
+
+            // Hide on click anywhere else
+            $(document).click(function () {
+                $(".rnav").removeClass("active");
+            });
+        });
+    </script>
+
+</body>
+</html>

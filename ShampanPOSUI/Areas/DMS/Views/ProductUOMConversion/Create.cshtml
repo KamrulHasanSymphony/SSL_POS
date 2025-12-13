@@ -1,0 +1,186 @@
+﻿@model ShampanPOS.Models.ProductUOMFactorsVM
+
+
+@{
+    ViewBag.Title = "Product Batch History Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @Html.HiddenFor(model => model.ProductName)
+}
+
+
+<style>
+    .k-dropdown-wrap .k-input {
+        line-height: 1.6em !important;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Purchase Price History List </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+
+                Product Info
+                <span style="font-size:initial;">
+                    <strong style="color:antiquewhite">
+                        : @(!string.IsNullOrEmpty(Model.ProductName) && !string.IsNullOrEmpty(Model.ProductCode) ? $"{Model.ProductName} ({Model.ProductCode})" : "Product (Code)")
+                    </strong>
+                </span>
+            </div>
+
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.ProductId)
+                @Html.HiddenFor(model => model.BranchId)
+
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Name)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Name", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Packsize)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Packsize, new { placeholder = "Enter Packsize Name", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.ConversationFactor)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.ConversationFactor, new { @class = " dFormat NumericCheck form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ConversationFactor)
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+
+            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/ProductUOMConversion/Create?ProductId=@Model.ProductId" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/ProductUOMConversion/Create?ProductId=@Model.ProductId" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+
+        </div>
+        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("Remarks")
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/ProductUOMConversionController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            ProductUOMConversionController.init();
+        });
+
+    </script>
+
+
+}
+

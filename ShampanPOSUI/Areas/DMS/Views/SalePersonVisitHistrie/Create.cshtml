@@ -1,0 +1,172 @@
+﻿@model ShampanPOS.Models.SalePersonVisitHistrieVM
+@{
+    ViewBag.Title = "Visit Histrie Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var serial = 1;
+}
+@Html.HiddenFor(model => model.SalePersonName)
+<style>
+    .k-dropdown-wrap .k-input {
+        line-height: 1.6em !important;
+    }
+
+    #SalePersonInputArea .k-select {
+        display: none !important;
+    }
+
+    #SalePersonInputArea .k-input {
+        background-color: #e9ecef;
+        pointer-events: none;
+        width: 111%;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Sale Person Visit  Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+            @*<div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/DMS/SalePersonVisitHistrie/Index">Index</a></li>
+                        <li class="breadcrumb-item active">Index</li>
+                    </ol>
+                </div>*@
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header p-2">
+
+       
+            <div style="display:none;" class="divUpdate">
+                @*<button type="button" class="button btnsave sslUpdate">Update</button>*@
+                <button type="button" title="Add New" data-url="/DMS/SalePersonVisitHistrie/Create?SalePersonId=@Model.SalePersonId&SalePersonName=@Model.SalePersonName" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+            </div>
+       
+
+
+            <div class="divSave">
+                <button style="float:left;" class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
+
+
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                @*<h3 class="card-title">SalePerson Visit Histrie Info </h3>*@
+
+
+                <span style="font-size:initial;">
+                    <strong style="color:antiquewhite">
+                        @(!string.IsNullOrEmpty(Model.SalePersonName) ? Model.SalePersonName + "'s": "Name")  Visit  Entry
+                    </strong>
+                </span>
+            </div>
+            <div class="card-body">
+                @Html.HiddenFor(model => model.Id)
+
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.IsIndex)
+                @Html.HiddenFor(model => model.BranchId)
+                @Html.HiddenFor(model => model.SalePersonName)
+
+
+                <div class="form-group row">
+
+                    @*<div class="col-sm-2">
+                            @Html.LabelFor(model => model.BranchId)
+                            <div class="input-group ">
+                                @Html.TextBoxFor(model => model.BranchId, new { @readonly = "readonly", @class = "  ", @style = "width:100%" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.BranchId)
+                        </div>*@
+
+
+                    <div class="col-sm-2">
+                        <div id="SalePersonInputArea">
+                            @Html.LabelFor(model => model.SalePersonId)
+                            <div class="input-group ">
+                                @Html.TextBoxFor(model => model.SalePersonId, new
+                                {
+                                    @readonly = "readonly",
+                                    @class = "  form-control form-control-sm "
+                           })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.SalePersonId)
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.RouteId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.RouteId, new { @class = "  form-control form-control-sm ", id = "RouteId" })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Date)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.Date, new { @readonly = "readonly", @class = "  form-control form-control-sm  " })
+                            @*<div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>*@
+                        </div>
+                    </div>
+
+                    @*<div class="col-sm-1">
+                            <div class="input-group">
+                                <button type="button" title="Generate Details" class="btn btn-primary btn-sm" style="margin-top: 26%;" id="btnFDt">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </button>
+
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card card-secondary" id="SalePersonVisitDetails" style="display: none;">
+            <div class="card-header" id="dtHeader">
+                <h3 class="card-title">Sale Person Visit histrie Details</h3>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SalePersonVisitHistrieController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            SalePersonVisitHistrieController.init();
+        });
+
+    </script>
+
+
+}
+

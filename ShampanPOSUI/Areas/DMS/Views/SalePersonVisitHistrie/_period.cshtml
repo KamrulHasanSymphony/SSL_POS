@@ -1,0 +1,90 @@
+﻿@model List<ShampanPOS.Models.SalePersonVisitHistrieDetailVM>
+
+@{
+    Layout = null;
+}
+
+@foreach (var item in Model)
+{
+    <div class="card-body" style="padding-left: 0">
+        <div class="row period-row fiscalYearRow">
+            @Html.HiddenFor(model => item.Id)
+            @Html.HiddenFor(model => item.SalePersonVisitHistroyId)
+
+            @*<div class="col-sm-2">
+
+            <div class="input-group ">
+                @Html.TextBoxFor(model => item.CustomerId, new { @class = "  form-control form-control-sm " })
+            </div>
+            @Html.ValidationMessageFor(model => item.CustomerId)
+        </div>*@
+            <div class="col-sm-2">
+
+                <div class="input-group ">
+                    @Html.TextBoxFor(model => item.Code, new { @class = "  form-control form-control-sm " })
+                </div>
+                @Html.ValidationMessageFor(model => item.Code)
+            </div>
+            <div class="col-sm-2">
+
+                <div class="input-group ">
+                    @Html.TextBoxFor(model => item.Name, new { @class = "  form-control form-control-sm " })
+                </div>
+                @Html.ValidationMessageFor(model => item.Name)
+            </div>
+            <div class="col-sm-2">
+
+                <div class="input-group ">
+                    @Html.TextBoxFor(model => item.Address, new { @class = "  form-control form-control-sm " })
+                </div>
+                @Html.ValidationMessageFor(model => item.Address)
+            </div>
+            @*<div class="col-md-1">
+            <div class="editor-field">
+                <div class="form-check ">
+                    @Html.CheckBoxFor(model => item.IsVisited, new { @class = " PeriodLock form-check-input", })
+                </div>
+
+            </div>
+        </div>*@
+
+            <!--<div class="col-md-1">
+    <div class="editor-field">
+        <div class="form-check" @item.IsVisited?>-->
+            <!-- Adding data-id for row identification -->
+            <!--@Html.CheckBoxFor(model => item.IsVisited, new { @class = " PeriodLock form-check-input", data_id = item.RowId })
+            </div>
+        </div>
+    </div>-->
+
+            <div class="col-md-1">
+                <div class="editor-field">
+                    <div class="form-check">
+                        <!-- Adding data-id for row identification -->
+                        @Html.CheckBoxFor(model => item.IsVisited, new
+                        {
+                            @class = "PeriodLock form-check-input",
+                            data_id = item.RowId,
+                            // Disable if IsVisited is true
+
+                        })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <a href="@Url.Action("Edit", "SaleOrder", new { id = item.SaleOrderId })" class="form-control form-control-sm">
+                        @item.SaleOrderCode
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

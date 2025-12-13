@@ -1,0 +1,60 @@
+﻿@model List<ShampanPOS.Models.SalePersonYearlyTargetDetailVM>
+
+@{
+    Layout = null;
+}
+
+@foreach (var item in Model)
+{
+    <div class="row period-row fiscalYearRow" style="margin-bottom: 15px;">
+        @Html.HiddenFor(model => item.Id)
+        @Html.HiddenFor(model => item.SalePersonYearlyTargetId)
+        @Html.HiddenFor(model => item.SalePersonId)
+
+        <div class="col-sm-2">
+            <div class="input-group">
+                @Html.TextBoxFor(model => item.MonthName, new { @class = "form-control form-control-sm", @disabled = "disabled" })
+            </div>
+            @Html.ValidationMessageFor(model => item.MonthName)
+        </div>
+
+        <div class="col-sm-2">
+            <div class="input-group">
+                @Html.TextBoxFor(model => item.MonthStart, new { @class = "form-control form-control-sm", @disabled = "disabled" })
+            </div>
+            @Html.ValidationMessageFor(model => item.MonthStart)
+        </div>
+
+        <div class="col-sm-2">
+            <div class="input-group">
+                @Html.TextBoxFor(model => item.MonthEnd, new { @class = "form-control form-control-sm", @disabled = "disabled" })
+            </div>
+            @Html.ValidationMessageFor(model => item.MonthEnd)
+        </div>
+
+        <div class="col-sm-2">
+            <div class="input-group">
+                @Html.TextBoxFor(model => item.MonthlyTarget, new { @class = "item_MonthlyTarget form-control form-control-sm" })
+            </div>
+            @Html.ValidationMessageFor(model => item.MonthlyTarget)
+        </div>
+
+        <div class="col-sm-2">
+            <div class="input-group">
+                @Html.TextBoxFor(model => item.SelfSaleCommissionRate, new { @class = "item_SelfSaleCommissionRate form-control form-control-sm" })
+            </div>
+            @Html.ValidationMessageFor(model => item.SelfSaleCommissionRate)
+        </div>
+
+        <div class="col-sm-2">
+            <div class="input-group">
+                @Html.TextBoxFor(model => item.OtherSaleCommissionRate, new { @class = "item_OtherSaleCommissionRate form-control form-control-sm" })
+            </div>
+            @Html.ValidationMessageFor(model => item.OtherSaleCommissionRate)
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

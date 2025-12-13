@@ -1,0 +1,193 @@
+﻿@model ShampanDms.Models.MISReportVM
+@{
+    ViewBag.Title = "CreatePartial";
+}
+
+
+
+<div class="container-fluid border-0 p-0 m-0">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                    <h3 class="card-title"> Sale Delevery Info </h3>
+                </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-9">
+                        @Html.LabelFor(model => model.CustomerId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.CustomerId, new { @class = "clsCustomer", @style = "width: 100%;" })
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>
+                 
+                    <div class="col-sm-4">
+                        @Html.LabelFor(model => model.DateFrom)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.DateFrom, new { @class = "form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                 
+                    <div class="col-sm-4">
+                        @Html.LabelFor(model => model.DateTo)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.DateTo, new { @class = "form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-9">
+                        @Html.LabelFor(model => model.BranchId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.BranchId, new { @class = "clsBranchId", @style = "width: 100%;" })
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                </div>
+          
+                <div class="row">
+               
+                    <div class="card-body">
+                        <div class="form-check form-check-inline">
+                            @Html.CheckBoxFor(model => model.IsDetail, new { @class = "form-check-input", id = "IsDetail" })
+                            <label class="form-check-label" for="IsDetail">
+                                Details
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.CheckBoxFor(model => model.IsSummary, new { @class = "form-check-input", id = "IsSummary" })
+                            <label class="form-check-label" for="IsDetail">
+                                Summary
+                            </label>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-sm-1 mt-3">
+                        <button type="button" id="ReportGenerate" class="btn btn-primary w-100">Report</button>
+                    </div>
+                    @*<div class="col-sm-1 mt-3">
+                <button type="button" id="ReportGenerateSummary" class="btn btn-secondary w-100">Summary</button>
+            </div>*@
+                </div>
+            </div>
+            </div>
+    </form>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        var getCustomerId = $("#CustomerId").val() || 0;
+        GetCustomerComboBox()
+        GetBranchList()
+
+        $("#ReportGenerate").on("click", function () {
+
+            var dateFrom = $("#DateFrom").val();
+            var dateTo = $("#DateTo").val();
+
+            if (!dateFrom) {
+                /*     alert("Please select 'Date From");*/
+                ShowNotification(3, "Please select 'Date From");
+                return;
+            }
+            if ( !dateTo) {
+                ShowNotification(3, "Please select 'Date To");
+                return;
+            }
+            var params = {
+                CustomerId: $("#CustomerId").val(),
+                DateTo: $("#DateTo").val(),
+                DateFrom: $("#DateFrom").val()
+            };
+            var query = $.param(params);
+            var url = '/DMS/MISReport/SaleDeleveryReportPreview?' + query;
+            window.open(url, "_blank");
+        });
+
+        //$("#ReportGenerateSummary").on("click", function () {
+        //    var params = {
+        //        CustomerId: $("#CustomerId").val(),
+        //        DateTo: $("#DateTo").val(),
+        //        DateFrom: $("#DateFrom").val()
+        //    };
+        //    var query = $.param(params);
+        //    var url = '/DMS/MISReport/ExportSaleAndPaymentSummary?' + query;
+        //    window.open(url, "_blank");
+        //});
+
+        function GetCustomerComboBox() {
+            var CustomerComboBox = $(".clsCustomer").kendoMultiColumnComboBox({
+                dataTextField: "Name",
+                dataValueField: "Id",
+                height: 400,
+                columns: [
+
+                    { field: "Code", title: "Code", width: 100 },
+                    { field: "Name", title: "Name", width: 100 },
+                    { field: "Address", title: "Address", width: 150 },
+                    { field: "Email", title: "Email", width: 150 },
+                    { field: "City", title: "City", width: 150 }
+
+                ],
+                filter: "contains",
+                filterFields: ["Code", "Name", "Address", "Email", "City"],
+                dataSource: {
+                    transport: {
+                        read: "/Common/Common/GetCustomerList"
+                    }
+                },
+                placeholder: "Select Customer", // Set the placeholder
+                value: "",
+                dataBound: function (e) {
+
+                    if (getCustomerId) {
+                        this.value(parseInt(getCustomerId));
+                    }
+                }
+            }).data("kendoMultiColumnComboBox");
+        }
+
+
+        function GetBranchList() {
+            var branch = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetBranchList?value=",
+                        dataType: "json",
+                        success: function (data) {
+
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Id === 0 && data[i].Code === 'N/A') {
+                                    data[i].Id = '';
+                                    data[i].Name = 'All';
+                                }
+                            }
+                            branch.data(data);
+                        }
+                    }
+                }
+            });
+
+            $(".clsBranchId").kendoComboBox({
+                dataTextField: "Name",
+                dataValueField: "Id",
+                dataSource: branch,
+                filter: "contains",
+                suggest: true
+            });
+        };
+    });
+
+</script>
+
+
