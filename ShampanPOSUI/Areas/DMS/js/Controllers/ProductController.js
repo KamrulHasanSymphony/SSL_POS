@@ -562,7 +562,7 @@
                 },
                 {
                     title: "Action",
-                    width: 200,
+                    width: 80,
                     template: function (dataItem) {
                         
                         return `
@@ -570,19 +570,7 @@
                         <i class="fas fa-pencil-alt"></i>
                     </a>
 
-                    <a href="/DMS/ProductBatchHistory/Index/${dataItem.Id}?Name=${encodeURIComponent(dataItem.Name)}&Code=${encodeURIComponent(dataItem.Code)}"
-   class="btn btn-success btn-sm mr-2" 
-   title="Sales Price History">
-   <i class="fas fa-th-list"></i>
-</a>
-
-                    <a href="/DMS/ProductPurchasePriceBatchHistorie/Index/${dataItem.Id}?Name=${encodeURIComponent(dataItem.Name)}&Code=${encodeURIComponent(dataItem.Code)}" class="btn bg-info btn-sm mr-2" title="Purchase Price History">
-                <i class="fas fa-th-list"></i>
-            </a>
-
-                    <a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-                        <i class='fas fa-print'></i>
-                    </a> `;
+ `;
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },

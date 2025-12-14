@@ -183,6 +183,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
            return Json(result);  // Return the result to the front-end
         }
+
+
         [HttpGet]
         public ActionResult Edit(string id)
         {
@@ -215,6 +217,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+
         public ActionResult NextPrevious(int id, string status)
         {
             _commonRepo = new CommonRepo();
@@ -246,110 +250,112 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 return RedirectToAction("Index");
             }
         }
-        [HttpPost]
-        public ActionResult Delete(CustomerVM vm)
-        {
-            ResultModel<CustomerVM> result = new ResultModel<CustomerVM>();
 
-            try
-            {
-                _repo = new CustomerRepo();
-                CommonVM param = new CommonVM();
 
-                param.IDs = vm.IDs;
-                param.ModifyBy = Session["UserId"].ToString();
-                param.ModifyFrom = Ordinary.GetLocalIpAddress();
+        //[HttpPost]
+        //public ActionResult Delete(CustomerVM vm)
+        //{
+        //    ResultModel<CustomerVM> result = new ResultModel<CustomerVM>();
 
-                ResultVM resultData = _repo.Delete(param);
+        //    try
+        //    {
+        //        _repo = new CustomerRepo();
+        //        CommonVM param = new CommonVM();
 
-                Session["result"] = resultData.Status + "~" + resultData.Message;
+        //        param.IDs = vm.IDs;
+        //        param.ModifyBy = Session["UserId"].ToString();
+        //        param.ModifyFrom = Ordinary.GetLocalIpAddress();
 
-                result = new ResultModel<CustomerVM>()
-                {
-                    Success = true,
-                    Status = Status.Success,
-                    Message = resultData.Message,
-                    Data = null
-                };
+        //        ResultVM resultData = _repo.Delete(param);
 
-                return Json(result);
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return RedirectToAction("Index");
-            }
-        }
-        [HttpPost]
-        public JsonResult GetGridData(GridOptions options)
-        {
-            ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
-            _repo = new CustomerRepo();
+        //        Session["result"] = resultData.Status + "~" + resultData.Message;
 
-            try
-            {
-                CustomerVM vm = new CustomerVM();
-                var branchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-                vm.BranchId = int.Parse(branchId);
-                options.vm.BranchId = branchId == "0" ? "" : branchId;
-                result = _repo.GetGridData(options);
+        //        result = new ResultModel<CustomerVM>()
+        //        {
+        //            Success = true,
+        //            Status = Status.Success,
+        //            Message = resultData.Message,
+        //            Data = null
+        //        };
 
-                if (result.Status == "Success" && result.DataVM != null)
-                {
-                    var gridData = JsonConvert.DeserializeObject<GridEntity<CustomerVM>>(result.DataVM.ToString());
+        //        return Json(result);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return RedirectToAction("Index");
+        //    }
+        //}
+        //[HttpPost]
+        //public JsonResult GetGridData(GridOptions options)
+        //{
+        //    ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+        //    _repo = new CustomerRepo();
 
-                    return Json(new
-                    {
-                        Items = gridData.Items,
-                        TotalCount = gridData.TotalCount
-                    }, JsonRequestBehavior.AllowGet);
-                }
+        //    try
+        //    {
+        //        CustomerVM vm = new CustomerVM();
+        //        var branchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+        //        vm.BranchId = int.Parse(branchId);
+        //        options.vm.BranchId = branchId == "0" ? "" : branchId;
+        //        result = _repo.GetGridData(options);
 
-                return Json(new { Error = true, Message = "No data found." }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
-        [HttpPost]
-        public async Task<ActionResult> ReportPreview(CommonVM param)
-        {
-            try
-            {
-                _repo = new CustomerRepo();
-                param.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
-                var resultStream = _repo.ReportPreview(param);
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            var gridData = JsonConvert.DeserializeObject<GridEntity<CustomerVM>>(result.DataVM.ToString());
 
-                if (resultStream == null)
-                {
-                    throw new Exception("Failed to generate report: No data received.");
-                }
+        //            return Json(new
+        //            {
+        //                Items = gridData.Items,
+        //                TotalCount = gridData.TotalCount
+        //            }, JsonRequestBehavior.AllowGet);
+        //        }
 
-                using (var memoryStream = new MemoryStream())
-                {
-                    await resultStream.CopyToAsync(memoryStream);
-                    byte[] fileBytes = memoryStream.ToArray();
+        //        return Json(new { Error = true, Message = "No data found." }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+        //[HttpPost]
+        //public async Task<ActionResult> ReportPreview(CommonVM param)
+        //{
+        //    try
+        //    {
+        //        _repo = new CustomerRepo();
+        //        param.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
+        //        var resultStream = _repo.ReportPreview(param);
 
-                    if (fileBytes.Length < 1000)
-                    {
-                        string errorContent = Encoding.UTF8.GetString(fileBytes);
-                        throw new Exception("Failed to generate report!");
-                    }
+        //        if (resultStream == null)
+        //        {
+        //            throw new Exception("Failed to generate report: No data received.");
+        //        }
 
-                    Response.Headers.Add("Content-Disposition", "inline; filename=Customer_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf");
+        //        using (var memoryStream = new MemoryStream())
+        //        {
+        //            await resultStream.CopyToAsync(memoryStream);
+        //            byte[] fileBytes = memoryStream.ToArray();
 
-                    return File(fileBytes, "application/pdf");
-                }
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                TempData["Message"] = e.Message.ToString();
-                return RedirectToAction("Index", "Customer", new { area = "DMS", message = TempData["Message"] });
-            }
-        }
+        //            if (fileBytes.Length < 1000)
+        //            {
+        //                string errorContent = Encoding.UTF8.GetString(fileBytes);
+        //                throw new Exception("Failed to generate report!");
+        //            }
+
+        //            Response.Headers.Add("Content-Disposition", "inline; filename=Customer_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf");
+
+        //            return File(fileBytes, "application/pdf");
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        TempData["Message"] = e.Message.ToString();
+        //        return RedirectToAction("Index", "Customer", new { area = "DMS", message = TempData["Message"] });
+        //    }
+        //}
 
 
         public ActionResult DevitCredit()
@@ -357,108 +363,108 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<ActionResult> DevitCreditData(string fromDate, string toDate, string branchId)
-        {
-            _commonRepo = new CommonRepo();
-            _repo = new CustomerRepo();
-            BranchProfileRepo _branchRepo = new BranchProfileRepo();
-            try
-            {
-                string BranchName = "";
-                string BranchAddress = "";
-                string CompanyName = "";
+        //[HttpGet]
+        //public async Task<ActionResult> DevitCreditData(string fromDate, string toDate, string branchId)
+        //{
+        //    _commonRepo = new CommonRepo();
+        //    _repo = new CustomerRepo();
+        //    BranchProfileRepo _branchRepo = new BranchProfileRepo();
+        //    try
+        //    {
+        //        string BranchName = "";
+        //        string BranchAddress = "";
+        //        string CompanyName = "";
 
-                CommonVM vm = new CommonVM();
-                vm.ToDate = toDate;
-                vm.FromDate = fromDate;
-                vm.Id = branchId == "0" ? "" : branchId;
-                vm.BranchId = branchId == "0" ? "" : branchId;
+        //        CommonVM vm = new CommonVM();
+        //        vm.ToDate = toDate;
+        //        vm.FromDate = fromDate;
+        //        vm.Id = branchId == "0" ? "" : branchId;
+        //        vm.BranchId = branchId == "0" ? "" : branchId;
 
-                if (vm.BranchId == "")
-                {
-                    BranchName = "ALL";
-                }
-                else
-                {
-                    var branchResult = _branchRepo.List(vm);
+        //        if (vm.BranchId == "")
+        //        {
+        //            BranchName = "ALL";
+        //        }
+        //        else
+        //        {
+        //            var branchResult = _branchRepo.List(vm);
 
-                    if (branchResult != null && branchResult.Status == "Success" && branchResult.DataVM != null)
-                    {
-                        var data = JsonConvert.DeserializeObject<List<BranchProfileVM>>(branchResult.DataVM.ToString());
+        //            if (branchResult != null && branchResult.Status == "Success" && branchResult.DataVM != null)
+        //            {
+        //                var data = JsonConvert.DeserializeObject<List<BranchProfileVM>>(branchResult.DataVM.ToString());
 
-                        if (data.Count > 0)
-                        {
-                            BranchName = data.FirstOrDefault()?.Name;
-                            BranchAddress = data.FirstOrDefault()?.Address;
-                        }
-                    }
-                }
+        //                if (data.Count > 0)
+        //                {
+        //                    BranchName = data.FirstOrDefault()?.Name;
+        //                    BranchAddress = data.FirstOrDefault()?.Address;
+        //                }
+        //            }
+        //        }
 
-                DataTable dt = new DataTable();
-                vm = new CommonVM();
-                vm.BranchId = branchId == "0" ? "" : branchId;
-                vm.FromDate = fromDate;
-                vm.ToDate = toDate;
+        //        DataTable dt = new DataTable();
+        //        vm = new CommonVM();
+        //        vm.BranchId = branchId == "0" ? "" : branchId;
+        //        vm.FromDate = fromDate;
+        //        vm.ToDate = toDate;
 
-                var result = _repo.DevitCredit(vm);
+        //        var result = _repo.DevitCredit(vm);
 
-                if (result.Status == "Success" && result.DataVM != null)
-                {
-                    var data = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            var data = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
 
-                    dt = Extensions.ConvertToDataTable(data);
-                }
+        //            dt = Extensions.ConvertToDataTable(data);
+        //        }
 
-                dt.Columns["Id"].ColumnName = "Id ";
-                dt.Columns["Code"].ColumnName = "Code ";
-                dt.Columns["Name"].ColumnName = "Name ";
-                dt.Columns["BranchId"].ColumnName = "Branch Id ";
+        //        dt.Columns["Id"].ColumnName = "Id ";
+        //        dt.Columns["Code"].ColumnName = "Code ";
+        //        dt.Columns["Name"].ColumnName = "Name ";
+        //        dt.Columns["BranchId"].ColumnName = "Branch Id ";
 
-                // Generate PDF from DataTable
-                using (var memoryStream = new MemoryStream())
-                {
-                    var document = new Document(PageSize.A4);
-                    var writer = PdfWriter.GetInstance(document, memoryStream);
-                    document.Open();
+        //        // Generate PDF from DataTable
+        //        using (var memoryStream = new MemoryStream())
+        //        {
+        //            var document = new Document(PageSize.A4);
+        //            var writer = PdfWriter.GetInstance(document, memoryStream);
+        //            document.Open();
 
-                    // Create a table for the data
-                    var table = new PdfPTable(dt.Columns.Count);
-                    foreach (DataColumn column in dt.Columns)
-                    {
-                        table.AddCell(new Phrase(column.ColumnName));
-                    }
+        //            // Create a table for the data
+        //            var table = new PdfPTable(dt.Columns.Count);
+        //            foreach (DataColumn column in dt.Columns)
+        //            {
+        //                table.AddCell(new Phrase(column.ColumnName));
+        //            }
 
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        foreach (var cell in row.ItemArray)
-                        {
-                            table.AddCell(new Phrase(cell.ToString()));
-                        }
-                    }
+        //            foreach (DataRow row in dt.Rows)
+        //            {
+        //                foreach (var cell in row.ItemArray)
+        //                {
+        //                    table.AddCell(new Phrase(cell.ToString()));
+        //                }
+        //            }
 
-                    document.Add(table);
-                    document.Close();
+        //            document.Add(table);
+        //            document.Close();
 
-                    // Get the byte array for the PDF file
-                    byte[] fileBytes = memoryStream.ToArray();
+        //            // Get the byte array for the PDF file
+        //            byte[] fileBytes = memoryStream.ToArray();
 
-                    // Return the file as a PDF
-                    Response.Headers.Add("Content-Disposition", "inline; filename=Customer_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf");
-                    return File(fileBytes, "application/pdf");
-                }
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                TempData["Message"] = e.Message.ToString();
-                return RedirectToAction("Index", "Customer", new
-                {
-                    area = "DMS",
-                    message = TempData["Message"]
-                });
-            }
-        }
+        //            // Return the file as a PDF
+        //            Response.Headers.Add("Content-Disposition", "inline; filename=Customer_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf");
+        //            return File(fileBytes, "application/pdf");
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        TempData["Message"] = e.Message.ToString();
+        //        return RedirectToAction("Index", "Customer", new
+        //        {
+        //            area = "DMS",
+        //            message = TempData["Message"]
+        //        });
+        //    }
+        //}
 
     }
 }

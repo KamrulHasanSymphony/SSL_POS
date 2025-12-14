@@ -4,11 +4,6 @@ using ShampanPOS.Models;
 using ShampanPOS.Repo.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Net.Http;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using static ShampanPOS.Models.CommonModel;
 
 namespace ShampanPOS.Repo

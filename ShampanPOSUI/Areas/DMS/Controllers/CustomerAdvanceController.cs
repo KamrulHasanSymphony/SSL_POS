@@ -296,42 +296,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
 
-        [HttpPost]
-        public ActionResult MultiplePost(BranchAdvanceVM vm)
-        {
-            ResultModel<BranchAdvanceVM> result = new ResultModel<BranchAdvanceVM>();
-
-            try
-            {
-                _repo = new CustomerAdvanceRepo();
-
-                CommonVM param = new CommonVM();
-
-                param.IDs = vm.IDs;
-                param.ModifyBy = Session["UserId"].ToString();
-                param.ModifyFrom = Ordinary.GetLocalIpAddress();
-
-                ResultVM resultData = _repo.MultiplePost(param);
-
-
-                Session["result"] = resultData.Status + "~" + resultData.Message;
-
-                result = new ResultModel<BranchAdvanceVM>()
-                {
-                    Success = true,
-                    Status = Status.Success,
-                    Message = resultData.Message,
-                    Data = null
-                };
-
-                return Json(result);
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return RedirectToAction("Index");
-            }
-        }
+      
 
 
 

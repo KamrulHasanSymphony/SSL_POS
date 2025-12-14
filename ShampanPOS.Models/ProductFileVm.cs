@@ -18,12 +18,10 @@ namespace ShampanPOS.Models
         public string? CtnSize { get; set; }
         [Display(Name = "Carton Size Factor")]
         public string? CtnSizeFactor { get; set; }
-        public List<ProductImportVM> ProductImportList { get; set; }
         public List<BranchProfileVM> BranchProfileList { get; set; }
        
         public ProductFileVm()
         {
-            ProductImportList = new List<ProductImportVM>();
             BranchProfileList = new List<BranchProfileVM>();
             
         }

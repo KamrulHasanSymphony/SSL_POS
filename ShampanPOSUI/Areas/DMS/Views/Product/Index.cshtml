@@ -127,9 +127,9 @@
                 New
             </button>
             <button type="button" title="Delete" class="button sslUnPost btnDelete"> Delete </button>
-            <button type="button" title="Price List" data-url="/DMS/MISReport/ProductLeatestPricePreview" onclick="window.open(this.getAttribute('data-url'), '_blank');" class="button PreviewButton Preview">
+            @*<button type="button" title="Price List" data-url="/DMS/MISReport/ProductLeatestPricePreview" onclick="window.open(this.getAttribute('data-url'), '_blank');" class="button PreviewButton Preview">
                 Price List
-            </button>
+            </button>*@
             @*<button type="button" title="Download Excel" id="download" class="button NewButton sslExcel">Download Excel</button>*@
 
 
@@ -140,7 +140,7 @@
 
 <div id="tabs">
 
-    <ul class="tab-list">
+    @*<ul class="tab-list">
         <li class="tab-item">
             <a href="#tabs-1" class="tab-link active" data-tab="1"> Index </a>
         </li>
@@ -153,7 +153,7 @@
         <li class="tab-item">
             <a href="#tabs-4" class="tab-link " data-tab="1"> Opening Excel Import </a>
         </li>
-    </ul>
+    </ul>*@
 
     <div id="tabs-1">
 
@@ -173,195 +173,7 @@
     </div>
 
 
-    <div id="tabs-2">
-
-        <div class="container-fluid">
-
-
-            <div class="mt-3">
-                <div class="container-fluid">
-                    <div class="row">
-                        <!-- This is the fix -->
-                        <!-- First Form Column -->
-                        <div class="col-sm-6">
-                            <div class="card card-secondary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Group wise Price Excel Upload</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="container-fluid mt-3">
-                                        @using (Ajax.BeginForm("ImportExcel", "Product", null, new AjaxOptions { }, new { enctype = "multipart/form-data", @Id = "frmProductImport" }))
-                                        {
-                                            <div class="row align-items-end">
-                                                <div class="col-md-8">
-                                                    <label> File</label>
-                                                    <input id="frmProductImport" type="file" name="File" accept=".xlsx" class="form-control" />
-                                                    @*@Html.TextBoxFor(model => model.productfile.File, new { @type = "file", @accept = ".xlsx", @class = "form-control" })*@
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <label>&nbsp;</label>
-                                                    <button type="button" id="btnUpload" class="btn btn-primary w-100">Upload</button>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Second Form Column -->
-                        <div class="col-sm-4">
-                            <div class="card card-secondary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Group wise Price Excel Template File Export</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="container-fluid mt-3">
-
-                                        <div class="row justify-content-center">
-                                            <!-- center contents horizontally -->
-                                            <div class="col-md-3">
-                                                <label>&nbsp;</label>
-                                                <button type="button" id="download" class="btn btn-warning w-100">Template</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div> <!-- end .row -->
-                </div> <!-- end .container-fluid -->
-            </div>
-        </div>
-
-    </div>
-
-    <div id="tabs-3">
-
-        <div class="container-fluid">
-
-
-            <div class="mt-3">
-                <div class="container-fluid">
-                    <div class="row">
-                        <!-- This is the fix -->
-                        <!-- First Form Column -->
-                        <div class="col-sm-6">
-                            <div class="card card-secondary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Purchase Cost price Upload</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="container-fluid mt-3">
-                                        @using (Ajax.BeginForm("PurchaseImportExcel", "Product", null, new AjaxOptions { }, new { enctype = "multipart/form-data", @Id = "frmProductPurchaseImport" }))
-                                        {
-                                            <div class="row align-items-end">
-                                                <div class="col-md-8">
-                                                    <label> File</label>
-                                                    <input id="frmProductImport" type="file" name="File" accept=".xlsx" class="form-control" />
-                                                    @*@Html.TextBoxFor(model => model.productfile.File, new { @type = "file", @accept = ".xlsx", @class = "form-control" })*@
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <label>&nbsp;</label>
-                                                    <button type="button" id="btnPurchaseUpload" class="btn btn-primary w-100">Upload</button>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Second Form Column -->
-                        <div class="col-sm-4">
-                            <div class="card card-secondary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Purchase Cost price Template File Export</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="container-fluid mt-3">
-
-                                        <div class="row justify-content-center">
-                                            <!-- center contents horizontally -->
-                                            <div class="col-md-3">
-                                                <label>&nbsp;</label>
-                                                <button type="button" id="PurchasePriceDownload" class="btn btn-warning w-100">Template</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div> <!-- end .row -->
-                </div> <!-- end .container-fluid -->
-            </div>
-        </div>
-
-    </div>
-
-    <div id="tabs-4">
-        <div class="mt-3">
-            <div class="container-fluid">
-                <div class="row">
-                    <!-- This is the fix -->
-                    <!-- First Form Column -->
-                    <div class="col-sm-6">
-                        <div class="card card-secondary">
-                            <div class="card-header">
-                                <h3 class="card-title">Opening Excel File Upload</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="container-fluid mt-3">
-                                    @using (Ajax.BeginForm("OpeningImportExcel", "Product", null, new AjaxOptions { }, new { enctype = "multipart/form-data", @id = "frmProductStockImport" }))
-                                    {
-                                        <div class="row align-items-end">
-                                            <div class="col-md-6">
-                                                <label>File</label>
-                                                <input id="frmProductStockImport" type="file" name="File" accept=".xlsx" class="form-control" />
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label>&nbsp;</label>
-                                                <button type="button" id="btnProductStockUpload" class="btn btn-primary w-100">Upload</button>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Second Form Column -->
-                    <div class="col-sm-4">
-                        <div class="card card-secondary">
-                            <div class="card-header">
-                                <h3 class="card-title">Opening Excel Template File Export</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="container-fluid mt-3">
-                                    @using (Ajax.BeginForm("OpeningImportExcel", "Product", null, new AjaxOptions { }, new { enctype = "multipart/form-data", @id = "frmProductOpeningImport2" }))
-                                    {
-                                        <div class="row justify-content-center">
-                                            <!-- center contents horizontally -->
-                                            <div class="col-md-3">
-                                                <label>&nbsp;</label>
-                                                <button type="button" id="downloadProductStock" class="btn btn-warning w-100">Template</button>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div> <!-- end .row -->
-            </div> <!-- end .container-fluid -->
-        </div>
-    </div>
+    
 </div>
 
 
