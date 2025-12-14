@@ -64,13 +64,13 @@
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
 
-                    <div class="col-sm-2">
+                    @*<div class="col-sm-2">
                         @Html.LabelFor(model => model.CurrencyId)
                         <div class="input-group">
                             <input type="text" class="form-control form-control-sm" name="PurchaseOrderCurrencyName" id="PurchaseOrderCurrencyName" disabled />
                         </div>
                         <span id="titleError2" class="text-danger" style="display:none;"></span>
-                    </div>
+                    </div>*@
 
 
                 </div>
@@ -84,12 +84,12 @@
                             </div>
                         </div>*@
 
-                    <div class="col-sm-2">
+                    @*<div class="col-sm-2">
                         @Html.LabelFor(model => model.ImportIDExcel)
                         <div class="input-group">
                             <input type="text" class="form-control form-control-sm" name="PurchaseOrderImportIDExcel" id="PurchaseOrderImportIDExcel" disabled />
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="col-sm-3">
                         @Html.LabelFor(model => model.Comments)
@@ -251,10 +251,10 @@
                 @Html.HiddenFor(model => model.Operation)
                 @Html.HiddenFor(model => model.IsPost)
                 @Html.HiddenFor(model => model.DecimalPlace)
-                @Html.HiddenFor(model => model.UOMId)
+                @*@Html.HiddenFor(model => model.UOMId)*@
                 @Html.HiddenFor(model => model.BranchId)
                 @Html.HiddenFor(model => model.TransactionType)
-                @Html.HiddenFor(model => model.PurchaseOrderId)
+                @*@Html.HiddenFor(model => model.PurchaseOrderId)*@
                 @Html.HiddenFor(model => model.FromDate)
 
                 <div class="form-group row">
@@ -296,13 +296,13 @@
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
 
-                    <div class="col-sm-2">
+                    @*<div class="col-sm-2">
                         @Html.LabelFor(model => model.CurrencyId)
                         <div class="input-group">
                             @Html.TextBoxFor(model => model.CurrencyId, new { @class = "form-control form-control-sm" })
                         </div>
                         <span id="titleError2" class="text-danger" style="display:none;"></span>
-                    </div>
+                    </div>*@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.BENumber)
@@ -317,19 +317,19 @@
 
                 <div class="form-group row">
 
-                    <div class="col-sm-2">
+                    @*<div class="col-sm-2">
                         @Html.LabelFor(model => model.ImportIDExcel)
                         <div class="input-group">
                             @Html.TextBoxFor(model => model.ImportIDExcel, new { placeholder = "Enter Import Excel Id", @class = "form-control form-control-sm" })
                         </div>
-                    </div>
+                    </div>*@
 
-                    <div class="col-sm-2">
+                    @*<div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomHouse)
                         <div class="input-group">
                             @Html.TextBoxFor(model => model.CustomHouse, new { placeholder = "Enter Custom House", @class = "form-control form-control-sm" })
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.Comments)
@@ -396,11 +396,11 @@
                                         <td hidden> @item.ProductCode </td>
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
-                                        <td> @item.UOMName </td>
+                                        @*<td> @item.UOMName </td>
                                         <td hidden> @item.UOMId </td>
                                         <td class=" dFormat "> @item.CtnQuantity </td>
                                         <td class=" dFormat "> @item.InputQuantity </td>
-                                        <td class=" dFormat "> @item.PcsQuantity </td>
+                                        <td class=" dFormat "> @item.PcsQuantity </td>*@
                                         <td class="dFormat"> @item.Quantity </td>
                                         <td class="dFormat"> @item.UnitPrice </td>
                                         <td class="dFormat"> @item.SubTotal </td>
@@ -410,8 +410,8 @@
                                         <td hidden class="dFormat"> @item.VATAmount </td>
                                         <td hidden class="dFormat"> @item.OthersAmount </td>
                                         <td class="dFormat"> @item.LineTotal </td>
-                                        <td> @item.Comments </td>
-                                        <td hidden> @item.UOMConversion</td>
+                                        @*<td> @item.Comments </td>
+                                        <td hidden> @item.UOMConversion</td>*@
 
                                         @if (item.PurchaseOrderId > 0)
                                         {

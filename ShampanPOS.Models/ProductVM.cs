@@ -20,10 +20,6 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
-        [Display(Name = "Carton Size")]
-        public string? CtnSize { get; set; }
-        [Display(Name = "Carton Size Factor")]
-        public string? CtnSizeFactor { get; set; }
 
         [Display(Name = "Description")]
         public string? Description { get; set; }
@@ -67,14 +63,14 @@ namespace ShampanPOS.Models
         public string? UOMName { get; set; }
         [Display(Name = "Image")]
         public string? ImagePath { get; set; }
-        public List<ProductImportVM> ProductImportList { get; set; } 
+        //public List<ProductImportVM> ProductImportList { get; set; } 
         public List<BranchProfileVM> BranchProfileList { get; set; }
-         public ProductFileVm productfile { get; set; }
+         //public ProductFileVm productfile { get; set; }
         public ProductVM()
         {
-            ProductImportList = new List<ProductImportVM>();
+            //ProductImportList = new List<ProductImportVM>();
             BranchProfileList = new List<BranchProfileVM>();
-            productfile = new ProductFileVm();
+            //productfile = new ProductFileVm();
         }
 
 

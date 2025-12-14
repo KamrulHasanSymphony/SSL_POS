@@ -31,14 +31,14 @@ namespace ShampanPOS.Models
         [Display(Name = "  Purchase Return Date")]
         public string PurchaseReturnDate { get; set; }
 
-        [Display(Name = "Grand Total Amount")]
-        public decimal? GrandTotalAmount { get; set; }
+        //[Display(Name = "Grand Total Amount")]
+        //public decimal? GrandTotalAmount { get; set; }
 
-        [Display(Name = "Grand Total SD Amount")]
-        public decimal? GrandTotalSDAmount { get; set; }
+        //[Display(Name = "Grand Total SD Amount")]
+        //public decimal? GrandTotalSDAmount { get; set; }
 
-        [Display(Name = "Grand Total VAT Amount")]
-        public decimal? GrandTotalVATAmount { get; set; }
+        //[Display(Name = "Grand Total VAT Amount")]
+        //public decimal? GrandTotalVATAmount { get; set; }
 
         [Display(Name = "Comments")]
         public string? Comments { get; set; }
@@ -57,19 +57,19 @@ namespace ShampanPOS.Models
         public string? PostedOn { get; set; }
         public string? CreatedFrom { get; set; }
 
-        [Required]
-        [Display(Name = "Currency")]
-        public int? CurrencyId { get; set; }
-        public int? UOMId { get; set; }
+        //[Required]
+        //[Display(Name = "Currency")]
+        //public int? CurrencyId { get; set; }
+        //public int? UOMId { get; set; }
 
-        [Display(Name = "Currency Rate from BDT")]
-        public decimal? CurrencyRateFromBDT { get; set; }
+        //[Display(Name = "Currency Rate from BDT")]
+        //public decimal? CurrencyRateFromBDT { get; set; }
 
-        [Display(Name = "Import ID Excel")]
-        public string? ImportIDExcel { get; set; }
+        //[Display(Name = "Import ID Excel")]
+        //public string? ImportIDExcel { get; set; }
 
-        [Display(Name = "File Name")]
-        public string? FileName { get; set; }
+        //[Display(Name = "File Name")]
+        //public string? FileName { get; set; }
 
         [Display(Name = "Fiscal Year")]
         public string? FiscalYear { get; set; }
@@ -107,7 +107,7 @@ namespace ShampanPOS.Models
         public string? ToDate { get; set; }
         public string? SupplierName { get; set; }
         public string? BranchName { get; set; }
-        public decimal? TotalQuantity { get; set; }
+        //public decimal? TotalQuantity { get; set; }
 
         public List<PurchaseReturnDetailVM> purchaseReturnDetailList { get; set; }
 

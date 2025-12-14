@@ -73,9 +73,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.TransactionType = "PurchaseOrder";
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
             vm.BranchId = Convert.ToInt32(currentBranchId);
-            var currencyId = Session["CurrencyId"] != null ? Session["CurrencyId"].ToString() : "1";
-            vm.CurrencyId = Convert.ToInt32(currencyId);
-            vm.UOMId = Convert.ToInt32(0);
+            //var currencyId = Session["CurrencyId"] != null ? Session["CurrencyId"].ToString() : "1";
+            //vm.CurrencyId = Convert.ToInt32(currencyId);
+            //vm.UOMId = Convert.ToInt32(0);
 
             #region DecimalPlace
             CommonVM commonVM = new CommonVM();

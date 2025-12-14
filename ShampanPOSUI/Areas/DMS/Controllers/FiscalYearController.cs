@@ -266,7 +266,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 vm.Operation = "update";
                 //vm.YearPeriod = id;
-                vm.YearPeriod = vm.Year;
+                //vm.YearPeriod = vm.Year;
 
                 return View("CreateEdit", vm);
             }

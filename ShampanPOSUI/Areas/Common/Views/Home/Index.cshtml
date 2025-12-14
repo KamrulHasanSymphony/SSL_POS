@@ -175,70 +175,70 @@
 
 <div class="container-fluid">
 
-    <div class="row">
+    <!--<div class="row">
         <div class="col-lg-4">
             <!-- Small Box with Chart -->
-            <div class="small-box bg-info">
+            <!--<div class="small-box bg-info">
                 <div class="inner">
                     <h3>Top 10 Customers</h3>
                     <p>Based on Grand Total Amount</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
-                </div>
+                </div>-->
 
                 <!-- Canvas for Chart -->
-                <canvas id="topCustomersChart" height="200"></canvas>
+                <!--<canvas id="topCustomersChart" height="200"></canvas>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-4">-->
             <!-- Small Box with Chart -->
-            <div class="small-box bg-info">
+            <!--<div class="small-box bg-info">
                 <div class="inner">
                     <h3>Bottom 10 Customers</h3>
                     <p>Based on Grand Total Amount</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
-                </div>
+                </div>-->
 
                 <!-- Canvas for Chart -->
-                <canvas id="bottomCustomersChart" height="200"></canvas>
+                <!--<canvas id="bottomCustomersChart" height="200"></canvas>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4">-->
             <!-- Small Box with Chart -->
-            <div class="small-box bg-info">
+            <!--<div class="small-box bg-info">
                 <div class="inner">
                     <h3>Top 10 Sale Products</h3>
                     <p>Based on Sale Value</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
-                </div>
+                </div>-->
 
                 <!-- Canvas for Chart -->
-                <canvas id="topProductChart" height="200"></canvas>
+                <!--<canvas id="topProductChart" height="200"></canvas>
             </div>
         </div>
 
     </div>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-4">-->
             <!-- Small Box with Chart -->
-            <div class="small-box bg-info">
+            <!--<div class="small-box bg-info">
                 <div class="inner">
                     <h3>Bottom 10 Sale Products</h3>
                     <p>Based on Sale Value</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
-                </div>
+                </div>-->
 
                 <!-- Canvas for Chart -->
-                <canvas id="bottomProductChart" height="200"></canvas>
+                <!--<canvas id="bottomProductChart" height="200"></canvas>
             </div>
         </div>
         <div class="col-lg-4">
@@ -249,10 +249,10 @@
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
-                </div>
+                </div>-->
 
                 <!-- Canvas for Chart -->
-                <canvas id="topSalePersonChart" height="200"></canvas>
+                <!--<canvas id="topSalePersonChart" height="200"></canvas>
             </div>
         </div>
         <div class="col-lg-4">
@@ -263,12 +263,12 @@
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
-                </div>
+                </div>-->
 
                 <!-- Canvas for Chart -->
-                <canvas id="bottomSalePersonChart" height="200"></canvas>
+                <!--<canvas id="bottomSalePersonChart" height="200"></canvas>
             </div>
-        </div>
+        </div>-->
         <!--<div class="col-lg-4">-->
         <!-- Small Box with Chart -->
         <!--<div class="small-box bg-info">
@@ -283,39 +283,39 @@
         <!--<canvas id="pendingSalesChartCanvas" height="200"></canvas>
             </div>
         </div>-->
-    </div>
+    <!--</div>
 
     <div class="row">
         <div class="col-lg-6">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>Purchase </h3>
+                    <h3>Purchase </h3>-->
                     @*<p>Distribution Overview</p>*@
-                </div>
+                <!--</div>
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
-                </div>
+                </div>-->
 
                 <!-- Canvas for Pie Chart -->
-                <canvas id="orderPurchasePieChart" height="600"></canvas>
+                <!--<canvas id="orderPurchasePieChart" height="600"></canvas>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>Sales</h3>
+                    <h3>Sales</h3>-->
                     @*<p>Distribution Overview</p>*@
-                </div>
+                @*</div>
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
-                </div>
+                </div>-->*@
 
                 <!-- Canvas for Pie Chart -->
-                <canvas id="salesPieChart" height="600"></canvas>
+                <!--<canvas id="salesPieChart" height="600"></canvas>
             </div>
         </div>
 
-    </div>
+    </div>-->
 
     <div class="clearfix"></div>
 
@@ -624,19 +624,19 @@
                 });
             }
 
-            if (@Model.Count > 0) {
+            @*if (@Model.Count > 0) {
                 // Fetch data and create charts
-                fetchAndCreateChart('/Home/GetTop10Customers', 'topCustomersChart', 'Grand Total Amount');
-                fetchAndCreateChart('/Home/GetBottom10Customers', 'bottomCustomersChart', 'Grand Total Amount');
-                fetchAndCreateChart('/Home/GetTop10Products', 'topProductChart', 'Sale Value');
-                fetchAndCreateChart('/Home/GetBottom10Products', 'bottomProductChart', 'Sale Value');
-                fetchAndCreateChart('/Home/GetTop10SalePersons', 'topSalePersonChart', 'Total Sale Value');
-                fetchAndCreateChart('/Home/GetBottom10SalePersons', 'bottomSalePersonChart', 'Total Sale Value');
-                fetchAndCreateChart('/Home/GetOrderPurchasePOReturnData', 'orderPurchasePieChart', '', true);
-                fetchAndCreateChart('/Home/GetSalesData', 'salesPieChart', '', true);
+                //fetchAndCreateChart('/Home/GetTop10Customers', 'topCustomersChart', 'Grand Total Amount');
+                //fetchAndCreateChart('/Home/GetBottom10Customers', 'bottomCustomersChart', 'Grand Total Amount');
+                //fetchAndCreateChart('/Home/GetTop10Products', 'topProductChart', 'Sale Value');
+                //fetchAndCreateChart('/Home/GetBottom10Products', 'bottomProductChart', 'Sale Value');
+                //fetchAndCreateChart('/Home/GetTop10SalePersons', 'topSalePersonChart', 'Total Sale Value');
+               // fetchAndCreateChart('/Home/GetBottom10SalePersons', 'bottomSalePersonChart', 'Total Sale Value');
+               // fetchAndCreateChart('/Home/GetOrderPurchasePOReturnData', 'orderPurchasePieChart', '', true);
+               // fetchAndCreateChart('/Home/GetSalesData', 'salesPieChart', '', true);
 
-                fetchAndCreatePendingSalesChart();
-            };
+                //fetchAndCreatePendingSalesChart();
+            };*@
 
 });
     </script>

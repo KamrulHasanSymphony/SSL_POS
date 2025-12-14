@@ -33,14 +33,16 @@ namespace ShampanPOS.Models
         [Display(Name = "Quantity")]
         [DataType(DataType.Currency)]
         public decimal? Quantity { get; set; }
-        [Display(Name = "Ctn Qty")]
-        public decimal CtnQuantity { get; set; }
 
-        [Display(Name = "Input Qty")]
-        public decimal InputQuantity { get; set; }
 
-        [Display(Name = "Quantity")]
-        public decimal PcsQuantity { get; set; }
+        //[Display(Name = "Ctn Qty")]
+        //public decimal CtnQuantity { get; set; }
+
+        //[Display(Name = "Input Qty")]
+        //public decimal InputQuantity { get; set; }
+
+        //[Display(Name = "Quantity")]
+        //public decimal PcsQuantity { get; set; }
 
         [Display(Name = "Unit Price")]
         [DataType(DataType.Currency)]
@@ -82,21 +84,21 @@ namespace ShampanPOS.Models
         public decimal? LineTotal { get; set; }
 
 
-        [Display(Name = "UOM")]
-        public int? UOMId { get; set; }
-        public string? UOMName { get; set; }
+        //[Display(Name = "UOM")]
+        //public int? UOMId { get; set; }
+        //public string? UOMName { get; set; }
 
 
-        [Display(Name = "UOM From")]
-        public int? UOMFromId { get; set; }
-        public string? UOMFromName { get; set; }
+        //[Display(Name = "UOM From")]
+        //public int? UOMFromId { get; set; }
+        //public string? UOMFromName { get; set; }
 
 
-        [Display(Name = "UOM Conversion")]
-        public decimal? UOMConversion { get; set; }
+        //[Display(Name = "UOM Conversion")]
+        //public decimal? UOMConversion { get; set; }
 
-        [Display(Name = "Comments")]
-        public string? Comments { get; set; }
+        //[Display(Name = "Comments")]
+        //public string? Comments { get; set; }
 
 
         [Display(Name = "VAT Type")]
@@ -111,18 +113,18 @@ namespace ShampanPOS.Models
         public bool? IsPost { get; set; }
 
 
-        [Display(Name = "Invoice DateTime")]
-        [DataType(DataType.DateTime)]
-        public string? InvoiceDateTime { get; set; }
+        //[Display(Name = "Invoice DateTime")]
+        //[DataType(DataType.DateTime)]
+        //public string? InvoiceDateTime { get; set; }
 
 
-        [Display(Name = "Fixed VAT")]
-        public bool IsFixedVAT { get; set; }
+        //[Display(Name = "Fixed VAT")]
+        //public bool IsFixedVAT { get; set; }
 
 
-        [Display(Name = "Fixed VAT Amount")]
-        [DataType(DataType.Currency)]
-        public decimal? FixedVATAmount { get; set; }
+        //[Display(Name = "Fixed VAT Amount")]
+        //[DataType(DataType.Currency)]
+        //public decimal? FixedVATAmount { get; set; }
     }
 
 }

@@ -24,9 +24,9 @@ namespace ShampanPOS.Models
         [Display(Name = "Supplier")]
         public int? SupplierId { get; set; }
 
-        [Required(ErrorMessage = "Currency is required")]
-        [Display(Name = "Currency")]
-        public int? CurrencyId { get; set; }
+        //[Required(ErrorMessage = "Currency is required")]
+        //[Display(Name = "Currency")]
+        //public int? CurrencyId { get; set; }
 
         [Required(ErrorMessage = "BE Number (Challan No.) is required")]
         [Display(Name = "BE Number (Challan No.)")]
@@ -40,14 +40,14 @@ namespace ShampanPOS.Models
         [Display(Name = "Purchase Date")]
         public string PurchaseDate { get; set; }
 
-        [Display(Name = "Grand Total Amount")]
-        public decimal? GrandTotalAmount { get; set; }
+        //[Display(Name = "Grand Total Amount")]
+        //public decimal? GrandTotalAmount { get; set; }
 
-        [Display(Name = "Grand Total SD Amount")]
-        public decimal? GrandTotalSDAmount { get; set; }
+        //[Display(Name = "Grand Total SD Amount")]
+        //public decimal? GrandTotalSDAmount { get; set; }
 
-        [Display(Name = "Grand Total VAT Amount")]
-        public decimal? GrandTotalVATAmount { get; set; }
+        //[Display(Name = "Grand Total VAT Amount")]
+        //public decimal? GrandTotalVATAmount { get; set; }
 
         [Display(Name = "Comments")]
         public string? Comments { get; set; }
@@ -55,7 +55,7 @@ namespace ShampanPOS.Models
         [Required]
         [Display(Name = "Transaction Type")]
         public string? TransactionType { get; set; }
-        public bool IsCompleted { get; set; }
+        //public bool IsCompleted { get; set; }
 
         [Required]
         [Display(Name = "Posted")]
@@ -69,20 +69,20 @@ namespace ShampanPOS.Models
         public string? CreatedFrom { get; set; }
 
 
-        public int? UOMId { get; set; }
+        //public int? UOMId { get; set; }
         public int? PurchaseOrderId { get; set; }
 
-        [Display(Name = "Currency Rate from BDT")]
-        public decimal? CurrencyRateFromBDT { get; set; }
+        //[Display(Name = "Currency Rate from BDT")]
+        //public decimal? CurrencyRateFromBDT { get; set; }
 
-        [Display(Name = "Import ID Excel")]
-        public string? ImportIDExcel { get; set; }
+        //[Display(Name = "Import ID Excel")]
+        //public string? ImportIDExcel { get; set; }
 
-        [Display(Name = "File Name")]
-        public string? FileName { get; set; }
+        //[Display(Name = "File Name")]
+        //public string? FileName { get; set; }
 
-        [Display(Name = "Custom House")]
-        public string? CustomHouse { get; set; }
+        //[Display(Name = "Custom House")]
+        //public string? CustomHouse { get; set; }
 
         [Display(Name = "Fiscal Year")]
         public string? FiscalYear { get; set; }
@@ -102,7 +102,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Last Modified On")]
         public string? LastModifiedOn { get; set; }
         public string? LastUpdateFrom { get; set; }
-        public string? Completed { get; set; }
+        //public string? Completed { get; set; }
         public string?[] IDs { get; set; }
         public string? Operation { get; set; }
         public string? Status { get; set; }
@@ -117,12 +117,12 @@ namespace ShampanPOS.Models
         [Display(Name = "To Date")]
         public string? ToDate { get; set; }
         public string? SupplierName { get; set; }
-        [Display(Name = "Currency")]
-        public string? CurrencyName { get; set; }
+        //[Display(Name = "Currency")]
+        //public string? CurrencyName { get; set; }
         public string? BranchName { get; set; }
         public int? CompanyId { get; set; }
         public string? CompanyName { get; set; }
-        public decimal? TotalQuantity { get; set; }
+        //public decimal? TotalQuantity { get; set; }
 
         //Add
         public HttpPostedFileBase File { get; set; }

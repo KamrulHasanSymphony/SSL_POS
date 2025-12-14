@@ -1214,43 +1214,43 @@ namespace ShampanPOS.Repo
             }
         }
 
-        public ResultVM CampaignMudularityCalculation(CampaignUtilty vm)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Common/CampaignMudularityCalculation", authModel, JsonConvert.SerializeObject(vm));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
+        //public ResultVM CampaignMudularityCalculation(CampaignUtilty vm)
+        //{
+        //    try
+        //    {
+        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
+        //        #region Invoke API
+        //        var data = httpRequestHelper.PostData("api/Common/CampaignMudularityCalculation", authModel, JsonConvert.SerializeObject(vm));
+        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+        //        #endregion                
 
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //        return result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
 
-        public ResultVM CampaignInvoiceCalculation(CampaignUtilty vm)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Common/CampaignInvoiceCalculation", authModel, JsonConvert.SerializeObject(vm));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
+        //public ResultVM CampaignInvoiceCalculation(CampaignUtilty vm)
+        //{
+        //    try
+        //    {
+        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
+        //        #region Invoke API
+        //        var data = httpRequestHelper.PostData("api/Common/CampaignInvoiceCalculation", authModel, JsonConvert.SerializeObject(vm));
+        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+        //        #endregion                
 
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //        return result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
 
         public ResultVM GetPaymentTypeList(CommonVM model)
         {
@@ -1321,24 +1321,24 @@ namespace ShampanPOS.Repo
             }
         }
 
-        public ResultVM GetSaleDeleveryModal(SaleDeliveryVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Common/GetSaleDeleveryModal", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
+        //public ResultVM GetSaleDeleveryModal(SaleDeliveryVM model)
+        //{
+        //    try
+        //    {
+        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
+        //        #region Invoke API
+        //        var data = httpRequestHelper.PostData("api/Common/GetSaleDeleveryModal", authModel, JsonConvert.SerializeObject(model));
+        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+        //        #endregion                
 
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //        return result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
 
 
         public ResultVM GetFocalPointList(CommonVM model)

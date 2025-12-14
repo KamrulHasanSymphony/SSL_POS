@@ -39,7 +39,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.IsActive = true;
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
             vm.BranchId = Convert.ToInt32(currentBranchId);
-            vm.RegularDiscountRate = 0;
+            //vm.RegularDiscountRate = 0;
 
             return View("Create", vm);
         }

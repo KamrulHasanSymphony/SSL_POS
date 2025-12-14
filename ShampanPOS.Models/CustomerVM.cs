@@ -16,9 +16,9 @@ namespace ShampanPOS.Models
         [Required(ErrorMessage = "Customer Name is required.")]
         [StringLength(50, ErrorMessage = "Name cannot exceed 50 characters.")]
         [Display(Name = "Name ")]
-        public string? Name { get; set; }      
+        public string? Name { get; set; }
         [Display(Name = "Branch")]
-        public int? BranchId { get; set; }  
+        public int? BranchId { get; set; }
         [Display(Name = "Customer Group")]
         public int? CustomerGroupId { get; set; }
 
@@ -30,7 +30,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Bangla Address")]
         public string? BanglaAddress { get; set; }
-   
+
         [Display(Name = "Route")]
         public int? RouteId { get; set; }
 
@@ -57,7 +57,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Fax No.")]
         public string? FaxNo { get; set; }
-        
+
         [Display(Name = "Email")]
         public string? Email { get; set; }
 
@@ -72,7 +72,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Comments")]
         public string? Comments { get; set; }
-       
+
         [Display(Name = "Archived")]
         public bool IsArchive { get; set; }
 
@@ -81,7 +81,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Created By")]
         public string? CreatedBy { get; set; }
-       
+
         [Display(Name = "Created On")]
         public string? CreatedOn { get; set; }
 
@@ -116,20 +116,13 @@ namespace ShampanPOS.Models
 
         public string? Status { get; set; }
         public string? CustomerGroupName { get; set; }
-        public string? BranchName { get; set; }
-        public string? AreaName { get; set; }
-        public string? RouteName { get; set; }
+
         [Display(Name = " Price Group")]
 
         public string? CustomerCategory { get; set; }
-        
 
-        [Display(Name = "Discount Rate (%)")]
 
-        public decimal?  RegularDiscountRate { get; set; }
-        public string? FocalPoint { get; set; }
-        public decimal? Potential { get; set; }
+
+
     }
-
-
 }

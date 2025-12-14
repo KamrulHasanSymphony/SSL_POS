@@ -19,17 +19,17 @@ namespace ShampanPOS.Models
 
         public string? SupplierAddress { get; set; }
 
-        [Display(Name = "BE Number (Challan No.)")]
-        public string? BENumber { get; set; }
+        //[Display(Name = "BE Number (Challan No.)")]
+        //public string? BENumber { get; set; }
 
         [Display(Name = "Order Date")]
         public string? OrderDate { get; set; }
 
         [Display(Name = " Expected Delivery Date")]
         public string? DeliveryDateTime { get; set; }
-        public decimal? GrandTotalAmount { get; set; }
-        public decimal? GrandTotalSDAmount { get; set; }
-        public decimal? GrandTotalVATAmount { get; set; }
+        //public decimal? GrandTotalAmount { get; set; }
+        //public decimal? GrandTotalSDAmount { get; set; }
+        //public decimal? GrandTotalVATAmount { get; set; }
 
         [Display(Name = "Comments")]
         public string? Comments { get; set; }
@@ -44,15 +44,15 @@ namespace ShampanPOS.Models
         public string? IsPosted { get; set; }
 
 
-        [Required]
-        [Display(Name = "Currency")]
-        public int? CurrencyId { get; set; }
-        public string? CurrencyName { get; set; }
-        [Display(Name = "Rate From BDT")]
-        public decimal? CurrencyRateFromBDT { get; set; }
-        public string? ImportIDExcel { get; set; }
-        public string? FileName { get; set; }
-        public string? FiscalYear { get; set; }
+        //[Required]
+        //[Display(Name = "Currency")]
+        //public int? CurrencyId { get; set; }
+        //public string? CurrencyName { get; set; }
+        //[Display(Name = "Rate From BDT")]
+        //public decimal? CurrencyRateFromBDT { get; set; }
+        //public string? ImportIDExcel { get; set; }
+        //public string? FileName { get; set; }
+        //public string? FiscalYear { get; set; }
         public string? PeriodId { get; set; }
         public string? CreatedBy { get; set; }
         public string? CreatedOn { get; set; }
@@ -60,8 +60,8 @@ namespace ShampanPOS.Models
         public string? LastModifiedBy { get; set; }
         public string? LastModifiedOn { get; set; }
         public string? LastUpdateFrom { get; set; }
-        public int? ProductGroupId { get; set; }
-        public int? UOMId { get; set; }
+        //public int? ProductGroupId { get; set; }
+        //public int? UOMId { get; set; }
         public string?[] IDs { get; set; }
 
         [Display(Name = "Branch Name")]
@@ -76,11 +76,11 @@ namespace ShampanPOS.Models
         public string? Status { get; set; }
         public string? BranchAddress { get; set; }
         public string? CompanyName { get; set; }
-        public int? rowindex { get; set; }
-        public string? GrdTotalAmount { get; set; }
-        public string? GrdTotalSDAmount { get; set; }
-        public string? GrdTotalVATAmount { get; set; }
-        public decimal? TotalQuantity { get; set; }
+        //public int? rowindex { get; set; }
+        //public string? GrdTotalAmount { get; set; }
+        //public string? GrdTotalSDAmount { get; set; }
+        //public string? GrdTotalVATAmount { get; set; }
+        //public decimal? TotalQuantity { get; set; }
 
         public List<PurchaseOrderDetailVM> purchaseOrderDetailsList { get; set; }
 

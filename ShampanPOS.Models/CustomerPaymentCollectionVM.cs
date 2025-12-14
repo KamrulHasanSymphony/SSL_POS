@@ -13,10 +13,12 @@ namespace ShampanPOS.Models
         public string? Code { get; set; }
         [Display(Name = "Customer Name")]
         public int? CustomerId { get; set; }
-        [Display(Name = "Sale Delevery ")]
-        public int? SaleDeleveryId { get; set; }
-        [Display(Name = "Sale Delevery No")]
-        public string? SaleDeleveryNo { get; set; }
+
+        //[Display(Name = "Sale Delevery ")]
+        //public int? SaleDeleveryId { get; set; }
+        //[Display(Name = "Sale Delevery No")]
+        //public string? SaleDeleveryNo { get; set; }
+
         [Display(Name = "Transaction Date")]
         public string? TransactionDate { get; set; }
         public string? Name { get; set; }

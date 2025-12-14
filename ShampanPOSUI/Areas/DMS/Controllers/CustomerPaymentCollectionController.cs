@@ -300,38 +300,38 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
-        [HttpPost]
+        //[HttpPost]
 
-        public JsonResult GetTabGridData(GridOptions options)
-        {
-            ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
-            _repo = new CustomerPaymentCollectionRepo();
+        //public JsonResult GetTabGridData(GridOptions options)
+        //{
+        //    ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+        //    _repo = new CustomerPaymentCollectionRepo();
 
-            try
-            {
-                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-                options.vm.BranchId = currentBranchId;
-                result = _repo.GetTabGridData(options);
+        //    try
+        //    {
+        //        var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+        //        options.vm.BranchId = currentBranchId;
+        //        result = _repo.GetTabGridData(options);
 
-                if (result.Status == "Success" && result.DataVM != null)
-                {
-                    var gridData = JsonConvert.DeserializeObject<GridEntity<SaleDeliveryVM>>(result.DataVM.ToString());
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            var gridData = JsonConvert.DeserializeObject<GridEntity<SaleDeliveryVM>>(result.DataVM.ToString());
 
-                    return Json(new
-                    {
-                        Items = gridData.Items,
-                        TotalCount = gridData.TotalCount
-                    }, JsonRequestBehavior.AllowGet);
-                }
+        //            return Json(new
+        //            {
+        //                Items = gridData.Items,
+        //                TotalCount = gridData.TotalCount
+        //            }, JsonRequestBehavior.AllowGet);
+        //        }
 
-                return Json(new { Error = true, Message = "No data found." }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
+        //        return Json(new { Error = true, Message = "No data found." }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
 
         [HttpPost]
         public async Task<ActionResult> ReportPreview(CommonVM param)
@@ -421,55 +421,55 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult PaymentSettlementProcess(CustomerPaymentCollectionVM vm)
-        {
-            ResultModel<CustomerPaymentCollectionVM> result = new ResultModel<CustomerPaymentCollectionVM>();
+        //[HttpPost]
+        //public ActionResult PaymentSettlementProcess(CustomerPaymentCollectionVM vm)
+        //{
+        //    ResultModel<CustomerPaymentCollectionVM> result = new ResultModel<CustomerPaymentCollectionVM>();
 
-            try
-            {
-                _repo = new CustomerPaymentCollectionRepo();
+        //    try
+        //    {
+        //        _repo = new CustomerPaymentCollectionRepo();
 
-                CommonVM param = new CommonVM();
+        //        CommonVM param = new CommonVM();
 
-                param.IDs = vm.IDs;
-                param.Id = vm.SaleDeleveryId.ToString();
-                param.ModifyBy = Session["UserId"].ToString();
-                param.ModifyFrom = Ordinary.GetLocalIpAddress();
+        //        param.IDs = vm.IDs;
+        //        param.Id = vm.SaleDeleveryId.ToString();
+        //        param.ModifyBy = Session["UserId"].ToString();
+        //        param.ModifyFrom = Ordinary.GetLocalIpAddress();
 
-                ResultVM resultData = _repo.MultiplePaymentSettlementProcess(param);
+        //        ResultVM resultData = _repo.MultiplePaymentSettlementProcess(param);
 
-                Session["result"] = resultData.Status + "~" + resultData.Message;
+        //        Session["result"] = resultData.Status + "~" + resultData.Message;
 
-                if (resultData.Status == "Success")
-                {
-                    result = new ResultModel<CustomerPaymentCollectionVM>()
-                    {
-                        Success = true,
-                        Status = Status.Success,
-                        Message = resultData.Message,
-                        Data = null
-                    };
-                }
-                else
-                {
-                    result = new ResultModel<CustomerPaymentCollectionVM>()
-                    {
-                        Success = false,
-                        Status = Status.Fail,
-                        Message = resultData.Message,
-                        Data = null
-                    };
-                }
+        //        if (resultData.Status == "Success")
+        //        {
+        //            result = new ResultModel<CustomerPaymentCollectionVM>()
+        //            {
+        //                Success = true,
+        //                Status = Status.Success,
+        //                Message = resultData.Message,
+        //                Data = null
+        //            };
+        //        }
+        //        else
+        //        {
+        //            result = new ResultModel<CustomerPaymentCollectionVM>()
+        //            {
+        //                Success = false,
+        //                Status = Status.Fail,
+        //                Message = resultData.Message,
+        //                Data = null
+        //            };
+        //        }
 
-                return Json(result);
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return RedirectToAction("Index");
-            }
-        }
+        //        return Json(result);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return RedirectToAction("Index");
+        //    }
+        //}
 
     }
 }

@@ -73,9 +73,9 @@
 
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.Operation)
-                @Html.HiddenFor(model => model.ProductGroupId)
+                @*@Html.HiddenFor(model => model.ProductGroupId)*@
                 @Html.HiddenFor(model => model.DecimalPlace)
-                @Html.HiddenFor(model => model.UOMId)
+                @*@Html.HiddenFor(model => model.UOMId)*@
                 @Html.HiddenFor(model => model.IsPost)
                 @Html.HiddenFor(model => model.BranchId)
                 @Html.HiddenFor(model => model.TransactionType)
@@ -119,13 +119,13 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    @*<div class="col-sm-2">
                         @Html.LabelFor(model => model.CurrencyId)
                         <div class="input-group ">
                             @Html.TextBoxFor(model => model.CurrencyId, new { @class = "" , @style = "width: 100%;" })
                         </div>
                         <span id="titleError2" class="text-danger" style="display:none;"></span>
-                    </div>
+                    </div>*@
 
 
 
@@ -193,11 +193,11 @@
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
 
-                                        <td> @item.UOMName </td>
+                                        @*<td> @item.UOMName </td>
                                         <td hidden> @item.UOMId </td>
                                         <td class=" dFormat "> @item.CtnQuantity </td>
                                         <td class=" dFormat "> @item.InputQuantity </td>
-                                        <td class=" dFormat "> @item.PcsQuantity </td>
+                                        <td class=" dFormat "> @item.PcsQuantity </td>*@
                                         <td class=" dFormat "> @item.Quantity </td>
                                         <td class=" dFormat "> @item.UnitPrice</td>
                                         <td class=" dFormat "> @item.SubTotal</td>
@@ -208,8 +208,8 @@
                                         <td hidden class=" dFormat "> @item.OthersAmount</td>
                                         <td class=" dFormat "> @item.LineTotal</td>
 
-                                        <td> @item.Comments</td>
-                                        <td hidden> @item.UOMConversion</td>
+                                        @*<td> @item.Comments</td>
+                                        <td hidden> @item.UOMConversion</td>*@
                                         <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
 
                                     </tr>

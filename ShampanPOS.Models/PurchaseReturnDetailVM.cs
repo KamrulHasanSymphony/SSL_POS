@@ -28,29 +28,29 @@ namespace ShampanPOS.Models
         public decimal? VATAmount { get; set; }
         public decimal? OthersAmount { get; set; }
         public decimal? LineTotal { get; set; }
-        public int? UOMId { get; set; }
-        public string? UOMName { get; set; }
-        public int? UOMFromId { get; set; }
-        public string? UOMFromName { get; set; }
+        //public int? UOMId { get; set; }
+        //public string? UOMName { get; set; }
+        //public int? UOMFromId { get; set; }
+        //public string? UOMFromName { get; set; }
 
-        [Display(Name = "UOM Conversion")]
-        public decimal? UOMConversion { get; set; }
-        public string? Comments { get; set; }
-        public string? VATType { get; set; }
+        //[Display(Name = "UOM Conversion")]
+        //public decimal? UOMConversion { get; set; }
+        //public string? Comments { get; set; }
+        //public string? VATType { get; set; }
         public string? TransactionType { get; set; }
         public bool? IsPost { get; set; }
-        public bool? IsFixedVAT { get; set; }
-        public decimal? FixedVATAmount { get; set; }
-        public string? ReturnReason { get; set; }
-        public string? POCode { get; set; }
-        [Display(Name = "Ctn Qty")]
-        public decimal CtnQuantity { get; set; }
+        //public bool? IsFixedVAT { get; set; }
+        //public decimal? FixedVATAmount { get; set; }
+        //public string? ReturnReason { get; set; }
+        //public string? POCode { get; set; }
+        //[Display(Name = "Ctn Qty")]
+        //public decimal CtnQuantity { get; set; }
 
-        [Display(Name = "Input Qty")]
-        public decimal InputQuantity { get; set; }
+        //[Display(Name = "Input Qty")]
+        //public decimal InputQuantity { get; set; }
 
-        [Display(Name = "Quantity")]
-        public decimal PcsQuantity { get; set; }
+        //[Display(Name = "Quantity")]
+        //public decimal PcsQuantity { get; set; }
 
     }
 

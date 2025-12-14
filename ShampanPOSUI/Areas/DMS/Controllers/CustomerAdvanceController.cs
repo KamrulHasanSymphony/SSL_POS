@@ -29,9 +29,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 CustomerAdvanceVM customerAdvance = new CustomerAdvanceVM()
                 {
-                    IsIndex = true,
+                    //IsIndex = true,
                     CustomerId = id.Value,
-                    CustomerCode = Code,
+                    //CustomerCode = Code,
                     CustomerName = Name
                 };
                 return View("Index", customerAdvance);
@@ -46,7 +46,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             CustomerAdvanceRepo _repo = new CustomerAdvanceRepo();
             CustomerRepo _customerrepo = new CustomerRepo();
             vm.Operation = "add";
-            vm.IsIndex = false;
+            //vm.IsIndex = false;
             vm.CustomerId = CustomerId ?? 0;
             if (vm != null && vm.CustomerId != 0)
             {
@@ -70,7 +70,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                         if (data != null)
                         {
                             vm.CustomerName = Customervm.Name;
-                            vm.CustomerCode = Customervm.Code;
+                            //vm.CustomerCode = Customervm.Code;
                         }
                     }
                 }

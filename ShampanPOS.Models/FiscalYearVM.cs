@@ -11,7 +11,6 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Year")]
         public int Year { get; set; }
-        public int? YearPeriod { get; set; }
 
         [Display(Name = "Year Start Date")]
         public string? YearStart { get; set; }

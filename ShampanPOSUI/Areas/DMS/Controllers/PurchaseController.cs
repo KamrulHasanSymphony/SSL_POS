@@ -80,8 +80,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.TransactionType = "Purchase";
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
             vm.BranchId = Convert.ToInt32(currentBranchId);
-            var currencyId = Session["CurrencyId"] != null ? Session["CurrencyId"].ToString() : "1";
-            vm.CurrencyId = Convert.ToInt32(currencyId);
+            //var currencyId = Session["CurrencyId"] != null ? Session["CurrencyId"].ToString() : "1";
+            //vm.CurrencyId = Convert.ToInt32(currencyId);
 
             #region DecimalPlace
             CommonVM commonVM = new CommonVM();
@@ -426,16 +426,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 vm.CreatedBy = paramVM.CreatedBy;
                 vm.CreatedOn = paramVM.CreatedOn;
                 vm.CreatedFrom = paramVM.CreatedFrom;
-                vm.CurrencyId = 0;
-                vm.CustomHouse = "";
-                vm.FromDate = "";
-                vm.GrandTotalAmount = 0;
-                vm.GrandTotalSDAmount = 0;
-                vm.GrandTotalVATAmount = 0;
-                vm.ImportIDExcel = "0";
+                //vm.CurrencyId = 0;
+                //vm.CustomHouse = "";
+                //vm.FromDate = "";
+                //vm.GrandTotalAmount = 0;
+                //vm.GrandTotalSDAmount = 0;
+                //vm.GrandTotalVATAmount = 0;
+                //vm.ImportIDExcel = "0";
                 vm.Id = 0;
                 vm.InvoiceDateTime = dataRowM["Invoice_Date"].ToString();
-                vm.IsCompleted = false;
+                //vm.IsCompleted = false;
                 vm.IsPost = false;
                 vm.Operation = "add";
                 vm.PurchaseDate = dataRowM["Invoice_Date"].ToString();
