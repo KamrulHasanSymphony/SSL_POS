@@ -97,6 +97,9 @@
     <Compile Include="CustomerCategoryVM.cs" />
     <Compile Include="CustomerData.cs" />
     <Compile Include="CustomerDataVM.cs" />
+    <Compile Include="ProductDataVM.cs" />
+    <Compile Include="PurchaseOrderDetailVM.cs" />
+    <Compile Include="PurchaseOrderVM.cs" />
     <Compile Include="DashboardData.cs" />
     <Compile Include="DbUpdateModel.cs" />
     <Compile Include="EnumTypeVM.cs" />

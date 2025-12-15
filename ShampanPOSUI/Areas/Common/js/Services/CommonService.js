@@ -182,10 +182,11 @@
                     { data: "HSCodeNo", title: "HS Code No.", width: '10%', visible: false },
                     { data: "UOMId", visible: false },
                     { data: "UOMName", title: "UOM Name", width: '10%' },
-                    { data: "CostPrice", title: "Cost Price", width: '10%' },
+                    { data: "PurchasePrice", title: "Purchase Price", width: '10%' },
                     { data: "SDRate", title: "SD Rate", width: '8%', visible: false },
                     { data: "VATRate", title: "VAT Rate", width: '8%', visible: false },
                     { data: "Status", title: "Status", width: '8%' }
+                    
                 ],
                 columnDefs: [
                     { width: '10%', targets: 0 }

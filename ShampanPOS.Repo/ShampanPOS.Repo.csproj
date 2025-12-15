@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PurchaseOrderRepo.cs" />
     <Compile Include="AreasRepo.cs" />
     <Compile Include="AuthRepo.cs" />
     <Compile Include="BusinessTypeRepo.cs" />
