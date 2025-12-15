@@ -36,9 +36,7 @@ namespace ShampanPOS.Models
         public string? TelephoneNo { get; set; }
 
         [Display(Name = "Email")]
-        //[Required(ErrorMessage = "Email is required.")]
-        //[EmailAddress(ErrorMessage = "Invalid Email format.")]
-        //[StringLength(255, ErrorMessage = "Email cannot exceed 255 characters.")]
+
         public string? Email { get; set; }
 
         [Display(Name = "Contact Person")]

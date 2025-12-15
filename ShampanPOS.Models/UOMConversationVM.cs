@@ -45,10 +45,10 @@ namespace ShampanPOS.Models
         public string? Status { get; set; }
         public string? FromName { get; set; }
         public string? ToName { get; set; }
-        public bool? IsIndex { get; set; }
+        //public bool? IsIndex { get; set; }
 
 
-        public int UOMId { get; set; }
+        //public int UOMId { get; set; }
 
     }
 

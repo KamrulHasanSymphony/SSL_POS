@@ -69,11 +69,7 @@ namespace ShampanPOS.Models
         public string? Operation { get; set; }
         public string? Status { get; set; }
         public string?[] IDs { get; set; }
-        public string? CountryName { get; set; }
-        public string? DivisionName { get; set; }
-        public string? DistrictName { get; set; }
-        public string? ThanaName { get; set; }
-        public string? EnumTypeName { get; set; }
+
     }
 
 

@@ -2486,8 +2486,6 @@
     <Content Include="Areas\SetUp\Views\MenuAuthorization\UserMenuCreateEdit.cshtml" />
     <Content Include="Areas\DMS\Views\BranchProfile\Create.cshtml" />
     <Content Include="Areas\DMS\Views\BranchProfile\Index.cshtml" />
-    <Content Include="Areas\DMS\Views\ProductBatchHistory\Create.cshtml" />
-    <Content Include="Areas\DMS\Views\ProductBatchHistory\Index.cshtml" />
     <Content Include="Areas\DMS\Views\PaymentType\Create.cshtml" />
     <Content Include="Areas\DMS\Views\PaymentType\Index.cshtml" />
     <Content Include="Areas\DMS\Views\UOM\Create.cshtml" />

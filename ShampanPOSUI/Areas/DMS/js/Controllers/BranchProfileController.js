@@ -432,8 +432,8 @@
                         return `
                                 <a href="/DMS/BranchProfile/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                     <i class="fas fa-pencil-alt"></i></a>
-                                    <a href="/DMS/BranchCreditLimit/Index/${dataItem.Id}" class="btn btn-success btn-sm mr-2" title="Branch Credit Limit List">
-                                 <i class="fas fa-th-list"></i>
+
+
                                    </a> <a class='btn bg-info btn-sm mr-2' title='Branch Advance List' href='/DMS/BranchAdvance/Index/${dataItem.Id}'>
                                     <i class='fas fa-th-list'></i>
                                 </a>

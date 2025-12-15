@@ -3,7 +3,7 @@ using ShampanPOS.Models;
 using ShampanPOS.Models.KendoCommon;
 using ShampanPOS.Repo;
 using ShampanPOS.Repo.Helper;
-using ShampanPOS.Service.ViewModel;
+//using ShampanPOS.Service.ViewModel;
 using ShampanPOSUI.Persistence;
 using System;
 using System.Collections.Generic;

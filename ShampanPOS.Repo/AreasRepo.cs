@@ -158,30 +158,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        //public List<AreaVM> GetParentAreaList()
-        //{
-        //    try
-        //    {
-        //        CommonDataService kendoList = new CommonDataService();
-        //        string sqlQuery = @"
-        //        Select
-        //            s.Id,
-        //            S.Code,
-        //            s.Name
-
-        //            from Areas s
-
-        //            Where s.IsArchive = 0
-        //                            ";
-
-
-        //        return kendoList.Select_Data_ListCMD<AreaVM>(sqlQuery);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex.InnerException;
-        //    }
-        //}
+        
 
     }
 }

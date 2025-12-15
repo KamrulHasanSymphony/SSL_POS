@@ -260,23 +260,7 @@ namespace ShampanPOS.Repo
             }
         }
 
-        //public ResultVM PurchaseImportExcelFileInsert(ProductPriceGroupVM model)
-        //{
-        //    try
-        //    {
-        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-        //        CommonModel.AuthModel auth = new CommonModel.AuthModel
-        //        {
-        //            token = ClaimNames.token
-        //        };
-        //        string value = httpRequestHelper.PostData("api/Product/PurchaseImportExcelFileInsert", auth, JsonConvert.SerializeObject(model));
-        //        return JsonConvert.DeserializeObject<ResultVM>(value);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+
 
 
 

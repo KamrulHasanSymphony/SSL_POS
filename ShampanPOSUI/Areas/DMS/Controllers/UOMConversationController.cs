@@ -29,7 +29,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 UOMConversationVM UOMConversation = new UOMConversationVM()
                 {
-                    IsIndex = true,
+                    //IsIndex = true,
                     FromId = id.Value
                 };
                 return View("Index", UOMConversation);
@@ -45,7 +45,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             UOMRepo _uomrepo = new UOMRepo();
             vm.Operation = "add";
             vm.IsActive = true;
-            vm.IsIndex = false;
+            //vm.IsIndex = false;
             vm.FromId = FromId;
             if (vm != null && vm.FromId != 0)
             {

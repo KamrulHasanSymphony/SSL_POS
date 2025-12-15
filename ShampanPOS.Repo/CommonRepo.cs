@@ -81,101 +81,6 @@ namespace ShampanPOS.Repo
             }
         }
 
-        public ResultVM GetProductModalForSaleData(ProductDataVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Common/GetProductModalForSaleData", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public ResultVM GetProductModalForPurchaseData(ProductDataVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Common/GetProductModalForPurchaseData", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public ResultVM GetProductModalData(ProductDataVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Common/GetProductModalData", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public ResultVM GetUOMFromNameData(ProductDataVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Product/GetUOMFromNameData", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public ResultVM GetProductGroupModalData(ProductDataVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Product/GetProductGroupModalData", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
         public ResultVM GetAreaList(CommonVM model)
         {
             try
@@ -273,32 +178,6 @@ namespace ShampanPOS.Repo
             }
         }
 
-        //     public List<UOMVM> GetUOMList()
-        //     {
-        //         try
-        //         {
-        //             CommonDataService kendoList = new CommonDataService();
-        //             string sqlQuery = @"
-
-        //         SELECT DISTINCT
-
-        // ISNULL(H.Id,0)	Id
-        //,ISNULL(H.Code,'') Code
-        //,ISNULL(H.Name,'') Name
-        //,CASE WHEN ISNULL(H.IsActive,0) = 1 THEN 'Active' ELSE 'Inactive'	END Status
-
-        //FROM UOMs H
-
-        //WHERE H.IsArchive != 1  
-        //             ";
-
-        //             return kendoList.Select_Data_ListCMD<UOMVM>(sqlQuery);
-        //         }
-        //         catch (Exception ex)
-        //         {
-        //             throw ex.InnerException;
-        //         }
-        //     }
 
         public ResultVM GetEnumTypeList(CommonVM model)
         {
@@ -318,28 +197,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        //public List<EnumTypeVM> GetEnumTypeList()
-        //{
-        //    try
-        //    {
-        //        CommonDataService kendoList = new CommonDataService();
-        //        string sqlQuery = @"
 
-        //        SELECT DISTINCT
-        //      ISNULL(H.Id, 0) AS Id,
-        //      ISNULL(H.Name, '') AS Name,
-        //      ISNULL(H.EnumType, '') AS EnumType
-
-        //      From EnumTypes H 
-        //        WHERE 1 = 1  ";
-
-        //        return kendoList.Select_Data_ListCMD<EnumTypeVM>(sqlQuery);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex.InnerException;
-        //    }
-        //}
 
         public ResultVM GetSalePersonList(CommonVM model)
         {
@@ -399,18 +257,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        //public List<SaleOrderVM> GetSalePersonList()
-        //{
-        //    try
-        //    {
-        //        CommonDataService kendoList = new CommonDataService();
-        //        return kendoList.Select_Data_List<SaleOrderVM>("sp_GetSalePersonList", "get_List");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex.InnerException;
-        //    }
-        //}
+
 
         public ResultVM GetCurrencieList(CommonVM model)
         {
@@ -468,34 +315,7 @@ namespace ShampanPOS.Repo
             }
         }
 
-        //     public List<CurrencieVM> GetCurrencieList()
-        //     {
-        //         try
-        //         {
-        //             CommonDataService kendoList = new CommonDataService();
-        //             string sqlQuery = @"
-        //       SELECT DISTINCT
-        //          ISNULL(H.Id,0)	Id
-        //,ISNULL(H.Id,0)	Value
-        //,ISNULL(H.Code,'') Code
-        //,ISNULL(H.Name,'') Name
 
-        //,CASE WHEN ISNULL(H.IsActive,0) = 1 THEN 'Active' ELSE 'Inactive'	END Status
-
-        //FROM Currencies H
-
-        //WHERE H.IsActive = 1  
-        //             ";
-
-
-        //             return kendoList.Select_Data_ListCMD<CurrencieVM>(sqlQuery);
-        //         }
-        //         catch (Exception)
-        //         {
-
-        //             throw;
-        //         }
-        //     }
         public ResultVM GetDeliveryList(CommonVM model)
         {
             try
@@ -514,49 +334,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        //public List<DeliveryPersonVM> GetDeliveryList()
-        //{
-        //    try
-        //    {
-        //        CommonDataService kendoList = new CommonDataService();
-        //        string sqlQuery = @"
-        //SELECT DISTINCT
-        //         ISNULL(H.Id, 0) AS Id,
-        //         ISNULL(H.Id, 0) AS Value,
-        //         ISNULL(H.Code, '') AS Code,
-        //         ISNULL(H.Name, '') AS Name,
-        //         ISNULL(H.Comments, '') AS Comments
 
-        //         FROM DeliveryPersons H
-        //        ";
-
-
-        //        return kendoList.Select_Data_ListCMD<DeliveryPersonVM>(sqlQuery);
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
-        //public ResultVM GetDriverList(CommonVM model)
-        //{
-        //    try
-        //    {
-        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
-        //        #region Invoke API
-        //        var data = httpRequestHelper.PostData("api/Common/DriverList", authModel, JsonConvert.SerializeObject(model));
-        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-        //        #endregion 
-
-        //        return result;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
         public List<EnumTypeVM> GetDriverList()
         {
             try
@@ -598,42 +376,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        //     public List<CustomerVM> GetCustomerList(CommonVM param)
-        //     {
-        //         try
-        //         {
-        //             CommonDataService kendoList = new CommonDataService();
-        //             string sqlQuery = @"
-        //         SELECT DISTINCT
 
-        // ISNULL(H.Id,0)	Id
-        //,ISNULL(H.Code,'') Code
-        //,ISNULL(H.Name,'') Name
-        //,ISNULL(H.Address,'') Address
-        //,ISNULL(H.Email,'') Email
-        //,ISNULL(H.City,'') City
-        //,ISNULL(H.BanglaName,'') BanglaName
-        //,ISNULL(H.Comments,'') Comments
-        //,CASE WHEN ISNULL(H.IsActive,0) = 1 THEN 'Active' ELSE 'Inactive'	END Status
-
-        //FROM Customers H
-
-        //WHERE H.IsActive = 1
-
-        //             ";
-
-        //             if(!string.IsNullOrEmpty(param.BranchId))
-        //             {
-        //                 sqlQuery += " AND H.BranchId = " + param.BranchId + " ";
-        //             }
-
-        //             return kendoList.Select_Data_ListCMD<CustomerVM>(sqlQuery);
-        //         }
-        //         catch (Exception ex)
-        //         {
-        //             throw ex.InnerException;
-        //         }
-        //     }
         public ResultVM GetReceiveByDeliveryPersonList(CommonVM model)
         {
             try
@@ -652,31 +395,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        //     public List<CustomerAdvanceVM> GetReceiveByDeliveryPersonList()
-        //     {
-        //         try
-        //         {
-        //             CommonDataService kendoList = new CommonDataService();
-        //string sqlQuery = @"
 
-        //         SELECT DISTINCT
-
-        // ISNULL(H.Id,0)	Id
-        //,ISNULL(H.Name,'') Name
-        //,ISNULL(H.EnumType,'') EnumType
-
-        //FROM EnumTypes H
-
-        //WHERE H.EnumType = 'DeliveryPerson' 
-        //             ";
-
-        //             return kendoList.Select_Data_ListCMD<CustomerAdvanceVM>(sqlQuery);
-        //         }
-        //         catch (Exception ex)
-        //         {
-        //             throw ex.InnerException;
-        //         }
-        //     }
 
         public ResultVM GetSupplierList(CommonVM model)
         {
@@ -696,30 +415,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        //public List<CommonDropDown> GetSupplierList()
-        //{
-        //    try
-        //    {
-        //        CommonDataService kendoList = new CommonDataService();
-        //        string sqlQuery = @"
-        //         Select
-        //         ISNULL(H.Id,0)	Id,
-        //         ISNULL(H.Name,'') Name,              
-        //         ISNULL(H.Code,'') Code
-
-
-        //        FROM Suppliers H
-        //        WHERE H.IsActive =1 ";
-
-
-        //        return kendoList.Select_Data_ListCMD<CommonDropDown>(sqlQuery);
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
+ 
         public ResultVM GetCampaignTargetList(CommonVM model)
         {
             try
@@ -738,28 +434,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        //public List<CommonDropDown> GetCampaignTargetList()
-        //{
-        //    try
-        //    {
-        //        CommonDataService kendoList = new CommonDataService();
-        //        string sqlQuery = @"
-        //         Select
-        //         ISNULL(H.Id,0)	Id,
-        //         ISNULL(H.TotalTarget,'') Value
-
-        //        FROM SalePersonCampaignTargets H
-        //        WHERE 1 =1 ";
-
-
-        //        return kendoList.Select_Data_ListCMD<CommonDropDown>(sqlQuery);
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
+  
 
         public ResultVM GetCampaignList(CommonVM model)
         {
@@ -1209,43 +884,6 @@ namespace ShampanPOS.Repo
             }
         }
 
-        //public ResultVM CampaignMudularityCalculation(CampaignUtilty vm)
-        //{
-        //    try
-        //    {
-        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
-        //        #region Invoke API
-        //        var data = httpRequestHelper.PostData("api/Common/CampaignMudularityCalculation", authModel, JsonConvert.SerializeObject(vm));
-        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-        //        #endregion                
-
-        //        return result;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
-
-        //public ResultVM CampaignInvoiceCalculation(CampaignUtilty vm)
-        //{
-        //    try
-        //    {
-        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
-        //        #region Invoke API
-        //        var data = httpRequestHelper.PostData("api/Common/CampaignInvoiceCalculation", authModel, JsonConvert.SerializeObject(vm));
-        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-        //        #endregion                
-
-        //        return result;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
 
         public ResultVM GetPaymentTypeList(CommonVM model)
         {
@@ -1316,25 +954,6 @@ namespace ShampanPOS.Repo
             }
         }
 
-        //public ResultVM GetSaleDeleveryModal(SaleDeliveryVM model)
-        //{
-        //    try
-        //    {
-        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
-        //        #region Invoke API
-        //        var data = httpRequestHelper.PostData("api/Common/GetSaleDeleveryModal", authModel, JsonConvert.SerializeObject(model));
-        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-        //        #endregion                
-
-        //        return result;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
-
 
         public ResultVM GetFocalPointList(CommonVM model)
         {
@@ -1379,36 +998,6 @@ namespace ShampanPOS.Repo
             }
         }
 
-
-        //public ResultVM HasDayEndData(string branchId)
-        //{
-        //    try
-        //    {
-        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-
-        //        // Authentication model
-        //        CommonModel.AuthModel auth = new CommonModel.AuthModel
-        //        {
-        //            token = ClaimNames.token
-        //        };
-
-        //        // Prepare request payload
-        //        var payload = new { branchCode = branchId };
-        //        string jsonPayload = JsonConvert.SerializeObject(payload);
-
-        //        // Call the API
-        //        string apiUrl = "api/Common/CheckDayEnd"; // your API endpoint
-        //        string response = httpRequestHelper.PostData(apiUrl, auth, jsonPayload);
-
-        //        // Deserialize the result and return
-        //        return JsonConvert.DeserializeObject<ResultVM>(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Optionally log exception here
-        //        throw;
-        //    }
-        //}
 
     }
 }

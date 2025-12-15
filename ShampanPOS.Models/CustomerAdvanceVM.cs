@@ -23,7 +23,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Advance Entry Date")]
         public string? AdvanceEntryDate { get; set; }
         public string? Name { get; set; }
-        public string? EnumType { get; set; }
+        //public string? EnumType { get; set; }
         public string? Operation { get; set; }
 
         [Display(Name = "Advance Amount")]

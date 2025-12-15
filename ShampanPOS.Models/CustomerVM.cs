@@ -31,23 +31,24 @@ namespace ShampanPOS.Models
         [Display(Name = "Bangla Address")]
         public string? BanglaAddress { get; set; }
 
-        [Display(Name = "Route")]
-        public int? RouteId { get; set; }
+        //[Display(Name = "Route")]
+        //public int? RouteId { get; set; }
 
-        [Display(Name = "Area")]
-        public int? AreaId { get; set; }
+        //[Display(Name = "Area")]
+        //public int? AreaId { get; set; }
 
-        [Display(Name = "Focal Point")]
-        public int? FocalPointId { get; set; }
+        //[Display(Name = "Focal Point")]
+        //public int? FocalPointId { get; set; }
 
-        [Display(Name = "City")]
-        public string? City { get; set; }
-        [Display(Name = "Customer")]
-        public int? CustomerId { get; set; }
+        //[Display(Name = "City")]
+        //public string? City { get; set; }
 
-        [Display(Name = "Customer")]
-        public string? CustomerCode { get; set; }
-        public string? CustomerName { get; set; }
+        //[Display(Name = "Customer")]
+        //public int? CustomerId { get; set; }
+
+        //[Display(Name = "Customer")]
+        //public string? CustomerCode { get; set; }
+        //public string? CustomerName { get; set; }
 
         [Display(Name = "Mobile No.")]
         //[Required(ErrorMessage = "Telephone No. is required.")]
@@ -117,9 +118,9 @@ namespace ShampanPOS.Models
         public string? Status { get; set; }
         public string? CustomerGroupName { get; set; }
 
-        [Display(Name = " Price Group")]
+        //[Display(Name = " Price Group")]
 
-        public string? CustomerCategory { get; set; }
+        //public string? CustomerCategory { get; set; }
 
 
 

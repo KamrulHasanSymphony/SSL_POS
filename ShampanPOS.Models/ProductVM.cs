@@ -63,14 +63,10 @@ namespace ShampanPOS.Models
         public string? UOMName { get; set; }
         [Display(Name = "Image")]
         public string? ImagePath { get; set; }
-        //public List<ProductImportVM> ProductImportList { get; set; } 
         public List<BranchProfileVM> BranchProfileList { get; set; }
-         //public ProductFileVm productfile { get; set; }
         public ProductVM()
         {
-            //ProductImportList = new List<ProductImportVM>();
             BranchProfileList = new List<BranchProfileVM>();
-            //productfile = new ProductFileVm();
         }
 
 

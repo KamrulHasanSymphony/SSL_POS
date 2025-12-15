@@ -20,15 +20,6 @@ namespace ShampanPOS.Models
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
 
-        [Display(Name = "Distributor Parent")]
-        public int? ParentId { get; set; }
-        public string? EnumType { get; set; }
-
-        [Display(Name = "Type")]
-        public int? EnumTypeId { get; set; }
-
-        [Display(Name = "Type Name")]
-        public string? EnumName { get; set; }
         [Required]
         [Display(Name = "Area")]
         public int? AreaId { get; set; }
@@ -36,14 +27,12 @@ namespace ShampanPOS.Models
         [Display(Name = "Area Name")]
         public string? AreaName { get; set; }
 
-        //[Display(Name = "Telephone No.")]
-        //public string TelephoneNo { get; set; }
-
         [Display(Name = "Telephone No.")]
         [Required(ErrorMessage = "Telephone No. is required.")]
         [StringLength(15, ErrorMessage = "Telephone No. cannot exceed 15 characters.")]
         [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "Invalid Telephone No. format.")]
         public string TelephoneNo { get; set; }
+
         [Display(Name = "Email")]
         public string Email { get; set; }
 
