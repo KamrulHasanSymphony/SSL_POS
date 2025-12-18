@@ -92,18 +92,18 @@
             <div class="card-body">
 
                 @Html.HiddenFor(model => model.Id)
-                @Html.HiddenFor(model => model.ProductGroupId)
-                @Html.HiddenFor(model => model.UOMId)
+                @*@Html.HiddenFor(model => model.ProductGroupId)
+                    @Html.HiddenFor(model => model.UOMId)*@
                 @Html.HiddenFor(model => model.DecimalPlace)
                 @Html.HiddenFor(model => model.Operation)
                 @Html.HiddenFor(model => model.IsPost)
                 @Html.HiddenFor(model => model.BranchId)
                 @Html.HiddenFor(model => model.TransactionType)
                 @Html.HiddenFor(model => model.FromDate)
-                @Html.HiddenFor(model => model.InvoiceDiscountRate)
-                @Html.HiddenFor(model => model.InvoiceDiscountAmount)
-                @Html.HiddenFor(model => model.GrandTotalVATAmount)
-                @Html.HiddenFor(model => model.GrandTotalSDAmount)
+                @*@Html.HiddenFor(model => model.InvoiceDiscountRate)
+                    @Html.HiddenFor(model => model.InvoiceDiscountAmount)
+                    @Html.HiddenFor(model => model.GrandTotalVATAmount)
+                    @Html.HiddenFor(model => model.GrandTotalSDAmount)*@
                 <div class="form-group row">
 
                     <div class="col-sm-2 codeWidth">
@@ -116,9 +116,9 @@
                     </div>
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.InvoiceDateTime)
+                        @Html.LabelFor(model => model.OrderDate)
                         <div class="input-group date">
-                            @Html.TextBoxFor(model => model.InvoiceDateTime, new { @class = "  form-control form-control-sm dateRange" })
+                            @Html.TextBoxFor(model => model.OrderDate, new { @class = "  form-control form-control-sm dateRange" })
                             <div class="input-group-append">
                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                             </div>
@@ -135,13 +135,13 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.SalePersonId)
-                        <div class="input-group ">
-                            @Html.TextBoxFor(model => model.SalePersonId, new { @class = "   ", @style = "width: 100%;" })
-                        </div>
-                        <span id="titleError1" class="text-danger" style="display:none;"></span>
-                    </div>
+                    @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.SalePersonId)
+            <div class="input-group ">
+                @Html.TextBoxFor(model => model.SalePersonId, new { @class = "   ", @style = "width: 100%;" })
+            </div>
+            <span id="titleError1" class="text-danger" style="display:none;"></span>
+        </div>*@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)
@@ -152,19 +152,13 @@
                     </div>
 
 
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.CurrencyId)
-                        <div class="input-group ">
-                            @Html.TextBoxFor(model => model.CurrencyId, new { @class = "   ", @style = "width: 100%;" })
-                        </div>
+                    @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.CurrencyId)
+            <div class="input-group ">
+                @Html.TextBoxFor(model => model.CurrencyId, new { @class = "   ", @style = "width: 100%;" })
+            </div>
 
-                    </div><span id="titleError3" class="text-danger" style="display:none;"></span>
-
-
-                </div>
-
-                <div class="form-group row">
-
+        </div><span id="titleError3" class="text-danger" style="display:none;"></span>*@
                     <div class="col-sm-3">
                         @Html.LabelFor(model => model.DeliveryAddress)
                         <div class="input-group ">
@@ -173,6 +167,12 @@
                         </div>
                         @Html.ValidationMessageFor(model => model.DeliveryAddress)
                     </div>
+
+                </div>
+
+                <div class="form-group row">
+
+
 
                     <div class="col-sm-3">
                         @Html.LabelFor(model => model.Comments)
@@ -206,45 +206,27 @@
                                 <th hidden data-type="text" data-search="false" data-required="false" data-computed="true" style="width:20%;" data-name="ProductCode"> Product Code </th>
                                 <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="ProductName"> Product </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
-                                <th data-type="text" data-search="true" data-computed="false" data-required="true" style="width:10%;" data-name="UOMName"> UOM</th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="UOMId"> UOMId </th>
-                                <th data-type="decimal" style="width: 10%;" data-required="true" data-name="CtnQuantity">Ctn Qty </th>
-                                <th data-type="decimal" style="width: 10%;" data-required="true" data-name="InputQuantity"> Input Qty </th>
 
-                                <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="true" data-name="PcsQuantity"> Pcs Qty </th>
-                                <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="true" data-name="Quantity"> Total Qty </th>
+                                <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="Quantity"> Total Qty </th>
 
                                 <th data-type="decimal" style="width: 10%;" data-required="true" data-name="UnitRate"> Unit Rate </th>
 
-                                <th data-type="text" style="width:12%;" data-computed="true" data-name="FreeProductName">Free Product</th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="FreeProductId"> FreeProductId </th>
-                                <th data-type="decimal" style="width: 5%;" data-computed="true" data-name="FreeQuantity"> Free Quantity </th>
-                                <th hidden data-type="decimal" style="width: 5%;" data-computed="true" data-name="DiscountRate"> Discount Rate </th>
-                                <th data-type="decimal" style="width: 5%;" data-computed="true" data-name="DiscountAmount"> Discount Amount </th>
 
                                 <th data-type="decimal" style="width: 14%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
-                                <th hidden data-type="decimal" style="width: 5%;" data-computed="true" data-name="SubTotalAfterDiscount"> SubTotal AfterDiscount </th>
 
 
-                                <th hidden data-type="decimal" style="width: 8%;" data-computed="true" data-name="SD"> SD Rate </th>
-                                <th hidden data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
-                                <th hidden data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATRate"> VAT Rate </th>
-                                <th hidden data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="SD"> SD Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="VATRate"> VAT Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
 
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
-                                <th hidden data-type="decimal" style="width: 5%;" data-computed="true" data-name="LineDiscountRate"> Line DiscountRate </th>
-                                <th hidden data-type="decimal" style="width: 5%;" data-computed="true" data-name="LineDiscountAmount"> Line DiscountAmount </th>
-                                <th hidden data-type="decimal" style="width: 5%;" data-computed="true" data-name="LineTotalAfterDiscount"> LineTotal AfterDiscount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="LineTotal"> Line Total </th>
 
 
-                                @*<th hidden data-type="decimal" style="width: 5%;" data-computed="true" data-name="StorckQuantity"> Storck Quantity </th>*@
+                                <th data-type="decimal" style="width: 5%;" data-computed="false" data-name="CompletedQty"> Completed Qty </th>
+                                <th data-type="decimal" style="width: 5%;" data-computed="false" data-name="RemainQty"> Remain Qty </th>
 
 
-                                <th data-type="text" style="width: 15%;" data-name="Comments">Comments</th>
-                                <th hidden data-type="text" style="width: 5%;" data-name="CampaignTypeId">CampaignTypeId</th>
-                                <th hidden data-type="text" style="width: 5%;" data-name="CampaignDetailsId">CampaignDetailsId</th>
-                                <th hidden data-type="text" style="width: 5%;" data-name="CampaignHeaderId">CampaignHeaderId</th>
-                                <th hidden data-type="text" style="width: 5%;" data-name="UOMConversion">UOMConversion</th>
                             </tr>
                         </thead>
                         <tbody id="SODBody">
@@ -258,24 +240,24 @@
                                         <td> @item.ProductName </td>
 
                                         <td hidden> @item.ProductId </td>
-                                        <td> @item.UOMName </td>
-                                        <td hidden>@item.UOMId</td>
-                                        <td class=" dFormat "> @item.CtnQuantity </td>
-                                        <td class=" dFormat "> @item.InputQuantity </td>
+                                        @*<td> @item.UOMName </td>
+                                            <td hidden>@item.UOMId</td>
+                                            <td class=" dFormat "> @item.CtnQuantity </td>
+                                            <td class=" dFormat "> @item.InputQuantity </td>
 
-                                        <td class=" dFormat "> @item.PcsQuantity </td>
+                                            <td class=" dFormat "> @item.PcsQuantity </td>*@
                                         <td class=" dFormat "> @item.Quantity </td>
 
                                         <td class=" dFormat "> @item.UnitRate </td>
-                                        <td class="  "> @item.FreeProductName </td>
+                                        @*<td class="  "> @item.FreeProductName </td>
 
-                                        <td hidden> @item.FreeProductId </td>
-                                        <td class=" dFormat "> @item.FreeQuantity </td>
-                                        <td hidden class=" dFormat "> @item.DiscountRate </td>
-                                        <td class=" dFormat "> @item.DiscountAmount </td>
+                                            <td hidden> @item.FreeProductId </td>
+                                            <td class=" dFormat "> @item.FreeQuantity </td>
+                                            <td hidden class=" dFormat "> @item.DiscountRate </td>
+                                            <td class=" dFormat "> @item.DiscountAmount </td>*@
 
                                         <td class=" dFormat "> @item.SubTotal</td>
-                                        <td hidden class=" dFormat ">@item.SubTotalAfterDiscount</td>
+                                        @*<td hidden class=" dFormat ">@item.SubTotalAfterDiscount</td>*@
 
                                         <td hidden class=" dFormat "> @item.SD</td>
                                         <td hidden class=" dFormat "> @item.SDAmount</td>
@@ -283,19 +265,15 @@
                                         <td hidden class=" dFormat "> @item.VATAmount</td>
 
                                         <td class=" dFormat ">@item.LineTotal</td>
-                                        <td hidden class=" dFormat ">@item.LineDiscountRate</td>
-                                        <td hidden class=" dFormat ">@item.LineDiscountAmount</td>
-                                        <td hidden class=" dFormat ">@item.LineTotalAfterDiscount</td>
+                                        @*<td hidden class=" dFormat ">@item.LineDiscountRate</td>
+                                            <td hidden class=" dFormat ">@item.LineDiscountAmount</td>
+                                            <td hidden class=" dFormat ">@item.LineTotalAfterDiscount</td>*@
 
 
                                         @*<td hidden class=" dFormat ">@item.StorckQuantity</td>*@
 
 
-                                        <td>@item.Comments</td>
-                                        <td hidden> @item.CampaignTypeId</td>
-                                        <td hidden> @item.CampaignDetailsId</td>
-                                        <td hidden> @item.CampaignHeaderId</td>
-                                        <td hidden> @item.UOMConversion</td>
+
                                         <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
 
                                     </tr>
@@ -310,150 +288,7 @@
 
             </div>
         </div>
-        <div class="card">
-            <div class="card-header p-2">
-
-                <div class="card-body">
-                    <div class="row">
-
-
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp;Grand Total Quantity </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotalAmount", 0, new { @placeholder = "Grand Total Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp;Total Free Quantity </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("FreeGrandTotalAmount", 0, new { @placeholder = "Grand Total with Free Amount", @class = " dFormat trFreeGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-
-                        </div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp;Grand SubTotal </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandSubTotal", 0, new { @placeholder = "Grand SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-
-                        </div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp; Grand Line Total</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Line Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-
-                        </div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp; Regular Discount Rate %</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBoxFor(model => model.RegularDiscountRate, new { @class = "trRegularDiscountRate form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp; Regular Discount Amount</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBoxFor(model => model.RegularDiscountAmount, new { @class = "trRegularDiscountAmount form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-
-                            </div>
-
-                        </div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp; </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("AfterRegularDiscountAmount", 0, new { @placeholder = " After Regular Discount amount", @class = "tramountRegularDiscountAmount form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row" style="display:none">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp;Invoice Discount Rate</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("InvoiceDiscountRate", 0, new { @placeholder = "Final Invoice Value", @class = "trFinalInvoiceDiscount form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp; Special Discount Rate %</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBoxFor(model => model.SpecialDiscountRate, new { @placeholder = "Special Discount Rate", @class = "trSpecialDiscountRate form-control form-control-sm   NumberCheck text-right" })
-
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp; Special Discount Amount</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBoxFor(model => model.SpecialDiscountAmount, new { @placeholder = " Special Discount", @class = "trSpecialDiscountAmount form-control form-control-sm   NumberCheck text-right" })
-
-                            </div>
-
-                        </div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp; </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("AfterSpecialDiscountAmount", 0, new { @placeholder = "After Special Discount", @class = "trAfterSpecialDiscountAmount form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3">
-                            <div class="editor-label">
-                                <label>&nbsp; Final Invoice Value</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("FinalInvoiceValue", 0, new { @placeholder = "Final Invoice Value", @class = "trFinalInvoiceValue form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
+        
     </form>
     <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
         <div class="card-header p-2">

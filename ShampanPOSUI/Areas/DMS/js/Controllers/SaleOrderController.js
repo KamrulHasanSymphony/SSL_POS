@@ -22,14 +22,15 @@
             GetGridDataList();
         };
 
-        GetSalePersonComboBox();
-        GetCurrencyComboBox();
-        if (operation == "add") {
-            GetCustomerComboBox();
-        }
-        else if (operation == "update") {
-            updateCustomerComboBox(getSalePersonId, $("#BranchId").val());
-        }
+        GetCustomerComboBox();
+        //GetSalePersonComboBox();
+        //GetCurrencyComboBox();
+        //if (operation == "add") {
+        //    GetCustomerComboBox();
+        //}
+        //else if (operation == "update") {
+        //    updateCustomerComboBox(getSalePersonId, $("#BranchId").val());
+        //}
 
         $(document).on('click', '.edit-sale-order', function () {
             kendo.alert("You can't edit this order because it has already been delivered.");
@@ -526,12 +527,11 @@
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 100 },
                 { field: "Address", title: "Address", width: 150 },
-                { field: "Email", title: "Email", width: 150 },
-                { field: "City", title: "City", width: 150 }
+                { field: "Email", title: "Email", width: 150 }
 
             ],
             filter: "contains",
-            filterFields: ["Code", "Name", "Address", "Email", "City"],
+            filterFields: ["Code", "Name", "Address", "Email"],
             dataSource: {
                 transport: {
                     read: "/Common/Common/GetCustomerList"

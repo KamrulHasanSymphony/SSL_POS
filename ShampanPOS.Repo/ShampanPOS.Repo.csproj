@@ -48,11 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PurchaseReturnRepo.cs" />
+    <Compile Include="PurchaseRepo.cs" />
     <Compile Include="PurchaseOrderRepo.cs" />
     <Compile Include="AreasRepo.cs" />
     <Compile Include="AuthRepo.cs" />
     <Compile Include="BusinessTypeRepo.cs" />
     <Compile Include="ProductUOMConversionRepo.cs" />
+    <Compile Include="SaleOrderRepo.cs" />
     <Compile Include="UserBranchProfileRepo.cs" />
     <Compile Include="UserProfileRepo.cs" />
     <Compile Include="CompanyProfileRepo.cs" />

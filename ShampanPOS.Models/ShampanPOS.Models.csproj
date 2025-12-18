@@ -99,6 +99,12 @@
     <Compile Include="CustomerDataVM.cs" />
     <Compile Include="ProductDataVM.cs" />
     <Compile Include="PurchaseOrderDetailVM.cs" />
+    <Compile Include="PurchaseDetailVM.cs" />
+    <Compile Include="PurchaseReturnDetailVM.cs" />
+    <Compile Include="PurchaseReturnVM.cs" />
+    <Compile Include="SaleOrderDetailVM.cs" />
+    <Compile Include="SaleOrderVM.cs" />
+    <Compile Include="PurchaseVM.cs" />
     <Compile Include="PurchaseOrderVM.cs" />
     <Compile Include="DashboardData.cs" />
     <Compile Include="DbUpdateModel.cs" />

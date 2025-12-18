@@ -645,5 +645,93 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
 
+
+
+        [HttpPost]
+        public ActionResult _getProductDataForSale()
+        {
+            try
+            {
+                _repo = new CommonRepo();
+
+                ProductDataVM vm = new ProductDataVM();
+                var search = Request.Form["search[value]"].Trim();
+
+                var startRec = Request.Form["start"].ToString();
+                var pageSize = Request.Form["length"].ToString();
+                var orderColumnIndex = Request.Form["order[0][column]"].ToString();
+                var orderDir = Request.Form["order[0][dir]"].ToString();
+                var orderName = Request.Form[$"columns[{orderColumnIndex}][name]"].ToString();
+
+                vm.PeramModel.SearchValue = search;
+                vm.PeramModel.OrderName = orderName == "" ? "P.Id" : orderName;
+                vm.PeramModel.orderDir = orderDir;
+                vm.PeramModel.startRec = Convert.ToInt32(startRec);
+                vm.PeramModel.pageSize = Convert.ToInt32(pageSize);
+                if (vm.PeramModel.pageSize == -1)
+                {
+                    vm.PeramModel.pageSize = int.MaxValue; // fetch all records
+                }
+                vm.PeramModel.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                vm.PeramModel.FromDate = Request.Form["FromDate"];
+
+                if (!string.IsNullOrEmpty(Request.Form["CustomerId"]))
+                {
+                    vm.PeramModel.CustomerId = Convert.ToInt32(Request.Form["CustomerId"]);
+                }
+                else
+                {
+                    vm.PeramModel.CustomerId = -1;
+                }
+
+                vm.ProductCode = search;
+                vm.ProductName = search;
+                vm.BanglaName = search;
+                vm.HSCodeNo = search;
+                vm.ProductGroupName = search;
+                vm.UOMName = search;
+                vm.Status = search;
+                vm.ImagePath = search;
+
+                ResultVM result = _repo.GetProductModalForSaleData(vm);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var jArray = result.DataVM as JArray;
+                    if (jArray != null)
+                    {
+                        var data = jArray.ToObject<List<ProductDataVM>>();
+                        return Json(new
+                        {
+                            draw = Request.Form["draw"],
+                            recordsTotal = result.Count,
+                            recordsFiltered = result.Count,
+                            data = data
+                        }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+                return Json(new
+                {
+                    draw = Request.Form["draw"],
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new List<ProductDataVM>()
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new
+                {
+                    draw = Request.Form["draw"],
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new List<ProductDataVM>()
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 }
