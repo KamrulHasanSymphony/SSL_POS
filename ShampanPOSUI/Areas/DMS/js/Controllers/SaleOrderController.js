@@ -1,8 +1,8 @@
 ﻿var SaleOrderController = function (CommonService, CommonAjaxService) {
 
     var getCustomerId = 0;
-    var getSalePersonId = 0;
-    var getCurrencyId = 0;
+    //var getSalePersonId = 0;
+    //var getCurrencyId = 0;
     var operation = "";
     var decimalPlace = 0;
 
@@ -10,8 +10,8 @@
 
 
         getCustomerId = $("#CustomerId").val() || 0;
-        getSalePersonId = $("#SalePersonId").val() || 0;
-        getCurrencyId = $("#CurrencyId").val() || 0;
+        //getSalePersonId = $("#SalePersonId").val() || 0;
+        //getCurrencyId = $("#CurrencyId").val() || 0;
         operation = $("#Operation").val();
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
@@ -154,35 +154,58 @@
         $('#details').on('blur', ".td-VATAmount", function (event) {
             computeSubTotal($(this), 'VATAmount');
         });
+
+
+        //$('#details').on('click', 'input.txtProductName', function () {
+
+        //    var customerId = $("#CustomerId").val() || 0;
+        //    // Validate customer selection
+        //    if (customerId === "0" || customerId === 0) {
+        //        ShowNotification(3, "Please select a customer first.");
+        //        return;
+        //    }
+
+        //    var originalRow = $(this);
+        //    $('#FromDate').val($('#InvoiceDateTime').val());
+        //    originalRow.closest("td").find("input").data('touched', true);
+        //    CommonService.productCodeModal(
+        //        function success(result) {
+        //        },
+        //        function fail(error) {
+        //            originalRow.closest("td").find("input").data("touched", false).focus();
+        //        },
+        //        function bindSingleClick(row) {
+                    
+        //            productModalDblClick(row, originalRow);
+        //        },
+        //        function closeCallback() {
+        //            originalRow.closest("td").find("input").data("touched", false).focus();
+        //        }
+        //    );
+
+        //});
+
         $('#details').on('click', 'input.txtProductName', function () {
-
-            var customerId = $("#CustomerId").val() || 0;
-            // Validate customer selection
-            if (customerId === "0" || customerId === 0) {
-                ShowNotification(3, "Please select a customer first.");
-                return;
-            }
-
             var originalRow = $(this);
-            $('#FromDate').val($('#InvoiceDateTime').val());
+            $('#FromDate').val($('#PurchaseDate').val());
             originalRow.closest("td").find("input").data('touched', true);
-            CommonService.productCodeModal(
+            CommonService.productForPurchaseModal(
                 function success(result) {
+                    console.log("Modal opened successfully.");
                 },
                 function fail(error) {
                     originalRow.closest("td").find("input").data("touched", false).focus();
+                    console.error("Error opening modal:", error);
                 },
-                function bindSingleClick(row) {
-                    
+                function dblClick(row) {
                     productModalDblClick(row, originalRow);
                 },
                 function closeCallback() {
                     originalRow.closest("td").find("input").data("touched", false).focus();
+                    console.log("Modal closed.");
                 }
             );
-
         });
-
 
 
         $('#details').on('click', 'input.txtUOMName', function () {
@@ -953,7 +976,7 @@
         $currentRow.find('.td-SD').text(SDRate);
         $currentRow.find('.td-VATRate').text(VATRate);
         $currentRow.find('.td-UOMConversion').text(Conversion);
-        CampaignMudularitycal($currentRow)
+        //CampaignMudularitycal($currentRow)
         $("#partialModal").modal("hide");
         originalRow.closest("td").find("input").data("touched", false).focus();
         $('#details').find(".td-Quantity").trigger('blur');
@@ -1007,15 +1030,7 @@
                             if (param.field === "CustomerName") {
                                 param.field = "C.Name";
                             }
-                            if (param.field === "SalePersonName") {
-                                param.field = "SP.Name";
-                            }
-                            if (param.field === "RouteName") {
-                                param.field = "R.Name";
-                            }
-                            if (param.field === "CurrencyName") {
-                                param.field = "CR.Name";
-                            }
+
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";
                             }
@@ -1028,9 +1043,9 @@
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
-                            if (param.field === "InvoiceDateTime" && param.value) {
+                            if (param.field === "OrderDate" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "H.InvoiceDateTime";
+                                param.field = "H.OrderDate";
                             }
                             if (param.field === "DeliveryDate" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
@@ -1086,15 +1101,6 @@
                             if (param.field === "CustomerName") {
                                 param.field = "C.Name";
                             }
-                            if (param.field === "SalePersonName") {
-                                param.field = "SP.Name";
-                            }
-                            if (param.field === "RouteName") {
-                                param.field = "R.Name";
-                            }
-                            if (param.field === "CurrencyName") {
-                                param.field = "CR.Name";
-                            }
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";
                             }
@@ -1108,26 +1114,15 @@
                                 param.field = "H.Comments";
                             }
 
-                            if (param.field === "InvoiceDateTime" && param.value) {
+                            if (param.field === "OrderDate" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "CONVERT(VARCHAR(10), H.InvoiceDateTime, 120)";
+                                param.field = "CONVERT(VARCHAR(10), H.OrderDate, 120)";
                             }
                             if (param.field === "DeliveryDate" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
                                 param.field = "CONVERT(VARCHAR(10), H.DeliveryDate, 120)";
                             }
-                            if (param.field === "GrandTotalAmount") {
-                                param.field = "H.GrandTotalAmount";
 
-                            }
-                            if (param.field === "GrandTotalSDAmount") {
-                                param.field = "H.GrandTotalSDAmount";
-
-                            }
-                            if (param.field === "GrandTotalVATAmount") {
-                                param.field = "H.GrandTotalVATAmount";
-
-                            }
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
@@ -1372,7 +1367,7 @@
                             footerTemplate: "#= kendo.toString(sum, 'n2') #"
                         },
                         { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 },
-                        { field: "IsFixedVAT", hidden: true, title: "Is Fixed VAT", sortable: true, width: 100 },
+                      /*  { field: "IsFixedVAT", hidden: true, title: "Is Fixed VAT", sortable: true, width: 100 },*/
                         { field: "Comments", title: "Comments", sortable: true, width: 150 }
                     ]
                 });
@@ -1414,8 +1409,8 @@
 
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", sortable: true, width: 200 },
-                { field: "SalePersonName", title: "Sale Person", sortable: true, width: 200 },
-                { field: "RouteName", title: "Route", sortable: true, width: 200 },
+                //{ field: "SalePersonName", title: "Sale Person", sortable: true, width: 200 },
+                //{ field: "RouteName", title: "Route", sortable: true, width: 200 },
                 { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
                 {
                     field: "PostStatus", title: "Posted", sortable: true, width: 130,
@@ -1433,9 +1428,9 @@
                         }
                     }
                 },
-                { field: "CurrencyName", title: "Currency Name", sortable: true, width: 200 },
+                //{ field: "CurrencyName", title: "Currency Name", sortable: true, width: 200 },
                 {
-                    field: "InvoiceDateTime", title: "Invoice Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
+                    field: "OrderDate", title: "Order Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(OrderDate), "yyyy-MM-dd") #',
                     filterable:
                     {
                         ui: "datepicker"
@@ -1448,57 +1443,23 @@
                         ui: "datepicker"
                     }
                 },
-                {
-                    field: "Status", title: "Is Complete", sortable: true, width: 130,
-                    filterable: {
-                        ui: function (element) {
-                            element.kendoDropDownList({
-                                dataSource: [
-                                    { text: "Y", value: "1" },
-                                    { text: "N", value: "0" }
-                                ],
-                                dataTextField: "text",
-                                dataValueField: "value",
-                                optionLabel: "Select Option"
-                            });
-                        }
-                    }
-                },
-                {
-                    field: "GrandTotalAmount",
-                    title: "Grand Total Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                }
-                ,
-                {
-                    field: "GrandTotalSDAmount",
-                    title: "Grand Total SD Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                }
-                ,
-                {
-                    field: "GrandTotalVATAmount",
-                    title: "Grand Total VAT Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
+                //{
+                //    field: "Status", title: "Is Complete", sortable: true, width: 130,
+                //    filterable: {
+                //        ui: function (element) {
+                //            element.kendoDropDownList({
+                //                dataSource: [
+                //                    { text: "Y", value: "1" },
+                //                    { text: "N", value: "0" }
+                //                ],
+                //                dataTextField: "text",
+                //                dataValueField: "value",
+                //                optionLabel: "Select Option"
+                //            });
+                //        }
+                //    }
+                //},
+
                 { field: "DeliveryAddress", title: "DeliveryAddress", sortable: true, width: 200 },
                 { field: "Comments", title: "Comments", sortable: true, width: 250 },
                 { field: "BranchName", title: "Branch Name", sortable: true, hidden: true },
@@ -1523,20 +1484,20 @@
 
     function save($table) {
 
-        var isDropdownValid1 = CommonService.validateDropdown("#SalePersonId", "#titleError1", "Sale Person is required");
+/*        var isDropdownValid1 = CommonService.validateDropdown("#SalePersonId", "#titleError1", "Sale Person is required");*/
         var isDropdownValid2 = CommonService.validateDropdown("#CustomerId", "#titleError2", "Customer is required");
-        var isDropdownValid3 = CommonService.validateDropdown("#CurrencyId", "#titleError3", "Currency is required");
+   /*     var isDropdownValid3 = CommonService.validateDropdown("#CurrencyId", "#titleError3", "Currency is required");*/
 
 
-        var isDropdownValid = isDropdownValid1 && isDropdownValid2 && isDropdownValid3;
+        var isDropdownValid =  isDropdownValid2;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
 
 
-        if (parseInt(model.SalePersonId) == 0 || model.SalePersonId == "") {
-            ShowNotification(3, "Sale Person Is Required.");
-            return;
-        }
+        //if (parseInt(model.SalePersonId) == 0 || model.SalePersonId == "") {
+        //    ShowNotification(3, "Sale Person Is Required.");
+        //    return;
+        //}
         if (parseInt(model.CustomerId) == 0 || model.CustomerId == "") {
             ShowNotification(3, "Customer Is Required.");
             return;
@@ -1579,12 +1540,12 @@
             return;
         };
 
-        model.GrandTotalAmount = model.GrandTotalAmount.replace(/,/g, '');
-        model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
-        model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
-        model.InvoiceDiscountRate = model.InvoiceDiscountRate.replace(/,/g, '');
-        model.InvoiceDiscountAmount = model.InvoiceDiscountAmount.replace(/,/g, '');
-        model.saleOrderDetailsList = details;
+        //model.GrandTotalAmount = model.GrandTotalAmount.replace(/,/g, '');
+        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
+        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
+        //model.InvoiceDiscountRate = model.InvoiceDiscountRate.replace(/,/g, '');
+        //model.InvoiceDiscountAmount = model.InvoiceDiscountAmount.replace(/,/g, '');
+        //model.saleOrderDetailsList = details;
 
         var url = "/DMS/SaleOrder/CreateEdit";
 

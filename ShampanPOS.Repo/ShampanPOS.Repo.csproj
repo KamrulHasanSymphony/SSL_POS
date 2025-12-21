@@ -56,6 +56,8 @@
     <Compile Include="BusinessTypeRepo.cs" />
     <Compile Include="ProductUOMConversionRepo.cs" />
     <Compile Include="SaleOrderRepo.cs" />
+    <Compile Include="SaleRepo.cs" />
+    <Compile Include="SaleReturnRepo.cs" />
     <Compile Include="UserBranchProfileRepo.cs" />
     <Compile Include="UserProfileRepo.cs" />
     <Compile Include="CompanyProfileRepo.cs" />

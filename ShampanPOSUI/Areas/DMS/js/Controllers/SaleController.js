@@ -1,13 +1,20 @@
-﻿var SaleReturnController = function (CommonService, CommonAjaxService) {
-
+﻿var SaleController = function (CommonService, CommonAjaxService) {
     var getCustomerId = 0;
-    var getSalePersonId = 0;
+    var getSaleOrderId = 0;
     var getDeliveryPersonId = 0;
     var getDriverPersonId = 0;
     var getRouteId = 0;
     var getCurrencyId = 0;
+    var decimalPlace = 0;
 
     var init = function () {
+
+        getCustomerId = $("#CustomerId").val() || 0;
+        getSaleOrderId = $("#SaleOrderId").val() || 0;
+        getDeliveryPersonId = $("#DeliveryPersonId").val() || 0;
+        getDriverPersonId = $("#DriverPersonId").val() || 0;
+        getRouteId = $("#RouteId").val() || 0;
+        getCurrencyId = $("#CurrencyId").val() || 0;
 
         if ($("#IsPosted").length) {
             LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
@@ -15,23 +22,17 @@
             GetBranchList();
         };
 
-        getCustomerId = $("#CustomerId").val() || 0;
-        getSalePersonId = $("#SalePersonId").val() || 0;
-        getDeliveryPersonId = $("#DeliveryPersonId").val() || 0;
-        getDriverPersonId = $("#DriverPersonId").val() || 0;
-        getRouteId = $("#RouteId").val() || 0;
-        getCurrencyId = $("#CurrencyId").val() || 0;
-
-
+        decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
         if (parseInt(getId) == 0 && getOperation == '') {
+            debugger;
             GetGridDataList();
         };
 
         GetCustomerComboBox();
-        GetSalePersonComboBox();
+        GetSaleOrderComboBox();
         GetRouteComboBox();
         GetDeliveryComboBox();
         GetDriverComboBox();
@@ -86,8 +87,8 @@
                             ShowNotification(3, "Data has already been Posted.");
                         }
                         else {
-                            model.IDs = model.Id; SaleReturnController
-                            var url = "/DMS/SaleReturn/MultiplePost";
+                            model.IDs = model.Id;
+                            var url = "/DMS/Sale/MultiplePost";
                             CommonAjaxService.multiplePost(url, model, postDone, fail);
                         }
                     }
@@ -97,7 +98,7 @@
 
         $('#details').on('click', "input.txt" + "ProductName", function () {
             
-
+         
             var originalRow = $(this);
             CommonService.productCodeModal({}, fail, function (row) { productModalDblClick(row, originalRow) },
                 function () {
@@ -183,6 +184,7 @@
             GetGridDataList();
 
         });
+
     };
     function GetBranchList() {
         var branch = new kendo.data.DataSource({
@@ -212,6 +214,7 @@
             suggest: true
         });
     };
+
     function GetCustomerComboBox() {
         var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -238,6 +241,7 @@
             }
         }).data("kendoMultiColumnComboBox");
     };
+
     //function GetCustomerComboBox() {
     //    var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
     //        dataTextField: "Name",
@@ -269,29 +273,30 @@
     //    }).data("kendoMultiColumnComboBox");
     //};
 
-    function GetSalePersonComboBox() {
-        var SalePersonComboBox = $("#SalePersonId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
+    function GetSaleOrderComboBox() {
+        debugger;
+        var SalePersonComboBox = $("#SaleOrderId").kendoMultiColumnComboBox({
+            dataTextField: "Code",
             dataValueField: "Id",
             height: 400,
             columns: [
                 { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "BanglaName", title: "BanglaName", width: 200 },
+                { field: "CustomerName", title: "Customer Name", width: 150 },
+            //    { field: "BanglaName", title: "BanglaName", width: 200 },
             ],
             filter: "contains",
-            filterFields: ["Code", "Name", "BanglaName"],
+            filterFields: ["Code", "CustomerName"],
             dataSource: {
                 transport: {
-                    read: "/Common/Common/GetSalePersonList"
+                    read: "/Common/Common/GetSaleOrderList"
                 }
             },
             placeholder: "Select Person",
             value: "",
             dataBound: function (e) {
                 
-                if (getSalePersonId) {
-                    this.value(parseInt(getSalePersonId));
+                if (getSaleOrderId) {
+                    this.value(parseInt(getSaleOrderId));
                 }
             },
             change: function (e) {
@@ -300,6 +305,36 @@
         }).data("kendoMultiColumnComboBox");
     };
 
+
+
+    function GetCurrencyComboBox() {
+        var CurrencyComboBox = $("#CurrencyId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 }
+            ],
+            filter: "contains",
+            filterFields: ["Code", "Name"],
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetCurrencieList"
+                }
+            },
+            placeholder: "Select Currency",
+            value: "",
+            dataBound: function (e) {
+                if (getCurrencyId) {
+                    this.value(parseInt(getCurrencyId));
+                }
+            },
+            change: function (e) {
+                
+            }
+        }).data("kendoMultiColumnComboBox");
+    };
     function GetRouteComboBox() {
         var RouteComboBox = $("#RouteId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -330,6 +365,7 @@
             }
         }).data("kendoMultiColumnComboBox");
     };
+
     function GetDeliveryComboBox() {
         var DeliveryComboBox = $("#DeliveryPersonId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -350,73 +386,17 @@
             placeholder: "Select Delivery Person",
             value: "",
             dataBound: function (e) {
+                
                 if (getDeliveryPersonId) {
                     this.value(parseInt(getDeliveryPersonId));
                 }
             },
             change: function (e) {
-
-            }
-        }).data("kendoMultiColumnComboBox");
-    };
-    //function GetDeliveryComboBox() {
-    //    var DeliveryComboBox = $("#DeliveryPersonId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 }
-
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Sale/GetDeliveryList"
-    //            }
-    //        },
-    //        placeholder: "Select Delivery Person",
-    //        value: "",
-    //        dataBound: function (e) {
-                
-    //            if (getDeliveryPersonId) {
-    //                this.value(parseInt(getDeliveryPersonId));
-    //            }
-    //        },
-    //        change: function (e) {
-                
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-    function GetCurrencyComboBox() {
-        var CurrencyComboBox = $("#CurrencyId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetCurrencieList"
-                }
-            },
-            placeholder: "Select Currency",
-            value: "",
-            dataBound: function (e) {
-                if (getCurrencyId) {
-                    this.value(parseInt(getCurrencyId));
-                }
-            },
-            change: function (e) {
                 
             }
         }).data("kendoMultiColumnComboBox");
     };
+
     function GetDriverComboBox() {
         var DriverComboBox = $("#DriverPersonId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -426,7 +406,7 @@
             filterFields: ["Name"],
             dataSource: {
                 transport: {
-                    read: "/Sale/GetDriverList"
+                    read: "/Common/Common/GetDriverList"
                 }
             },
             placeholder: "Select Driver Person",
@@ -445,87 +425,89 @@
 
 
     function computeSubTotal(row, param) {
+
+        var qty = parseFloat(row.closest("tr").find("td.td-Quantity").text().replace(/,/g, '')) || 1;
+        var unitCost = parseFloat(row.closest("tr").find("td.td-UnitRate").text().replace(/,/g, '')) || 0;
+
+        var SDRate = parseFloat(row.closest("tr").find("td.td-SD").text().replace(/,/g, '')) || 0;
+        var SDAmount = parseFloat(row.closest("tr").find("td.td-SDAmount").text().replace(/,/g, '')) || 0;
+
+        var VATRate = parseFloat(row.closest("tr").find("td.td-VATRate").text().replace(/,/g, '')) || 0;
+        var VATAmount = parseFloat(row.closest("tr").find("td.td-VATAmount").text().replace(/,/g, '')) || 0;
+
         
-
-        var qty = parseFloat(row.closest("tr").find("td.td-Quantity").text().replace(',', '').replace(',', ''));
-        var unitCost = parseFloat(row.closest("tr").find("td.td-UnitRate").text().replace(',', '').replace(',', ''));
-
-        var SDRate = parseFloat(row.closest("tr").find("td.td-SD").text().replace(',', '').replace(',', ''));
-        var SDAmount = parseFloat(row.closest("tr").find("td.td-SDAmount").text().replace(',', '').replace(',', ''));
-
-        var VATRate = parseFloat(row.closest("tr").find("td.td-VATRate").text().replace(',', '').replace(',', ''));
-        var VATAmount = parseFloat(row.closest("tr").find("td.td-VATAmount").text().replace(',', '').replace(',', ''));
-
-
         if (!isNaN(qty * unitCost)) {
-            var SubTotal = Number(parseFloat(qty * unitCost).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-            row.closest("tr").find("td.td-SubTotal").text(SubTotal);
+            var SubTotal = Number(parseFloat(qty * unitCost).toFixed(parseInt(decimalPlace)));
+            row.closest("tr").find("td.td-SubTotal").text(SubTotal.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
 
 
             if (param == 'VATRate') {
-                var VATAmount = Number(parseFloat(((qty * unitCost) * VATRate) / 100).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-                row.closest("tr").find("td.td-VATAmount").text(VATAmount);
+                var VATAmount = Number(parseFloat(((qty * unitCost) * VATRate) / 100).toFixed(parseInt(decimalPlace)));
+                row.closest("tr").find("td.td-VATAmount").text(VATAmount.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
             }
             else if (param == 'VATAmount') {
-                var VATRate = Number(parseFloat((VATAmount * 100) / (qty * unitCost)).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-                row.closest("tr").find("td.td-VATRate").text(VATRate);
+                var VATRate = Number(parseFloat((VATAmount * 100) / (qty * unitCost)).toFixed(parseInt(decimalPlace)));
+                row.closest("tr").find("td.td-VATRate").text(VATRate.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
             }
             else if (param == 'SDRate') {
-                var SDAmount = Number(parseFloat(((qty * unitCost) * SDRate) / 100).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-                row.closest("tr").find("td.td-SDAmount").text(SDAmount);
+                var SDAmount = Number(parseFloat(((qty * unitCost) * SDRate) / 100).toFixed(parseInt(decimalPlace)));
+                row.closest("tr").find("td.td-SDAmount").text(SDAmount.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
             }
             else if (param == 'SDAmount') {
-                var SDRate = Number(parseFloat((SDAmount * 100) / (qty * unitCost)).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-                row.closest("tr").find("td.td-SD").text(SDRate);
+                var SDRate = Number(parseFloat((SDAmount * 100) / (qty * unitCost)).toFixed(parseInt(decimalPlace)));
+                row.closest("tr").find("td.td-SD").text(SDRate.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
             }
             else {
-                var SDAmount = Number(parseFloat(((qty * unitCost) * SDRate) / 100).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
+                var SDAmount = Number(parseFloat(((qty * unitCost) * SDRate) / 100).toFixed(parseInt(decimalPlace)));
                 if (isNaN(SDAmount)) {
                     SDAmount = 0.00;
                 }
-                row.closest("tr").find("td.td-SDAmount").text(SDAmount);
-                var SDRate = Number(parseFloat((SDAmount * 100) / (qty * unitCost)).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
+                row.closest("tr").find("td.td-SDAmount").text(SDAmount.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+                var SDRate = Number(parseFloat((SDAmount * 100) / (qty * unitCost)).toFixed(parseInt(decimalPlace)));
                 if (isNaN(SDRate)) {
                     SDRate = 0.00;
                 }
-                row.closest("tr").find("td.td-SD").text(SDRate);
+                row.closest("tr").find("td.td-SD").text(SDRate.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
 
                 //////////////////////////////////////////////////////////////////
-                var VATAmount = Number(parseFloat(((qty * unitCost) * VATRate) / 100).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
+                var VATAmount = Number(parseFloat(((qty * unitCost) * VATRate) / 100).toFixed(parseInt(decimalPlace)));
                 if (isNaN(VATAmount)) {
                     VATAmount = 0.00;
                 }
-                row.closest("tr").find("td.td-VATAmount").text(VATAmount);
-                var VATRate = Number(parseFloat((VATAmount * 100) / (qty * unitCost)).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
+                row.closest("tr").find("td.td-VATAmount").text(VATAmount.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+                var VATRate = Number(parseFloat((VATAmount * 100) / (qty * unitCost)).toFixed(parseInt(decimalPlace)));
                 if (isNaN(VATRate)) {
                     VATRate = 0.00;
                 }
-                row.closest("tr").find("td.td-VATRate").text(VATRate);
+                row.closest("tr").find("td.td-VATRate").text(VATRate.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
             }
 
-            var LineTotal = Number(parseFloat((qty * unitCost) + parseFloat(SDAmount) + parseFloat(VATAmount)).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-            row.closest("tr").find("td.td-LineTotal").text(LineTotal);
+            var LineTotal = Number(parseFloat((qty * unitCost) + parseFloat(SDAmount) + parseFloat(VATAmount)).toFixed(parseInt(decimalPlace)));
+            row.closest("tr").find("td.td-LineTotal").text(LineTotal.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
 
             TotalCalculation();
         }
     };
 
-
     function TotalCalculation() {
+        
         var Quantity = 0;
         var SDAmount = 0;
+        var SubTotal = 0;
         var LineTotal = 0;
 
-        Quantity = getColumnSumAttr('Quantity', 'details').toFixed(2);
-        SDAmount = getColumnSumAttr('SDAmount', 'details').toFixed(2);
-        VATAmount = getColumnSumAttr('VATAmount', 'details').toFixed(2);
-        LineTotal = getColumnSumAttr('LineTotal', 'details').toFixed(2);
+        Quantity = getColumnSumAttr('Quantity', 'details').toFixed(parseInt(decimalPlace));
+        SubTotal = getColumnSumAttr('SubTotal', 'details').toFixed(parseInt(decimalPlace));
+        SDAmount = getColumnSumAttr('SDAmount', 'details').toFixed(parseInt(decimalPlace));
+        VATAmount = getColumnSumAttr('VATAmount', 'details').toFixed(parseInt(decimalPlace));
+        LineTotal = getColumnSumAttr('LineTotal', 'details').toFixed(parseInt(decimalPlace));
 
 
-        $("#GrandTotalAmount").val(Number(parseFloat(Quantity).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 }));
-        $("#GrandTotalSDAmount").val(Number(parseFloat(SDAmount).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 }));
-        $("#GrandTotalVATAmount").val(Number(parseFloat(VATAmount).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 }));
-        $("#GrandTotal").val(Number(parseFloat(LineTotal).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 }));
+        $("#GrandTotalAmount").val(Number(parseFloat(Quantity).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+        $("#GrandSubTotal").val(Number(parseFloat(SubTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+        $("#GrandTotalSDAmount").val(Number(parseFloat(SDAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+        $("#GrandTotalVATAmount").val(Number(parseFloat(VATAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+        $("#GrandTotal").val(Number(parseFloat(LineTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
 
     };
 
@@ -538,13 +520,11 @@
         var ProductName = rowData.ProductName;
         var UOMId = rowData.UOMId;
         var UOMName = rowData.UOMName;
-
+        debugger;
         originalRow.closest("td").find("input").val(ProductName);
         originalRow.closest('td').next().text(ProductId);
         originalRow.closest('td').next().next().text(UOMId);
         originalRow.closest('td').next().next().next().text(UOMName);
-        originalRow.closest('td').next().next().next().next().text(UOMId);
-        originalRow.closest('td').next().next().next().next().next().text(UOMName);
         $("#UOMId").val(UOMId);
 
         $("#partialModal").modal("hide");
@@ -573,11 +553,12 @@
 
 
     var GetGridDataList = function () {
+        debugger;
         var branchId = $("#Branchs").data("kendoComboBox").value();
         var IsPosted = $('#IsPosted').val();
         var FromDate = $('#FromDate').val();
         var ToDate = $('#ToDate').val();
-        
+
         var gridDataSource = new kendo.data.DataSource({
             type: "json",
             serverPaging: true,
@@ -588,14 +569,13 @@
             pageSize: 10,
             transport: {
                 read: {
-                    url: "/DMS/SaleReturn/GetGridData",
+                    url: "/DMS/Sale/GetGridData",
                     type: "POST",
                     dataType: "json",
                     cache: false,
                     data: { branchId: branchId, isPost: IsPosted, fromDate: FromDate, toDate: ToDate }
                 },
                 parameterMap: function (options) {
-                    
                     if (options.sort) {
                         options.sort.forEach(function (param) {
                             if (param.field === "Id") {
@@ -604,7 +584,9 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            
+                            if (param.field === "CustomerName") {
+                                param.field = "cus.Name";
+                            }
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";
                             }
@@ -625,18 +607,13 @@
                                 param.field = "H.IsPost";
                                 param.operator = "eq";
                             }
-                            
-                        if (param.field === "DeliveryDate") {
-                            param.field = "H.DeliveryDate";
-                        }
-                        if (param.field === "BranchName") {
-                            param.field = "Br.Name";
-                        }
-                        if (param.field === "CustomerName") {
-                            param.field = "cus.Name";
-                        }
-                        
-                                
+                            if (param.field === "InvoiceDateTime" && param.value) {
+                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+                                param.field = "H.InvoiceDateTime";
+                            }
+                            if (param.field === "BranchName") {
+                                param.field = "Br.Name";
+                            }
                         });
                     }
 
@@ -648,7 +625,9 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            
+                            if (param.field === "CustomerName") {
+                                param.field = "cus.Name";
+                            }
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";
                             }
@@ -662,32 +641,20 @@
                                     param.value = 1;
                                 } else if (statusValue.startsWith("n")) {
                                     param.value = 0;
-                                }
-                                else if (statusValue == "1") {
-                                    param.value = 1;
-                                }
-                                else if (statusValue == "0") {
-                                    param.value = 0;
-                                }
-                                else {
+                                } else {
                                     param.value = null;
                                 }
 
                                 param.field = "H.IsPost";
                                 param.operator = "eq";
                             }
-                            
-                            if (param.field === "DeliveryDate") {
-                                param.field = "H.DeliveryDate";
+                            if (param.field === "InvoiceDateTime" && param.value) {
+                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+                                param.field = "H.InvoiceDateTime";
                             }
                             if (param.field === "BranchName") {
                                 param.field = "Br.Name";
                             }
-                            if (param.field === "CustomerName") {
-                                param.field = "cus.Name";
-                            }
-                            
-
 
                         });
                     }
@@ -751,7 +718,7 @@
             reorderable: true,
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
-            search: ["Code", "VehicleNo", "VehicleType", "DeliveryAddress", "Comments", "Status", "GrdTotalAmount", "GrdTotalSDAmount", "GrdTotalVATAmount", "InvoiceDateTime", "DeliveryDate", "BranchName", "CustomerName", "SalePersonName", "RouteName"],
+            search: ["Code", "CustomerName", "InvoiceDateTime", "DeliveryDate", "GrdTotalAmount", "GrdTotalSDAmount", "GrdTotalVATAmount", "SalePersonName", "RouteName", "VehicleNo", "BranchName","VehicleType"],
             excel: {
                 fileName: "SaleList.xlsx",
                 filterable: true
@@ -824,7 +791,7 @@
             },
             columns: [
                 {
-                    selectable: true, width: 40
+                    selectable: true, width: 70
                 },
                 {
                     title: "Action",
@@ -832,7 +799,7 @@
                     template: function (dataItem) {
                         
                         return `
-                                <a href="/DMS/SaleReturn/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
+                                <a href="/DMS/Sale/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>`+
                             "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
@@ -842,9 +809,13 @@
                 { field: "Code", title: "Code", width: 180, sortable: true },
                 { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
                 {
-                    field: "InvoiceDateTime", title: "Invoice DateTime", sortable: true, width: 150
+                    field: "InvoiceDateTime", title: "Invoice DateTime", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
+                    filterable:
+                    {
+                        ui: "datepicker"
+                    }
                 },
-               
+                
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,
                     filterable: {
@@ -862,7 +833,6 @@
                     }
                 }
                 ,
-                
                 { field: "DeliveryAddress", title: "Delivery Address", sortable: true, width: 250 },
                 { field: "Comments", title: "Comments", sortable: true, width: 250 },
                 { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
@@ -901,8 +871,13 @@
             ShowNotification(3, "Complete Details Entry");
             return;
         };
+        //
+        //var customer = $("#CustomerId").val();
+        //var salePerson = $("#SalePersonId").val();
+        //var deliveryPerson = $("#DeliveryPersonId").val();
+        //var driverPerson = $("#DriverPersonId").val();
+        //var route = $("#RouteId").val();
 
-        
         var details = serializeTable($table);
 
         var requiredFields = ['ProductGroupName', 'ProductName', 'Quantity', 'UnitRate', 'SubTotal'];
@@ -926,15 +901,15 @@
         //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(',', '').replace(',', '').replace(',', '');
         //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(',', '').replace(',', '').replace(',', '');
 
-        model.saleReturnDetailList = details;
+        model.saleDetailsList = details;
 
-        var url = "/DMS/SaleReturn/CreateEdit";
+        var url = "/DMS/Sale/CreateEdit";
 
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     };
 
     function saveDone(result) {
-        
+        debugger;
         if (result.Status == 200) {
             if (result.Data.Operation == "add") {
                 ShowNotification(1, result.Message);
@@ -997,7 +972,7 @@
             return;
         }
 
-        var url = "/DMS/SaleReturn/MultiplePost";
+        var url = "/DMS/Sale/MultiplePost";
 
         CommonAjaxService.multiplePost(url, model, postDone, fail);
     };
@@ -1039,7 +1014,7 @@ function ReportPreview(id) {
     
     const form = document.createElement('form');
     form.method = 'post';
-    form.action = '/DMS/SaleReturn/ReportPreview';
+    form.action = '/DMS/Sale/ReportPreview';
     form.target = '_blank';
     const inputVal = document.createElement('input');
     inputVal.type = 'hidden';
@@ -1054,3 +1029,4 @@ function ReportPreview(id) {
     form.remove();
 
 };
+

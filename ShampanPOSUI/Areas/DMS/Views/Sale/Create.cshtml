@@ -1,6 +1,6 @@
-﻿@model ShampanPOS.Models.SaleReturnVM
+﻿@model ShampanPOS.Models.SaleVM
 @{
-    ViewBag.Title = "Sale Return Create";
+    ViewBag.Title = "Sale Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -17,7 +17,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0"> Sale Retun Entry </h1>
+                <h1 class="m-0"> Sale  Entry </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -29,64 +29,49 @@
 </div>
 
 <div class="card">
-    <div class="card-header p-2">
+        <div class="card-header p-2">
 
-        @if (Model.IsPost)
-        {
-            <button type="button" class="button sslPush">Already Posted</button>
-
-            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>
-        }
-        else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
-        {
-            <button type="button" class="button btnsave sslUpdate">Update</button>
-
-            <button type="button" class="button btnPost sslPost">Post</button>
-
-            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-
-            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>
-        }
-        else
-        {
-            <div style="display:none;" class="divUpdate">
+            @if (Model.IsPost)
+            {
+                <button type="button" class="button sslPush">Already Posted</button>
+            }
+            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
                 <button type="button" class="button btnsave sslUpdate">Update</button>
+
                 <button type="button" class="button btnPost sslPost">Post</button>
-                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
 
-                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                    New
-                </button>
-
-            </div>
-            <div class="divSave">
-                <button class="button btnsave sslSave" type="button" id="">Save</button>
-            </div>
-        }
-
+        </div>
     </div>
-</div>
+
+
 
 <div class="container-fluid">
     <form id="frmEntry">
         <div class="card card-secondary">
             <div class="card-header">
-                <h3 class="card-title"> Sale Return Info </h3>
+                <h3 class="card-title"> Sale  Info </h3>
             </div>
             <div class="card-body">
 
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.DecimalPlace)
 
                 @Html.HiddenFor(model => model.IsPost)
                 @Html.HiddenFor(model => model.BranchId)
                 @Html.HiddenFor(model => model.TransactionType)
-                @*@Html.HiddenFor(model => model.FiscalYear)*@
-                @Html.HiddenFor(model => model.PeriodId)
 
                 <div class="form-group row">
 
@@ -102,17 +87,27 @@
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.CustomerId, new { @class = "form-control form-control-sm" })
+                            @Html.TextBoxFor(model => model.CustomerId, new
+                            {
+                                @class = "form-control form-control-sm"@*, @readonly = "readonly"*@})
                         </div>
                     </div>
 
-
-
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.SaleOrderId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.SaleOrderId, new
+                            {
+                                @class = "form-control form-control-sm"@*, @readonly = "readonly"*@})
+                        </div>
+                    </div>
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.InvoiceDateTime)
                         <div class="input-group date">
-                            @Html.TextBoxFor(model => model.InvoiceDateTime, new { @class = "  form-control form-control-sm dateRange" })
+                            @Html.TextBoxFor(model => model.InvoiceDateTime, new
+                            {
+                                @class = "  form-control form-control-sm dateRange"@*, @readonly = "readonly"*@})
                             <div class="input-group-append">
                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                             </div>
@@ -120,43 +115,39 @@
                     </div>
 
 
-
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.DeliveryAddress)
                         <div class="input-group">
-                            @Html.TextAreaFor(model => model.DeliveryAddress, new { @class = "form-control form-control-sm" })
+                            @Html.TextAreaFor(model => model.DeliveryAddress, new
+                            {
+                                @class = "form-control form-control-sm"@*, @readonly = "readonly"*@})
                         </div>
                     </div>
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.Comments)
                         <div class="input-group">
-                            @Html.TextAreaFor(model => model.Comments, new { @class = "form-control form-control-sm" })
+                            @Html.TextAreaFor(model => model.Comments, new
+                            {
+                                @class = "form-control form-control-sm"@*, @readonly = "readonly"*@})
                         </div>
                     </div>
 
 
+
+
+                    @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.DeliveryDate)
+            <div class="input-group date">
+                @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange", @readonly = "readonly" })
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>*@
                 </div>
 
-                @*<div class="form-group row">
 
-
-
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.DeliveryAddress)
-                        <div class="input-group">
-                            @Html.TextAreaFor(model => model.DeliveryAddress, new { @class = "form-control form-control-sm" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.Comments)
-                        <div class="input-group">
-                            @Html.TextAreaFor(model => model.Comments, new { @class = "form-control form-control-sm" })
-                        </div>
-                    </div>
-
-                </div>*@
 
             </div>
         </div>
@@ -178,6 +169,8 @@
                                 <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
                                 <th data-type="text" data-search="true" data-required="true" style="width:12%;" data-name="ProductName"> Product Name </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>
 
                                 @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="UOMId"> UOMId </th>
                                 <th data-type="text" data-search="false" data-computed="true" data-required="true" style="width:10%;" data-name="UOMName"> UOM </th>
@@ -204,22 +197,23 @@
                         <tbody id="lst">
                             @if (Model != null)
                             {
-                                foreach (var item in Model.saleReturnDetailList)
+                                foreach (var item in Model.saleDetailsList)
                                 {
                                     <tr>
                                         <td> @serial </td>
 
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
+                                        <td hidden> @item.SaleId </td>
+                                        <td hidden> @item.SaleOrderDetailId </td>
 
                                         @*<td hidden> @item.UOMId </td>
-                                        <td> @item.UOMName </td>
+                                            <td> @item.UOMName </td>
 
-                                        <td hidden> @item.UOMFromId </td>
-                                        <td> @item.UOMFromName </td>
-
-
-                                        <td class=" dFormat "> @item.UOMConversion</td>*@
+                                            <td hidden> @item.UOMFromId </td>
+                                            <td> @item.UOMFromName </td>
+                                           
+                                            <td class=" dFormat "> @item.UOMConversion</td>*@
                                         <td class=" dFormat "> @item.Quantity</td>
                                         <td class=" dFormat "> @item.UnitRate</td>
                                         <td class=" dFormat "> @item.SubTotal</td>
@@ -249,90 +243,10 @@
             </div>
         </div>
 
-        @*<div class="card">
-            <div class="card-header p-2">
-
-                <div class="card-body">
-                    <div class="row">
-
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp;Grand Total Qty </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotalAmount", 0, new { @placeholder = "Grand Total Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Grand Total SD Amount </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotalSDAmount", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Grand Total VAT Amount </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotalVATAmount", 0, new { @placeholder = "Grand Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Grand Total</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-        </div>*@
-
 
 
     </form>
 
-    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
-        <div class="card-header p-2">
-
-            @if (Model.IsPost)
-            {
-                <button type="button" class="button sslPush">Already Posted</button>
-            }
-            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
-            {
-                <button type="button" class="button btnsave sslUpdate">Update</button>
-
-                <button type="button" class="button btnPost sslPost">Post</button>
-
-                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-            }
-            else
-            {
-                <div style="display:none;" class="divUpdate">
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
-                    <button type="button" class="button btnPost sslPost">Post</button>
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-                </div>
-                <div class="divSave">
-                    <button class="button btnsave sslSave" type="button" id="">Save</button>
-                </div>
-            }
-
-        </div>
-        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
-    </div>
 
     <div class="card card-secondary auditcard">
 
@@ -385,7 +299,7 @@
                             @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
                         </div>
                         <div class="col-sm-3">
-                            @Html.TextBoxFor(model => model.PostBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.PostedBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
                             @Html.TextBoxFor(model => model.PostedOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
 
                         </div>
@@ -399,15 +313,18 @@
 
 </div>
 
+
+
+
 @section scripts{
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
-    <script src="~/Areas/DMS/js/Controllers/SaleReturnController.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SaleController.js"></script>
 
     <script>
         $(document).ready(function () {
 
-            SaleReturnController.init();
+            SaleController.init();
         });
 
     </script>

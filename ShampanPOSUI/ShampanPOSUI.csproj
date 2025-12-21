@@ -334,6 +334,8 @@
     <Compile Include="Areas\Common\CommonAreaRegistration.cs" />
     <Compile Include="Areas\Common\Controllers\CommonController.cs" />
     <Compile Include="Areas\Common\Controllers\HomeController.cs" />
+    <Compile Include="Areas\DMS\Controllers\SaleReturnController.cs" />
+    <Compile Include="Areas\DMS\Controllers\SaleController.cs" />
     <Compile Include="Areas\DMS\Controllers\SaleOrderController.cs" />
     <Compile Include="Areas\DMS\Controllers\PurchaseReturnController.cs" />
     <Compile Include="Areas\DMS\Controllers\PurchaseController.cs" />
@@ -388,8 +390,12 @@
     <Content Include="Areas\DMS\js\Controllers\ProductUOMConversionController.js" />
     <Content Include="Areas\DMS\js\Controllers\PurchaseReturnController.js" />
     <Content Include="Areas\DMS\js\Controllers\PurchaseReturnDetailsIndexController.js" />
+    <Content Include="Areas\DMS\js\Controllers\SaleController.js" />
+    <Content Include="Areas\DMS\js\Controllers\SaleDetailsIndexController.js" />
     <Content Include="Areas\DMS\js\Controllers\SaleOrderController.js" />
     <Content Include="Areas\DMS\js\Controllers\SaleOrderDetailsIndexController.js" />
+    <Content Include="Areas\DMS\js\Controllers\SaleReturnController.js" />
+    <Content Include="Areas\DMS\js\Controllers\SaleReturnDetailsIndexController.js" />
     <Content Include="Areas\DMS\js\Controllers\SupplierController.js" />
     <Content Include="Areas\DMS\js\Controllers\CustomerGroupController.js" />
     <Content Include="Areas\DMS\js\Controllers\FiscalYearsController.js" />
@@ -2565,6 +2571,12 @@
     <Content Include="Areas\DMS\Views\SaleOrder\Report.cshtml" />
     <Content Include="Areas\DMS\Views\SaleOrderDetail\Create.cshtml" />
     <Content Include="Areas\DMS\Views\SaleOrderDetail\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\DetailsIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\SaleReturn\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\SaleReturn\DetailsIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\SaleReturn\Index.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

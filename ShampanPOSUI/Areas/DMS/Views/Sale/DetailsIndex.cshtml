@@ -1,6 +1,6 @@
-﻿@model ShampanPOS.Models.SaleReturnDetailVM
+﻿@model ShampanPOS.Models.SaleDetailVM
 @{
-    ViewData["Title"] = "Sale Return Detail Index";
+    ViewData["Title"] = "Sale Detail Index";
 
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -11,7 +11,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0"> Sale Return Details Data </h1>
+                <h1 class="m-0"> Sale Details Data </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -50,9 +50,9 @@
                         </div>
 
                         <div class="col-sm-1">
-                            @Html.LabelFor(model => model.IsPosted)
-                            @Html.DropDownListFor(model => model.IsPosted, Enumerable.Empty<SelectListItem>(), new { @class = " form-control form-control-sm", @data_selected = Model.IsPosted })
-                            @Html.ValidationMessageFor(model => model.IsPosted)
+                            @Html.LabelFor(model => model.IsPost)
+                            @Html.DropDownListFor(model => model.IsPost, Enumerable.Empty<SelectListItem>(), new { @class = " form-control form-control-sm", @data_selected = Model.IsPost })
+                            @Html.ValidationMessageFor(model => model.IsPost)
                         </div>
 
                         <div class="col-sm-2">
@@ -89,6 +89,7 @@
     </div>
 </div>
 
+
 <div class="container-fluid">
     <div class="card card-secondary">
         <div class="card-header">
@@ -106,13 +107,13 @@
 @section scripts {
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
-    <script src="~/Areas/DMS/js/Controllers/SaleReturnDetailsIndexController.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SaleDetailsIndexController.js"></script>
 
 
     <script>
         $(document).ready(function () {
 
-            SaleReturnDetailsIndexController.init();
+            SaleDetailsIndexController.init();
 
         });
 
