@@ -107,7 +107,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 model.PeriodId = "2025";//Need to be change 
                 try
                 {
-                    if (model.Operation.ToLower() == "add")
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
+
+                if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
                         model.CreatedOn = DateTime.Now.ToString();
@@ -686,6 +691,39 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
         #endregion
+
+
+        [HttpGet]
+        public JsonResult GetSaleReturnDetailDataById(GridOptions options, int masterId)
+        {
+            ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+            _repo = new SaleReturnRepo();
+
+            try
+            {
+                result = _repo.GetSaleReturnDetailDataById(options, masterId);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var gridData = JsonConvert.DeserializeObject<GridEntity<SaleReturnDetailVM>>(result.DataVM.ToString());
+
+                    return Json(new
+                    {
+                        Items = gridData.Items,
+                        TotalCount = gridData.TotalCount
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new { Error = true, Message = "No data found." }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
 
 
     }

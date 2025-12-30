@@ -258,33 +258,7 @@
                 ShowNotification(3, "Please select a customer first.");
                 return;
             }
-
-            // Prepare request data
-            const requestData = {
-                CustomerId: customerId,
-                ProductId: productId,
-                Quantity: quantity,
-                Date: deliveryDate
-            };
-
-            // Call API and handle calculations
-            CommonService.CampaignMudularityCalculation(requestData,
-                function success(result) {
-                    if (!result || !result.data) {
-                        ShowNotification(3, "Invalid response received");
-                        return;
-                    }
-
-                    const row = currentRow.closest('tr');
-                    updateRowWithAPIData(row, result.data);
-                    calculateRowTotals(row);
-                    TotalDCalculation();
-                },
-                function fail(error) {
-                    console.error("Error fetching data:", error);
-                    ShowNotification(3, "There was an error processing your request.");
-                }
-            );
+            
         });
 
         $("#indexSearch").on('click', function () {
@@ -721,84 +695,82 @@
         var SpecialDiscount = 0;
 
         Quantity = getColumnSumAttr('Quantity', 'details');
-        FreeQuantity = getColumnSumAttr('FreeQuantity', 'details');
         SubTotal = getColumnSumAttr('SubTotal', 'details');
-        subTotalAfterDiscount = getColumnSumAttr('SubTotalAfterDiscount', 'details');
         SDAmount = getColumnSumAttr('SDAmount', 'details');
         VATAmount = getColumnSumAttr('VATAmount', 'details');
         LineTotal = getColumnSumAttr('LineTotal', 'details');
-        lineTotalAfterDiscount = getColumnSumAttr('LineTotalAfterDiscount', 'details');
+        //lineTotalAfterDiscount = getColumnSumAttr('LineTotalAfterDiscount', 'details');
         // Calculate FreeGrandTotalAmount (GrandTotalAmount + sum of FreeQuantity)
-        var freeGrandTotalAmount = FreeQuantity;
+        //var freeGrandTotalAmount = FreeQuantity;
 
         // Calculate Invoice Discount Amount & Final Invoice Value
-        invoiceDiscountRate = parseFloat($("#InvoiceDiscountRate").val()) || 0; // Get discount rate from input
+        //invoiceDiscountRate = parseFloat($("#InvoiceDiscountRate").val()) || 0; // Get discount rate from input
 
 
-        invoiceDiscountAmount = (LineTotal * invoiceDiscountRate) / 100; // Calculate discount amount
-        finalInvoiceValue = LineTotal - invoiceDiscountAmount; // Calculate final value
+        //invoiceDiscountAmount = (LineTotal * invoiceDiscountRate) / 100; // Calculate discount amount
+        //finalInvoiceValue = LineTotal - invoiceDiscountAmount; // Calculate final value
 
-        ReqularRate = parseFloat($("#RegularDiscountRate").val()) || 0;
-        ReqularDiscount = ((finalInvoiceValue * ReqularRate) / 100)
+        //ReqularRate = parseFloat($("#RegularDiscountRate").val()) || 0;
+        //ReqularDiscount = ((finalInvoiceValue * ReqularRate) / 100)
 
-        ReqularfinalInvoiceValue = finalInvoiceValue - ReqularDiscount; // Calculate final value
+        //ReqularfinalInvoiceValue = finalInvoiceValue - ReqularDiscount; // Calculate final value
 
-        SpecialRate = parseFloat($("#SpecialDiscountRate").val()) || 0;
+        //SpecialRate = parseFloat($("#SpecialDiscountRate").val()) || 0;
 
-        if (SpecialRate != 0) {
-            SpecialDiscount = parseFloat($("#SpecialDiscountRate").val()) || 0;
-            SpecialDiscount = ((finalInvoiceValue * SpecialRate) / 100)
+        //if (SpecialRate != 0) {
+        //    SpecialDiscount = parseFloat($("#SpecialDiscountRate").val()) || 0;
+        //    SpecialDiscount = ((finalInvoiceValue * SpecialRate) / 100)
 
-        }
-        else {
+        //}
+        //else {
 
-            SpecialDiscount = parseFloat($("#SpecialDiscountAmount").val()) || 0;
-            SpecialRate = (SpecialDiscount / ReqularfinalInvoiceValue) * 100
-            if (isNaN(SpecialRate)) {
-                SpecialRate = 0;
-            }
-            $("#SpecialDiscountRate").val(SpecialRate.toFixed(2));
+        //    SpecialDiscount = parseFloat($("#SpecialDiscountAmount").val()) || 0;
+        //    SpecialRate = (SpecialDiscount / ReqularfinalInvoiceValue) * 100
+        //    if (isNaN(SpecialRate)) {
+        //        SpecialRate = 0;
+        //    }
+        //    $("#SpecialDiscountRate").val(SpecialRate.toFixed(2));
 
-        }
+        //}
 
 
-        finalInvoiceValue = ReqularfinalInvoiceValue - SpecialDiscount; // Calculate final value
+       // finalInvoiceValue = ReqularfinalInvoiceValue - SpecialDiscount; // Calculate final value
         // Update all grand total fields with proper formatting
-        $("#GrandTotalAmount").val(formatNumber(Quantity));
-        $("#FreeGrandTotalAmount").val(formatNumber(freeGrandTotalAmount));
-        $("#GrandSubTotal").val(formatNumber(SubTotal));
-        $("#GrandSubTotalAD").val(formatNumber(subTotalAfterDiscount));
-        $("#GrandTotalSDAmount").val(formatNumber(SDAmount));
-        $("#GrandTotalVATAmount").val(formatNumber(VATAmount));
-        $("#GrandTotal").val(formatNumber(LineTotal));
-        $("#LineTotalAfterDiscount").val(formatNumber(lineTotalAfterDiscount));
+        //$("#GrandTotalAmount").val(formatNumber(Quantity));
+        //$("#FreeGrandTotalAmount").val(formatNumber(freeGrandTotalAmount));
+        //$("#GrandSubTotal").val(formatNumber(SubTotal));
+        //$("#GrandSubTotalAD").val(formatNumber(subTotalAfterDiscount));
+        //$("#GrandTotalSDAmount").val(formatNumber(SDAmount));
+        //$("#GrandTotalVATAmount").val(formatNumber(VATAmount));
+       // $("#GrandTotal").val(formatNumber(LineTotal));
+       // $("#LineTotalAfterDiscount").val(formatNumber(lineTotalAfterDiscount));
 
-        $(".trFinalDiscountAmount").val(invoiceDiscountAmount);
-        $(".trFinalInvoiceDiscount").val(invoiceDiscountRate); //rate
-        $("#RegularDiscountAmount").val(ReqularDiscount.toFixed(2));
-        $("#SpecialDiscountAmount").val(SpecialDiscount.toFixed(2));
+       // $(".trFinalDiscountAmount").val(invoiceDiscountAmount);
+      //  $(".trFinalInvoiceDiscount").val(invoiceDiscountRate); //rate
+      //  $("#RegularDiscountAmount").val(ReqularDiscount.toFixed(2));
+      //  $("#SpecialDiscountAmount").val(SpecialDiscount.toFixed(2));
 
-        $("#AfterRegularDiscountAmount").val(ReqularfinalInvoiceValue.toFixed(2));
-        $("#AfterSpecialDiscountAmount").val(finalInvoiceValue.toFixed(2));
+      //  $("#AfterRegularDiscountAmount").val(ReqularfinalInvoiceValue.toFixed(2));
+      //  $("#AfterSpecialDiscountAmount").val(finalInvoiceValue.toFixed(2));
 
-        $(".trFinalInvoiceValue").val(finalInvoiceValue.toFixed(2));
+      //  $(".trFinalInvoiceValue").val(finalInvoiceValue.toFixed(2));
 
     };
 
     // Function to update row with API response data
     function updateRowWithAPIData(row, data) {
         // Update basic fields
-        row.find('.td-FreeProductName').text(data.FreeProductName?.trim() || '');
-        row.find('.td-FreeProductId').text(data.FreeProductId || '');
-        row.find('.td-FreeQuantity').text(formatNumber(data.FreeQuantity || 0));
-        row.find('.td-DiscountRate').text(formatNumber(data.DiscountRate || 0));
-        row.find('.td-DiscountAmount').text(formatNumber(data.DiscountAmount || 0));
-        row.find('.td-LineDiscountRate').text(formatNumber(data.LineDiscountRate || 0));
-        row.find('.td-LineDiscountAmount').text(formatNumber(data.LineDiscountAmount || 0));
+        //row.find('.td-FreeProductName').text(data.FreeProductName?.trim() || '');
+        //row.find('.td-FreeProductId').text(data.FreeProductId || '');
+        //row.find('.td-FreeQuantity').text(formatNumber(data.FreeQuantity || 0));
+        //row.find('.td-DiscountRate').text(formatNumber(data.DiscountRate || 0));
+        //row.find('.td-DiscountAmount').text(formatNumber(data.DiscountAmount || 0));
+        //row.find('.td-LineDiscountRate').text(formatNumber(data.LineDiscountRate || 0));
+        //row.find('.td-LineDiscountAmount').text(formatNumber(data.LineDiscountAmount || 0));
 
-        // Update calculated totals
-        row.find('.td-SubTotalAfterDiscount').text(formatNumber(data.SubTotalAfterDiscount || 0));
-        row.find('.td-LineTotalAfterDiscount').text(formatNumber(data.LineTotalAfterDiscount || 0));
+        //// Update calculated totals
+        //row.find('.td-SubTotalAfterDiscount').text(formatNumber(data.SubTotalAfterDiscount || 0));
+        //row.find('.td-LineTotalAfterDiscount').text(formatNumber(data.LineTotalAfterDiscount || 0));
     }
 
 
@@ -1278,14 +1250,6 @@
                     columns: [
                         { field: "Id", hidden: true, width: 50 },
                         { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
-                        { field: "UOMName", title: "UOM Name", sortable: true, width: 100 },
-                        {
-                            field: "UOMConversion",
-                            title: "UOM Conv.",
-                            sortable: true,
-                            width: 100,
-                            footerTemplate: "<strong>Total:</strong>" // ✅ Text in footer
-                        },
                         {
                             field: "Quantity",
                             title: "Quantity",
@@ -1366,9 +1330,8 @@
                             attributes: { style: "text-align: right;" },
                             footerTemplate: "#= kendo.toString(sum, 'n2') #"
                         },
-                        { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 },
+                        { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 }
                       /*  { field: "IsFixedVAT", hidden: true, title: "Is Fixed VAT", sortable: true, width: 100 },*/
-                        { field: "Comments", title: "Comments", sortable: true, width: 150 }
                     ]
                 });
             },
@@ -1483,7 +1446,7 @@
     };
 
     function save($table) {
-
+        debugger;
 /*        var isDropdownValid1 = CommonService.validateDropdown("#SalePersonId", "#titleError1", "Sale Person is required");*/
         var isDropdownValid2 = CommonService.validateDropdown("#CustomerId", "#titleError2", "Customer is required");
    /*     var isDropdownValid3 = CommonService.validateDropdown("#CurrencyId", "#titleError3", "Currency is required");*/
@@ -1545,7 +1508,7 @@
         //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
         //model.InvoiceDiscountRate = model.InvoiceDiscountRate.replace(/,/g, '');
         //model.InvoiceDiscountAmount = model.InvoiceDiscountAmount.replace(/,/g, '');
-        //model.saleOrderDetailsList = details;
+        model.saleOrderDetailsList = details;
 
         var url = "/DMS/SaleOrder/CreateEdit";
 

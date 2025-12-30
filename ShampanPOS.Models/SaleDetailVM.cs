@@ -12,7 +12,7 @@ namespace ShampanPOS.Models
         public int Id { get; set; }
 
         [Display(Name = "Sale")]
-        public string? SaleId { get; set; }
+        public int? SaleId { get; set; }
 
         [Display(Name = "Sale Order")]
         public int? SaleOrderId { get; set; }
@@ -22,6 +22,8 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Branch")]
         public int? BranchId { get; set; }
+        public int? CompanyId { get; set; }
+
         [Display(Name = "Branch Name")]
         public int? Branchs { get; set; }
 

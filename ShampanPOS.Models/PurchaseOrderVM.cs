@@ -15,6 +15,9 @@ namespace ShampanPOS.Models
         [Display(Name = "Code (Auto Generate)")]
         public string? Code { get; set; }
         public int? BranchId { get; set; }
+
+        public int? CompanyId { get; set; }
+
         public string? BranchName { get; set; }
 
         [Required]

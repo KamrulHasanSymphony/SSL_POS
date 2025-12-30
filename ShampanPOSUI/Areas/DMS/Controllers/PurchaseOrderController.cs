@@ -99,10 +99,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new PurchaseOrderRepo();
 
-            if (ModelState.IsValid)
-            {
+          
                 try
                 {
+                    var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                    model.BranchId = Convert.ToInt32(currentBranchId);
+                    model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
                     if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
@@ -184,18 +187,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     return View("Create", model);
                 }
             }
-            else
-            {
-                result = new ResultModel<PurchaseOrderVM>()
-                {
-                    Success = false,
-                    Status = Status.Fail,
-                    Message = "Model State Error!",
-                    Data = model
-                };
-                return Json(result);
-            }
-        }
+            
 
         [HttpGet]
         public ActionResult Edit(string id)

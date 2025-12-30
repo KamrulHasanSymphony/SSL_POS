@@ -110,7 +110,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             _repo = new SaleRepo();
                 try
                 {
-                    if (model.Operation.ToLower() == "add")
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
+
+                if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
                         model.CreatedOn = DateTime.Now.ToString();
@@ -697,6 +702,38 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
         #endregion
+
+
+
+        [HttpGet]
+        public JsonResult GetSaleDetailDataById(GridOptions options, int masterId)
+        {
+            ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+            _repo = new SaleRepo();
+
+            try
+            {
+                result = _repo.GetSaleDetailDataById(options, masterId);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var gridData = JsonConvert.DeserializeObject<GridEntity<SaleVM>>(result.DataVM.ToString());
+
+                    return Json(new
+                    {
+                        Items = gridData.Items,
+                        TotalCount = gridData.TotalCount
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new { Error = true, Message = "No data found." }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
     }

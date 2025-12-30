@@ -18,7 +18,7 @@ namespace ShampanPOS.Models
 
         [Required]
         [Display(Name = "Distributor")]
-        public int BranchId { get; set; }
+        public int? BranchId { get; set; }
 
         [Required(ErrorMessage = "Supplier is required")]
         [Display(Name = "Supplier")]

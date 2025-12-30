@@ -590,9 +590,6 @@
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";
                             }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
@@ -610,9 +607,6 @@
                             if (param.field === "InvoiceDateTime" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
                                 param.field = "H.InvoiceDateTime";
-                            }
-                            if (param.field === "BranchName") {
-                                param.field = "Br.Name";
                             }
                         });
                     }
@@ -652,9 +646,6 @@
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
                                 param.field = "H.InvoiceDateTime";
                             }
-                            if (param.field === "BranchName") {
-                                param.field = "Br.Name";
-                            }
 
                         });
                     }
@@ -677,11 +668,11 @@
                 }
             }
             ,
-            aggregate: [
-                { field: "GrdTotalAmount", aggregate: "sum" },
-                { field: "GrdTotalSDAmount", aggregate: "sum" },
-                { field: "GrdTotalVATAmount", aggregate: "sum" }
-            ]
+            //aggregate: [
+            //    { field: "GrdTotalAmount", aggregate: "sum" },
+            //    { field: "GrdTotalSDAmount", aggregate: "sum" },
+            //    { field: "GrdTotalVATAmount", aggregate: "sum" }
+            //]
         });
 
         $("#GridDataList").kendoGrid({
@@ -718,7 +709,96 @@
             reorderable: true,
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
-            search: ["Code", "CustomerName", "InvoiceDateTime", "DeliveryDate", "GrdTotalAmount", "GrdTotalSDAmount", "GrdTotalVATAmount", "SalePersonName", "RouteName", "VehicleNo", "BranchName","VehicleType"],
+            search: {
+                fields: ["Id", "Code", "Status", "CustomerName", "InvoiceDateTime"]
+            },
+
+            detailInit: function (e) {
+                debugger;
+                $("<div/>").appendTo(e.detailCell).kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        serverPaging: true,
+                        serverSorting: true,
+                        serverFiltering: true,
+                        allowUnsort: true,
+                        pageSize: 10,
+                        transport: {
+                            read: {
+                                url: "/DMS/Sale/GetSaleDetailDataById",
+                                type: "GET",
+                                dataType: "json",
+                                cache: false,
+                                data: { masterId: e.data.Id }
+                            },
+
+                            parameterMap: function (options) {
+                                return options;
+                            }
+                        },
+                        batch: true,
+                        schema: {
+                            data: "Items",
+                            total: "TotalCount"
+                        },
+                        aggregate: [
+                            { field: "Quantity", aggregate: "sum" },
+                            { field: "UnitRate", aggregate: "sum" },
+                            { field: "SubTotal", aggregate: "sum" },
+                            { field: "SD", aggregate: "sum" },
+                            { field: "SDAmount", aggregate: "sum" },
+                            { field: "VATRate", aggregate: "sum" },
+                            { field: "VATAmount", aggregate: "sum" },
+                            { field: "LineTotal", aggregate: "sum" }
+                        ],
+                        requestEnd: function (e) {
+                            console.log("Response Data:", e.response); // Log server response
+                        }
+                    },
+                    scrollable: false,
+                    sortable: true,
+                    pageable: false,
+                    noRecords: true,
+                    messages: {
+                        noRecords: "No Record Found!"
+                    },
+                    columns: [
+                        { field: "Id", hidden: true, width: 50 },
+                        { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
+                        { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
+                        { field: "UnitRate", title: "Unit Rate", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
+                        { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
+                        { field: "SD", title: "SD Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "SDAmount", title: "SD Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                 
+                        { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "CompanyId", hidden: true, title: "Vat Type", sortable: true, width: 100 }
+                    ],
+                    footerTemplate: function (e) {
+                        var aggregates = e.sender.dataSource.aggregates();
+                        return `
+                            <div style="font-weight: bold; text-align: right;">
+                                Total:
+                                <span>${kendo.toString(aggregates.Quantity.sum, 'n2')}</span>
+                                <span>${kendo.toString(aggregates.UnitRate.sum, 'n2')}</span>
+                                <span>${kendo.toString(aggregates.SubTotal.sum, 'n2')}</span>
+                                <span>${kendo.toString(aggregates.SD.sum, 'n2')}</span>
+                                <span>${kendo.toString(aggregates.SDAmount.sum, 'n2')}</span>
+                                <span>${kendo.toString(aggregates.VATRate.sum, 'n2')}</span>
+                                <span>${kendo.toString(aggregates.VATAmount.sum, 'n2')}</span>
+                                <span>${kendo.toString(aggregates.LineTotal.sum, 'n2')}</span>
+                            </div>`;
+                    }
+                });
+            },
+            
+
+
+
+
+
             excel: {
                 fileName: "SaleList.xlsx",
                 filterable: true
@@ -835,7 +915,9 @@
                 ,
                 { field: "DeliveryAddress", title: "Delivery Address", sortable: true, width: 250 },
                 { field: "Comments", title: "Comments", sortable: true, width: 250 },
-                { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
+                { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
+                { field: "CompanyName", title: "Company Name ", sortable: true, hidden: true, width: 200 }
+
 
             ],
             editable: false,

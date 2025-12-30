@@ -18,8 +18,7 @@ namespace ShampanPOS.Models
         public int SaleOrderId { get; set; }
 
 
-        [Display(Name = "Branch")]
-        public int BranchId { get; set; }
+        public int? CompanyId { get; set; }
 
 
         [Display(Name = "Line")]

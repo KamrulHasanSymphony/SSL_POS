@@ -2723,6 +2723,7 @@ function getColumnSum(columnName, tableId) {
 }
 
 function getColumnSumAttr(dataName, tableId) {
+    debugger;
     let sum = 0;
     const table = document.getElementById(tableId);
     if (table) {

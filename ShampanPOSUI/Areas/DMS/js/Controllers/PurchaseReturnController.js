@@ -1051,7 +1051,7 @@
             toolbar: ["excel", "pdf", "search"],
           /*  search: ["Code", "SupplierName", "SupplierAddress", "Status", "Completed", "BENumber", "OrderDate", "DeliveryDateTime", "GrandTotalAmount", "GrandTotalSDAmount", "GrandTotalVATAmount", "Comments", "TransactionType", "CurrencyRateFromBDT", "CurrencyName", "FiscalYear", "BranchName", "BranchAddress"],*/
             detailInit: function (e) {
-
+                debugger;
                 $("<div/>").appendTo(e.detailCell).kendoGrid({
                     dataSource: {
                         type: "json",
@@ -1104,8 +1104,6 @@
                     columns: [
                         { field: "Id", hidden: true, width: 50 },
                         { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
-                        { field: "UOMName", title: "UOM Name", sortable: true, width: 100 },
-                        { field: "UOMConversion", title: "UOM Conversion", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
                         { field: "UnitPrice", title: "Unit Price", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
                         { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
@@ -1115,11 +1113,8 @@
                         { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "OthersAmount", title: "Others Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "FixedVATAmount", title: "Fixed VAT Amnt", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "IsFixedVAT", hidden: true, title: "Is Fixed Vat", sortable: true, width: 100 },
-                        { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 },
-                        { field: "Comments", title: "Comments", sortable: true, width: 150 },
-                        { field: "ReturnReason", title: "Return Reason", sortable: true, width: 150 }
+                        { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 }
                     ],
                     footerTemplate: function (e) {
                         var aggregates = e.sender.dataSource.aggregates();
@@ -1141,7 +1136,7 @@
                 });
             },
             search: {
-                fields: ["Id", "Code", "BranchId", "Status", "SupplierName", "GrandTotalVATAmount", "GrandTotalSDAmount", "GrandTotalAmount", "BENumber", "FileName", "ImportIDExcel", "FiscalYear", "BranchName", "BranchAddress", "SupplierAddress", "Comments","PurchaseReturnDate"]
+                fields: ["Id", "Code", "Status", "SupplierName", "BENumber", "FiscalYear", "BranchName", "PurchaseDate"]
             },
             excel: {
                 fileName: "PurchaseList.xlsx",
@@ -1383,7 +1378,7 @@
                 { field: "Code", title: "Code", width: 180, sortable: true },
                 { field: "SupplierName", title: "Supplier Name", sortable: true, width: 180 },
                 {
-                    field: "PurchaseDate", title: "Invoice Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(PurchaseDate), "yyyy-MM-dd") #',
+                    field: "PurchaseDate", title: "Purchase Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(PurchaseDate), "yyyy-MM-dd") #',
                     filterable:
                     {
                         ui: "datepicker"

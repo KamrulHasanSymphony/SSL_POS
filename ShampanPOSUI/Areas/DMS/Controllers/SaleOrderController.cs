@@ -78,7 +78,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             SaleOrderDetailVM vm = new SaleOrderDetailVM();
 
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-            vm.BranchId = Convert.ToInt32(currentBranchId);
             //vm.Branchs = Convert.ToInt32(currentBranchId);
             DateTime currentDate = DateTime.Now;
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
@@ -105,18 +104,20 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new SaleOrderRepo();
 
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
 
-                    if (model.Operation.ToLower() == "add")
+                if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
                         model.CreatedOn = DateTime.Now.ToString();
                         model.CreatedFrom = Ordinary.GetLocalIpAddress();
-                        var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-                        model.BranchId = Convert.ToInt32(currentBranchId);
+                        //var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                        //model.BranchId = Convert.ToInt32(currentBranchId);
                         resultVM = _repo.Insert(model);
 
                         if (resultVM.Status == ResultStatus.Success.ToString())
@@ -192,8 +193,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                     return View("Create", model);
                 }
-            }
-            return View("Create", model);
+            
 
         }
 

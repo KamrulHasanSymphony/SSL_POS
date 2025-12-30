@@ -1176,8 +1176,7 @@
                 },
                 
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },
-                { field: "BranchName", hidden: true, title: "Branch Name", sortable: true, width: 200 },
-                { field: "BranchAddress", title: "Branch Address", width: 200, hidden: true, sortable: true },
+                { field: "BranchName", hidden: true, title: "Branch Name", sortable: true, width: 200 }
                 //{ field: "CompanyName", title: "Company Name", width: 200, hidden: true, sortable: true },
 
             ],

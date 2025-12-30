@@ -389,5 +389,34 @@ namespace ShampanPOS.Repo
         }
 
 
+
+        public ResultVM GetSaleReturnDetailDataById(GridOptions options, int masterId)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+
+                #region Invoke API 
+
+                var data = httpRequestHelper.PostData($"api/SaleReturn/GetSaleReturnDetailDataById?masterId={masterId}", authModel, JsonConvert.SerializeObject(options,
+                    new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    }));
+
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
     }
 }

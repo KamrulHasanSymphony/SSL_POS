@@ -14,7 +14,9 @@ namespace ShampanPOS.Models
         public int? PurchaseId { get; set; }
         public int? PurchaseOrderId { get; set; }
         public int? PurchaseOrderDetailId { get; set; }
-        public int BranchId { get; set; }
+        public int? BranchId { get; set; }
+        public int? CompanyId { get; set; }
+
         public int? Line { get; set; }
         public int ProductId { get; set; }
         public string? ProductCode { get; set; }

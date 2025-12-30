@@ -16,10 +16,13 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Distributor")]
         public int? BranchId { get; set; }
+        public int? CompanyId { get; set; }
 
         [Display(Name = "Customer")]
         public int? CustomerId { get; set; }
         public string? CustomerName { get; set; }
+
+        [Display(Name = "Sale Order")]
 
         public int? SaleOrderId { get; set; }
 
