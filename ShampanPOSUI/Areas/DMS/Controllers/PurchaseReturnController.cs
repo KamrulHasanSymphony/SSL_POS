@@ -104,7 +104,11 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
   
                 try
                 {
-                    if (model.Operation.ToLower() == "add")
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
+                if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
                         model.CreatedOn = DateTime.Now.ToString();

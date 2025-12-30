@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BankInformationRepo.cs" />
+    <Compile Include="OverHeadRepo.cs" />
     <Compile Include="PurchaseReturnRepo.cs" />
     <Compile Include="PurchaseRepo.cs" />
     <Compile Include="PurchaseOrderRepo.cs" />
