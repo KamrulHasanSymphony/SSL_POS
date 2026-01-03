@@ -88,6 +88,7 @@
     <Compile Include="ApplicationUser.cs" />
     <Compile Include="AspNetUsersVM.cs" />
     <Compile Include="Audit.cs" />
+    <Compile Include="BankAccountVM.cs" />
     <Compile Include="BankInformationVM.cs" />
     <Compile Include="BusinessTypeVM.cs" />
     <Compile Include="ClaimNames.cs" />

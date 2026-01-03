@@ -760,5 +760,220 @@ namespace ShampanPOSUI.Areas.Common.Controllers
 
 
 
+        [HttpGet]
+        public ActionResult GetBankIdList(string value)
+        {
+            try
+            {
+                List<BankInformationVM> lst = new List<BankInformationVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetBankIdList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<BankInformationVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
+        [HttpGet]
+        public ActionResult GetPurchaseOrder()
+        {
+            return PartialView("_getPurchaseOrderIdData");
+        }
+
+
+
+
+        //[HttpPost]
+        //public ActionResult _getPurchaseOrderIdData()
+        //{
+        //    try
+        //    {
+        //        _repo = new CommonRepo();
+
+        //        PurchaseOrderVM vm = new PurchaseOrderVM();
+        //        var search = Request.Form["search[value]"].Trim();
+
+        //        var startRec = Request.Form["start"].ToString();
+        //        var pageSize = Request.Form["length"].ToString();
+        //        var orderColumnIndex = Request.Form["order[0][column]"].ToString();
+        //        var orderDir = Request.Form["order[0][dir]"].ToString();
+        //        var orderName = Request.Form[$"columns[{orderColumnIndex}][name]"].ToString();
+
+        //        //vm.PeramModel.SearchValue = search;
+        //        //vm.PeramModel.OrderName = orderName == "" ? "P.Id" : orderName;
+        //        //vm.PeramModel.orderDir = orderDir;
+        //        //vm.PeramModel.startRec = Convert.ToInt32(startRec);
+        //        //vm.PeramModel.pageSize = Convert.ToInt32(pageSize);
+        //        //if (vm.PeramModel.pageSize == -1)
+        //        //{
+        //        //    vm.PeramModel.pageSize = int.MaxValue; // fetch all records
+        //        //}
+        //        //vm.PeramModel.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+        //        //vm.PeramModel.FromDate = Request.Form["FromDate"];
+
+        //        vm.Code = search;
+        //        vm.SupplierName = search;
+        //        vm.SupplierAddress = search;
+        //        vm.OrderDate = search;
+        //        vm.DeliveryDateTime = search;
+        //        vm.Status = search;
+
+        //        ResultVM result = _repo.GetPurchaseOrderIdData(vm);
+
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            var jArray = result.DataVM as JArray;
+        //            if (jArray != null)
+        //            {
+        //                var data = jArray.ToObject<List<PurchaseOrderVM>>();
+        //                return Json(new
+        //                {
+        //                    draw = Request.Form["draw"],
+        //                    recordsTotal = result.Count,
+        //                    recordsFiltered = result.Count,
+        //                    data = data
+        //                }, JsonRequestBehavior.AllowGet);
+        //            }
+        //        }
+
+        //        return Json(new
+        //        {
+        //            draw = Request.Form["draw"],
+        //            recordsTotal = 0,
+        //            recordsFiltered = 0,
+        //            data = new List<PurchaseOrderVM>()
+        //        }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Session["result"] = "Fail" + "~" + e.Message;
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return Json(new
+        //        {
+        //            draw = Request.Form["draw"],
+        //            recordsTotal = 0,
+        //            recordsFiltered = 0,
+        //            data = new List<PurchaseOrderVM>()
+        //        }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
+
+
+        [HttpPost]
+        public ActionResult _getPurchaseOrderIdData()
+        {
+            try
+            {
+                _repo = new CommonRepo();
+
+                var search = Request.Form["search[value]"]?.Trim() ?? "";
+
+                PurchaseOrderVM vm = new PurchaseOrderVM
+                {
+                    Code = search,
+                    SupplierName = search,
+                    SupplierAddress = search,
+                    OrderDate = search,
+                    DeliveryDateTime = search,
+                    Status = search
+                };
+
+                ResultVM result = _repo.GetPurchaseOrderIdData(vm);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var jArray = result.DataVM as JArray;
+                    var data = jArray?.ToObject<List<PurchaseOrderVM>>() ?? new List<PurchaseOrderVM>();
+
+                    return Json(new
+                    {
+                        draw = Request.Form["draw"],
+                        recordsTotal = data.Count,
+                        recordsFiltered = data.Count,
+                        data = data
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new
+                {
+                    draw = Request.Form["draw"],
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new List<PurchaseOrderVM>()
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new
+                {
+                    draw = Request.Form["draw"],
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new List<PurchaseOrderVM>()
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpGet]
+
+        public ActionResult GetPurchaseOrderList()
+        {
+            try
+            {
+                List<PurchaseOrderVM> lst = new List<PurchaseOrderVM>();
+                CommonVM param = new CommonVM();
+
+                ResultVM result = _repo.GetPurchaseOrderList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<PurchaseOrderVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //[HttpGet]
+        //public ActionResult GetPurchaseOrderList(string value)
+        //{
+        //    try
+        //    {
+        //        List<PurchaseOrderVM> lst = new List<PurchaseOrderVM>();
+        //        CommonVM param = new CommonVM();
+        //        param.Value = value;
+        //        ResultVM result = _repo.GetPurchaseOrderList(param);
+
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            lst = JsonConvert.DeserializeObject<List<PurchaseOrderVM>>(result.DataVM.ToString());
+        //        }
+        //        return Json(lst, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
     }
 }

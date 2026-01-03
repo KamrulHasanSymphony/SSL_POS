@@ -1035,5 +1035,67 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
+
+        public ResultVM GetBankIdList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/BankIdList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        public ResultVM GetPurchaseOrderIdData(PurchaseOrderVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/GetPurchaseOrderIdData", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        public ResultVM GetPurchaseOrderList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/PurchaseOrderList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+
     }
 }

@@ -92,7 +92,11 @@
                     }
                 });
         });
-        
+
+        $("#btnFromPurchaseOrder").on("click", function () {
+            window.location.href = "/DMS/Purchase/FromPurchaseOrder";
+        });
+
 
         //$('#details').on('blur', ".td-InputQuantity", function (event) {
         //    var originalRow = $(this);

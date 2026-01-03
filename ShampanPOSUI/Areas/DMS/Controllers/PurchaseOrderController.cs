@@ -551,7 +551,95 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+        [HttpGet]
+        public JsonResult GetPurchaseOrderList(int purchaseOrderId)
+        {
+            try
+            {
+                _repo = new PurchaseOrderRepo();
+                CommonVM param = new CommonVM();
+                param.Id = purchaseOrderId.ToString();
 
+                ResultVM result = _repo.List(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var list = JsonConvert.DeserializeObject<List<PurchaseOrderVM>>(result.DataVM.ToString());
+                    return Json(list, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new List<PurchaseOrderVM>(), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ToPurchaseOrder()
+        {
+            PurchaseOrderVM vm = new PurchaseOrderVM();
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
+            vm.Branchs = Convert.ToInt32(currentBranchId);
+            DateTime currentDate = DateTime.Now;
+            DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            firstDayOfMonth = firstDayOfMonth.AddMonths(-5);
+            vm.FromDate = firstDayOfMonth.ToString("yyyy/MM/dd");
+            vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult GetToPurchaseOrder(CommonVM vm)
+        {
+            try
+            {
+                PurchaseOrderRepo _repoo = new PurchaseOrderRepo();
+
+                PurchaseVM purchase = new PurchaseVM();
+                ResultVM result = _repoo.PurchaseOrderList(vm);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    purchase = JsonConvert.DeserializeObject<List<PurchaseVM>>(result.DataVM.ToString()).FirstOrDefault();
+                }
+                else
+                {
+                    TempData["message"] = result.Message;
+                    return RedirectToAction("FromPurchaseOrder", "Purchase", new { area = "DMS" });
+                }
+
+                purchase.Operation = "add";
+                purchase.IsPost = false;
+
+                #region DecimalPlace
+                CommonVM commonVM = new CommonVM();
+                commonVM.Group = "SaleDecimalPlace";
+                commonVM.Name = "SaleDecimalPlace";
+                var settingsValue = _commonRepo.GetSettingsValue(commonVM);
+
+                if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
+                {
+                    var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
+
+                    purchase.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
+                }
+
+                #endregion
+
+                return View("Create", purchase);
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return RedirectToAction("Index");
+            }
+        }
 
     }
 }

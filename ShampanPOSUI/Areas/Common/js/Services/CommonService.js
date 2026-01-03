@@ -201,6 +201,100 @@
         }).done(onSuccess).fail(onFail);
     };  
 
+
+    var purchaseOrderIdModal = function (done, fail, dblCallBack, closeCallback) {
+        debugger;
+        var modalId = "#partialModal";
+        var dataTableId = "#modalData";
+        function showModal(html) {
+            $(modalId).html(html);
+            $('.draggable').draggable({
+                handle: ".modal-header"
+            });
+            $(modalId).modal("show");
+        }
+
+        function onSuccess(result) {
+            showModal(result);
+
+            if (typeof done === "function") {
+                done(result);
+            }
+
+            bindDoubleClick(dblCallBack);
+            bindModalClose(closeCallback);
+            initializeDataTable();
+        }
+
+        function onFail(result) {
+            if (typeof fail === "function") {
+                fail(result);
+            }
+        }
+
+        function bindDoubleClick(callBack) {
+            $(dataTableId).off("dblclick").on("dblclick", "tr", function () {
+                if (typeof callBack === "function") {
+                    callBack($(this));
+                }
+            });
+        }
+
+        function bindModalClose(closeCallback) {
+            $(modalId).off("hidden.bs.modal").on("hidden.bs.modal", function () {
+                if (typeof closeCallback === "function") {
+                    closeCallback();
+                }
+                $(modalId).html("");
+            });
+        }
+
+        function initializeDataTable() {
+            if ($.fn.DataTable.isDataTable(dataTableId)) {
+                $(dataTableId).DataTable().destroy();
+            }
+
+            $(dataTableId).DataTable({
+                orderCellsTop: true,
+                fixedHeader: true,
+                serverSide: true,
+                processing: true,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                ajax: {
+                    url: '/Common/Common/_getPurchaseOrderIdData',
+                    type: 'POST',
+                    data: function (d) {
+                        d.FromDate = $('#FromDate').val();
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error("AJAX Error:", error, thrown);
+                        console.error("Response:", xhr.responseText);
+                    }
+                },
+                columns: [
+                    { data: "Code", title: "Code", width: '15%', visible: false },
+                    { data: "SupplierId", visible: false },
+                    { data: "SupplierName", title: "Supplier Name", width: '30%' },
+                    { data: "SupplierAddress", title: "Supplier Address", width: '30%' },
+                    { data: "OrderDate", title: "Order Date", width: '10%' },
+                    { data: "DeliveryDateTime", title: "Delivery Date Time", width: '10%' },
+                    { data: "Comments", title: "Comments", width: '8%', visible: false }
+
+                ],
+                columnDefs: [
+                    { width: '10%', targets: 0 }
+                ],
+            });
+        }
+
+        $.ajax({
+            //url: '/Common/Common/GetProductData',
+            url: '/Common/Common/GetPurchaseOrder',
+            method: 'get',
+        }).done(onSuccess).fail(onFail);
+    };  
+
+
     var productGroupCodeModal = function (done, fail, dblCallBack, closeCallback) {
         $.ajax({
             url: '/Common/Common/GetProductGroupData',
@@ -750,7 +844,8 @@
         CampaignMudularityCalculation: CampaignMudularityCalculation,
         CampaignInvoiceCalculation: CampaignInvoiceCalculation,
         validateDropdown: validateDropdown,
-        saleDeleveryModal: saleDeleveryModal
+        saleDeleveryModal: saleDeleveryModal,
+        purchaseOrderIdModal: purchaseOrderIdModal
 
 
     }

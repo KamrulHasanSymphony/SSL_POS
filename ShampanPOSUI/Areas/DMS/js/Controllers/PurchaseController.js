@@ -100,6 +100,313 @@
                 });
         });
 
+        //$('#btnSearchPurchaseOrder').on('click', function () {
+        //    debugger;
+
+        //    // Pass FromDate if needed
+        //    $('#FromDate').val($('#PurchaseDate').val());
+
+        //    // Open Purchase Order search modal
+        //    CommonService.purchaseOrderIdModal(
+        //        function success() {
+        //            console.log("Purchase Order search opened");
+        //        },
+        //        function fail(err) {
+        //            console.error(err);
+        //            ShowNotification(3, "Failed to open Purchase Order search");
+        //        },
+        //        function dblClick(row) {
+        //            debugger;
+        //            purchaseOrderModalDblClick(row);
+        //        },
+        //        function closeCallback() {
+        //            console.log("Purchase Order search closed");
+        //        }
+        //    );
+        //});
+
+        $("#btnSearchPurchaseOrder").on("click", function () {
+            $('#FromDate').val($('#PurchaseDate').val());
+
+            poWindow.center().open();
+
+            // Optional: reload grid every time window opens
+            $("#windowGrid").data("kendoGrid").dataSource.read();
+        });
+
+
+        $("#windowGrid").on("dblclick", "tbody tr", function () {
+
+            var grid = $("#windowGrid").data("kendoGrid");
+            var dataItem = grid.dataItem(this);
+
+            if (!dataItem) return;
+
+            var purchaseOrderId = dataItem.Id;
+
+            $("#PurchaseOrderCode").val(dataItem.Code);
+            $("#PurchaseOrderId").val(purchaseOrderId);
+
+            // Close window
+            $("#poWindow").data("kendoWindow").close();
+
+            // Load detail table
+            loadPurchaseOrderDetails(purchaseOrderId);
+        });
+
+
+
+        var poWindow = $("#poWindow").kendoWindow({
+            title: "Purchase Order",
+            modal: true,
+            width: "900px",
+            height: "450px",
+            visible: false,
+            actions: ["Close"],
+            close: function () {
+                selectedGridModel = null;
+            }
+        }).data("kendoWindow");
+
+
+        $("#windowGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetPurchaseOrderList",
+                        dataType: "json"
+                    }
+                },
+                pageSize: 10
+            },
+            pageable: true,
+            filterable: true,
+            selectable: "row",
+            toolbar: ["search"],
+            columns: [
+                { field: "Code", title: "PO Code" },
+                { field: "SupplierName", title: "Supplier" },
+                { field: "OrderDate", title: "Order Date", format: "{0:dd-MMM-yyyy}" }
+            ]
+        });
+
+
+        //function loadPurchaseOrderDetails(purchaseOrderId) {
+        //    debugger;
+        //    $.ajax({
+        //        url: "/DMS/PurchaseOrder/GetPurchaseOrderList",
+        //        type: "GET",
+        //        data: { purchaseOrderId: purchaseOrderId },
+        //        success: function (data) {
+
+
+        //            console.log("PO DATA:", data);
+
+        //            if (!data || data.length === 0) return;
+
+        //            var master = data[0];
+
+        //            /* ===== MASTER ===== */
+
+        //            // Supplier
+        //            if (master.SupplierId !== undefined) {
+
+        //                var supplierCombo = $("#SupplierId").data("kendoComboBox")
+        //                    || $("#SupplierId").data("kendoMultiColumnComboBox");
+
+        //                if (supplierCombo) {
+        //                    supplierCombo.value(master.SupplierId);
+        //                    supplierCombo.trigger("change");
+        //                } else {
+        //                    $("#SupplierId").val(master.SupplierId);
+        //                }
+        //            }
+
+        //            // Invoice Date
+        //            if (master.OrderDate) {
+        //                var date = new Date(master.OrderDate);
+        //                if (!isNaN(date.getTime())) {
+        //                    $("#InvoiceDateTime").val(date.toISOString().slice(0, 10));
+        //                }
+        //            }
+
+
+        //            $("#lst").empty(); // Clear existing rows
+
+        //            var sl = 1;
+
+        //            $.each(data, function (index, item) {
+
+        //                var row = `
+        //        <tr>
+        //            <td>${sl}</td>
+        //            <td hidden>${item.ProductCode}</td>
+        //            <td>${item.ProductName}</td>
+        //            <td hidden>${item.ProductId}</td>
+        //            <td class="dFormat">${item.Quantity}</td>
+        //            <td class="dFormat">${item.UnitPrice}</td>
+        //            <td class="dFormat">${item.SubTotal}</td>
+        //            <td hidden class="dFormat">${item.SD}</td>
+        //            <td hidden class="dFormat">${item.SDAmount}</td>
+        //            <td hidden class="dFormat">${item.VATRate}</td>
+        //            <td hidden class="dFormat">${item.VATAmount}</td>
+        //            <td hidden class="dFormat">${item.OthersAmount}</td>
+        //            <td class="dFormat">${item.LineTotal}</td>
+        //            <td hidden>${item.PurchaseOrderId}</td>
+        //            <td hidden>${item.PurchaseOrderDetailId}</td>
+        //            <td>
+        //                <button class="btn btn-danger btn-sm remove-row-btn">
+        //                    <i class='fa fa-trash'></i>
+        //                </button>
+        //            </td>
+        //        </tr>
+        //        `;
+
+        //                $("#lst").append(row);
+        //                sl++;
+        //            });
+        //        },
+        //        error: function () {
+        //            alert("Failed to load purchase order details.");
+        //        }
+        //    });
+        //}
+
+
+
+        function loadPurchaseOrderDetails(purchaseOrderId) {
+            debugger;
+
+            $.ajax({
+                url: "/DMS/PurchaseOrder/GetPurchaseOrderList",
+                type: "GET",
+                data: { purchaseOrderId: purchaseOrderId },
+                success: function (data) {
+
+                    console.log("PO DATA:", data);
+
+                    if (!data || data.length === 0) {
+                        $("#lst").empty();
+                        return;
+                    }
+
+                    // ===== MASTER =====
+                    var master = data[0];
+
+                    // Supplier
+                    if (master.SupplierId !== undefined && master.SupplierId !== null) {
+
+                        var supplierCombo = $("#SupplierId").data("kendoComboBox")
+                            || $("#SupplierId").data("kendoMultiColumnComboBox");
+
+                        if (supplierCombo) {
+                            supplierCombo.value(master.SupplierId);
+                            supplierCombo.trigger("change");
+                        } else {
+                            $("#SupplierId").val(master.SupplierId);
+                        }
+                    }
+
+                    // Invoice Date
+                    if (master.OrderDate) {
+                        var date = new Date(master.OrderDate);
+                        if (!isNaN(date.getTime())) {
+                            $("#InvoiceDateTime").val(date.toISOString().slice(0, 10));
+                        }
+                    }
+
+                    // ===== DETAILS =====
+                    $("#lst").empty();
+
+                    if (!master.purchaseOrderDetailsList || master.purchaseOrderDetailsList.length === 0)
+                        return;
+
+                    var sl = 1;
+
+                    $.each(master.purchaseOrderDetailsList, function (index, item) {
+
+                        var row = `
+                <tr>
+                    <td>${sl}</td>
+                    <td hidden>${item.ProductCode ?? ""}</td>
+                    <td>${item.ProductName ?? ""}</td>
+                    <td hidden>${item.ProductId ?? ""}</td>
+                    <td class="dFormat">${item.Quantity ?? 0}</td>
+                    <td class="dFormat">${item.UnitPrice ?? 0}</td>
+                    <td class="dFormat">${item.SubTotal ?? 0}</td>
+                    <td class="dFormat">${item.SD ?? 0}</td>
+                    <td class="dFormat">${item.SDAmount ?? 0}</td>
+                    <td class="dFormat">${item.VATRate ?? 0}</td>
+                    <td class="dFormat">${item.VATAmount ?? 0}</td>
+                    <td class="dFormat">${item.OthersAmount ?? 0}</td>
+                    <td class="dFormat">${item.LineTotal ?? 0}</td>
+                    <td hidden>${item.PurchaseOrderId ?? ""}</td>
+                    <td hidden>${item.PurchaseOrderDetailId ?? ""}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm remove-row-btn">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+
+                        $("#lst").append(row);
+                        sl++;
+                    });
+                },
+                error: function () {
+                    alert("Failed to load purchase order details.");
+                }
+            });
+        }
+
+
+
+
+        //var poWindow = $("#poWindow").kendoWindow({
+        //    title: "Purchase Order",
+        //    modal: true,
+        //    width: "900px",
+        //    height: "550px",
+        //    visible: false,
+        //    actions: ["Close"],
+        //    content: {
+        //        url: "/Common/Common/GetPurchaseOrderList"
+        //    },
+        //    open: function () {
+        //        loadPurchaseOrderGrid();
+        //    }
+        //}).data("kendoWindow");
+
+
+
+
+        //var activeDetailRow = null;
+
+        //$('#details').on('click', '.btnSearchPurchaseOrder', function () {
+        //    activeDetailRow = $(this).closest('tr');
+
+        //    $('#FromDate').val($('#PurchaseDate').val());
+
+        //    CommonService.purchaseOrderIdModal(
+        //        function success() {
+        //            console.log("Purchase Order search opened");
+        //        },
+        //        function fail(err) {
+        //            console.error(err);
+        //            ShowNotification(3, "Failed to open Purchase Order search");
+        //        },
+        //        function dblClick(row) {
+        //            purchaseOrderModalDblClick(row, activeDetailRow);
+        //        },
+        //        function closeCallback() {
+        //            console.log("Purchase Order search closed");
+        //        }
+        //    );
+
+        //});
+
+
 
         $('#details').on('blur', ".td-Quantity", function (event) {
             computeSubTotal($(this), '');
@@ -285,12 +592,6 @@
 
         });
 
-
-
-
-
-
-
     };
 
 
@@ -301,6 +602,72 @@
 
         pageSubmit('frmPurchaseImport'); // Call the function
     });
+
+    //function loadPurchaseOrderGrid() {
+
+    //    var grid = $("#poGrid").data("kendoGrid");
+    //    if (grid) {
+    //        grid.destroy();
+    //        $("#poGrid").empty();
+    //    }
+
+    //    $("#poGrid").kendoGrid({
+    //        dataSource: {
+    //            transport: {
+    //                read: {
+    //                    url: "/Common/Common/_getPurchaseOrderIdData",
+    //                    type: "POST",
+    //                    dataType: "json",
+    //                    data: function () {
+    //                        return {
+    //                            FromDate: $("#FromDate").val()
+    //                        };
+    //                    }
+    //                }
+    //            },
+    //            schema: {
+    //                data: "data",
+    //                total: "recordsTotal"
+    //            },
+    //            serverPaging: true,
+    //            serverSorting: true,
+    //            pageSize: 10
+    //        },
+    //        pageable: true,
+    //        sortable: true,
+    //        selectable: "row",
+    //        columns: [
+    //            { field: "Code", title: "PO Code" },
+    //            { field: "SupplierName", title: "Supplier" },
+    //            { field: "OrderDate", title: "Order Date" }
+    //        ],
+    //        change: onPurchaseOrderSelect
+    //    });
+    //}
+
+    //function onPurchaseOrderSelect() {
+
+    //    var grid = $("#poGrid").data("kendoGrid");
+    //    var selected = grid.select();
+
+    //    if (selected.length === 0) return;
+
+    //    var data = grid.dataItem(selected);
+
+    //    $("#PurchaseOrderId").val(data.Id);
+    //    $("#Code").val(data.Code);
+
+    //    var supplierCombo = $("#SupplierId").data("kendoMultiColumnComboBox");
+    //    if (supplierCombo && data.SupplierId) {
+    //        supplierCombo.value(data.SupplierId);
+    //    }
+
+    //    $("#poWindow").data("kendoWindow").close();
+    //}
+
+
+
+
     function computeCtnQuantity(row, param) {
 
         // Get base values with proper parsing of formatted numbers
@@ -745,6 +1112,84 @@
         originalRow.closest("td").find("input").data("touched", false).focus();
         $('#details').find(".td-Quantity").trigger('blur');
     };
+
+
+    //function purchaseOrderModalDblClick(row, originalRow) {
+    //    debugger;
+    //    var dataTable = $("#modalData").DataTable();
+    //    var rowData = dataTable.row(row).data();
+    //    var Code = rowData.Code;
+    //    var SupplierId = rowData.SupplierId;
+    //    var SupplierName = rowData.SupplierName;
+    //    var SupplierAddress = rowData.SupplierAddress;
+    //    var OrderDate = rowData.OrderDate;
+    //    var DeliveryDateTime = rowData.DeliveryDateTime;
+    //    var Comments = rowData.Comments;
+    //    var Quantity = 1;
+    //    // ✅ Check for duplicates before setting data
+    //    var isDuplicate = false;
+    //    $("#details tbody tr").each(function () {
+    //        var existingSupplierId = $(this).find(".td-SupplierId").text().trim();
+
+    //        if (existingSupplierId && existingSupplierId === SupplierId.toString()) {
+    //            isDuplicate = true;
+    //            // Optional: highlight the existing row
+    //            $(this).addClass("duplicate-highlight");
+    //            setTimeout(() => $(this).removeClass("duplicate-highlight"), 2000);
+    //            return false; // stop loop
+    //        }
+    //    });
+
+    //    if (isDuplicate) {
+    //        ShowNotification(3, "This product has already been added!");
+    //        $("#partialModal").modal("hide");
+    //        return;
+    //    }
+    //    var $currentRow = originalRow.closest('tr');
+    //    $currentRow.find('.td-Code').text(Code);
+    //    $currentRow.find('.td-SupplierId').text(SupplierId);
+    //    $currentRow.find('.td-SupplierName').text(SupplierName);
+    //    $currentRow.find('.td-SupplierAddress').text(SupplierAddress);
+    //    $currentRow.find('.td-OrderDate').text(OrderDate);
+    //    $currentRow.find('.td-DeliveryDateTime').text(DeliveryDateTime);
+    //    $currentRow.find('.td-Comments').text(Comments);
+    //    //CampaignMudularitycal($currentRow)
+
+    //    $("#partialModal").modal("hide");
+    //    originalRow.closest("td").find("input").data("touched", false).focus();
+    //    $('#details').find(".td-Quantity").trigger('blur');
+    //};
+
+
+
+    function purchaseOrderModalDblClick(row, originalRow) {
+        debugger;
+
+        if (!originalRow || originalRow.length === 0) {
+            ShowNotification(3, "No target row selected");
+            return;
+        }
+
+        var dataTable = $("#modalData").DataTable();
+        var rowData = dataTable.row(row).data();
+
+        if (!rowData) {
+            ShowNotification(3, "Invalid selection");
+            return;
+        }
+
+        originalRow.find('.td-Code').text(rowData.Code);
+        originalRow.find('.td-SupplierId').text(rowData.SupplierId);
+        originalRow.find('.td-SupplierName').text(rowData.SupplierName);
+        originalRow.find('.td-SupplierAddress').text(rowData.SupplierAddress);
+        originalRow.find('.td-OrderDate').text(rowData.OrderDate);
+        originalRow.find('.td-DeliveryDateTime').text(rowData.DeliveryDateTime);
+        originalRow.find('.td-Comments').text(rowData.Comments);
+
+        $("#partialModal").modal("hide");
+    }
+
+
 
     function computeSubTotal(row, param) {
 

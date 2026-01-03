@@ -334,6 +334,7 @@
     <Compile Include="Areas\Common\CommonAreaRegistration.cs" />
     <Compile Include="Areas\Common\Controllers\CommonController.cs" />
     <Compile Include="Areas\Common\Controllers\HomeController.cs" />
+    <Compile Include="Areas\DMS\Controllers\BankAccountController.cs" />
     <Compile Include="Areas\DMS\Controllers\BankInformationController.cs" />
     <Compile Include="Areas\DMS\Controllers\OverHeadController.cs" />
     <Compile Include="Areas\DMS\Controllers\SaleReturnController.cs" />
@@ -354,6 +355,8 @@
     <Compile Include="Areas\DMS\Controllers\SupplierGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMConversationController.cs" />
+    <Content Include="Areas\DMS\js\Controllers\BankAccountController.js" />
+    <Content Include="Areas\DMS\js\Controllers\ToPurchaseOrderController.js" />
     <Content Include="Areas\DMS\js\Controllers\OverHeadController.js" />
     <Content Include="Areas\DMS\js\Controllers\BankInformationController.js" />
     <Compile Include="Areas\SetUp\Controllers\SettingsController.cs" />
@@ -2585,6 +2588,9 @@
     <Content Include="Areas\DMS\Views\BankInformation\Create.cshtml" />
     <Content Include="Areas\DMS\Views\OverHead\Index.cshtml" />
     <Content Include="Areas\DMS\Views\OverHead\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseOrder\ToPurchaseOrder.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

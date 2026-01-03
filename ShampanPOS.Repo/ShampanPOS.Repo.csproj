@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BankAccountRepo.cs" />
     <Compile Include="BankInformationRepo.cs" />
     <Compile Include="OverHeadRepo.cs" />
     <Compile Include="PurchaseReturnRepo.cs" />

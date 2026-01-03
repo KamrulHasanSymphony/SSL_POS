@@ -1,4 +1,4 @@
-﻿var FromPurchaseController = function () {
+﻿var ToPurchaseOrderController = function () {
 
     var init = function () {
 
@@ -9,7 +9,6 @@
             SelectData();
         });
     };
-
 
     function SelectData() {
         var IDs = [];
@@ -60,49 +59,52 @@
             pageSize: 10,
             transport: {
                 read: {
-                    url: "/DMS/Purchase/FromPurchaseGridData",
+                    url: "/DMS/PurchaseOrder/FromPurchaseOrderGridData",
                     type: "POST",
                     dataType: "json",
                     cache: false
                 },
                 parameterMap: function (options) {
                     if (options.sort) {
-                        options.sort.forEach(function (param) {
+                        options.sort.forEach(function (param) {                           
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
                             if (param.field === "SupplierName") {
-                                param.field = "S.SupplierName";
+                                param.field = "s.Name";
                             }
-                            if (param.field === "BENumber") {
-                                param.field = "H.BENumber";
-                            }
-                            if (param.field === "ImportIDExcel") {
-                                param.field = "H.ImportIDExcel";
-                            }
-                            if (param.field === "CustomHouse") {
-                                param.field = "H.CustomHouse";
-                            }
-                            if (param.field === "FiscalYear") {
-                                param.field = "H.FiscalYear";
-                            }
-                            if (param.field === "BranchName") {
-                                param.field = "Br.BranchName";
+                            if (param.field === "CurrencyName") {
+                                param.field = "c.Name";
                             }
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
-                            if (param.field === "Status") {
+                            if (param.field === "IsPost") {
                                 param.field = "H.IsPost";
                             }
-                            if (param.field === "CurrencyRateFromBDT") {
-                                param.field = "H.CurrencyRateFromBDT";
+                            if (param.field === "OrderDate") {
+                                param.field = "H.OrderDate";
+                            }
+                            if (param.field === "DeliveryDateTime") {
+                                param.field = "H.DeliveryDateTime";
+                            }
+                            if (param.field === "GrandTotalAmount") {
+                                param.field = "H.GrandTotalAmount";
+                            }
+                            if (param.field === "GrandTotalSDAmount") {
+                                param.field = "H.GrandTotalSDAmount";
+                            }
+                            if (param.field === "GrandTotalVATAmount") {
+                                param.field = "H.GrandTotalVATAmount";
+                            }
+                            if (param.field === "BranchName") {
+                                param.field = "br.Name";
+                            }
+                            if (param.field === "TransactionType") {
+                                param.field = "H.TransactionType";
                             }
                             if (param.field === "TotalQuantity") {
                                 param.field = "SD.TotalQuantity";
-                            }
-                            if (param.field === "InvoiceDateTime" || param.field === "PurchaseDate") {
-                                param.value = kendo.toString(param.value, "yyyy-MM-dd");
                             }
                         });
                     }
@@ -113,68 +115,39 @@
                                 param.field = "H.Code";
                             }
                             if (param.field === "SupplierName") {
-                                param.field = "S.SupplierName";
+                                param.field = "s.Name";
                             }
-                            if (param.field === "BENumber") {
-                                param.field = "H.BENumber";
-                            }
-                            if (param.field === "ImportIDExcel") {
-                                param.field = "H.ImportIDExcel";
-                            }
-                            if (param.field === "CustomHouse") {
-                                param.field = "H.CustomHouse";
-                            }
-                            if (param.field === "FiscalYear") {
-                                param.field = "H.FiscalYear";
-                            }
-                            if (param.field === "BranchName") {
-                                param.field = "Br.BranchName";
+                            if (param.field === "CurrencyName") {
+                                param.field = "c.Name";
                             }
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
-                            if (param.field === "Status") {
+                            if (param.field === "IsPost") {
                                 param.field = "H.IsPost";
                             }
-                            if (param.field === "CurrencyRateFromBDT") {
-                                param.field = "H.CurrencyRateFromBDT";
+                            if (param.field === "OrderDate") {
+                                param.field = "H.OrderDate";
                             }
-                            if (param.field === "InvoiceDateTime" || param.field === "PurchaseDate") {
-                                param.value = kendo.toString(param.value, "yyyy-MM-dd");
+                            if (param.field === "DeliveryDateTime") {
+                                param.field = "H.DeliveryDateTime";
                             }
-
+                            if (param.field === "BranchName") {
+                                param.field = "br.Name";
+                            }
                             if (param.field === "GrandTotalAmount") {
                                 param.field = "H.GrandTotalAmount";
-                                options.filter.filters.forEach(function (res) {
-                                    if (typeof res.value === 'string' && res.value.includes(',')) {
-                                        res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                                    }
-                                    else {
-                                        res.value = parseFloat(res.value) || 0;
-                                    }
-                                });
+
                             }
                             if (param.field === "GrandTotalSDAmount") {
                                 param.field = "H.GrandTotalSDAmount";
-                                options.filter.filters.forEach(function (res) {
-                                    if (typeof res.value === 'string' && res.value.includes(',')) {
-                                        res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                                    }
-                                    else {
-                                        res.value = parseFloat(res.value) || 0;
-                                    }
-                                });
+
                             }
                             if (param.field === "GrandTotalVATAmount") {
                                 param.field = "H.GrandTotalVATAmount";
-                                options.filter.filters.forEach(function (res) {
-                                    if (typeof res.value === 'string' && res.value.includes(',')) {
-                                        res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                                    }
-                                    else {
-                                        res.value = parseFloat(res.value) || 0;
-                                    }
-                                });
+                            }
+                            if (param.field === "TransactionType") {
+                                param.field = "H.TransactionType";
                             }
                             if (param.field === "TotalQuantity") {
                                 param.field = "SD.TotalQuantity";
@@ -187,7 +160,6 @@
                                     }
                                 });
                             }
-
                         });
                     }
                     return options;
@@ -201,8 +173,8 @@
             model: {
 
                 fields: {
-                    InvoiceDateTime: { type: "date" },
-                    PurchaseDate: { type: "date" },
+                    OrderDate: { type: "date" },
+                    DeliveryDateTime: { type: "date" },
                     TotalQuantity: { type: "number" },
                     GrandTotalAmount: { type: "number" },
                     GrandTotalSDAmount: { type: "number" },
@@ -264,7 +236,7 @@
                         pageSize: 10,
                         transport: {
                             read: {
-                                url: "/DMS/Purchase/GetPurchaseDetailDataById",
+                                url: "/DMS/PurchaseOrder/GetPurchaseOrderDetailDataById",
                                 type: "GET",
                                 dataType: "json",
                                 cache: false,
@@ -341,27 +313,28 @@
                     }
                 });
             },
+            search: ["Code", "SupplierName", "CurrencyName", "OrderDate", "DeliveryDateTime", "BranchName", "GrandTotalAmount", "GrandTotalSDAmount", "GrandTotalVATAmount", "TransactionType", "FiscalYear"],
             excel: {
-                fileName: "PurchaseList.xlsx",
+                fileName: "PurchaseOrder.xlsx",
                 filterable: true
             },
             pdf: {
-                fileName: `PurchaseList_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+                fileName: `PurchaseOrder_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
                 allPages: true,
                 avoidLink: true,
                 filterable: true
             },
             pdfExport: function (e) {
-
                 $(".k-grid-toolbar").hide();
                 $(".k-grouping-header").hide();
                 $(".k-floatwrap").hide();
-
                 
-
                 var branchName = "All Branch Name";
-                var companyName = "All Company Name";
-                var companyAddress = "All Company Address";
+
+                const dataItems = this.dataSource.view();
+                const firstItem = dataItems.length > 0 ? dataItems[0] : {};
+
+                branchName = firstItem.BranchName || "All Branch Name";
 
                 var grid = e.sender;
 
@@ -385,7 +358,7 @@
                 }
 
 
-                var fileName = `PurchaseList_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+                var fileName = `PurchaseOrder_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
                 var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
                 var columnWidth = 100;
@@ -393,15 +366,13 @@
 
                 e.sender.options.pdf = {
                     //paperSize: [totalWidth, 2800],
-                    paperSize: "A2",
+                    paperSize: "A1",
                     margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
                     landscape: true,
                     allPages: true,
                     template: `
                             <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                                <div>Company Name :- ${companyName}</div>
-                                <div>Company Address :- ${companyAddress}</div>
+                                <div>Branch Name :- ${branchName}</div>                                
                             </div> `
                 };
 
@@ -417,18 +388,16 @@
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", width: 180, sortable: true },
-                { field: "SupplierName", title: "Supplier Name", sortable: true, width: 180 },
+                { field: "SupplierName", title: "Supplier Name", width: 180, sortable: true },
                 {
-                    field: "InvoiceDateTime", title: "Invoice Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
-                    filterable:
-                    {
+                    field: "OrderDate", title: "Order Date", sortable: true, width: 130, template: '#= kendo.toString(kendo.parseDate(OrderDate), "yyyy-MM-dd") #',
+                    filterable: {
                         ui: "datepicker"
                     }
                 },
                 {
-                    field: "PurchaseDate", title: "Purchase Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(PurchaseDate), "yyyy-MM-dd") #',
-                    filterable:
-                    {
+                    field: "DeliveryDateTime", title: "Delivery Date", sortable: true, width: 130, template: '#= kendo.toString(kendo.parseDate(DeliveryDateTime), "yyyy-MM-dd") #',
+                    filterable: {
                         ui: "datepicker"
                     }
                 },
@@ -447,25 +416,21 @@
                             });
                         }
                     }
-                }
-                ,
-                {
-                    field: "TotalQuantity",
-                    title: "Total Quantity",
-                    sortable: true,
-                    width: 180,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },               
-
-                { field: "BENumber", title: "BE Number", sortable: true, width: 130 },
-                //{ field: "ImportIDExcel", title: "Import IDExcel", sortable: true, width: 130 },
-                //{ field: "CustomHouse", title: "Custom House", sortable: true, width: 130 },
-                { field: "FiscalYear", title: "Fiscal Year", sortable: true, width: 120 },
-                //{ field: "CurrencyRateFromBDT", title: "Currency Rate FromBDT", sortable: true, width: 190 },
+                },                
+                //{
+                //    field: "TotalQuantity",
+                //    title: "Total Quantity",
+                //    sortable: true,
+                //    width: 180,
+                //    aggregates: ["sum"],
+                //    format: "{0:n2}",
+                //    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                //    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                //    attributes: { style: "text-align: right;" }
+                //}, 
+                //{ field: "BENumber", title: "BE Number", sortable: true, width: 150 },
+                //{ field: "CurrencyName", title: "Currency Name", sortable: true, width: 150 },
+                //{ field: "FiscalYear", title: "Fiscal Year", sortable: true, width: 150 },
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },
                 { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
 
@@ -477,7 +442,6 @@
         });
 
     };
-
 
     return {
         init: init
