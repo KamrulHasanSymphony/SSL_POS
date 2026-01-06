@@ -271,6 +271,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
         [HttpGet]
         public ActionResult GetSupplierList(string value)
         {
@@ -759,7 +760,6 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
 
-
         [HttpGet]
         public ActionResult GetBankIdList(string value)
         {
@@ -783,92 +783,11 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
 
-
-
         [HttpGet]
         public ActionResult GetPurchaseOrder()
         {
             return PartialView("_getPurchaseOrderIdData");
         }
-
-
-
-
-        //[HttpPost]
-        //public ActionResult _getPurchaseOrderIdData()
-        //{
-        //    try
-        //    {
-        //        _repo = new CommonRepo();
-
-        //        PurchaseOrderVM vm = new PurchaseOrderVM();
-        //        var search = Request.Form["search[value]"].Trim();
-
-        //        var startRec = Request.Form["start"].ToString();
-        //        var pageSize = Request.Form["length"].ToString();
-        //        var orderColumnIndex = Request.Form["order[0][column]"].ToString();
-        //        var orderDir = Request.Form["order[0][dir]"].ToString();
-        //        var orderName = Request.Form[$"columns[{orderColumnIndex}][name]"].ToString();
-
-        //        //vm.PeramModel.SearchValue = search;
-        //        //vm.PeramModel.OrderName = orderName == "" ? "P.Id" : orderName;
-        //        //vm.PeramModel.orderDir = orderDir;
-        //        //vm.PeramModel.startRec = Convert.ToInt32(startRec);
-        //        //vm.PeramModel.pageSize = Convert.ToInt32(pageSize);
-        //        //if (vm.PeramModel.pageSize == -1)
-        //        //{
-        //        //    vm.PeramModel.pageSize = int.MaxValue; // fetch all records
-        //        //}
-        //        //vm.PeramModel.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-        //        //vm.PeramModel.FromDate = Request.Form["FromDate"];
-
-        //        vm.Code = search;
-        //        vm.SupplierName = search;
-        //        vm.SupplierAddress = search;
-        //        vm.OrderDate = search;
-        //        vm.DeliveryDateTime = search;
-        //        vm.Status = search;
-
-        //        ResultVM result = _repo.GetPurchaseOrderIdData(vm);
-
-        //        if (result.Status == "Success" && result.DataVM != null)
-        //        {
-        //            var jArray = result.DataVM as JArray;
-        //            if (jArray != null)
-        //            {
-        //                var data = jArray.ToObject<List<PurchaseOrderVM>>();
-        //                return Json(new
-        //                {
-        //                    draw = Request.Form["draw"],
-        //                    recordsTotal = result.Count,
-        //                    recordsFiltered = result.Count,
-        //                    data = data
-        //                }, JsonRequestBehavior.AllowGet);
-        //            }
-        //        }
-
-        //        return Json(new
-        //        {
-        //            draw = Request.Form["draw"],
-        //            recordsTotal = 0,
-        //            recordsFiltered = 0,
-        //            data = new List<PurchaseOrderVM>()
-        //        }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Session["result"] = "Fail" + "~" + e.Message;
-        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-        //        return Json(new
-        //        {
-        //            draw = Request.Form["draw"],
-        //            recordsTotal = 0,
-        //            recordsFiltered = 0,
-        //            data = new List<PurchaseOrderVM>()
-        //        }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
 
 
         [HttpPost]
@@ -952,19 +871,130 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
 
+
+
+        [HttpGet]
+        public ActionResult GetBankAccountList(string value)
+        {
+            try
+            {
+                List<BankAccountVM> lst = new List<BankAccountVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetBankAccountList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<BankAccountVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult GetPurchase()
+        {
+            return PartialView("_getPurchase");
+        }
+
+
+
+
+        [HttpPost]
+        public ActionResult _getPurchaseData()
+        {
+            try
+            {
+                _repo = new CommonRepo();
+
+                PurchaseDataVM vm = new PurchaseDataVM();
+                var search = Request.Form["search[value]"].Trim();
+
+                var startRec = Request.Form["start"].ToString();
+                var pageSize = Request.Form["length"].ToString();
+                var orderColumnIndex = Request.Form["order[0][column]"].ToString();
+                var orderDir = Request.Form["order[0][dir]"].ToString();
+                var orderName = Request.Form[$"columns[{orderColumnIndex}][name]"].ToString();
+
+                vm.PeramModel.SearchValue = search;
+                vm.PeramModel.OrderName = orderName == "" ? "M.Id" : orderName;
+                vm.PeramModel.orderDir = orderDir;
+                vm.PeramModel.startRec = Convert.ToInt32(startRec);
+                vm.PeramModel.pageSize = Convert.ToInt32(pageSize);
+                if (vm.PeramModel.pageSize == -1)
+                {
+                    vm.PeramModel.pageSize = int.MaxValue; // fetch all records
+                }
+                vm.PeramModel.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                vm.PeramModel.FromDate = Request.Form["FromDate"];
+
+                
+
+                vm.Code = search;
+                vm.PurchaseOrderCode = search;
+                vm.SupplierName = search;
+                vm.Comments = search;
+
+                ResultVM result = _repo.GetPurchaseData(vm);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var jArray = result.DataVM as JArray;
+                    if (jArray != null)
+                    {
+                        var data = jArray.ToObject<List<PurchaseDataVM>>();
+                        return Json(new
+                        {
+                            draw = Request.Form["draw"],
+                            recordsTotal = result.Count,
+                            recordsFiltered = result.Count,
+                            data = data
+                        }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+                return Json(new
+                {
+                    draw = Request.Form["draw"],
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new List<PurchaseDataVM>()
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new
+                {
+                    draw = Request.Form["draw"],
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new List<PurchaseDataVM>()
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         //[HttpGet]
-        //public ActionResult GetPurchaseOrderList(string value)
+        //public ActionResult GetBankAccountIdList(string value)
         //{
         //    try
         //    {
-        //        List<PurchaseOrderVM> lst = new List<PurchaseOrderVM>();
+        //        List<BankAccountVM> lst = new List<BankAccountVM>();
         //        CommonVM param = new CommonVM();
         //        param.Value = value;
-        //        ResultVM result = _repo.GetPurchaseOrderList(param);
+        //        ResultVM result = _repo.GetBankAccountIdList(param);
 
         //        if (result.Status == "Success" && result.DataVM != null)
         //        {
-        //            lst = JsonConvert.DeserializeObject<List<PurchaseOrderVM>>(result.DataVM.ToString());
+        //            lst = JsonConvert.DeserializeObject<List<BankAccountVM>>(result.DataVM.ToString());
         //        }
         //        return Json(lst, JsonRequestBehavior.AllowGet);
         //    }
@@ -974,6 +1004,8 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         //        return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
         //    }
         //}
+
+
 
     }
 }

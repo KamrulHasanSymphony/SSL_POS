@@ -94,8 +94,32 @@
         });
 
         $("#btnFromPurchaseOrder").on("click", function () {
-            window.location.href = "/DMS/Purchase/FromPurchaseOrder";
+            debugger;
+            var id = $("#Id").val();
+
+            if (!id || id === "0") {
+                ShowNotification(3, "Invalid Id!");
+                return;
+            }
+
+            var form = $('<form>', {
+                method: 'POST',
+                action: '/DMS/Purchase/GetFromPurchaseOrder'
+            });
+
+            // CommonVM.IDs
+            form.append(
+                $('<input>', {
+                    type: 'hidden',
+                    name: 'IDs',
+                    value: id
+                })
+            );
+
+            $('body').append(form);
+            form.submit();
         });
+
 
 
         //$('#details').on('blur', ".td-InputQuantity", function (event) {
@@ -1204,6 +1228,7 @@
 
 
     function save($table) {
+        debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
 

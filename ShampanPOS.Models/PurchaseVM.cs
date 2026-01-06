@@ -91,10 +91,10 @@ namespace ShampanPOS.Models
         [Display(Name = "Last Modified On")]
         public string? LastModifiedOn { get; set; }
         public string? LastUpdateFrom { get; set; }
-        public string?[] IDs { get; set; }
+        public string[]? IDs { get; set; }
         public string? Operation { get; set; }
         public string? Status { get; set; }
-        public string? BranchAddress { get; set; }
+        public string? BranchAddress { get; set; } 
         [Display(Name = "Branch Name")]
         public int? Branchs { get; set; }
         [Display(Name = "Posted")]
@@ -110,13 +110,14 @@ namespace ShampanPOS.Models
         public int? CompanyId { get; set; }
         public string? CompanyName { get; set; }
 
-
+        public PeramModel PeramModel { get; set; }
         public List<PurchaseDetailVM> purchaseDetailList { get; set; }
         //public List<PurchaseDetailExportVM> purchaseDetailExportList { get; set; }
 
         public PurchaseVM()
         {
             purchaseDetailList = new List<PurchaseDetailVM>();
+            PeramModel = new PeramModel();
             //purchaseDetailExportList = new List<PurchaseDetailExportVM>();
         }
 

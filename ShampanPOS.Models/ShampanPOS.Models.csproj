@@ -92,6 +92,8 @@
     <Compile Include="BankInformationVM.cs" />
     <Compile Include="BusinessTypeVM.cs" />
     <Compile Include="ClaimNames.cs" />
+    <Compile Include="CollectionDetailVM.cs" />
+    <Compile Include="CollectionVM.cs" />
     <Compile Include="CommonDropDown.cs" />
     <Compile Include="CommonModel.cs" />
     <Compile Include="CommonVM.cs" />
@@ -99,8 +101,12 @@
     <Compile Include="CustomerCategoryVM.cs" />
     <Compile Include="CustomerData.cs" />
     <Compile Include="CustomerDataVM.cs" />
+    <Compile Include="DepositVM.cs" />
     <Compile Include="OverHeadVM.cs" />
+    <Compile Include="PaymentDetailVM.cs" />
+    <Compile Include="PaymentVM.cs" />
     <Compile Include="ProductDataVM.cs" />
+    <Compile Include="PurchaseDataVM.cs" />
     <Compile Include="PurchaseOrderDetailVM.cs" />
     <Compile Include="PurchaseDetailVM.cs" />
     <Compile Include="PurchaseReturnDetailVM.cs" />
@@ -162,6 +168,7 @@
     <Compile Include="UOMVM.cs" />
     <Compile Include="SessionClass.cs" />
     <Compile Include="UserMenuAccess.cs" />
+    <Compile Include="WithdrawalVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

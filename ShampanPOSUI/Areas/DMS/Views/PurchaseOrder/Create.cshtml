@@ -39,6 +39,9 @@
         @if (Model.IsPost)
         {
             <button type="button" class="button sslPush">Already Posted</button>
+            <button type="button" class="button secondary" id="btnFromPurchaseOrder">
+                <span style="font-weight:bold; margin-right:5px;">+</span> Purchase
+            </button>
         }
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
@@ -49,9 +52,7 @@
             <button type="button" class="button btnsave sslUpdate">Update</button>
 
             <button type="button" class="button btnPost sslPost">Post</button>
-            <button type="button" class="button secondary" id="btnFromPurchaseOrder">
-                <span style="font-weight:bold; margin-right:5px;">+</span> Purchase
-            </button>
+
 
             <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
         }

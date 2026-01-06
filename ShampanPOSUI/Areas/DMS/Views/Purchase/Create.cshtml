@@ -7,7 +7,17 @@
 @{
     var serial = 1;
 }
+<style>
+    .k-dropdown-wrap .k-input {
+        line-height: 1.6em !important;
+    }
 
+    .button.secondary {
+        background-color: #adb5bd;
+        color: #212529;
+        border: 1px solid #adb5bd;
+    }
+</style>
 
 <div class="content-header">
     <div class="container-fluid">
@@ -204,22 +214,32 @@
             <button style="float:right;" type="button" title="Add New" data-url="/DMS/Purchase/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                 New
             </button>
+
+            <button type="button" class="button secondary" id="btnFromPurchaseOrder">
+                <span style="font-weight:bold; margin-right:5px;">+</span> Payment
+            </button>
+
         }
         else
         {
-            <div style="display:none;" class="divUpdate">
-                <button type="button" class="button btnsave sslUpdate">Update</button>
-                <button type="button" class="button btnPost sslPost">Post</button>
-                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+    <div style="display:none;" class="divUpdate">
+        <button type="button" class="button btnsave sslUpdate">Update</button>
+        <button type="button" class="button btnPost sslPost">Post</button>
+        <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
 
-                <button style="float:right;" type="button" title="Add New" data-url="/DMS/Purchase/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+        <button style="float:right;" type="button" title="Add New" data-url="/DMS/Purchase/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                     New
-                </button>
-
-            </div>
+        </button>
+        <button type="button" class="button secondary" id="btnFromPurchaseOrder">
+            <span style="font-weight:bold; margin-right:5px;">+</span> Payment
+        </button>
+    </div>
             <div class="divSave">
                 <button class="button btnsave sslSave" type="button" id="">Save</button>
+
             </div>
+
+
         }
 
     </div>
@@ -403,7 +423,7 @@
             </div>
         </div>
 
-        @*<div class="card">
+        <div class="card">
                 <div class="card-header p-2">
 
                     <div class="card-body">
@@ -411,46 +431,46 @@
 
                             <div class="col-md-2">
                                 <div class="editor-label">
-                                    <label>&nbsp;Grand Total Quantity </label>
+                                    <label>&nbsp;Paid Amount </label>
                                 </div>
                                 <div class="editor-field">
-                                    @Html.TextBox("GrandTotalAmount", 0, new { @placeholder = "Grand Total Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                                    @Html.TextBox("PaidAmount", 0, new { @placeholder = "Paid Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right" })
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="editor-label">
-                                    <label>&nbsp;Grand SubTotal </label>
+                                    <label>&nbsp;SubTotal </label>
                                 </div>
                                 <div class="editor-field">
-                                    @Html.TextBox("GrandSubTotal", 0, new { @placeholder = "Grand SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                                    @Html.TextBox("SubTotal", 0, new { @placeholder = "SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="editor-label">
-                                    <label>&nbsp; Grand Total SD Amount </label>
+                                    <label>&nbsp; Total SD</label>
                                 </div>
                                 <div class="editor-field">
-                                    @Html.TextBox("GrandTotalSDAmount", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                                    @Html.TextBox("TotalSD", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right" })
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="editor-label">
-                                    <label>&nbsp; Grand Total VAT Amount </label>
+                                    <label>&nbsp; Total VAT  </label>
                                 </div>
                                 <div class="editor-field">
-                                    @Html.TextBox("GrandTotalVATAmount", 0, new { @placeholder = "Grand Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
+                                    @Html.TextBox("TotalVAT", 0, new { @placeholder = "Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right"})
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="editor-label">
-                                    <label>&nbsp; Grand Line Total</label>
+                                    <label>&nbsp; Grand Total</label>
                                 </div>
                                 <div class="editor-field">
-                                    @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Line Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
+                                    @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right" })
                                 </div>
                             </div>
 
@@ -459,7 +479,7 @@
                     </div>
 
                 </div>
-            </div>*@
+            </div>
 
 
     </form>
@@ -492,6 +512,8 @@
                 <div class="divSave">
                     <button class="button btnsave sslSave" type="button" id="">Save</button>
                 </div>
+
+
             }
 
         </div>

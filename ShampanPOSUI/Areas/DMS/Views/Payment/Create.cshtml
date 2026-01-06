@@ -1,0 +1,398 @@
+﻿@model ShampanPOS.Models.PaymentVM
+@{
+    ViewBag.Title = "Payment Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var serial = 1;
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Payment Data Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-header p-2">
+
+        @if (Model.IsActive)
+        {
+            <button type="button" class="button sslPush">Already Posted</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/Payment/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+        else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+        {
+            <button type="button" class="button btnsave sslUpdate">Update</button>
+
+            <button type="button" class="button btnPost sslPost">Post</button>
+
+            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/Payment/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+        }
+        else
+        {
+            <div style="display:none;" class="divUpdate">
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+                <button type="button" class="button btnPost sslPost">Post</button>
+                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/Payment/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
+
+            </div>
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
+        }
+
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Payment Info </h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2 codeWidth">
+                        @Html.LabelFor(model => model.Code)
+                        <div style="display: flex; align-items: center;">
+                            <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Code Auto Generate", @class = " csCode  form-control form-control-sm", @readonly = "readonly", @style = "width:140px;" }) &nbsp;
+                            <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.TransactionDate)
+                        <div class="input-group date">
+                            @Html.TextBoxFor(model => model.TransactionDate, new { @class = "  form-control form-control-sm dateRange" })
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.SupplierId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.SupplierId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.BankAccountId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.BankAccountId, new { @class = "form-control form-control-sm" })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+
+
+                    @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.TotalPaymentAmount)
+            <div class="input-group">
+                @Html.TextBoxFor(
+                    model => model.TotalPaymentAmount,
+                    new
+                    {
+                        @placeholder = "Total Payment Amount",
+                        @class = "form-control form-control-sm text-right NumberCheck priceLen",
+                        @readonly = "readonly",  // Ensure the field is read-only
+                        id = "TotalPaymentAmount" // Set an ID to access this field easily
+                    }
+                )
+            </div>
+        </div>*@
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Reference)
+                        <div class="input-group">
+                            @Html.TextAreaFor(model => model.Reference, new { placeholder = "Enter Reference", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Comments)
+                        <div class="input-group">
+                            @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comment", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group row">
+
+                    <div class="col-sm-2" style="flex-direction: column">
+                        @Html.LabelFor(model => model.IsCash)
+                        <div class="Onoffbtn">
+                            <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                <input id="IsCash"
+                                       value="@Model.IsCash"
+                                       type="checkbox"
+                                       name="my-checkbox"
+                                       @(Model.IsCash ? "checked" : "")
+                                       data-bootstrap-switch
+                                       data-off-color="danger"
+                                       data-on-color="success"
+                                       data-on-text="Cash"
+                                       data-off-text="Bank">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Details </h3>
+            </div>
+            <div class="card-body">
+
+                <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+
+                <div style="overflow-x: auto; white-space: nowrap;">
+                    <table class="table table-bordered table-striped table-sm" id="details">
+                        <thead>
+                            <tr>
+                                <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="PaymentId">Payment Id</th>
+                                <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="PurchaseCode">Purchase Code</th>
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="PurchaseId">Purchase Id</th>
+                                @*<th data-type="text" style="width:20%;" data-name="SupplierName">Supplier Name</th>
+                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SupplierId">Supplier Id</th>*@
+                                <th data-type="decimal" style="width: 20%;" data-required="true" data-computed="false" data-name="PurchaseAmount">Purchase Amount</th>
+                                <th data-type="decimal" style="width: 20%" data-required="true" data-computed="false" data-name="PaymentAmount">Payment Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lst">
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model.paymentDetailList)
+                                {
+                                    <tr>
+                                        <td>@serial</td>
+                                        <td hidden>@item.PaymentId</td>
+                                        <td>@item.PurchaseCode</td>
+                                        <td hidden>@item.PurchaseId</td>
+                                        @*<td data-name="SupplierName">@item.SupplierName</td>
+                                        <td hidden data-name="SupplierId">@item.SupplierId</td>*@
+                                        <td class="dFormat">@item.PurchaseAmount</td>
+                                        <td class="dFormat">@item.PaymentAmount</td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm remove-row-btn">
+                                                <i class='fa fa-trash'></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    { serial++; }
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-header p-2">
+                <div class="card-body">
+                    <div class="form-group row">
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Total Payment Amount</label>
+                            </div>
+                            <div class="editor-field">
+                                <input type="text" class="form-control form-control-sm priceLen NumberCheck text-right" name="PurchaseOrderGrandTotalAmount" id="PurchaseOrderGrandTotalAmount"  />
+                            </div>
+
+
+                            @*<div class="col-sm-2">
+                                @Html.LabelFor(model => model.TotalPaymentAmount)
+                                <div class="input-group">
+                                    @Html.TextBoxFor(
+                                        model => model.TotalPaymentAmount,
+                                        new
+                                        {
+                                            @placeholder = "Total Payment Amount",
+                                            @class = "form-control form-control-sm text-right NumberCheck priceLen",
+                                            @readonly = "readonly",  // Make the field readonly
+                                            id = "TotalPaymentAmount" // Unique ID for easy reference
+                                        }
+                                    )
+                                </div>
+                            </div>*@
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+
+            @if (Model.IsActive)
+            {
+                <button type="button" class="button sslPush">Already Posted</button>
+            }
+            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    <button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>
+
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                </div>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+
+        </div>
+        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Posted")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                        @*<div class="col-sm-3">
+                                @Html.TextBoxFor(model => model.PostedBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
+                                @Html.TextBoxFor(model => model.PostedOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
+
+                            </div>*@
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div id="poWindow" style="display:none;">
+    <div id="windowGrid"></div>
+</div>
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/PaymentController.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $("#tabs").tabs();
+
+            $("#IsActive").bootstrapSwitch();
+            $("#IsCash").bootstrapSwitch();
+
+            PaymentController.init();
+        });
+    </script>
+
+
+}
+

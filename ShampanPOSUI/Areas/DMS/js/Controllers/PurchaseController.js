@@ -28,7 +28,6 @@
         };
 
         if (getOperation !== '') {
-            GetCurrencyComboBox();
             GetSupplierComboBox();
             TotalCalculation();
         };
@@ -100,30 +99,48 @@
                 });
         });
 
-        //$('#btnSearchPurchaseOrder').on('click', function () {
-        //    debugger;
 
-        //    // Pass FromDate if needed
-        //    $('#FromDate').val($('#PurchaseDate').val());
 
-        //    // Open Purchase Order search modal
-        //    CommonService.purchaseOrderIdModal(
-        //        function success() {
-        //            console.log("Purchase Order search opened");
-        //        },
-        //        function fail(err) {
-        //            console.error(err);
-        //            ShowNotification(3, "Failed to open Purchase Order search");
-        //        },
-        //        function dblClick(row) {
-        //            debugger;
-        //            purchaseOrderModalDblClick(row);
-        //        },
-        //        function closeCallback() {
-        //            console.log("Purchase Order search closed");
-        //        }
-        //    );
-        //});
+        $("#btnFromPurchaseOrder").on("click", function () {
+            debugger;
+            var id = $("#Id").val();
+
+            if (!id || id === "0") {
+                ShowNotification(3, "Invalid Id!");
+                return;
+            }
+
+            var form = $('<form>', {
+                method: 'POST',
+                action: '/DMS/Payment/GetFromPurchase'
+            });
+
+            // CommonVM.IDs
+            form.append(
+                $('<input>', {
+                    type: 'hidden',
+                    name: 'IDs',
+                    value: id
+                })
+            );
+
+            $('body').append(form);
+            form.submit();
+        });
+
+
+
+
+
+
+        $(document).on('keyup change', '.td-Quantity, .td-SubTotal, .td-SDAmount, .td-VATAmount, .td-LineTotal', function () {
+            TotalCalculation();
+        });
+        $(document).on('click', '.remove-row-btn', function () {
+            $(this).closest('tr').remove();
+            TotalCalculation();
+        });
+
 
         $("#btnSearchPurchaseOrder").on("click", function () {
             $('#FromDate').val($('#PurchaseDate').val());
@@ -190,26 +207,27 @@
             ]
         });
 
-
         //function loadPurchaseOrderDetails(purchaseOrderId) {
         //    debugger;
+
         //    $.ajax({
         //        url: "/DMS/PurchaseOrder/GetPurchaseOrderList",
         //        type: "GET",
         //        data: { purchaseOrderId: purchaseOrderId },
         //        success: function (data) {
 
-
         //            console.log("PO DATA:", data);
 
-        //            if (!data || data.length === 0) return;
+        //            if (!data || data.length === 0) {
+        //                $("#lst").empty();
+        //                return;
+        //            }
 
+        //            // ===== MASTER =====
         //            var master = data[0];
 
-        //            /* ===== MASTER ===== */
-
         //            // Supplier
-        //            if (master.SupplierId !== undefined) {
+        //            if (master.SupplierId !== undefined && master.SupplierId !== null) {
 
         //                var supplierCombo = $("#SupplierId").data("kendoComboBox")
         //                    || $("#SupplierId").data("kendoMultiColumnComboBox");
@@ -230,33 +248,36 @@
         //                }
         //            }
 
+        //            // ===== DETAILS =====
+        //            $("#lst").empty();
 
-        //            $("#lst").empty(); // Clear existing rows
+        //            if (!master.purchaseOrderDetailsList || master.purchaseOrderDetailsList.length === 0)
+        //                return;
 
         //            var sl = 1;
 
-        //            $.each(data, function (index, item) {
+        //            $.each(master.purchaseOrderDetailsList, function (index, item) {
 
         //                var row = `
         //        <tr>
         //            <td>${sl}</td>
-        //            <td hidden>${item.ProductCode}</td>
-        //            <td>${item.ProductName}</td>
-        //            <td hidden>${item.ProductId}</td>
-        //            <td class="dFormat">${item.Quantity}</td>
-        //            <td class="dFormat">${item.UnitPrice}</td>
-        //            <td class="dFormat">${item.SubTotal}</td>
-        //            <td hidden class="dFormat">${item.SD}</td>
-        //            <td hidden class="dFormat">${item.SDAmount}</td>
-        //            <td hidden class="dFormat">${item.VATRate}</td>
-        //            <td hidden class="dFormat">${item.VATAmount}</td>
-        //            <td hidden class="dFormat">${item.OthersAmount}</td>
-        //            <td class="dFormat">${item.LineTotal}</td>
-        //            <td hidden>${item.PurchaseOrderId}</td>
-        //            <td hidden>${item.PurchaseOrderDetailId}</td>
+        //            <td hidden>${item.ProductCode ?? ""}</td>
+        //            <td>${item.ProductName ?? ""}</td>
+        //            <td hidden>${item.ProductId ?? ""}</td>
+        //            <td class="dFormat">${item.Quantity ?? 0}</td>
+        //            <td class="dFormat">${item.UnitPrice ?? 0}</td>
+        //            <td class="dFormat">${item.SubTotal ?? 0}</td>
+        //            <td class="dFormat">${item.SD ?? 0}</td>
+        //            <td class="dFormat">${item.SDAmount ?? 0}</td>
+        //            <td class="dFormat">${item.VATRate ?? 0}</td>
+        //            <td class="dFormat">${item.VATAmount ?? 0}</td>
+        //            <td class="dFormat">${item.OthersAmount ?? 0}</td>
+        //            <td class="dFormat">${item.LineTotal ?? 0}</td>
+        //            <td hidden>${item.PurchaseOrderId ?? ""}</td>
+        //            <td hidden>${item.PurchaseOrderDetailId ?? ""}</td>
         //            <td>
         //                <button class="btn btn-danger btn-sm remove-row-btn">
-        //                    <i class='fa fa-trash'></i>
+        //                    <i class="fa fa-trash"></i>
         //                </button>
         //            </td>
         //        </tr>
@@ -271,7 +292,6 @@
         //        }
         //    });
         //}
-
 
 
         function loadPurchaseOrderDetails(purchaseOrderId) {
@@ -290,12 +310,11 @@
                         return;
                     }
 
-                    // ===== MASTER =====
+                    // ================= MASTER (AS IT IS) =================
                     var master = data[0];
 
-                    // Supplier
+                    // Supplier autofill
                     if (master.SupplierId !== undefined && master.SupplierId !== null) {
-
                         var supplierCombo = $("#SupplierId").data("kendoComboBox")
                             || $("#SupplierId").data("kendoMultiColumnComboBox");
 
@@ -307,7 +326,7 @@
                         }
                     }
 
-                    // Invoice Date
+                    // Invoice Date autofill
                     if (master.OrderDate) {
                         var date = new Date(master.OrderDate);
                         if (!isNaN(date.getTime())) {
@@ -315,15 +334,27 @@
                         }
                     }
 
-                    // ===== DETAILS =====
+                    // ================= DETAILS =================
                     $("#lst").empty();
 
                     if (!master.purchaseOrderDetailsList || master.purchaseOrderDetailsList.length === 0)
                         return;
 
+                    // 🔹 ADD: totals variable
+                    let subTotal = 0;
+                    let totalSD = 0;
+                    let totalVAT = 0;
+                    let grandTotal = 0;
+
                     var sl = 1;
 
                     $.each(master.purchaseOrderDetailsList, function (index, item) {
+
+                        // 🔹 ADD: accumulate totals from details
+                        subTotal += parseFloat(item.SubTotal) || 0;
+                        totalSD += parseFloat(item.SDAmount) || 0;
+                        totalVAT += parseFloat(item.VATAmount) || 0;
+                        grandTotal += parseFloat(item.LineTotal) || 0;
 
                         var row = `
                 <tr>
@@ -353,6 +384,22 @@
                         $("#lst").append(row);
                         sl++;
                     });
+
+                    // ================= MASTER TOTAL AUTOFILL =================
+                    const dp = parseInt(decimalPlace || 2);
+
+                    $("#SubTotal").val(subTotal.toLocaleString('en', { minimumFractionDigits: dp }));
+                    $("#TotalSD").val(totalSD.toLocaleString('en', { minimumFractionDigits: dp }));
+                    $("#TotalVAT").val(totalVAT.toLocaleString('en', { minimumFractionDigits: dp }));
+                    $("#GrandTotal").val(grandTotal.toLocaleString('en', { minimumFractionDigits: dp }));
+
+                    // PaidAmount (optional, if exists in master)
+                    if (master.PaidAmount !== undefined && master.PaidAmount !== null) {
+                        $("#PaidAmount").val(
+                            parseFloat(master.PaidAmount)
+                                .toLocaleString('en', { minimumFractionDigits: dp })
+                        );
+                    }
                 },
                 error: function () {
                     alert("Failed to load purchase order details.");
@@ -360,51 +407,6 @@
             });
         }
 
-
-
-
-        //var poWindow = $("#poWindow").kendoWindow({
-        //    title: "Purchase Order",
-        //    modal: true,
-        //    width: "900px",
-        //    height: "550px",
-        //    visible: false,
-        //    actions: ["Close"],
-        //    content: {
-        //        url: "/Common/Common/GetPurchaseOrderList"
-        //    },
-        //    open: function () {
-        //        loadPurchaseOrderGrid();
-        //    }
-        //}).data("kendoWindow");
-
-
-
-
-        //var activeDetailRow = null;
-
-        //$('#details').on('click', '.btnSearchPurchaseOrder', function () {
-        //    activeDetailRow = $(this).closest('tr');
-
-        //    $('#FromDate').val($('#PurchaseDate').val());
-
-        //    CommonService.purchaseOrderIdModal(
-        //        function success() {
-        //            console.log("Purchase Order search opened");
-        //        },
-        //        function fail(err) {
-        //            console.error(err);
-        //            ShowNotification(3, "Failed to open Purchase Order search");
-        //        },
-        //        function dblClick(row) {
-        //            purchaseOrderModalDblClick(row, activeDetailRow);
-        //        },
-        //        function closeCallback() {
-        //            console.log("Purchase Order search closed");
-        //        }
-        //    );
-
-        //});
 
 
 
@@ -437,56 +439,6 @@
         });
 
 
-        $('#details').on('click', 'input.txtProductName', function () {
-            var originalRow = $(this);
-            $('#FromDate').val($('#PurchaseDate').val());
-            originalRow.closest("td").find("input").data('touched', true);
-            CommonService.productForPurchaseModal(
-                function success(result) {
-                    console.log("Modal opened successfully.");
-                },
-                function fail(error) {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.error("Error opening modal:", error);
-                },
-                function dblClick(row) {
-                    productModalDblClick(row, originalRow);
-                },
-                function closeCallback() {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.log("Modal closed.");
-                }
-            );
-        });
-
-
-        $('#details').on('click', 'input.txtUOMName', function () {
-            var originalRow = $(this);
-            var currentRow = originalRow.closest('tr');
-            var UOMId = currentRow.find('td:nth-child(6)').text().trim() || 0;
-            if (parseInt(UOMId) == 0) {
-                ShowNotification(3, 'Please Fillup Product First!');
-                return;
-            };
-            $('#UOMId').val(UOMId);
-            originalRow.closest("td").find("input").data('touched', true);
-            CommonService.uomFromNameModal(
-                function success(result) {
-                    console.log("Modal opened successfully.");
-                },
-                function fail(error) {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.error("Error opening modal:", error);
-                },
-                function dblClick(row) {
-                    uomFromNameModalDblClick(row, originalRow);
-                },
-                function closeCallback() {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.log("Modal closed.");
-                }
-            );
-        });
         $('#details').on('blur', ".td-CtnQuantity", function (event) {
 
             var originalRow = $(this);
@@ -603,71 +555,6 @@
         pageSubmit('frmPurchaseImport'); // Call the function
     });
 
-    //function loadPurchaseOrderGrid() {
-
-    //    var grid = $("#poGrid").data("kendoGrid");
-    //    if (grid) {
-    //        grid.destroy();
-    //        $("#poGrid").empty();
-    //    }
-
-    //    $("#poGrid").kendoGrid({
-    //        dataSource: {
-    //            transport: {
-    //                read: {
-    //                    url: "/Common/Common/_getPurchaseOrderIdData",
-    //                    type: "POST",
-    //                    dataType: "json",
-    //                    data: function () {
-    //                        return {
-    //                            FromDate: $("#FromDate").val()
-    //                        };
-    //                    }
-    //                }
-    //            },
-    //            schema: {
-    //                data: "data",
-    //                total: "recordsTotal"
-    //            },
-    //            serverPaging: true,
-    //            serverSorting: true,
-    //            pageSize: 10
-    //        },
-    //        pageable: true,
-    //        sortable: true,
-    //        selectable: "row",
-    //        columns: [
-    //            { field: "Code", title: "PO Code" },
-    //            { field: "SupplierName", title: "Supplier" },
-    //            { field: "OrderDate", title: "Order Date" }
-    //        ],
-    //        change: onPurchaseOrderSelect
-    //    });
-    //}
-
-    //function onPurchaseOrderSelect() {
-
-    //    var grid = $("#poGrid").data("kendoGrid");
-    //    var selected = grid.select();
-
-    //    if (selected.length === 0) return;
-
-    //    var data = grid.dataItem(selected);
-
-    //    $("#PurchaseOrderId").val(data.Id);
-    //    $("#Code").val(data.Code);
-
-    //    var supplierCombo = $("#SupplierId").data("kendoMultiColumnComboBox");
-    //    if (supplierCombo && data.SupplierId) {
-    //        supplierCombo.value(data.SupplierId);
-    //    }
-
-    //    $("#poWindow").data("kendoWindow").close();
-    //}
-
-
-
-
     function computeCtnQuantity(row, param) {
 
         // Get base values with proper parsing of formatted numbers
@@ -723,20 +610,7 @@
             }
         );
     }
-    function updateRowWithAPIData(row, data) {
-        // Update basic fields
-        row.find('.td-FreeProductName').text(data.FreeProductName?.trim() || '');
-        row.find('.td-FreeProductId').text(data.FreeProductId || '');
-        row.find('.td-FreeQuantity').text(formatNumber(data.FreeQuantity || 0));
-        row.find('.td-DiscountRate').text(formatNumber(data.DiscountRate || 0));
-        row.find('.td-DiscountAmount').text(formatNumber(data.DiscountAmount || 0));
-        row.find('.td-LineDiscountRate').text(formatNumber(data.LineDiscountRate || 0));
-        row.find('.td-LineDiscountAmount').text(formatNumber(data.LineDiscountAmount || 0));
 
-        // Update calculated totals
-        row.find('.td-SubTotalAfterDiscount').text(formatNumber(data.SubTotalAfterDiscount || 0));
-        row.find('.td-LineTotalAfterDiscount').text(formatNumber(data.LineTotalAfterDiscount || 0));
-    }
     function calculateRowTotals(row) {
 
 
@@ -825,11 +699,10 @@
         const freeGrandTotalAmount = totals.freeQuantity;
 
         // Update all total fields
-        $("#GrandTotalAmount").val(formatNumber(totals.quantity));
-        $("#GrandSubTotal").val(formatNumber(totals.subTotal));
-        $("#GrandSubTotalAD").val(formatNumber(totals.subTotalAfterDiscount));
-        $("#GrandTotalSDAmount").val(formatNumber(totals.sdAmount));
-        $("#GrandTotalVATAmount").val(formatNumber(totals.vatAmount));
+        //$("#GrandTotalAmount").val(formatNumber(totals.quantity));
+        $("#SubTotal").val(formatNumber(totals.subTotal));
+        $("#TotalSD").val(formatNumber(totals.sdAmount));
+        $("#TotalVAT").val(formatNumber(totals.vatAmount));
         $("#GrandTotal").val(formatNumber(totals.lineTotal));
 
         // Get required data for invoice calculation
@@ -988,22 +861,6 @@
         });
     };
 
-    function uomFromNameModalDblClick(row, originalRow) {
-
-        var dataTable = $("#modalData").DataTable();
-        var rowData = dataTable.row(row).data();
-
-        var UOMFromId = rowData.UOMFromId;
-        var UOMFromName = rowData.UOMFromName;
-        var UOMConversion = rowData.UOMConversion;
-
-        originalRow.closest("td").find("input").val(UOMFromName);
-        originalRow.closest('td').next().text(UOMFromId);
-        /*originalRow.closest('td').next().next().next().text(UOMConversion);*/
-
-        $("#partialModal").modal("hide");
-        originalRow.closest("td").find("input").data("touched", false).focus();
-    };
 
     function GetSupplierComboBox() {
         var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
@@ -1032,164 +889,6 @@
             }
         }).data("kendoMultiColumnComboBox");
     };
-
-    function GetCurrencyComboBox() {
-        var CurrencyComboBox = $("#CurrencyId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetCurrencieList"
-                }
-            },
-            placeholder: "Select Currency",
-            value: "",
-            dataBound: function (e) {
-                if (getCurrencyId) {
-                    this.value(parseInt(getCurrencyId));
-                }
-            },
-            change: function (e) {
-
-            }
-        }).data("kendoMultiColumnComboBox");
-    };
-
-    function productModalDblClick(row, originalRow) {
-        debugger;
-        var dataTable = $("#modalData").DataTable();
-        var rowData = dataTable.row(row).data();
-        var ProductCode = rowData.ProductCode;
-        var ProductId = rowData.ProductId;
-        var ProductName = rowData.ProductName;
-        var UOMId = rowData.UOMId;
-        var UOMName = rowData.UOMName;
-        var CostPrice = rowData.CostPrice;
-        var PurchasePrice = rowData.PurchasePrice;
-        var SDRate = rowData.SDRate;
-        var VATRate = rowData.VATRate;
-        var Conversion = rowData.UOMConversion;
-        var Quantity = 1;
-        // ✅ Check for duplicates before setting data
-        var isDuplicate = false;
-        $("#details tbody tr").each(function () {
-            var existingProductId = $(this).find(".td-ProductId").text().trim();
-
-            if (existingProductId && existingProductId === ProductId.toString()) {
-                isDuplicate = true;
-                // Optional: highlight the existing row
-                $(this).addClass("duplicate-highlight");
-                setTimeout(() => $(this).removeClass("duplicate-highlight"), 2000);
-                return false; // stop loop
-            }
-        });
-
-        if (isDuplicate) {
-            ShowNotification(3, "This product has already been added!");
-            $("#partialModal").modal("hide");
-            return;
-        }
-        var $currentRow = originalRow.closest('tr');
-        $currentRow.find('.td-ProductCode').text(ProductCode);
-        $currentRow.find('.td-ProductName').text(ProductName);
-        $currentRow.find('.td-ProductId').text(ProductId);
-        $currentRow.find('.td-UOMName').text(UOMName);
-        $currentRow.find('.td-UOMId').text(UOMId);
-        $currentRow.find('.td-UnitPrice').text(PurchasePrice);
-        $currentRow.find('.td-SD').text(SDRate);
-        $currentRow.find('.td-VATRate').text(VATRate);
-        $currentRow.find('.td-UOMConversion').text(Conversion);
-        //CampaignMudularitycal($currentRow)
-
-        $("#partialModal").modal("hide");
-        originalRow.closest("td").find("input").data("touched", false).focus();
-        $('#details').find(".td-Quantity").trigger('blur');
-    };
-
-
-    //function purchaseOrderModalDblClick(row, originalRow) {
-    //    debugger;
-    //    var dataTable = $("#modalData").DataTable();
-    //    var rowData = dataTable.row(row).data();
-    //    var Code = rowData.Code;
-    //    var SupplierId = rowData.SupplierId;
-    //    var SupplierName = rowData.SupplierName;
-    //    var SupplierAddress = rowData.SupplierAddress;
-    //    var OrderDate = rowData.OrderDate;
-    //    var DeliveryDateTime = rowData.DeliveryDateTime;
-    //    var Comments = rowData.Comments;
-    //    var Quantity = 1;
-    //    // ✅ Check for duplicates before setting data
-    //    var isDuplicate = false;
-    //    $("#details tbody tr").each(function () {
-    //        var existingSupplierId = $(this).find(".td-SupplierId").text().trim();
-
-    //        if (existingSupplierId && existingSupplierId === SupplierId.toString()) {
-    //            isDuplicate = true;
-    //            // Optional: highlight the existing row
-    //            $(this).addClass("duplicate-highlight");
-    //            setTimeout(() => $(this).removeClass("duplicate-highlight"), 2000);
-    //            return false; // stop loop
-    //        }
-    //    });
-
-    //    if (isDuplicate) {
-    //        ShowNotification(3, "This product has already been added!");
-    //        $("#partialModal").modal("hide");
-    //        return;
-    //    }
-    //    var $currentRow = originalRow.closest('tr');
-    //    $currentRow.find('.td-Code').text(Code);
-    //    $currentRow.find('.td-SupplierId').text(SupplierId);
-    //    $currentRow.find('.td-SupplierName').text(SupplierName);
-    //    $currentRow.find('.td-SupplierAddress').text(SupplierAddress);
-    //    $currentRow.find('.td-OrderDate').text(OrderDate);
-    //    $currentRow.find('.td-DeliveryDateTime').text(DeliveryDateTime);
-    //    $currentRow.find('.td-Comments').text(Comments);
-    //    //CampaignMudularitycal($currentRow)
-
-    //    $("#partialModal").modal("hide");
-    //    originalRow.closest("td").find("input").data("touched", false).focus();
-    //    $('#details').find(".td-Quantity").trigger('blur');
-    //};
-
-
-
-    function purchaseOrderModalDblClick(row, originalRow) {
-        debugger;
-
-        if (!originalRow || originalRow.length === 0) {
-            ShowNotification(3, "No target row selected");
-            return;
-        }
-
-        var dataTable = $("#modalData").DataTable();
-        var rowData = dataTable.row(row).data();
-
-        if (!rowData) {
-            ShowNotification(3, "Invalid selection");
-            return;
-        }
-
-        originalRow.find('.td-Code').text(rowData.Code);
-        originalRow.find('.td-SupplierId').text(rowData.SupplierId);
-        originalRow.find('.td-SupplierName').text(rowData.SupplierName);
-        originalRow.find('.td-SupplierAddress').text(rowData.SupplierAddress);
-        originalRow.find('.td-OrderDate').text(rowData.OrderDate);
-        originalRow.find('.td-DeliveryDateTime').text(rowData.DeliveryDateTime);
-        originalRow.find('.td-Comments').text(rowData.Comments);
-
-        $("#partialModal").modal("hide");
-    }
-
-
 
     function computeSubTotal(row, param) {
 
@@ -1278,27 +977,56 @@
     };
 
 
+    //function TotalCalculation() {
+
+    //    var Quantity = 0;
+    //    var SDAmount = 0;
+    //    var SubTotal = 0;
+    //    var LineTotal = 0;
+
+    //    Quantity = getColumnSumAttr('Quantity', 'details').toFixed(parseInt(decimalPlace));
+    //    SubTotal = getColumnSumAttr('SubTotal', 'details').toFixed(parseInt(decimalPlace));
+    //    SDAmount = getColumnSumAttr('SDAmount', 'details').toFixed(parseInt(decimalPlace));
+    //    VATAmount = getColumnSumAttr('VATAmount', 'details').toFixed(parseInt(decimalPlace));
+    //    LineTotal = getColumnSumAttr('LineTotal', 'details').toFixed(parseInt(decimalPlace));
+
+
+
+    //    $("#SubTotal").val(Number(parseFloat(SubTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+    //    $("#TotalSD").val(Number(parseFloat(SDAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+    //    $("#TotalVAT").val(Number(parseFloat(VATAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+    //    $("#GrandTotal").val(Number(parseFloat(LineTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+
+    //};
+
+
     function TotalCalculation() {
 
-        var Quantity = 0;
-        var SDAmount = 0;
-        var SubTotal = 0;
-        var LineTotal = 0;
+        let subTotal = 0;
+        let totalSD = 0;
+        let totalVAT = 0;
+        let grandTotal = 0;
 
-        Quantity = getColumnSumAttr('Quantity', 'details').toFixed(parseInt(decimalPlace));
-        SubTotal = getColumnSumAttr('SubTotal', 'details').toFixed(parseInt(decimalPlace));
-        SDAmount = getColumnSumAttr('SDAmount', 'details').toFixed(parseInt(decimalPlace));
-        VATAmount = getColumnSumAttr('VATAmount', 'details').toFixed(parseInt(decimalPlace));
-        LineTotal = getColumnSumAttr('LineTotal', 'details').toFixed(parseInt(decimalPlace));
+        // Loop through all detail rows
+        $('#details tbody tr').each(function () {
+            const row = $(this);
 
+            subTotal += parseFloat(row.find('.td-SubTotal').text().replace(/,/g, '')) || 0;
+            totalSD += parseFloat(row.find('.td-SDAmount').text().replace(/,/g, '')) || 0;
+            totalVAT += parseFloat(row.find('.td-VATAmount').text().replace(/,/g, '')) || 0;
+            grandTotal += parseFloat(row.find('.td-LineTotal').text().replace(/,/g, '')) || 0;
+        });
 
-        $("#GrandTotalAmount").val(Number(parseFloat(Quantity).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
-        $("#GrandSubTotal").val(Number(parseFloat(SubTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
-        $("#GrandTotalSDAmount").val(Number(parseFloat(SDAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
-        $("#GrandTotalVATAmount").val(Number(parseFloat(VATAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
-        $("#GrandTotal").val(Number(parseFloat(LineTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
+        // Decimal place
+        const dp = parseInt(decimalPlace);
 
-    };
+        // Set values in master fields (formatted)
+        $("#SubTotal").val(subTotal.toLocaleString('en', { minimumFractionDigits: dp, maximumFractionDigits: dp }));
+        $("#TotalSD").val(totalSD.toLocaleString('en', { minimumFractionDigits: dp, maximumFractionDigits: dp }));
+        $("#TotalVAT").val(totalVAT.toLocaleString('en', { minimumFractionDigits: dp, maximumFractionDigits: dp }));
+        $("#GrandTotal").val(grandTotal.toLocaleString('en', { minimumFractionDigits: dp, maximumFractionDigits: dp }));
+    }
+
 
 
     var GetGridDataList = function () {
@@ -1334,6 +1062,9 @@
                             if (param.field === "SupplierName") {
                                 param.field = "S.Name";
                             }
+                            if (param.field === "PurchaseOrderCode") {
+                                param.field = "P.Code";
+                            }
                             if (param.field === "BENumber") {
                                 param.field = "H.BENumber";
                             }
@@ -1345,15 +1076,21 @@
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
                                 param.field = "H.PurchaseDate";
                             }
-                            //if (param.field === "GrandTotalAmount") {
-                            //    param.field = "H.GrandTotalAmount";
-                            //}
-                            //if (param.field === "GrandTotalSDAmount") {
-                            //    param.field = "H.GrandTotalSDAmount";
-                            //}
-                            //if (param.field === "GrandTotalVATAmount") {
-                            //    param.field = "H.GrandTotalVATAmount";
-                            //}
+                            if (param.field === "SubTotal") {
+                                param.field = "H.SubTotal";
+                            }
+                            if (param.field === "TotalSD") {
+                                param.field = "H.TotalSD";
+                            }
+                            if (param.field === "TotalVAT") {
+                                param.field = "H.TotalVAT";
+                            }
+                            if (param.field === "GrandTotal") {
+                                param.field = "H.GrandTotal";
+                            }
+                            if (param.field === "PaidAmount") {
+                                param.field = "H.PaidAmount";
+                            }
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
@@ -1388,27 +1125,14 @@
                             //    param.field = "H.IsCompleted";
                             //    param.operator = "eq";
                             //}
-                            //if (param.field === "ImportIDExcel") {
-                            //    param.field = "H.ImportIDExcel";
-                            //}
-                            //if (param.field === "CustomHouse") {
-                            //    param.field = "H.CustomHouse";
-                            //}
+
                             if (param.field === "FiscalYear") {
                                 param.field = "H.FiscalYear";
                             }
                             if (param.field === "BranchName") {
                                 param.field = "Br.Name";
                             }
-                            //if (param.field === "CurrencyRateFromBDT") {
-                            //    param.field = "H.CurrencyRateFromBDT";
-                            //}
-                            //if (param.field === "FileName") {
-                            //    param.field = "H.FileName";
-                            //}
-                            //if (param.field === "CustomHouse") {
-                            //    param.field = "H.CustomHouse";
-                            //}
+
                             if (param.field === "BranchAddress") {
                                 param.field = "Br.Address";
                             }
@@ -1429,26 +1153,35 @@
                             if (param.field === "SupplierName") {
                                 param.field = "S.Name";
                             }
+                            if (param.field === "PurchaseOrderCode") {
+                                param.field = "P.Code";
+                            }
                             if (param.field === "BENumber") {
                                 param.field = "H.BENumber";
                             }
                             if (param.field === "InvoiceDateTime" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "CONVERT(VARCHAR(10), H.InvoiceDateTime, 120)";
+                                param.field = "H.InvoiceDateTime";
                             }
                             if (param.field === "PurchaseDate" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "CONVERT(VARCHAR(10), H.PurchaseDate, 120)";
+                                param.field = "H.PurchaseDate";
                             }
-                            //if (param.field === "GrandTotalAmount") {
-                            //    param.field = "H.GrandTotalAmount";
-                            //}
-                            //if (param.field === "GrandTotalSDAmount") {
-                            //    param.field = "H.GrandTotalSDAmount";
-                            //}
-                            //if (param.field === "GrandTotalVATAmount") {
-                            //    param.field = "H.GrandTotalVATAmount";
-                            //}
+                            if (param.field === "SubTotal") {
+                                param.field = "H.SubTotal";
+                            }
+                            if (param.field === "TotalSD") {
+                                param.field = "H.TotalSD";
+                            }
+                            if (param.field === "TotalVAT") {
+                                param.field = "H.TotalVAT";
+                            }
+                            if (param.field === "GrandTotal") {
+                                param.field = "H.GrandTotal";
+                            }
+                            if (param.field === "PaidAmount") {
+                                param.field = "H.PaidAmount";
+                            }
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
@@ -1462,14 +1195,7 @@
                                     param.value = 1;
                                 } else if (statusValue.startsWith("n")) {
                                     param.value = 0;
-                                }
-                                else if (statusValue == "1") {
-                                    param.value = 1;
-                                }
-                                else if (statusValue == "0") {
-                                    param.value = 0;
-                                }
-                                else {
+                                } else {
                                     param.value = null;
                                 }
 
@@ -1483,41 +1209,21 @@
                             //        param.value = 1;
                             //    } else if (statusValue.startsWith("n")) {
                             //        param.value = 0;
-                            //    }
-                            //    else if (statusValue == "1") {
-                            //        param.value = 1;
-                            //    }
-                            //    else if (statusValue == "0") {
-                            //        param.value = 0;
-                            //    }
-                            //    else {
+                            //    } else {
                             //        param.value = null;
                             //    }
 
                             //    param.field = "H.IsCompleted";
                             //    param.operator = "eq";
                             //}
-                            //if (param.field === "ImportIDExcel") {
-                            //    param.field = "H.ImportIDExcel";
-                            //}
-                            //if (param.field === "CustomHouse") {
-                            //    param.field = "H.CustomHouse";
-                            //}
+
                             if (param.field === "FiscalYear") {
                                 param.field = "H.FiscalYear";
                             }
                             if (param.field === "BranchName") {
                                 param.field = "Br.Name";
                             }
-                            //if (param.field === "CurrencyRateFromBDT") {
-                            //    param.field = "H.CurrencyRateFromBDT";
-                            //}
-                            //if (param.field === "FileName") {
-                            //    param.field = "H.FileName";
-                            //}
-                            //if (param.field === "CustomHouse") {
-                            //    param.field = "H.CustomHouse";
-                            //}
+
                             if (param.field === "BranchAddress") {
                                 param.field = "Br.Address";
                             }
@@ -1913,6 +1619,8 @@
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", width: 180, sortable: true },
                 { field: "SupplierName", title: "Supplier Name", sortable: true, width: 180 },
+                { field: "PurchaseOrderCode", title: "Purchase Order Code", sortable: true, width: 180 },
+
                 {
                     field: "InvoiceDateTime", title: "Invoice Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
                     filterable:
@@ -1960,41 +1668,63 @@
                 //    }
                 //}
                 //,
-                //{
-                //    field: "GrandTotalAmount",
-                //    title: "Grand Total Amount",
-                //    sortable: true,
-                //    width: 180,
-                //    aggregates: ["sum"],
-                //    format: "{0:n2}",
-                //    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                //    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                //    attributes: { style: "text-align: right;" }
-                //}
-                //,
-                //{
-                //    field: "GrandTotalSDAmount",
-                //    title: "Grand Total SD Amount",
-                //    sortable: true,
-                //    width: 200,
-                //    aggregates: ["sum"],
-                //    format: "{0:n2}",
-                //    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                //    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                //    attributes: { style: "text-align: right;" }
-                //}
-                //,
-                //{
-                //    field: "GrandTotalVATAmount",
-                //    title: "Grand Total VAT Amount",
-                //    sortable: true,
-                //    width: 200,
-                //    aggregates: ["sum"],
-                //    format: "{0:n2}",
-                //    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                //    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                //    attributes: { style: "text-align: right;" }
-                //},
+                {
+                    field: "SubTotal",
+                    title: "Sub Total",
+                    sortable: true,
+                    width: 180,
+                    aggregates: ["sum"],
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
+                }
+                ,
+                {
+                    field: "TotalSD",
+                    title: "Total SD",
+                    sortable: true,
+                    width: 200,
+                    aggregates: ["sum"],
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
+                }
+                ,
+                {
+                    field: "TotalVAT",
+                    title: "Total VAT",
+                    sortable: true,
+                    width: 200,
+                    aggregates: ["sum"],
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
+                },
+                {
+                    field: "GrandTotal",
+                    title: "Grand Total",
+                    sortable: true,
+                    width: 200,
+                    aggregates: ["sum"],
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
+                },
+                {
+                    field: "PaidAmount",
+                    title: "Paid Amount",
+                    sortable: true,
+                    width: 200,
+                    aggregates: ["sum"],
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
+                },
 
                 { field: "BENumber", title: "BE Number", sortable: true, width: 130 },
                 //{ field: "ImportIDExcel", title: "Import IDExcel", sortable: true, width: 130 },
@@ -2015,7 +1745,7 @@
     };
 
     function save($table) {
-
+       
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
 

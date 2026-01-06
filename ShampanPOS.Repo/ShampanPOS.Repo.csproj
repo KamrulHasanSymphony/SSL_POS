@@ -50,7 +50,9 @@
   <ItemGroup>
     <Compile Include="BankAccountRepo.cs" />
     <Compile Include="BankInformationRepo.cs" />
+    <Compile Include="DepositRepo.cs" />
     <Compile Include="OverHeadRepo.cs" />
+    <Compile Include="PaymentRepo.cs" />
     <Compile Include="PurchaseReturnRepo.cs" />
     <Compile Include="PurchaseRepo.cs" />
     <Compile Include="PurchaseOrderRepo.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="BranchProfileRepo.cs" />
     <Compile Include="Configuration\HttpRequestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WithdrawalRepo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

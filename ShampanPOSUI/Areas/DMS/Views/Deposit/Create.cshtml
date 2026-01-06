@@ -1,7 +1,7 @@
-﻿@model ShampanPOS.Models.BankAccountVM
+﻿@model ShampanPOS.Models.DepositVM
 
 @{
-    ViewBag.Title = "Bank Account Edit";
+    ViewBag.Title = "Deposit Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -97,7 +97,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0"> Bank Account Entry </h1>
+                    <h1 class="m-0"> Deposit Entry </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -117,7 +117,7 @@
                 <form id="frmEntry">
                     <div class="card card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title"> Bank Account Entry Info </h3>
+                            <h3 class="card-title"> Deposit Entry Info </h3>
                         </div>
                         <div class="card-body">
 
@@ -128,39 +128,92 @@
 
                             <div class="form-group row">
 
-
                                 <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.AccountNo)
-                                    <div class="input-group">
-                                        @Html.TextBoxFor(model => model.AccountNo, new { placeholder = "Enter Account No", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
-                                    </div>
-                                    @Html.ValidationMessageFor(model => model.AccountNo, "", new { @class = "text-danger" })
-                                </div>
-
-
-                                <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.AccountName)
+                                    @Html.LabelFor(model => model.FromBankAccountId)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.AccountName, new { placeholder = "Enter Account Name", @class = "  form-control form-control-sm " })
-                                    </div>
-                                    @Html.ValidationMessageFor(model => model.AccountName, "", new { @class = "text-danger" })
-                                </div>
-
-
-                                <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.BankId)
-                                    <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.BankId, new { @class = "   ", @style = "width: 100%;" })
+                                        @Html.TextBoxFor(model => model.FromBankAccountId, new { @class = "   ", @style = "width: 100%;" })
                                     </div>
                                     <span id="titleError2" class="text-danger" style="display:none;"></span>
                                 </div>
 
                                 <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.BranchName)
+                                    @Html.LabelFor(model => model.ToBankAccountId)
+                                    <div class="input-group ">
+                                        @Html.TextBoxFor(model => model.ToBankAccountId, new { @class = "   ", @style = "width: 100%;" })
+                                    </div>
+                                    <span id="titleError2" class="text-danger" style="display:none;"></span>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.ChequeNo)
                                     <div class="input-group">
-                                        @Html.TextBoxFor(model => model.BranchName, new { placeholder = " Enter Branch Name", @class = "form-control form-control-sm" })
+                                        @Html.TextBoxFor(model => model.ChequeNo, new { placeholder = "Enter Cheque No", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.ChequeBankName)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.ChequeBankName, new { placeholder = " Enter Bank Name", @class = "form-control form-control-sm" })
                                     </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.ChequeDate)
+                                    <div class="input-group date">
+                                        @Html.TextBoxFor(model => model.ChequeDate, new { @class = "  form-control form-control-sm dateRange" })
+                                        <div class="input-group-append">
+                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.TransactionDate)
+                                    <div class="input-group date">
+                                        @Html.TextBoxFor(model => model.TransactionDate, new { @class = "  form-control form-control-sm dateRange" })
+                                        <div class="input-group-append">
+                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group row">
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.TotalDepositAmount)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(
+                                            model => model.TotalDepositAmount,
+                                            new
+                                            {
+                                                @placeholder = "Total Deposit Amount",
+                                                @class = "form-control form-control-sm text-right NumberCheck priceLen",
+                                                id = "TotalDepositAmount" // Set an ID to access this field easily
+                                            }
+                                        )
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.Comments)
+                                    <div class="input-group ">
+                                        @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comments", @class = "  form-control form-control-sm " })
+
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Comments)
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.Reference)
+                                    <div class="input-group ">
+                                        @Html.TextAreaFor(model => model.Reference, new { placeholder = "Enter Comments", @class = "  form-control form-control-sm " })
+
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Reference)
+                                </div>
+
                                 <div class="col-sm-2" style="flex-direction: column">
                                     @Html.LabelFor(model => model.IsCash)
                                     <div class="Onoffbtn">
@@ -179,19 +232,6 @@
                                     </div>
                                 </div>
 
-                            </div>
-
-
-                            <div class="form-group row">
-
-                                <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.Comments)
-                                    <div class="input-group ">
-                                        @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comments", @class = "  form-control form-control-sm " })
-
-                                    </div>
-                                    @Html.ValidationMessageFor(model => model.Comments)
-                                </div>
 
                                 <div class="col-sm-2" style="flex-direction: column">
                                     @Html.LabelFor(model => model.IsActive)
@@ -211,9 +251,10 @@
                                     </div>
                                 </div>
 
-
-
                             </div>
+
+
+
 
                         </div>
 
@@ -228,7 +269,7 @@
                         {
                             <div style="display: flex; align-items: center; gap: 5px;">
                                 <button type="button" class="button btnsave sslUpdate">Update</button>
-                                <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/BankInformation/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                                <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/Deposit/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
                                 </button>
                                 <button class="button sslPrintC" data-id="@Model.Id">Print</button>
@@ -239,7 +280,7 @@
                         {
                             <div style="display:none;" class="divUpdate">
                                 <button type="button" class="button btnsave sslUpdate">Update</button>
-                                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/BankInformation/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/Deposit/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
                                 </button>
                             </div>
@@ -325,7 +366,7 @@
 @section scripts{
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
-    <script src="~/Areas/DMS/js/Controllers/BankAccountController.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/DepositController.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -338,7 +379,7 @@
             $("#IsActive").bootstrapSwitch();
             $("#IsCash").bootstrapSwitch();
 
-            BankAccountController.init();
+            DepositController.init();
         });
     </script>
 
