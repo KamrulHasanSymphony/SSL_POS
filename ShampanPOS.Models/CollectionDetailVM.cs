@@ -13,7 +13,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Collection")]
         public int? CollectionId { get; set; }
-        //public string? PaymentCode { get; set; }
+        public string? SaleCode { get; set; }
         public int? CustomerId { get; set; }
         //public string? PurchaseCode { get; set; }
 

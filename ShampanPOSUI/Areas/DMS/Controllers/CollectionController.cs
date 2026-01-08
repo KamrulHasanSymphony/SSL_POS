@@ -17,16 +17,18 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 {
     [Authorize]
     [RouteArea("DMS")]
-    public class PaymentController : Controller
+    public class CollectionController : Controller
     {
+
         private readonly ApplicationDbContext _applicationDb;
-        PaymentRepo _repo = new PaymentRepo();
+        CollectionRepo _repo = new CollectionRepo();
         CommonRepo _commonRepo = new CommonRepo();
 
-        // GET: DMS/Payment
+
+        // GET: DMS/Collection
         public ActionResult Index()
         {
-            PaymentVM vm = new PaymentVM();
+            CollectionVM vm = new CollectionVM();
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
             DateTime currentDate = DateTime.Now;
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
@@ -38,7 +40,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         public ActionResult DetailsIndex()
         {
-            PaymentDetailVM vm = new PaymentDetailVM();
+            CollectionDetailVM vm = new CollectionDetailVM();
 
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
             //vm.Branchs = Convert.ToInt32(currentBranchId);
@@ -46,8 +48,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
             firstDayOfMonth = firstDayOfMonth.AddMonths(-5);
-            //vm.FromDate = firstDayOfMonth.ToString("yyyy/MM/dd");
-            //vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
+
 
             #region  UserInfo
 
@@ -57,7 +58,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         public ActionResult Create()
         {
-            PaymentVM vm = new PaymentVM();
+            CollectionVM vm = new CollectionVM();
             vm.Operation = "add";
             //vm.TransactionType = "Purchase";
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
@@ -65,31 +66,17 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             //var currencyId = Session["CurrencyId"] != null ? Session["CurrencyId"].ToString() : "1";
             //vm.CurrencyId = Convert.ToInt32(currencyId);
 
-            //#region DecimalPlace
-            //CommonVM commonVM = new CommonVM();
-            //commonVM.Group = "SaleDecimalPlace";
-            //commonVM.Name = "SaleDecimalPlace";
-            //var settingsValue = _commonRepo.GetSettingsValue(commonVM);
-
-            //if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
-            //{
-            //    var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
-
-            //    vm.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
-            //}
-
-            //#endregion
 
 
             return View("Create", vm);
         }
 
         [HttpPost]
-        public ActionResult CreateEdit(PaymentVM model)
+        public ActionResult CreateEdit(CollectionVM model)
         {
-            ResultModel<PaymentVM> result = new ResultModel<PaymentVM>();
+            ResultModel<CollectionVM> result = new ResultModel<CollectionVM>();
             ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
-            _repo = new PaymentRepo();
+            _repo = new CollectionRepo();
 
 
             try
@@ -110,10 +97,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                     if (resultVM.Status == ResultStatus.Success.ToString())
                     {
-                        model = JsonConvert.DeserializeObject<PaymentVM>(resultVM.DataVM.ToString());
+                        model = JsonConvert.DeserializeObject<CollectionVM>(resultVM.DataVM.ToString());
                         model.Operation = "add";
                         Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                        result = new ResultModel<PaymentVM>()
+                        result = new ResultModel<CollectionVM>()
                         {
                             Success = true,
                             Status = Status.Success,
@@ -126,7 +113,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     {
                         Session["result"] = "Fail" + "~" + resultVM.Message;
 
-                        result = new ResultModel<PaymentVM>()
+                        result = new ResultModel<CollectionVM>()
                         {
                             Status = Status.Fail,
                             Message = resultVM.Message,
@@ -147,7 +134,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     if (resultVM.Status == ResultStatus.Success.ToString())
                     {
                         Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                        result = new ResultModel<PaymentVM>()
+                        result = new ResultModel<CollectionVM>()
                         {
                             Success = true,
                             Status = Status.Success,
@@ -160,7 +147,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     {
                         Session["result"] = "Fail" + "~" + resultVM.Message;
 
-                        result = new ResultModel<PaymentVM>()
+                        result = new ResultModel<CollectionVM>()
                         {
                             Status = Status.Fail,
                             Message = resultVM.Message,
@@ -189,16 +176,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             try
             {
-                _repo = new PaymentRepo();
+                _repo = new CollectionRepo();
 
-                PaymentVM vm = new PaymentVM();
+                CollectionVM vm = new CollectionVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
                 ResultVM result = _repo.List(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    vm = JsonConvert.DeserializeObject<List<PaymentVM>>(result.DataVM.ToString()).FirstOrDefault();
+                    vm = JsonConvert.DeserializeObject<List<CollectionVM>>(result.DataVM.ToString()).FirstOrDefault();
                 }
                 else
                 {
@@ -232,67 +219,67 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult GetFromPurchase(CommonVM vm)
-        {
-            try
-            {
-                PurchaseRepo _repoo = new PurchaseRepo();
+        //[HttpPost]
+        //public ActionResult GetFromPurchase(CommonVM vm)
+        //{
+        //    try
+        //    {
+        //        CollectionRepo _repoo = new CollectionRepo();
 
-                PaymentVM purchase = new PaymentVM();
-                ResultVM result = _repoo.PurchaseListForPayment(vm);
+        //        CollectionVM purchase = new CollectionVM();
+        //        ResultVM result = _repoo.PurchaseListForPayment(vm);
 
-                 if (result.Status == "Success" && result.DataVM != null)
-                {
-                    purchase = JsonConvert.DeserializeObject<List<PaymentVM>>(result.DataVM.ToString()).FirstOrDefault();
-                }
-                else
-                {
-                    TempData["message"] = result.Message;
-                    return RedirectToAction("FromPurchaseOrder", "Purchase", new { area = "DMS" });
-                }
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            purchase = JsonConvert.DeserializeObject<List<CollectionVM>>(result.DataVM.ToString()).FirstOrDefault();
+        //        }
+        //        else
+        //        {
+        //            TempData["message"] = result.Message;
+        //            return RedirectToAction("FromPurchaseOrder", "Purchase", new { area = "DMS" });
+        //        }
 
-                purchase.Operation = "add";
-                //purchase.IsPost = false;
+        //        purchase.Operation = "add";
+        //        //purchase.IsPost = false;
 
-                #region DecimalPlace
-                CommonVM commonVM = new CommonVM();
-                commonVM.Group = "SaleDecimalPlace";
-                commonVM.Name = "SaleDecimalPlace";
-                var settingsValue = _commonRepo.GetSettingsValue(commonVM);
+        //        #region DecimalPlace
+        //        CommonVM commonVM = new CommonVM();
+        //        commonVM.Group = "SaleDecimalPlace";
+        //        commonVM.Name = "SaleDecimalPlace";
+        //        var settingsValue = _commonRepo.GetSettingsValue(commonVM);
 
-                if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
-                {
-                    var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
+        //        if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
+        //        {
+        //            var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
 
-                    //purchase.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
-                }
+        //            //purchase.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
+        //        }
 
-                #endregion
+        //        #endregion
 
-                return View("Create", purchase);
-            }
-            catch (Exception e)
-            {
-                Session["result"] = "Fail" + "~" + e.Message;
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return RedirectToAction("Index");
-            }
-        }
+        //        return View("Create", purchase);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Session["result"] = "Fail" + "~" + e.Message;
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return RedirectToAction("Index");
+        //    }
+        //}
 
         [HttpGet]
-        public JsonResult GetPaymentDetailDataById(GridOptions options, int masterId)
+        public JsonResult GetCollectionDetailDataById(GridOptions options, int masterId)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
-            _repo = new PaymentRepo();
+            _repo = new CollectionRepo();
 
             try
             {
-                result = _repo.GetPaymentDetailDataById(options, masterId);
+                result = _repo.GetCollectionDetailDataById(options, masterId);
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    var gridData = JsonConvert.DeserializeObject<GridEntity<PaymentDetailVM>>(result.DataVM.ToString());
+                    var gridData = JsonConvert.DeserializeObject<GridEntity<CollectionDetailVM>>(result.DataVM.ToString());
 
                     return Json(new
                     {
@@ -311,13 +298,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(PaymentVM vm)
+        public ActionResult Delete(CollectionVM vm)
         {
-            ResultModel<PaymentVM> result = new ResultModel<PaymentVM>();
+            ResultModel<CollectionVM> result = new ResultModel<CollectionVM>();
 
             try
             {
-                _repo = new PaymentRepo();
+                _repo = new CollectionRepo();
 
                 CommonVM param = new CommonVM();
 
@@ -331,7 +318,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 if (resultData.Status == "Success")
                 {
-                    result = new ResultModel<PaymentVM>()
+                    result = new ResultModel<CollectionVM>()
                     {
                         Success = true,
                         Status = Status.Success,
@@ -341,7 +328,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 }
                 else
                 {
-                    result = new ResultModel<PaymentVM>()
+                    result = new ResultModel<CollectionVM>()
                     {
                         Success = false,
                         Status = Status.Fail,
@@ -360,13 +347,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
         [HttpPost]
-        public ActionResult MultiplePost(PaymentVM vm)
+        public ActionResult MultiplePost(CollectionVM vm)
         {
-            ResultModel<PaymentVM> result = new ResultModel<PaymentVM>();
+            ResultModel<CollectionVM> result = new ResultModel<CollectionVM>();
 
             try
             {
-                _repo = new PaymentRepo();
+                _repo = new CollectionRepo();
 
                 CommonVM param = new CommonVM();
 
@@ -380,7 +367,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 if (resultData.Status == "Success")
                 {
-                    result = new ResultModel<PaymentVM>()
+                    result = new ResultModel<CollectionVM>()
                     {
                         Success = true,
                         Status = Status.Success,
@@ -390,7 +377,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 }
                 else
                 {
-                    result = new ResultModel<PaymentVM>()
+                    result = new ResultModel<CollectionVM>()
                     {
                         Success = false,
                         Status = Status.Fail,
@@ -413,7 +400,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         public JsonResult GetGridData(GridOptions options)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
-            _repo = new PaymentRepo();
+            _repo = new CollectionRepo();
 
             try
             {
@@ -427,7 +414,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    var gridData = JsonConvert.DeserializeObject<GridEntity<PaymentVM>>(result.DataVM.ToString());
+                    var gridData = JsonConvert.DeserializeObject<GridEntity<CollectionVM>>(result.DataVM.ToString());
 
                     return Json(new
                     {
@@ -449,7 +436,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         public JsonResult GetDetailsGridData(GridOptions options, string branchId, string isPost, string fromDate, string toDate)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
-            _repo = new PaymentRepo();
+            _repo = new CollectionRepo();
 
             try
             {
@@ -462,7 +449,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    var gridData = JsonConvert.DeserializeObject<GridEntity<PaymentDetailVM>>(result.DataVM.ToString());
+                    var gridData = JsonConvert.DeserializeObject<GridEntity<CollectionDetailVM>>(result.DataVM.ToString());
 
                     return Json(new
                     {
@@ -480,42 +467,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult> ReportPreview(CommonVM param)
-        {
-            try
-            {
-                _repo = new PaymentRepo();
-                param.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
-                var resultStream = _repo.ReportPreview(param);
 
-                if (resultStream == null)
-                {
-                    throw new Exception("Failed to generate report: No data received.");
-                }
-
-                using (var memoryStream = new MemoryStream())
-                {
-                    await resultStream.CopyToAsync(memoryStream);
-                    byte[] fileBytes = memoryStream.ToArray();
-
-                    if (fileBytes.Length < 1000)
-                    {
-                        string errorContent = Encoding.UTF8.GetString(fileBytes);
-                        throw new Exception("Failed to generate report!");
-                    }
-
-                    Response.Headers.Add("Content-Disposition", "inline; filename=Purchase_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf");
-
-                    return File(fileBytes, "application/pdf");
-                }
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                TempData["Message"] = e.Message.ToString();
-                return RedirectToAction("Index", "Purchase", new { area = "DMS", message = TempData["Message"] });
-            }
-        }
     }
 }

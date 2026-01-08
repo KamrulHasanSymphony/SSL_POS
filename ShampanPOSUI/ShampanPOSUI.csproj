@@ -336,6 +336,7 @@
     <Compile Include="Areas\Common\Controllers\HomeController.cs" />
     <Compile Include="Areas\DMS\Controllers\BankAccountController.cs" />
     <Compile Include="Areas\DMS\Controllers\BankInformationController.cs" />
+    <Compile Include="Areas\DMS\Controllers\CollectionController.cs" />
     <Compile Include="Areas\DMS\Controllers\DepositController.cs" />
     <Compile Include="Areas\DMS\Controllers\OverHeadController.cs" />
     <Compile Include="Areas\DMS\Controllers\PaymentController.cs" />
@@ -358,6 +359,7 @@
     <Compile Include="Areas\DMS\Controllers\UOMController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMConversationController.cs" />
     <Content Include="Areas\DMS\js\Controllers\DepositController.js" />
+    <Content Include="Areas\DMS\js\Controllers\CollectionController.js" />
     <Content Include="Areas\DMS\js\Controllers\WithdrawalController.js" />
     <Content Include="Areas\DMS\js\Controllers\BankAccountController.js" />
     <Content Include="Areas\DMS\js\Controllers\PaymentController.js" />
@@ -2604,6 +2606,9 @@
     <Content Include="Areas\DMS\Views\Withdrawal\Create.cshtml" />
     <Content Include="Areas\DMS\Views\Deposit\Index.cshtml" />
     <Content Include="Areas\DMS\Views\Deposit\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\Collection\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\Collection\Create.cshtml" />
+    <Content Include="Areas\Common\Views\Common\_getSale.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

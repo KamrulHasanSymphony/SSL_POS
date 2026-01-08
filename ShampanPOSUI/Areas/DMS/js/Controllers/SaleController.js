@@ -32,7 +32,6 @@
         };
 
         GetCustomerComboBox();
-        GetSaleOrderComboBox();
         GetRouteComboBox();
         GetDeliveryComboBox();
         GetDriverComboBox();
@@ -145,6 +144,77 @@
             $("#myModal1").modal("hide");
         });
 
+        $(document).on('keyup change', '.td-Quantity, .td-SubTotal, .td-SDAmount, .td-VATAmount, .td-LineTotal', function () {
+            TotalCalculation();
+        });
+        $(document).on('click', '.remove-row-btn', function () {
+            $(this).closest('tr').remove();
+            TotalCalculation();
+        });
+
+
+        $("#btnSearchPurchaseOrder").on("click", function () {
+            $('#FromDate').val($('#InvoiceDateTime').val());
+
+            poWindow.center().open();
+
+            // Optional: reload grid every time window opens
+            //$("#windowGrid").data("kendoGrid").dataSource.read();
+        });
+
+
+        $("#windowGrid").on("dblclick", "tbody tr", function () {
+
+            var grid = $("#windowGrid").data("kendoGrid");
+            var dataItem = grid.dataItem(this);
+
+            if (!dataItem) return;
+            debugger;
+            var saleOrderId = dataItem.Id;
+            debugger;
+            $("#SaleOrderCode").val(dataItem.Code);
+            $("#SaleOrderId").val(saleOrderId);
+
+            // Close window
+            $("#poWindow").data("kendoWindow").close();
+
+            // Load detail table
+            loadPurchaseOrderDetails(saleOrderId);
+        });
+
+        var poWindow = $("#poWindow").kendoWindow({
+            title: "Sale Order",
+            modal: true,
+            width: "900px",
+            height: "400px",
+            visible: false,
+            actions: ["Close"],
+            close: function () {
+                selectedGridModel = null;
+            }
+        }).data("kendoWindow");
+
+        $("#windowGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetSaleOrderList",
+                        dataType: "json"
+                    }
+                },
+                pageSize: 10
+            },
+            pageable: true,
+            filterable: true,
+            selectable: "row",
+            toolbar: ["search"],
+            columns: [
+                { field: "Code", title: "PO Code" },
+                { field: "CustomerName", title: "Customer" },
+                { field: "OrderDate", title: "Order Date", format: "{0:dd-MMM-yyyy}" }
+            ]
+        });
+
         $('#details').on('blur', ".td-Quantity", function (event) {
             computeSubTotal($(this), '');
         });
@@ -186,6 +256,118 @@
         });
 
     };
+    function loadPurchaseOrderDetails(saleOrderId) {
+        debugger;
+
+        $.ajax({
+            url: "/DMS/SaleOrder/GetSaleOrderList",
+            type: "GET",
+            data: { saleOrderId: saleOrderId },
+            success: function (data) {
+
+                console.log("PO DATA:", data);
+
+                if (!data || data.length === 0) {
+                    $("#lst").empty();
+                    return;
+                }
+
+                // ================= MASTER (AS IT IS) =================
+                var master = data[0];
+
+                // Supplier autofill
+                if (master.CustomerId !== undefined && master.CustomerId !== null) {
+                    var customerCombo = $("#CustomerId").data("kendoComboBox")
+                        || $("#CustomerId").data("kendoMultiColumnComboBox");
+
+                    if (customerCombo) {
+                        customerCombo.value(master.CustomerId);
+                        customerCombo.trigger("change");
+                    } else {
+                        $("#SupplierId").val(master.SupplierId);
+                    }
+                }
+
+                // Invoice Date autofill
+                if (master.OrderDate) {
+                    var date = new Date(master.OrderDate);
+                    if (!isNaN(date.getTime())) {
+                        $("#InvoiceDateTime").val(date.toISOString().slice(0, 10));
+                    }
+                }
+
+                // ================= DETAILS =================
+                $("#lst").empty();
+
+                if (!master.saleOrderDetailsList || master.saleOrderDetailsList.length === 0)
+                    return;
+
+                // 🔹 ADD: totals variable
+                let subTotal = 0;
+                let totalSD = 0;
+                let totalVAT = 0;
+                let grandTotal = 0;
+
+                var sl = 1;
+
+                $.each(master.saleOrderDetailsList, function (index, item) {
+
+                    // 🔹 ADD: accumulate totals from details
+                    subTotal += parseFloat(item.SubTotal) || 0;
+                    totalSD += parseFloat(item.SDAmount) || 0;
+                    totalVAT += parseFloat(item.VATAmount) || 0;
+                    grandTotal += parseFloat(item.LineTotal) || 0;
+
+                    var row = `
+                <tr>
+                    <td>${sl}</td>
+                    <td hidden>${item.ProductCode ?? ""}</td>
+                    <td>${item.ProductName ?? ""}</td>
+                    <td hidden>${item.ProductId ?? ""}</td>
+                    <td class="dFormat">${item.Quantity ?? 0}</td>
+                    <td class="dFormat">${item.UnitPrice ?? 0}</td>
+                    <td class="dFormat">${item.SubTotal ?? 0}</td>
+                    <td class="dFormat">${item.SD ?? 0}</td>
+                    <td class="dFormat">${item.SDAmount ?? 0}</td>
+                    <td class="dFormat">${item.VATRate ?? 0}</td>
+                    <td class="dFormat">${item.VATAmount ?? 0}</td>
+                    <td class="dFormat">${item.OthersAmount ?? 0}</td>
+                    <td class="dFormat">${item.LineTotal ?? 0}</td>
+                    <td hidden>${item.SaleOrderId ?? ""}</td>
+                    <td hidden>${item.SaleOrderDetailId ?? ""}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm remove-row-btn">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+
+                    $("#lst").append(row);
+                    sl++;
+                });
+
+                // ================= MASTER TOTAL AUTOFILL =================
+                const dp = parseInt(decimalPlace || 2);
+
+                $("#SubTotal").val(subTotal.toLocaleString('en', { minimumFractionDigits: dp }));
+                $("#TotalSD").val(totalSD.toLocaleString('en', { minimumFractionDigits: dp }));
+                $("#TotalVAT").val(totalVAT.toLocaleString('en', { minimumFractionDigits: dp }));
+                $("#GrandTotal").val(grandTotal.toLocaleString('en', { minimumFractionDigits: dp }));
+
+                // PaidAmount (optional, if exists in master)
+                if (master.PaidAmount !== undefined && master.PaidAmount !== null) {
+                    $("#PaidAmount").val(
+                        parseFloat(master.PaidAmount)
+                            .toLocaleString('en', { minimumFractionDigits: dp })
+                    );
+                }
+            },
+            error: function () {
+                alert("Failed to load purchase order details.");
+            }
+        });
+    }
     function GetBranchList() {
         var branch = new kendo.data.DataSource({
             transport: {
@@ -273,37 +455,37 @@
     //    }).data("kendoMultiColumnComboBox");
     //};
 
-    function GetSaleOrderComboBox() {
-        debugger;
-        var SalePersonComboBox = $("#SaleOrderId").kendoMultiColumnComboBox({
-            dataTextField: "Code",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "CustomerName", title: "Customer Name", width: 150 },
-            //    { field: "BanglaName", title: "BanglaName", width: 200 },
-            ],
-            filter: "contains",
-            filterFields: ["Code", "CustomerName"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetSaleOrderList"
-                }
-            },
-            placeholder: "Select Person",
-            value: "",
-            dataBound: function (e) {
+    //function GetSaleOrderComboBox() {
+    //    debugger;
+    //    var SalePersonComboBox = $("#SaleOrderId").kendoMultiColumnComboBox({
+    //        dataTextField: "Code",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "CustomerName", title: "Customer Name", width: 150 },
+    //        //    { field: "BanglaName", title: "BanglaName", width: 200 },
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "CustomerName"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetSaleOrderList"
+    //            }
+    //        },
+    //        placeholder: "Select Person",
+    //        value: "",
+    //        dataBound: function (e) {
                 
-                if (getSaleOrderId) {
-                    this.value(parseInt(getSaleOrderId));
-                }
-            },
-            change: function (e) {
+    //            if (getSaleOrderId) {
+    //                this.value(parseInt(getSaleOrderId));
+    //            }
+    //        },
+    //        change: function (e) {
                 
-            }
-        }).data("kendoMultiColumnComboBox");
-    };
+    //        }
+    //    }).data("kendoMultiColumnComboBox");
+    //};
 
 
 
@@ -913,7 +1095,7 @@
                     }
                 }
                 ,
-                { field: "DeliveryAddress", title: "Delivery Address", sortable: true, width: 250 },
+                { field: "DeliveryAddress", title: "Delivery Address", sortable: true, hidden: true, width: 250 },
                 { field: "Comments", title: "Comments", sortable: true, width: 250 },
                 { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
                 { field: "CompanyName", title: "Company Name ", sortable: true, hidden: true, width: 200 }
@@ -929,10 +1111,11 @@
     };
 
     function save($table) {
-        
+        debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
-
+        var saleorderId = $("#SaleOrderId").val();
+        model.SaleOrderId = saleorderId;
         var result = validator.form();
 
         if (!result) {

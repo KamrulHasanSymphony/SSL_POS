@@ -30,7 +30,7 @@
             IDs: IDs
         };
 
-        var form = $('<form>').attr('method', 'post').attr('action', '/DMS/Purchase/GetFromPurchaseOrder');
+        var form = $('<form>').attr('method', 'post').attr('action', '/DMS/PurchaseReturn/GetFromPurchase');
 
         $.each(model, function (key, value) {
             if ($.isArray(value)) {

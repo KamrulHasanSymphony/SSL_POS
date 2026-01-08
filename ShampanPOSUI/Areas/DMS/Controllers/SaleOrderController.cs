@@ -773,5 +773,33 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
             return View(vm);
         }
+
+
+
+        [HttpGet]
+        public JsonResult GetSaleOrderList(int saleOrderId)
+        {
+            try
+            {
+                _repo = new SaleOrderRepo();
+                CommonVM param = new CommonVM();
+                param.Id = saleOrderId.ToString();
+
+                ResultVM result = _repo.List(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var list = JsonConvert.DeserializeObject<List<SaleOrderVM>>(result.DataVM.ToString());
+                    return Json(list, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new List<SaleOrderVM>(), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 }

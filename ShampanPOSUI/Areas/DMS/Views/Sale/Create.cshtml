@@ -93,16 +93,28 @@
                                 @class = "form-control form-control-sm"@*, @readonly = "readonly"*@})
                         </div>
                     </div>
-
+                    <div class="col-sm-2" style="display:none">
+                        @Html.LabelFor(model => model.SaleOrderId)
+                        <div class="input-group">
+                            @*<input type="text" id="PurchaseOrderCode" class="form-control form-control-sm" readonly />*@
+                            @Html.TextBoxFor(model => model.SaleOrderId, new { @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.SaleOrderId)
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.SaleOrderId, new
-                            {
-                                @class = "form-control form-control-sm"@*, @readonly = "readonly"*@})
+                            @*<input type="text" id="PurchaseOrderCode" class="form-control form-control-sm" readonly />*@
+                            @Html.TextBoxFor(model => model.SaleOrderCode, new { @class = "form-control form-control-sm" })
+
+                            <div class="input-group-append">
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm"
+                                        id="btnSearchPurchaseOrder">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.InvoiceDateTime)
                         <div class="input-group date">
@@ -168,19 +180,11 @@
                         <thead>
                             <tr>
                                 <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                <th hidden data-type="text" data-search="false" data-required="false" data-computed="true" style="width:20%;" data-name="ProductCode"> Product Code </th>
                                 <th data-type="text" data-search="true" data-required="true" style="width:12%;" data-name="ProductName"> Product Name </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>
-
-                                @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="UOMId"> UOMId </th>
-                                <th data-type="text" data-search="false" data-computed="true" data-required="true" style="width:10%;" data-name="UOMName"> UOM </th>
-
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="UOMFromId"> UOMFromId </th>
-                                <th data-type="text" data-search="true" data-required="true" style="width:10%;" data-name="UOMFromName"> UOM From Name </th>
-
-
-                                <th data-type="decimal" style="width: 8%;" data-name="UOMConversion"> UOM Conversion </th>*@
+                                @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
+        <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
 
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-name="Quantity"> Quantity </th>
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-name="UnitRate"> Unit Rate </th>
@@ -193,6 +197,8 @@
 
                                 <th data-type="text" style="width: 10%;">Comments</th>
 
+                                <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderId">Sale Order Id</th>
+                                <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderDetailId">Sale Order Detail Id</th>
                             </tr>
                         </thead>
                         <tbody id="lst">
@@ -202,19 +208,12 @@
                                 {
                                     <tr>
                                         <td> @serial </td>
+                                        <td hidden> @item.ProductCode </td>
 
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
-                                        <td hidden> @item.SaleId </td>
-                                        <td hidden> @item.SaleOrderDetailId </td>
-
-                                        @*<td hidden> @item.UOMId </td>
-                                            <td> @item.UOMName </td>
-
-                                            <td hidden> @item.UOMFromId </td>
-                                            <td> @item.UOMFromName </td>
-                                           
-                                            <td class=" dFormat "> @item.UOMConversion</td>*@
+                                        @*<td hidden> @item.SaleId </td>
+                                         <td hidden> @item.SaleOrderDetailId </td>*@
                                         <td class=" dFormat "> @item.Quantity</td>
                                         <td class=" dFormat "> @item.UnitRate</td>
                                         <td class=" dFormat "> @item.SubTotal</td>
@@ -225,6 +224,13 @@
                                         <td class=" dFormat "> @item.VATAmount</td>
                                         <td class=" dFormat "> @item.LineTotal</td>
 
+
+                                        @if (item.SaleOrderId > 0)
+                                        {
+                                            @*<td style="color:blue;cursor:pointer;" class="details-link" data-id="@item.PurchaseOrderId"> @item.POCode </td>*@
+                                        }
+                                        <td hidden> @item.SaleOrderId </td>
+                                        <td hidden> @item.SaleOrderDetailId </td>
                                         @*<td> @item.Comments</td>*@
 
                                         <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
@@ -244,7 +250,63 @@
             </div>
         </div>
 
+        <div class="card">
+            <div class="card-header p-2">
 
+                <div class="card-body">
+                    <div class="row grndBlock">
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Paid Amount </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("PaidAmount", 0, new { @placeholder = "Paid Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;SubTotal </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("SubTotal", 0, new { @placeholder = "SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Total SD</label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("TotalSD", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Total VAT  </label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("TotalVAT", 0, new { @placeholder = "Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp; Grand Total</label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
 
     </form>
 
@@ -315,7 +377,9 @@
 </div>
 
 
-
+<div id="poWindow" style="display:none;">
+    <div id="windowGrid"></div>
+</div>
 
 @section scripts{
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>

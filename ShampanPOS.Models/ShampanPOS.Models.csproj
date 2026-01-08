@@ -111,6 +111,7 @@
     <Compile Include="PurchaseDetailVM.cs" />
     <Compile Include="PurchaseReturnDetailVM.cs" />
     <Compile Include="PurchaseReturnVM.cs" />
+    <Compile Include="SaleDataVM.cs" />
     <Compile Include="SaleDetailVM.cs" />
     <Compile Include="SaleOrderDetailVM.cs" />
     <Compile Include="SaleOrderVM.cs" />

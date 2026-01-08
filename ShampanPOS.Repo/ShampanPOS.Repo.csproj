@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="BankAccountRepo.cs" />
     <Compile Include="BankInformationRepo.cs" />
+    <Compile Include="CollectionRepo.cs" />
     <Compile Include="DepositRepo.cs" />
     <Compile Include="OverHeadRepo.cs" />
     <Compile Include="PaymentRepo.cs" />

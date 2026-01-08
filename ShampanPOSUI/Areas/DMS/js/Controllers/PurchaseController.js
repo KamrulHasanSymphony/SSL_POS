@@ -148,7 +148,7 @@
             poWindow.center().open();
 
             // Optional: reload grid every time window opens
-            $("#windowGrid").data("kendoGrid").dataSource.read();
+            //$("#windowGrid").data("kendoGrid").dataSource.read();
         });
 
 
@@ -160,7 +160,7 @@
             if (!dataItem) return;
 
             var purchaseOrderId = dataItem.Id;
-
+            debugger;
             $("#PurchaseOrderCode").val(dataItem.Code);
             $("#PurchaseOrderId").val(purchaseOrderId);
 
@@ -207,91 +207,6 @@
             ]
         });
 
-        //function loadPurchaseOrderDetails(purchaseOrderId) {
-        //    debugger;
-
-        //    $.ajax({
-        //        url: "/DMS/PurchaseOrder/GetPurchaseOrderList",
-        //        type: "GET",
-        //        data: { purchaseOrderId: purchaseOrderId },
-        //        success: function (data) {
-
-        //            console.log("PO DATA:", data);
-
-        //            if (!data || data.length === 0) {
-        //                $("#lst").empty();
-        //                return;
-        //            }
-
-        //            // ===== MASTER =====
-        //            var master = data[0];
-
-        //            // Supplier
-        //            if (master.SupplierId !== undefined && master.SupplierId !== null) {
-
-        //                var supplierCombo = $("#SupplierId").data("kendoComboBox")
-        //                    || $("#SupplierId").data("kendoMultiColumnComboBox");
-
-        //                if (supplierCombo) {
-        //                    supplierCombo.value(master.SupplierId);
-        //                    supplierCombo.trigger("change");
-        //                } else {
-        //                    $("#SupplierId").val(master.SupplierId);
-        //                }
-        //            }
-
-        //            // Invoice Date
-        //            if (master.OrderDate) {
-        //                var date = new Date(master.OrderDate);
-        //                if (!isNaN(date.getTime())) {
-        //                    $("#InvoiceDateTime").val(date.toISOString().slice(0, 10));
-        //                }
-        //            }
-
-        //            // ===== DETAILS =====
-        //            $("#lst").empty();
-
-        //            if (!master.purchaseOrderDetailsList || master.purchaseOrderDetailsList.length === 0)
-        //                return;
-
-        //            var sl = 1;
-
-        //            $.each(master.purchaseOrderDetailsList, function (index, item) {
-
-        //                var row = `
-        //        <tr>
-        //            <td>${sl}</td>
-        //            <td hidden>${item.ProductCode ?? ""}</td>
-        //            <td>${item.ProductName ?? ""}</td>
-        //            <td hidden>${item.ProductId ?? ""}</td>
-        //            <td class="dFormat">${item.Quantity ?? 0}</td>
-        //            <td class="dFormat">${item.UnitPrice ?? 0}</td>
-        //            <td class="dFormat">${item.SubTotal ?? 0}</td>
-        //            <td class="dFormat">${item.SD ?? 0}</td>
-        //            <td class="dFormat">${item.SDAmount ?? 0}</td>
-        //            <td class="dFormat">${item.VATRate ?? 0}</td>
-        //            <td class="dFormat">${item.VATAmount ?? 0}</td>
-        //            <td class="dFormat">${item.OthersAmount ?? 0}</td>
-        //            <td class="dFormat">${item.LineTotal ?? 0}</td>
-        //            <td hidden>${item.PurchaseOrderId ?? ""}</td>
-        //            <td hidden>${item.PurchaseOrderDetailId ?? ""}</td>
-        //            <td>
-        //                <button class="btn btn-danger btn-sm remove-row-btn">
-        //                    <i class="fa fa-trash"></i>
-        //                </button>
-        //            </td>
-        //        </tr>
-        //        `;
-
-        //                $("#lst").append(row);
-        //                sl++;
-        //            });
-        //        },
-        //        error: function () {
-        //            alert("Failed to load purchase order details.");
-        //        }
-        //    });
-        //}
 
 
         function loadPurchaseOrderDetails(purchaseOrderId) {
@@ -1802,9 +1717,11 @@
             return;
         };
 
-        //model.GrandTotalAmount = model.GrandTotalAmount.replace(/,/g, '');
-        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
-        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
+        model.PaidAmount = model.PaidAmount.replace(/,/g, '');
+        model.SubTotal = model.SubTotal.replace(/,/g, '');
+        model.TotalSD = model.TotalSD.replace(/,/g, '');
+        model.TotalVAT = model.TotalVAT.replace(/,/g, '');
+        model.GrandTotal = model.GrandTotal.replace(/,/g, '');
 
         model.purchaseDetailList = details;
 
