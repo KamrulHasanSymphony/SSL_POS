@@ -95,6 +95,38 @@
         });
 
 
+        $("#btnFromPurchaseOrder").on("click", function () {
+            debugger;
+            var id = $("#Id").val();
+
+            if (!id || id === "0") {
+                ShowNotification(3, "Invalid Id!");
+                return;
+            }
+
+            var form = $('<form>', {
+                method: 'POST',
+                action: '/DMS/Collection/GetFromSale'
+            });
+
+            // CommonVM.IDs
+            form.append(
+                $('<input>', {
+                    type: 'hidden',
+                    name: 'IDs',
+                    value: id
+                })
+            );
+
+            $('body').append(form);
+            form.submit();
+        });
+
+
+
+
+
+
         $('#details').on('click', "input.txt" + "ProductName", function () {
             
          

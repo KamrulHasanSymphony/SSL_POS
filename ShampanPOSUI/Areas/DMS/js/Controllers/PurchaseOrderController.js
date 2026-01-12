@@ -1319,6 +1319,7 @@
     };
 
     function SelectData() {
+        debugger;
 
         var IDs = [];
 

@@ -724,7 +724,70 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult FromSale()
+        {
+            SaleReturnVM vm = new SaleReturnVM();
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
+            vm.Branchs = Convert.ToInt32(currentBranchId);
+            DateTime currentDate = DateTime.Now;
+            DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            firstDayOfMonth = firstDayOfMonth.AddMonths(-5);
+            vm.FromDate = firstDayOfMonth.ToString("yyyy/MM/dd");
+            vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
 
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult GetFromSale(CommonVM vm)
+        {
+            try
+            {
+                SaleRepo _repoo = new SaleRepo();
+
+                SaleReturnVM purchaseReturn = new SaleReturnVM();
+                ResultVM result = _repoo.SaleList(vm);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    purchaseReturn = JsonConvert.DeserializeObject<List<SaleReturnVM>>(result.DataVM.ToString()).FirstOrDefault();
+                }
+                else
+                {
+                    TempData["message"] = result.Message;
+                    return RedirectToAction("FromSale", "Return", new { area = "DMS" });
+                }
+
+                purchaseReturn.Operation = "add";
+                purchaseReturn.IsPost = false;
+
+                #region DecimalPlace
+                CommonVM commonVM = new CommonVM();
+                commonVM.Group = "SaleDecimalPlace";
+                commonVM.Name = "SaleDecimalPlace";
+                var settingsValue = _commonRepo.GetSettingsValue(commonVM);
+
+                if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
+                {
+                    var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
+
+                    purchaseReturn.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
+                }
+
+                #endregion
+
+                return View("Create", purchaseReturn);
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return RedirectToAction("Index");
+            }
+        }
 
     }
 }

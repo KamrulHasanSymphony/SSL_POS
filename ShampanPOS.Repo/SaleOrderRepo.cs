@@ -239,7 +239,7 @@ namespace ShampanPOS.Repo
 
                 #region Invoke API 
 
-                var data = httpRequestHelper.PostData("api/PurchaseOrder/FromSaleOrderGridData", authModel, JsonConvert.SerializeObject(options,
+                var data = httpRequestHelper.PostData("api/SaleOrder/FromSaleOrderGridData", authModel, JsonConvert.SerializeObject(options,
                     new JsonSerializerSettings
                     {
                         NullValueHandling = NullValueHandling.Ignore
@@ -318,5 +318,6 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
+
     }
 }

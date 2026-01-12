@@ -48,7 +48,7 @@
     };
 
     var GetGridDataList = function () {
-
+        debugger;
         var gridDataSource = new kendo.data.DataSource({
             type: "json",
             serverPaging: true,

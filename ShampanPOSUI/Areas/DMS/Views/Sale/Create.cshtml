@@ -12,6 +12,12 @@
     .k-dropdown-wrap .k-input {
         line-height: 1.6em !important;
     }
+
+    .button.secondary {
+        background-color: #adb5bd;
+        color: #212529;
+        border: 1px solid #adb5bd;
+    }
 </style>
 <div class="content-header">
     <div class="container-fluid">
@@ -29,31 +35,35 @@
 </div>
 
 <div class="card">
-        <div class="card-header p-2">
+    <div class="card-header p-2">
 
-            @if (Model.IsPost)
-            {
-                <button type="button" class="button sslPush">Already Posted</button>
+        @if (Model.IsPost)
+        {
+            <button type="button" class="button sslPush">Already Posted</button>
 
-            }
-            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
-            {
+        }
+        else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+        {
+            <button type="button" class="button btnsave sslUpdate">Update</button>
+
+            <button type="button" class="button btnPost sslPost">Post</button>
+
+            <button type="button" class="button secondary" id="btnFromPurchaseOrder">
+                <span style="font-weight:bold; margin-right:5px;">+</span> Collection
+            </button>
+        }
+        else
+        {
+            <div style="display:none;" class="divUpdate">
                 <button type="button" class="button btnsave sslUpdate">Update</button>
-
                 <button type="button" class="button btnPost sslPost">Post</button>
-            }
-            else
-            {
-                <div style="display:none;" class="divUpdate">
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
-                    <button type="button" class="button btnPost sslPost">Post</button>
-                </div>
-                <div class="divSave">
-                    <button class="button btnsave sslSave" type="button" id="">Save</button>
-                </div>
-            }
+            </div>
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
+        }
 
-        </div>
+    </div>
     </div>
 
 

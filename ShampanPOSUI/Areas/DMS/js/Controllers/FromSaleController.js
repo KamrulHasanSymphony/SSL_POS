@@ -1,4 +1,4 @@
-﻿var FromPurchaseController = function () {
+﻿var FromSaleController = function () {
 
     var init = function () {
 
@@ -30,7 +30,7 @@
             IDs: IDs
         };
 
-        var form = $('<form>').attr('method', 'post').attr('action', '/DMS/PurchaseReturn/GetFromPurchase');
+        var form = $('<form>').attr('method', 'post').attr('action', '/DMS/SaleReturn/GetFromSale');
 
         $.each(model, function (key, value) {
             if ($.isArray(value)) {

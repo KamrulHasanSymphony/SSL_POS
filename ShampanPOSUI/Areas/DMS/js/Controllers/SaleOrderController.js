@@ -91,6 +91,38 @@
                 });
         });
 
+
+        $("#btnFromPurchaseOrder").on("click", function () {
+            debugger;
+            var id = $("#Id").val();
+
+            if (!id || id === "0") {
+                ShowNotification(3, "Invalid Id!");
+                return;
+            }
+
+            var form = $('<form>', {
+                method: 'POST',
+                action: '/DMS/Sale/GetFromSaleOrder'
+            });
+
+            // CommonVM.IDs
+            form.append(
+                $('<input>', {
+                    type: 'hidden',
+                    name: 'IDs',
+                    value: id
+                })
+            );
+
+            $('body').append(form);
+            form.submit();
+        });
+
+
+
+
+
         $('#details').on('blur', ".td-CtnQuantity", function (event) {
 
             var customerId = $("#CustomerId").val() || 0;
@@ -1261,7 +1293,7 @@
                             footerTemplate: "#= kendo.toString(sum, 'n2') #"
                         },
                         {
-                            field: "UnitRate",
+                            field: "UnitRate", hidden: true,
                             title: "Unit Price",
                             sortable: true,
                             width: 100,

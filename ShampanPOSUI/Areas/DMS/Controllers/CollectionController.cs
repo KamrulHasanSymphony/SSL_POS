@@ -467,6 +467,52 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult GetFromSale(CommonVM vm)
+        {
+            try
+            {
+                SaleRepo _repoo = new SaleRepo();
 
+                CollectionVM purchase = new CollectionVM();
+                ResultVM result = _repoo.SaleListForPayment(vm);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    purchase = JsonConvert.DeserializeObject<List<CollectionVM>>(result.DataVM.ToString()).FirstOrDefault();
+                }
+                else
+                {
+                    TempData["message"] = result.Message;
+                    return RedirectToAction("FromPurchaseOrder", "Purchase", new { area = "DMS" });
+                }
+
+                purchase.Operation = "add";
+                //purchase.IsPost = false;
+
+                #region DecimalPlace
+                CommonVM commonVM = new CommonVM();
+                commonVM.Group = "SaleDecimalPlace";
+                commonVM.Name = "SaleDecimalPlace";
+                var settingsValue = _commonRepo.GetSettingsValue(commonVM);
+
+                if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
+                {
+                    var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
+
+                    //purchase.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
+                }
+
+                #endregion
+
+                return View("Create", purchase);
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return RedirectToAction("Index");
+            }
+        }
     }
 }
