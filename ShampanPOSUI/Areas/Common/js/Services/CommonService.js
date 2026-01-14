@@ -200,7 +200,102 @@
             method: 'get',
         }).done(onSuccess).fail(onFail);
     };  
+    var productForSaleModal = function (done, fail, dblCallBack, closeCallback) {
+        var modalId = "#partialModal";
+        var dataTableId = "#modalData";
+        function showModal(html) {
+            $(modalId).html(html);
+            $('.draggable').draggable({
+                handle: ".modal-header"
+            });
+            $(modalId).modal("show");
+        }
 
+        function onSuccess(result) {
+            showModal(result);
+
+            if (typeof done === "function") {
+                done(result);
+            }
+
+            bindDoubleClick(dblCallBack);
+            bindModalClose(closeCallback);
+            initializeDataTable();
+        }
+
+        function onFail(result) {
+            if (typeof fail === "function") {
+                fail(result);
+            }
+        }
+
+        function bindDoubleClick(callBack) {
+            $(dataTableId).off("dblclick").on("dblclick", "tr", function () {
+                if (typeof callBack === "function") {
+                    callBack($(this));
+                }
+            });
+        }
+
+        function bindModalClose(closeCallback) {
+            $(modalId).off("hidden.bs.modal").on("hidden.bs.modal", function () {
+                if (typeof closeCallback === "function") {
+                    closeCallback();
+                }
+                $(modalId).html("");
+            });
+        }
+
+        function initializeDataTable() {
+            if ($.fn.DataTable.isDataTable(dataTableId)) {
+                $(dataTableId).DataTable().destroy();
+            }
+
+            $(dataTableId).DataTable({
+                orderCellsTop: true,
+                fixedHeader: true,
+                serverSide: true,
+                processing: true,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                ajax: {
+                    url: '/Common/Common/_getProductForSaleData',
+                    type: 'POST',
+                    data: function (d) {
+                        d.FromDate = $('#FromDate').val();
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error("AJAX Error:", error, thrown);
+                        console.error("Response:", xhr.responseText);
+                    }
+                },
+                columns: [
+                    { data: "ProductGroupName", title: "Product Group Name", width: '15%', visible: false },
+                    { data: "ProductId", visible: false },
+                    { data: "ProductCode", title: "Product Code", width: '10%', visible: false },
+                    { data: "ProductName", title: "Product Name", width: '30%' },
+                    { data: "BanglaName", title: "Product Bangla Name", width: '30%' },
+                    { data: "HSCodeNo", title: "HS Code No.", width: '10%', visible: false },
+                    { data: "UOMId", visible: false },
+                    { data: "UOMName", title: "UOM Name", width: '10%' },
+                    { data: "SalesPrice", title: "Sale Price", width: '10%' },
+                    { data: "SDRate", title: "SD Rate", width: '8%', visible: false },
+                    { data: "VATRate", title: "VAT Rate", width: '8%', visible: false },
+                    { data: "Status", title: "Status", width: '8%' }
+
+                ],
+                columnDefs: [
+                    { width: '10%', targets: 0 }
+                ],
+            });
+        }
+
+        $.ajax({
+            //url: '/Common/Common/GetProductData',
+            //url: '/Common/Common/GetProductDataPurchase',
+            url: '/Common/Common/GetProductDataSale',
+            method: 'get',
+        }).done(onSuccess).fail(onFail);
+    };  
 
     var purchaseOrderIdModal = function (done, fail, dblCallBack, closeCallback) {
         debugger;
@@ -1024,6 +1119,7 @@
         productCodeModal: productCodeModal,
         productModal: productModal,
         productForPurchaseModal: productForPurchaseModal,
+        productForSaleModal: productForSaleModal,
         productGroupCodeModal: productGroupCodeModal,
         uomFromNameModal: uomFromNameModal,
         customerCodeModal: customerCodeModal,

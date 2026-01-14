@@ -25,6 +25,9 @@ namespace ShampanPOS.Models
         [Display(Name = "Sale Order")]
 
         public int? SaleOrderId { get; set; }
+
+        [Display(Name = "Sale Order Code")]
+
         public string? SaleOrderCode { get; set; }
 
         public decimal SubTotal { get; set; }

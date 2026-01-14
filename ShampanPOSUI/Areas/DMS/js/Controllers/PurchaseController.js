@@ -130,7 +130,17 @@
 
 
 
+        $('#details').on('click', "input.txt" + "ProductName", function () {
 
+
+            var originalRow = $(this);
+            CommonService.productForPurchaseModal({}, fail, function (row) { productModalDblClick(row, originalRow) },
+                function () {
+                    originalRow.closest("td").find("input").data('touched', false);
+                    originalRow.closest("td").find("input").focus();
+                });
+            $("#myModal1").modal("hide");
+        });
 
 
         $(document).on('keyup change', '.td-Quantity, .td-SubTotal, .td-SDAmount, .td-VATAmount, .td-LineTotal', function () {
@@ -209,6 +219,122 @@
 
 
 
+        //function loadPurchaseOrderDetails(purchaseOrderId) {
+        //    debugger;
+
+        //    $.ajax({
+        //        url: "/DMS/PurchaseOrder/GetPurchaseOrderList",
+        //        type: "GET",
+        //        data: { purchaseOrderId: purchaseOrderId },
+        //        success: function (data) {
+
+        //            console.log("PO DATA:", data);
+
+        //            if (!data || data.length === 0) {
+        //                $("#lst").empty();
+        //                return;
+        //            }
+
+        //            // ================= MASTER (AS IT IS) =================
+        //            var master = data[0];
+
+        //            // Supplier autofill
+        //            if (master.SupplierId !== undefined && master.SupplierId !== null) {
+        //                var supplierCombo = $("#SupplierId").data("kendoComboBox")
+        //                    || $("#SupplierId").data("kendoMultiColumnComboBox");
+
+        //                if (supplierCombo) {
+        //                    supplierCombo.value(master.SupplierId);
+        //                    supplierCombo.trigger("change");
+        //                } else {
+        //                    $("#SupplierId").val(master.SupplierId);
+        //                }
+        //            }
+
+        //            // Invoice Date autofill
+        //            if (master.OrderDate) {
+        //                var date = new Date(master.OrderDate);
+        //                if (!isNaN(date.getTime())) {
+        //                    $("#InvoiceDateTime").val(date.toISOString().slice(0, 10));
+        //                }
+        //            }
+
+        //            // ================= DETAILS =================
+        //            $("#lst").empty();
+
+        //            if (!master.purchaseOrderDetailsList || master.purchaseOrderDetailsList.length === 0)
+        //                return;
+
+        //            // 🔹 ADD: totals variable
+        //            let subTotal = 0;
+        //            let totalSD = 0;
+        //            let totalVAT = 0;
+        //            let grandTotal = 0;
+
+        //            var sl = 1;
+
+        //            $.each(master.purchaseOrderDetailsList, function (index, item) {
+
+        //                // 🔹 ADD: accumulate totals from details
+        //                subTotal += parseFloat(item.SubTotal) || 0;
+        //                totalSD += parseFloat(item.SDAmount) || 0;
+        //                totalVAT += parseFloat(item.VATAmount) || 0;
+        //                grandTotal += parseFloat(item.LineTotal) || 0;
+
+        //                var row = `
+        //        <tr>
+        //            <td>${sl}</td>
+        //            <td hidden>${item.ProductCode ?? ""}</td>
+        //            <td>${item.ProductName ?? ""}</td>
+        //            <td hidden>${item.ProductId ?? ""}</td>
+        //            <td class="dFormat">${item.Quantity ?? 0}</td>
+        //            <td class="dFormat">${item.UnitPrice ?? 0}</td>
+        //            <td class="dFormat">${item.SubTotal ?? 0}</td>
+        //            <td class="dFormat">${item.SD ?? 0}</td>
+        //            <td class="dFormat">${item.SDAmount ?? 0}</td>
+        //            <td class="dFormat">${item.VATRate ?? 0}</td>
+        //            <td class="dFormat">${item.VATAmount ?? 0}</td>
+        //            <td class="dFormat">${item.OthersAmount ?? 0}</td>
+        //            <td class="dFormat">${item.LineTotal ?? 0}</td>
+        //            <td hidden>${item.PurchaseOrderId ?? ""}</td>
+        //            <td hidden>${item.PurchaseOrderDetailId ?? ""}</td>
+        //            <td>
+        //                <button class="btn btn-danger btn-sm remove-row-btn">
+        //                    <i class="fa fa-trash"></i>
+        //                </button>
+        //            </td>
+        //        </tr>
+        //        `;
+
+        //                $("#lst").append(row);
+        //                sl++;
+        //            });
+
+        //            // ================= MASTER TOTAL AUTOFILL =================
+        //            const dp = parseInt(decimalPlace || 2);
+
+        //            $("#SubTotal").val(subTotal.toLocaleString('en', { minimumFractionDigits: dp }));
+        //            $("#TotalSD").val(totalSD.toLocaleString('en', { minimumFractionDigits: dp }));
+        //            $("#TotalVAT").val(totalVAT.toLocaleString('en', { minimumFractionDigits: dp }));
+        //            $("#GrandTotal").val(grandTotal.toLocaleString('en', { minimumFractionDigits: dp }));
+
+        //            // PaidAmount (optional, if exists in master)
+        //            if (master.PaidAmount !== undefined && master.PaidAmount !== null) {
+        //                $("#PaidAmount").val(
+        //                    parseFloat(master.PaidAmount)
+        //                        .toLocaleString('en', { minimumFractionDigits: dp })
+        //                );
+        //            }
+        //        },
+        //        error: function () {
+        //            alert("Failed to load purchase order details.");
+        //        }
+        //    });
+        //}
+
+
+
+
         function loadPurchaseOrderDetails(purchaseOrderId) {
             debugger;
 
@@ -218,20 +344,20 @@
                 data: { purchaseOrderId: purchaseOrderId },
                 success: function (data) {
 
-                    console.log("PO DATA:", data);
-
                     if (!data || data.length === 0) {
                         $("#lst").empty();
+                        TotalCalculation();
                         return;
                     }
 
-                    // ================= MASTER (AS IT IS) =================
+                    /* ================= MASTER ================= */
                     var master = data[0];
 
                     // Supplier autofill
-                    if (master.SupplierId !== undefined && master.SupplierId !== null) {
-                        var supplierCombo = $("#SupplierId").data("kendoComboBox")
-                            || $("#SupplierId").data("kendoMultiColumnComboBox");
+                    if (master.SupplierId) {
+                        var supplierCombo =
+                            $("#SupplierId").data("kendoMultiColumnComboBox") ||
+                            $("#SupplierId").data("kendoComboBox");
 
                         if (supplierCombo) {
                             supplierCombo.value(master.SupplierId);
@@ -249,27 +375,17 @@
                         }
                     }
 
-                    // ================= DETAILS =================
+                    /* ================= DETAILS ================= */
                     $("#lst").empty();
 
-                    if (!master.purchaseOrderDetailsList || master.purchaseOrderDetailsList.length === 0)
+                    if (!master.purchaseOrderDetailsList || master.purchaseOrderDetailsList.length === 0) {
+                        TotalCalculation();
                         return;
-
-                    // 🔹 ADD: totals variable
-                    let subTotal = 0;
-                    let totalSD = 0;
-                    let totalVAT = 0;
-                    let grandTotal = 0;
+                    }
 
                     var sl = 1;
 
                     $.each(master.purchaseOrderDetailsList, function (index, item) {
-
-                        // 🔹 ADD: accumulate totals from details
-                        subTotal += parseFloat(item.SubTotal) || 0;
-                        totalSD += parseFloat(item.SDAmount) || 0;
-                        totalVAT += parseFloat(item.VATAmount) || 0;
-                        grandTotal += parseFloat(item.LineTotal) || 0;
 
                         var row = `
                 <tr>
@@ -277,15 +393,20 @@
                     <td hidden>${item.ProductCode ?? ""}</td>
                     <td>${item.ProductName ?? ""}</td>
                     <td hidden>${item.ProductId ?? ""}</td>
-                    <td class="dFormat">${item.Quantity ?? 0}</td>
-                    <td class="dFormat">${item.UnitPrice ?? 0}</td>
-                    <td class="dFormat">${item.SubTotal ?? 0}</td>
-                    <td class="dFormat">${item.SD ?? 0}</td>
-                    <td class="dFormat">${item.SDAmount ?? 0}</td>
-                    <td class="dFormat">${item.VATRate ?? 0}</td>
-                    <td class="dFormat">${item.VATAmount ?? 0}</td>
-                    <td class="dFormat">${item.OthersAmount ?? 0}</td>
-                    <td class="dFormat">${item.LineTotal ?? 0}</td>
+
+                    <td class="td-Quantity dFormat">${item.Quantity ?? 0}</td>
+                    <td class="td-UnitPrice dFormat">${item.UnitPrice ?? 0}</td>
+                    <td class="td-SubTotal dFormat">${item.SubTotal ?? 0}</td>
+
+                    <td class="td-SD dFormat">${item.SD ?? 0}</td>
+                    <td class="td-SDAmount dFormat">${item.SDAmount ?? 0}</td>
+
+                    <td class="td-VATRate dFormat">${item.VATRate ?? 0}</td>
+                    <td class="td-VATAmount dFormat">${item.VATAmount ?? 0}</td>
+
+                    <td class="td-OthersAmount dFormat">${item.OthersAmount ?? 0}</td>
+                    <td class="td-LineTotal dFormat">${item.LineTotal ?? 0}</td>
+
                     <td hidden>${item.PurchaseOrderId ?? ""}</td>
                     <td hidden>${item.PurchaseOrderDetailId ?? ""}</td>
                     <td>
@@ -293,34 +414,23 @@
                             <i class="fa fa-trash"></i>
                         </button>
                     </td>
-                </tr>
-                `;
+                </tr>`;
 
                         $("#lst").append(row);
                         sl++;
                     });
 
-                    // ================= MASTER TOTAL AUTOFILL =================
-                    const dp = parseInt(decimalPlace || 2);
-
-                    $("#SubTotal").val(subTotal.toLocaleString('en', { minimumFractionDigits: dp }));
-                    $("#TotalSD").val(totalSD.toLocaleString('en', { minimumFractionDigits: dp }));
-                    $("#TotalVAT").val(totalVAT.toLocaleString('en', { minimumFractionDigits: dp }));
-                    $("#GrandTotal").val(grandTotal.toLocaleString('en', { minimumFractionDigits: dp }));
-
-                    // PaidAmount (optional, if exists in master)
-                    if (master.PaidAmount !== undefined && master.PaidAmount !== null) {
-                        $("#PaidAmount").val(
-                            parseFloat(master.PaidAmount)
-                                .toLocaleString('en', { minimumFractionDigits: dp })
-                        );
-                    }
+                    /* ================= 🔥 ONLY THIS ================= */
+                    // ❌ No manual totals
+                    // ✅ Always use calculation engine
+                    TotalCalculation();
                 },
                 error: function () {
                     alert("Failed to load purchase order details.");
                 }
             });
         }
+
 
 
 
@@ -892,29 +1002,6 @@
     };
 
 
-    //function TotalCalculation() {
-
-    //    var Quantity = 0;
-    //    var SDAmount = 0;
-    //    var SubTotal = 0;
-    //    var LineTotal = 0;
-
-    //    Quantity = getColumnSumAttr('Quantity', 'details').toFixed(parseInt(decimalPlace));
-    //    SubTotal = getColumnSumAttr('SubTotal', 'details').toFixed(parseInt(decimalPlace));
-    //    SDAmount = getColumnSumAttr('SDAmount', 'details').toFixed(parseInt(decimalPlace));
-    //    VATAmount = getColumnSumAttr('VATAmount', 'details').toFixed(parseInt(decimalPlace));
-    //    LineTotal = getColumnSumAttr('LineTotal', 'details').toFixed(parseInt(decimalPlace));
-
-
-
-    //    $("#SubTotal").val(Number(parseFloat(SubTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
-    //    $("#TotalSD").val(Number(parseFloat(SDAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
-    //    $("#TotalVAT").val(Number(parseFloat(VATAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
-    //    $("#GrandTotal").val(Number(parseFloat(LineTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
-
-    //};
-
-
     function TotalCalculation() {
 
         let subTotal = 0;
@@ -942,7 +1029,71 @@
         $("#GrandTotal").val(grandTotal.toLocaleString('en', { minimumFractionDigits: dp, maximumFractionDigits: dp }));
     }
 
+    function productModalDblClick(row, originalRow) {
 
+        var dataTable = $("#modalData").DataTable();
+        var rowData = dataTable.row(row).data();
+
+        var ProductId = rowData.ProductId || 0;
+        var ProductName = rowData.ProductName || "";
+        var UOMId = rowData.UOMId || 0;
+        var UOMName = rowData.UOMName || "";
+        var vatRate = rowData.VATRate || 0;
+        var sdRate = rowData.SDRate || 0;
+        var CostPrice = rowData.SalesPrice || 0;
+
+        var $currentRow = originalRow.closest('tr');
+
+        /* ================= PRODUCT & UOM ================= */
+        originalRow.closest("td").find("input").val(ProductName);
+        originalRow.closest('td').next().text(ProductId);
+        originalRow.closest('td').next().next().text(UOMId);
+        originalRow.closest('td').next().next().next().text(UOMName);
+
+        /* ================= RATE / SD / VAT ================= */
+        $currentRow.find('.td-UnitRate').text(
+            Number(CostPrice).toLocaleString('en', {
+                minimumFractionDigits: parseInt(decimalPlace),
+                maximumFractionDigits: parseInt(decimalPlace)
+            })
+        );
+
+        $currentRow.find('.td-SD').text(
+            Number(sdRate).toLocaleString('en', {
+                minimumFractionDigits: parseInt(decimalPlace),
+                maximumFractionDigits: parseInt(decimalPlace)
+            })
+        );
+
+        $currentRow.find('.td-VATRate').text(
+            Number(vatRate).toLocaleString('en', {
+                minimumFractionDigits: parseInt(decimalPlace),
+                maximumFractionDigits: parseInt(decimalPlace)
+            })
+        );
+
+        $("#UOMId").val(UOMId);
+
+        /* ================= DEFAULT QUANTITY ================= */
+        var qtyText = $currentRow.find('.td-Quantity').text().trim();
+        if (!qtyText || isNaN(parseFloat(qtyText))) {
+            $currentRow.find('.td-Quantity').text(
+                Number(1).toLocaleString('en', {
+                    minimumFractionDigits: parseInt(decimalPlace),
+                    maximumFractionDigits: parseInt(decimalPlace)
+                })
+            );
+        }
+
+        /* ================= 🔥 CORE CALCULATION ================= */
+        computeSubTotal($currentRow.find('.td-UnitRate'), '');
+        TotalCalculation();
+
+        /* ================= UI CLEANUP ================= */
+        $("#partialModal").modal("hide");
+        originalRow.closest("td").find("input").data("touched", false).focus();
+        $("#myModal1").modal("show");
+    }
 
     var GetGridDataList = function () {
         var branchId = $("#Branchs").data("kendoComboBox").value();
@@ -1839,8 +1990,8 @@
         }
         if (result.Status == 200) {
             ShowNotification(1, result.Message);
-            $(".btnsave").hide();
-            $(".btnPost").hide();
+            $(".btnsave").show();
+            $(".btnPost").show();
             $(".sslPush").show();
         }
         else if (result.Status == 400) {

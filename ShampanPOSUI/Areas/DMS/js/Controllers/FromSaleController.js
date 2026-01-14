@@ -60,7 +60,7 @@
             pageSize: 10,
             transport: {
                 read: {
-                    url: "/DMS/Purchase/FromPurchaseGridData",
+                    url: "/DMS/Sale/FromSaleGridData",
                     type: "POST",
                     dataType: "json",
                     cache: false
@@ -264,7 +264,7 @@
                         pageSize: 10,
                         transport: {
                             read: {
-                                url: "/DMS/Purchase/GetPurchaseDetailDataById",
+                                url: "/DMS/Sale/GetSaleDetailDataById",
                                 type: "GET",
                                 dataType: "json",
                                 cache: false,
@@ -413,16 +413,9 @@
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", width: 180, sortable: true },
-                { field: "SupplierName", title: "Supplier Name", sortable: true, width: 180 },
+                { field: "CustomerName", title: "Customer Name", sortable: true, width: 180 },
                 {
                     field: "InvoiceDateTime", title: "Invoice Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
-                    filterable:
-                    {
-                        ui: "datepicker"
-                    }
-                },
-                {
-                    field: "PurchaseDate", title: "Purchase Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(PurchaseDate), "yyyy-MM-dd") #',
                     filterable:
                     {
                         ui: "datepicker"
@@ -457,11 +450,7 @@
                     attributes: { style: "text-align: right;" }
                 },               
 
-                { field: "BENumber", title: "BE Number", sortable: true, width: 130 },
-                //{ field: "ImportIDExcel", title: "Import IDExcel", sortable: true, width: 130 },
-                //{ field: "CustomHouse", title: "Custom House", sortable: true, width: 130 },
-                { field: "FiscalYear", title: "Fiscal Year", sortable: true, width: 120 },
-                //{ field: "CurrencyRateFromBDT", title: "Currency Rate FromBDT", sortable: true, width: 190 },
+
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },
                 { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
 

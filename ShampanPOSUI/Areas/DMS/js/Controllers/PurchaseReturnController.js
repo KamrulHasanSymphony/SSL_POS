@@ -125,6 +125,7 @@
             $('#FromDate').val($('#PurchaseReturnDate').val());
             originalRow.closest("td").find("input").data('touched', true);
             CommonService.productForPurchaseModal(
+       
                 function success(result) {
                     console.log("Modal opened successfully.");
                 },
@@ -133,6 +134,7 @@
                     console.error("Error opening modal:", error);
                 },
                 function dblClick(row) {
+                    debugger;
                     productModalDblClick(row, originalRow);
                 },
                 function closeCallback() {
@@ -256,6 +258,8 @@
         });
 
     };
+
+
 
     function computeCtnQuantity(row, param) {
 
@@ -654,21 +658,42 @@
         }
 
 
+
         var $currentRow = originalRow.closest('tr');
         $currentRow.find('.td-ProductCode').text(ProductCode);
         $currentRow.find('.td-ProductName').text(ProductName);
         $currentRow.find('.td-ProductId').text(ProductId);
+        $currentRow.find('.td-UnitPrice').text(PurchasePrice);
         $currentRow.find('.td-UOMName').text(UOMName);
         $currentRow.find('.td-UOMId').text(UOMId);
-        $currentRow.find('.td-UnitPrice').text(PurchasePrice);
+        $currentRow.find('.td-Quantity').text(Quantity);
+        $currentRow.find('.td-InputQuantity').text(Quantity);
+        $currentRow.find('.td-PcsQuantity').text(Quantity);
+        $currentRow.find('.td-UnitRate').text(CostPrice);
         $currentRow.find('.td-SD').text(SDRate);
         $currentRow.find('.td-VATRate').text(VATRate);
         $currentRow.find('.td-UOMConversion').text(Conversion);
-        //CampaignMudularitycal($currentRow)
         $("#partialModal").modal("hide");
-        
         originalRow.closest("td").find("input").data("touched", false).focus();
         $('#details').find(".td-Quantity").trigger('blur');
+
+
+
+        //var $currentRow = originalRow.closest('tr');
+        //$currentRow.find('.td-ProductCode').text(ProductCode);
+        //$currentRow.find('.td-ProductName').text(ProductName);
+        //$currentRow.find('.td-ProductId').text(ProductId);
+        //$currentRow.find('.td-UOMName').text(UOMName);
+        //$currentRow.find('.td-UOMId').text(UOMId);
+        //$currentRow.find('.td-UnitPrice').text(PurchasePrice);
+        //$currentRow.find('.td-SD').text(SDRate);
+        //$currentRow.find('.td-VATRate').text(VATRate);
+        //$currentRow.find('.td-UOMConversion').text(Conversion);
+        ////CampaignMudularitycal($currentRow)
+        //$("#partialModal").modal("hide");
+        
+        //originalRow.closest("td").find("input").data("touched", false).focus();
+        //$('#details').find(".td-Quantity").trigger('blur');
     };
 
 
@@ -1469,6 +1494,7 @@
         //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
         //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
 
+
         model.purchaseReturnDetailList = details;
 
         var url = "/DMS/PurchaseReturn/CreateEdit";
@@ -1552,8 +1578,8 @@
         }
         if (result.Status == 200) {
             ShowNotification(1, result.Message);
-            $(".btnsave").hide();
-            $(".btnPost").hide();
+            $(".btnsave").show();
+            $(".btnPost").show();
             $(".sslPush").show();
         }
         else if (result.Status == 400) {

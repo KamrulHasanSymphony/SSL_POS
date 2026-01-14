@@ -110,8 +110,10 @@
                             @Html.TextBoxFor(model => model.SaleOrderId, new { @class = "form-control form-control-sm" })
                         </div>
                     </div>
+
+
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.SaleOrderId)
+                        @Html.LabelFor(model => model.SaleOrderCode)
                         <div class="input-group">
                             @*<input type="text" id="PurchaseOrderCode" class="form-control form-control-sm" readonly />*@
                             @Html.TextBoxFor(model => model.SaleOrderCode, new { @class = "form-control form-control-sm" })
@@ -125,6 +127,9 @@
                             </div>
                         </div>
                     </div>
+
+
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.InvoiceDateTime)
                         <div class="input-group date">
@@ -194,18 +199,18 @@
                                 <th data-type="text" data-search="true" data-required="true" style="width:12%;" data-name="ProductName"> Product Name </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
                                 @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
-        <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
+                               <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
 
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-name="Quantity"> Quantity </th>
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-name="UnitRate"> Unit Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="SubTotal"> SubTotal </th>
                                 <th data-type="decimal" style="width: 8%;" data-name="SD"> SD Rate </th>
                                 <th data-type="decimal" style="width: 8%;" data-name="SDAmount"> SD Amount </th>
                                 <th data-type="decimal" style="width: 8%;" data-name="VATRate"> VAT Rate </th>
                                 <th data-type="decimal" style="width: 8%;" data-name="VATAmount"> VAT Amount </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
 
-                                <th data-type="text" style="width: 10%;">Comments</th>
+                                @*<th data-type="text" style="width: 10%;">Comments</th>*@
 
                                 <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderId">Sale Order Id</th>
                                 <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderDetailId">Sale Order Detail Id</th>

@@ -335,7 +335,6 @@
                         <thead>
                             <tr>
                                 <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                <th data-type="text" data-search="false" data-required="false" data-computed="true" style="width:20%;" data-name="ProductCode"> Product Code </th>
                                 <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="ProductName"> Product Name </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
 
@@ -360,7 +359,7 @@
 
                                 @if (Model.PurchaseId > 0)
                                 {
-                                    <th data-type="text" data-search="false" data-required="false" data-computed="true" style="width:10%;" data-name="POCode"> Purchase Code </th>
+                                    @*<th data-type="text" data-search="false" data-required="false" data-computed="true" style="width:10%;" data-name="POCode"> Purchase Code </th>*@
                                 }
                                 <th hidden data-type="text" style="width: 5%;" data-name="PurchaseId">PurchaseId</th>
                                 <th hidden data-type="text" style="width: 5%;" data-name="PurchaseDetailId">PurchaseDetailId</th>
@@ -374,7 +373,6 @@
                                 {
                                     <tr>
                                         <td> @serial </td>
-                                        <td> @item.ProductCode </td>
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
 
@@ -398,7 +396,7 @@
                                         <td hidden> @item.UOMConversion</td>*@
                                         @if (item.PurchaseId > 0)
                                         {
-                                            <td style="color:blue;cursor:pointer;" class="details-link" data-id="@item.PurchaseId"> @item.POCode </td>
+                                            @*<td style="color:blue;cursor:pointer;" class="details-link" data-id="@item.PurchaseId"> @item.POCode </td>*@
                                         }
                                         <td hidden> @item.PurchaseId</td>
                                         <td hidden> @item.PurchaseDetailId</td>

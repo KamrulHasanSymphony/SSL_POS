@@ -2612,6 +2612,7 @@
     <Content Include="Areas\Common\Views\Common\_getSale.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\FromSaleOrder.cshtml" />
     <Content Include="Areas\DMS\Views\SaleReturn\FromSale.cshtml" />
+    <Content Include="Areas\Common\Views\Common\_getProductDataSale.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

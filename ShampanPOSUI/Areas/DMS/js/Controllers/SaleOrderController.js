@@ -73,7 +73,7 @@
         });
 
         $('.btnPost').on('click', function () {
-
+            debugger;
             Confirmation("Are you sure? Do You Want to Post Data?",
                 function (result) {
 
@@ -221,7 +221,7 @@
             var originalRow = $(this);
             $('#FromDate').val($('#PurchaseDate').val());
             originalRow.closest("td").find("input").data('touched', true);
-            CommonService.productForPurchaseModal(
+            CommonService.productForSaleModal(
                 function success(result) {
                     console.log("Modal opened successfully.");
                 },
@@ -954,7 +954,7 @@
     function productModalDblClick(row, originalRow) {
         var dataTable = $("#modalData").DataTable();
         var rowData = dataTable.row(row).data();
-
+        debugger;
         var ProductId = rowData.ProductId;
         var ProductCode = rowData.ProductCode;
         var ProductName = rowData.ProductName;
@@ -1623,8 +1623,8 @@
         }
         if (result.Status == 200) {
             ShowNotification(1, result.Message);
-            $(".btnsave").hide();
-            $(".btnPost").hide();
+            $(".btnsave").show();
+            $(".btnPost").show();
         }
         else if (result.Status == 400) {
             ShowNotification(3, result.Message);

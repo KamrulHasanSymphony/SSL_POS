@@ -454,5 +454,34 @@ namespace ShampanPOS.Repo
             }
         }
 
+
+
+        public ResultVM FromSaleGridData(GridOptions options)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+
+                #region Invoke API 
+
+                var data = httpRequestHelper.PostData("api/Sale/FromSaleGridData", authModel, JsonConvert.SerializeObject(options,
+                    new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    }));
+
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

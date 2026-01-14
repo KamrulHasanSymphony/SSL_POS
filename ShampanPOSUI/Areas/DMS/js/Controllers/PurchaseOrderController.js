@@ -480,7 +480,6 @@
         var PurchasePrice = rowData.PurchasePrice;
         var SDRate = rowData.SDRate;
         var VATRate = rowData.VATRate;
-
         var Conversion = rowData.UOMConversion;
         var Quantity = 1;
 
@@ -509,7 +508,16 @@
         $currentRow.find('.td-ProductCode').text(ProductCode);
         $currentRow.find('.td-ProductName').text(ProductName);
         $currentRow.find('.td-ProductId').text(ProductId);
-        $currentRow.find('.td-UnitPrice').text(PurchasePrice);        
+        $currentRow.find('.td-UnitPrice').text(PurchasePrice);
+        $currentRow.find('.td-UOMName').text(UOMName);
+        $currentRow.find('.td-UOMId').text(UOMId);
+        $currentRow.find('.td-Quantity').text(Quantity);
+        $currentRow.find('.td-InputQuantity').text(Quantity);
+        $currentRow.find('.td-PcsQuantity').text(Quantity);
+        $currentRow.find('.td-UnitRate').text(CostPrice);
+        $currentRow.find('.td-SD').text(SDRate);
+        $currentRow.find('.td-VATRate').text(VATRate);
+        $currentRow.find('.td-UOMConversion').text(Conversion);
         $("#partialModal").modal("hide");
         originalRow.closest("td").find("input").data("touched", false).focus();
         $('#details').find(".td-Quantity").trigger('blur');
@@ -1394,8 +1402,8 @@
         }
         if (result.Status == 200) {
             ShowNotification(1, result.Message);
-            $(".btnsave").hide();
-            $(".btnPost").hide();
+            $(".btnsave").show();
+            $(".btnPost").show();
         }
         else if (result.Status == 400) {
             ShowNotification(3, result.Message);

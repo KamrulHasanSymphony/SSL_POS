@@ -1313,8 +1313,8 @@
         }
         if (result.Status == 200) {
             ShowNotification(1, result.Message);
-            $(".btnsave").hide();
-            $(".btnPost").hide();
+            $(".btnsave").show();
+            $(".btnPost").show();
             $(".sslPush").show();
         }
         else if (result.Status == 400) {

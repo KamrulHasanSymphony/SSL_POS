@@ -1,7 +1,4 @@
 ﻿
-
-
-
 var FromSaleOrderController = function () {
 
     var init = function () {
@@ -282,21 +279,21 @@ var FromSaleOrderController = function () {
                     columns: [
                         { field: "Id", hidden: true, width: 50 },
                         { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
-                        { field: "UOMName", title: "UOM Name", sortable: true, width: 100 },
-                        { field: "UOMConversion", title: "UOM Conversion", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        //{ field: "UOMName", title: "UOM Name", sortable: true, width: 100 },
+                        /*{ field: "UOMConversion", title: "UOM Conversion", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },*/
                         { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "UnitPrice", title: "Unit Price", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
+                      /*  { field: "UnitPrice", title: "Unit Price", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },*/
                         { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
                         { field: "SD", title: "SD Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "SDAmount", title: "SD Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "OthersAmount", title: "Others Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                       /* { field: "OthersAmount", title: "Others Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },*/
                         { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "FixedVATAmount", title: "Fixed VAT Amnt", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+               /*         { field: "FixedVATAmount", title: "Fixed VAT Amnt", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },*/
                         { field: "IsFixedVAT", hidden: true, title: "Is Fixed Vat", sortable: true, width: 100 },
                         { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 },
-                        { field: "Comments", title: "Comments", sortable: true, width: 150 },
+                    //    { field: "Comments", title: "Comments", sortable: true, width: 150 },
                     ],
                     footerTemplate: function (e) {
                         var aggregates = e.sender.dataSource.aggregates();

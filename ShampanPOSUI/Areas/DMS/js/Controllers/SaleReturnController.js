@@ -183,6 +183,20 @@
             GetGridDataList();
 
         });
+
+        //$('#details').on('change', ".td-Quantity", function (event) {
+
+        //    var currentRow = $(this).closest('tr');
+
+        //    // Get quantity from input or text content
+        //    var quantity;
+        //    if (currentRow.find("td.td-Quantity input").length > 0) {
+        //        quantity = parseFloat(currentRow.find("td.td-Quantity input").val().replace(/,/g, '')) || 0;
+        //    } else {
+        //        quantity = parseFloat(currentRow.find("td.td-Quantity").text().replace(/,/g, '')) || 0;
+        //    }
+
+        //});
     };
     function GetBranchList() {
         var branch = new kendo.data.DataSource({
@@ -445,7 +459,7 @@
 
 
     function computeSubTotal(row, param) {
-        
+        debugger;
 
         var qty = parseFloat(row.closest("tr").find("td.td-Quantity").text().replace(',', '').replace(',', ''));
         var unitCost = parseFloat(row.closest("tr").find("td.td-UnitRate").text().replace(',', '').replace(',', ''));
@@ -479,29 +493,83 @@
                 row.closest("tr").find("td.td-SD").text(SDRate);
             }
             else {
-                var SDAmount = Number(parseFloat(((qty * unitCost) * SDRate) / 100).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-                if (isNaN(SDAmount)) {
-                    SDAmount = 0.00;
-                }
-                row.closest("tr").find("td.td-SDAmount").text(SDAmount);
-                var SDRate = Number(parseFloat((SDAmount * 100) / (qty * unitCost)).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-                if (isNaN(SDRate)) {
-                    SDRate = 0.00;
-                }
-                row.closest("tr").find("td.td-SD").text(SDRate);
 
-                //////////////////////////////////////////////////////////////////
-                var VATAmount = Number(parseFloat(((qty * unitCost) * VATRate) / 100).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
+                var baseAmount = qty * unitCost;
+
+                /* ===================== SD ===================== */
+
+                // SD Amount (number)
+                var SDAmount = baseAmount !== 0
+                    ? (baseAmount * SDRate) / 100
+                    : 0;
+
+                if (isNaN(SDAmount)) {
+                    SDAmount = 0;
+                }
+
+                // SD Amount display
+                row.closest("tr").find("td.td-SDAmount").text(
+                    SDAmount.toLocaleString('en', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })
+                );
+
+                // SD Rate recalculation (number)
+                var SDRateCalc = baseAmount !== 0
+                    ? (SDAmount * 100) / baseAmount
+                    : 0;
+
+                if (isNaN(SDRateCalc)) {
+                    SDRateCalc = 0;
+                }
+
+                // SD Rate display
+                row.closest("tr").find("td.td-SD").text(
+                    SDRateCalc.toLocaleString('en', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })
+                );
+
+
+                /* ===================== VAT ===================== */
+
+                // VAT Amount (number)
+                var VATAmount = baseAmount !== 0
+                    ? (baseAmount * VATRate) / 100
+                    : 0;
+
                 if (isNaN(VATAmount)) {
-                    VATAmount = 0.00;
+                    VATAmount = 0;
                 }
-                row.closest("tr").find("td.td-VATAmount").text(VATAmount);
-                var VATRate = Number(parseFloat((VATAmount * 100) / (qty * unitCost)).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
-                if (isNaN(VATRate)) {
-                    VATRate = 0.00;
+
+                // VAT Amount display
+                row.closest("tr").find("td.td-VATAmount").text(
+                    VATAmount.toLocaleString('en', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })
+                );
+
+                // VAT Rate recalculation (number)
+                var VATRateCalc = baseAmount !== 0
+                    ? (VATAmount * 100) / baseAmount
+                    : 0;
+
+                if (isNaN(VATRateCalc)) {
+                    VATRateCalc = 0;
                 }
-                row.closest("tr").find("td.td-VATRate").text(VATRate);
+
+                // VAT Rate display
+                row.closest("tr").find("td.td-VATRate").text(
+                    VATRateCalc.toLocaleString('en', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })
+                );
             }
+
 
             var LineTotal = Number(parseFloat((qty * unitCost) + parseFloat(SDAmount) + parseFloat(VATAmount)).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 });
             row.closest("tr").find("td.td-LineTotal").text(LineTotal);
@@ -529,27 +597,64 @@
 
     };
 
+    //function productModalDblClick(row, originalRow) {
+
+    //    var dataTable = $("#modalData").DataTable();
+    //    var rowData = dataTable.row(row).data();
+
+    //    var ProductId = rowData.ProductId;
+    //    var ProductName = rowData.ProductName;
+    //    var UOMId = rowData.UOMId;
+    //    var UOMName = rowData.UOMName;
+
+    //    originalRow.closest("td").find("input").val(ProductName);
+    //    originalRow.closest('td').next().text(ProductId);
+    //    //originalRow.closest('td').next().next().text(UOMId);
+    //    //originalRow.closest('td').next().next().next().text(UOMName);
+    //    $("#UOMId").val(UOMId);
+
+    //    $("#partialModal").modal("hide");
+    //    originalRow.closest("td").find("input").data("touched", false);
+    //    originalRow.closest("td").find("input").focus();
+    //    $("#myModal1").modal("show");
+    //};
+
     function productModalDblClick(row, originalRow) {
-        
         var dataTable = $("#modalData").DataTable();
         var rowData = dataTable.row(row).data();
-
+        debugger;
         var ProductId = rowData.ProductId;
+        var ProductCode = rowData.ProductCode;
         var ProductName = rowData.ProductName;
         var UOMId = rowData.UOMId;
         var UOMName = rowData.UOMName;
+        var CostPrice = rowData.SalesPrice;
+        var SDRate = rowData.SDRate;
+        var VATRate = rowData.VATRate;
+        var Conversion = rowData.UOMConversion;
+        var Quantity = 1;
+        var StorckQuantity = rowData.QuantityInHand;
 
-        originalRow.closest("td").find("input").val(ProductName);
-        originalRow.closest('td').next().text(ProductId);
-        //originalRow.closest('td').next().next().text(UOMId);
-        //originalRow.closest('td').next().next().next().text(UOMName);
-        $("#UOMId").val(UOMId);
-
+        var $currentRow = originalRow.closest('tr');
+        $currentRow.find('.td-ProductCode').text(ProductCode);
+        $currentRow.find('.td-ProductName').text(ProductName);
+        $currentRow.find('.td-ProductId').text(ProductId);
+        $currentRow.find('.td-UOMName').text(UOMName);
+        $currentRow.find('.td-UOMId').text(UOMId);
+        $currentRow.find('.td-Quantity').text(Quantity);
+        $currentRow.find('.td-InputQuantity').text(Quantity);
+        $currentRow.find('.td-PcsQuantity').text(Quantity);
+        $currentRow.find('.td-UnitRate').text(CostPrice);
+        $currentRow.find('.td-SD').text(SDRate);
+        $currentRow.find('.td-VATRate').text(VATRate);
+        $currentRow.find('.td-UOMConversion').text(Conversion);
+        //CampaignMudularitycal($currentRow)
         $("#partialModal").modal("hide");
-        originalRow.closest("td").find("input").data("touched", false);
-        originalRow.closest("td").find("input").focus();
-        $("#myModal1").modal("show");
+        originalRow.closest("td").find("input").data("touched", false).focus();
+        $('#details').find(".td-Quantity").trigger('blur');
     };
+
+
 
     function uomFromNameModalDblClick(row, originalRow) {
         
@@ -1099,8 +1204,8 @@
         }
         if (result.Status == 200) {
             ShowNotification(1, result.Message);
-            $(".btnsave").hide();
-            $(".btnPost").hide();
+            $(".btnsave").show();
+            $(".btnPost").show();
             $(".sslPush").show();
         }
         else if (result.Status == 400) {

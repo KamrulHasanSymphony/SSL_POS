@@ -820,6 +820,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
         [HttpPost]
         public JsonResult FromPurchaseGridData(GridOptions options)
         {
