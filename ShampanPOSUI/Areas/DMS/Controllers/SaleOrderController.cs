@@ -776,6 +776,32 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
 
+        //[HttpGet]
+        //public JsonResult GetSaleOrderList(int saleOrderId)
+        //{
+        //    try
+        //    {
+        //        _repo = new SaleOrderRepo();
+        //        CommonVM param = new CommonVM();
+        //        param.Id = saleOrderId.ToString();
+
+        //        ResultVM result = _repo.List(param);
+
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            var list = JsonConvert.DeserializeObject<List<SaleOrderVM>>(result.DataVM.ToString());
+        //            return Json(list, JsonRequestBehavior.AllowGet);
+        //        }
+
+        //        return Json(new List<SaleOrderVM>(), JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
+
         [HttpGet]
         public JsonResult GetSaleOrderList(int saleOrderId)
         {
@@ -783,23 +809,25 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 _repo = new SaleOrderRepo();
                 CommonVM param = new CommonVM();
-                param.Id = saleOrderId.ToString();
-
-                ResultVM result = _repo.List(param);
+                param.IDs = new string[] { saleOrderId.ToString() };
+                ResultVM result = _repo.SaleOrderList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    var list = JsonConvert.DeserializeObject<List<SaleOrderVM>>(result.DataVM.ToString());
+                    var list = JsonConvert.DeserializeObject<List<SaleVM>>(result.DataVM.ToString());
                     return Json(list, JsonRequestBehavior.AllowGet);
                 }
 
-                return Json(new List<SaleOrderVM>(), JsonRequestBehavior.AllowGet);
+                return Json(new List<SaleVM>(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
 
     }
 }

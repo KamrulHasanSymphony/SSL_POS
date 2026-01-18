@@ -585,7 +585,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    var gridData = JsonConvert.DeserializeObject<GridEntity<PurchaseOrderDetailVM>>(result.DataVM.ToString());
+                    var gridData = JsonConvert.DeserializeObject<GridEntity<PurchaseDetailVM>>(result.DataVM.ToString());
 
                     return Json(new
                     {

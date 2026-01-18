@@ -18,6 +18,9 @@
         color: #212529;
         border: 1px solid #adb5bd;
     }
+    .dFormat {
+        text-align: right;
+    }
 </style>
 <div class="content-header">
     <div class="container-fluid">
@@ -115,8 +118,12 @@
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.SaleOrderCode)
                         <div class="input-group">
-                            @*<input type="text" id="PurchaseOrderCode" class="form-control form-control-sm" readonly />*@
-                            @Html.TextBoxFor(model => model.SaleOrderCode, new { @class = "form-control form-control-sm" })
+
+                            @Html.TextBoxFor(model => model.SaleOrderCode, new
+                            {
+                                @class = "form-control form-control-sm",
+                                @readonly = "readonly"   // ✅ only textbox readonly
+                            })
 
                             <div class="input-group-append">
                                 <button type="button"
@@ -125,8 +132,10 @@
                                     <i class="fa fa-search"></i>
                                 </button>
                             </div>
+
                         </div>
                     </div>
+
 
 
 
@@ -199,16 +208,20 @@
                                 <th data-type="text" data-search="true" data-required="true" style="width:12%;" data-name="ProductName"> Product Name </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
                                 @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
-                               <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
+        <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
 
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="OrderQuantity"> Order Quantity </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="CompletedQty"> Completed Qty </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="RemainQty"> Remain Qty </th>
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-name="Quantity"> Quantity </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-name="UnitRate"> Unit Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="SubTotal"> SubTotal </th>
-                                <th data-type="decimal" style="width: 8%;" data-name="SD"> SD Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-name="SDAmount"> SD Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-name="VATRate"> VAT Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-name="VATAmount"> VAT Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="UnitRate"> Unit Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SD"> SD Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATRate"> VAT Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-computed="true" data-name="LineTotal"> Line Total </th>
+
 
                                 @*<th data-type="text" style="width: 10%;">Comments</th>*@
 
@@ -228,7 +241,10 @@
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
                                         @*<td hidden> @item.SaleId </td>
-                                         <td hidden> @item.SaleOrderDetailId </td>*@
+                                        <td hidden> @item.SaleOrderDetailId </td>*@
+                                        <td class=" dFormat "> @item.OrderQuantity</td>
+                                        <td class=" dFormat "> @item.CompletedQty</td>
+                                        <td class=" dFormat "> @item.RemainQty</td>
                                         <td class=" dFormat "> @item.Quantity</td>
                                         <td class=" dFormat "> @item.UnitRate</td>
                                         <td class=" dFormat "> @item.SubTotal</td>
@@ -238,6 +254,7 @@
                                         <td class=" dFormat "> @item.VATRate</td>
                                         <td class=" dFormat "> @item.VATAmount</td>
                                         <td class=" dFormat "> @item.LineTotal</td>
+
 
 
                                         @if (item.SaleOrderId > 0)

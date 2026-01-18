@@ -196,7 +196,7 @@
 
 
         $("#windowGrid").on("dblclick", "tbody tr", function () {
-
+            debugger;
             var grid = $("#windowGrid").data("kendoGrid");
             var dataItem = grid.dataItem(this);
 
@@ -414,7 +414,8 @@
             type: "GET",
             data: { saleOrderId: saleOrderId },
             success: function (data) {
-
+                debugger;
+                console.log(data);
                 if (!data || data.length === 0) {
                     $("#lst").empty();
                     TotalCalculation();
@@ -423,7 +424,7 @@
 
                 /* ================= MASTER ================= */
                 var master = data[0];
-
+                debugger;
                 // Customer autofill
                 if (master.CustomerId) {
                     var customerCombo =
@@ -446,15 +447,15 @@
 
                 /* ================= DETAILS ================= */
                 $("#lst").empty();
-
-                if (!master.saleOrderDetailsList || master.saleOrderDetailsList.length === 0) {
+                debugger;
+                if (!master.saleDetailsList || master.saleDetailsList.length === 0) {
                     TotalCalculation();
                     return;
                 }
 
                 var sl = 1;
 
-                $.each(master.saleOrderDetailsList, function (index, item) {
+                $.each(master.saleDetailsList, function (index, item) {
 
                     var row = `
                 <tr>
@@ -462,6 +463,10 @@
                     <td hidden>${item.ProductCode ?? ""}</td>
                     <td>${item.ProductName ?? ""}</td>
                     <td hidden>${item.ProductId ?? ""}</td>
+
+                    <td class="dFormat">${item.OrderQuantity ?? 0}</td>
+                    <td class="dFormat">${item.CompletedQty ?? 0}</td>
+                    <td class="dFormat">${item.RemainQty ?? 0}</td>
 
                     <td class="td-Quantity dFormat">${item.Quantity ?? 0}</td>
                     <td class="td-UnitRate dFormat">${item.UnitRate ?? 0}</td>
@@ -477,6 +482,7 @@
 
                     <td hidden>${item.SaleOrderId ?? ""}</td>
                     <td hidden>${item.SaleOrderDetailId ?? ""}</td>
+
                     <td>
                         <button class="btn btn-danger btn-sm remove-row-btn">
                             <i class="fa fa-trash"></i>
@@ -487,6 +493,7 @@
                     $("#lst").append(row);
                     sl++;
                 });
+
 
                 /* ================= 🔥 RECALCULATE ================= */
                 // IMPORTANT: do NOT manually set master totals here

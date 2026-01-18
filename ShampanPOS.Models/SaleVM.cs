@@ -77,6 +77,10 @@ namespace ShampanPOS.Models
         public string? LastModifiedOn { get; set; }
         public string? LastUpdateFrom { get; set; }
 
+        [Display(Name = "Expected Delivery Date")]
+        public string? DeliveryDate { get; set; }
+        public string? OrderDate { get; set; }
+
         public int? DecimalPlace { get; set; }
         public string? Operation { get; set; }
         [Display(Name = "Branch Name")]

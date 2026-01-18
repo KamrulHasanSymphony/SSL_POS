@@ -445,25 +445,19 @@
                     }
                 }
                 ,
-                {
-                    field: "TotalQuantity",
-                    title: "Total Quantity",
-                    sortable: true,
-                    width: 180,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },               
-
-                { field: "BENumber", title: "BE Number", sortable: true, width: 130 },
-                //{ field: "ImportIDExcel", title: "Import IDExcel", sortable: true, width: 130 },
-                //{ field: "CustomHouse", title: "Custom House", sortable: true, width: 130 },
-                { field: "FiscalYear", title: "Fiscal Year", sortable: true, width: 120 },
-                //{ field: "CurrencyRateFromBDT", title: "Currency Rate FromBDT", sortable: true, width: 190 },
+                //{
+                //    field: "TotalQuantity",
+                //    title: "Total Quantity",
+                //    sortable: true,
+                //    width: 180,
+                //    aggregates: ["sum"],
+                //    format: "{0:n2}",
+                //    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                //    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                //    attributes: { style: "text-align: right;" }
+                //},             
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },
-                { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
+                { field: "BranchName", title: "Branch Name", hidden: true, sortable: true, width: 200 },
 
             ],
             editable: false,

@@ -717,7 +717,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    var gridData = JsonConvert.DeserializeObject<GridEntity<SaleVM>>(result.DataVM.ToString());
+                    var gridData = JsonConvert.DeserializeObject<GridEntity<SaleDetailVM>>(result.DataVM.ToString());
 
                     return Json(new
                     {
@@ -762,6 +762,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 SaleOrderRepo _repoo = new SaleOrderRepo();
 
                 SaleVM purchase = new SaleVM();
+
+
                 ResultVM result = _repoo.SaleOrderList(vm);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -779,7 +781,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 #region DecimalPlace
                 CommonVM commonVM = new CommonVM();
-                commonVM.Group = "SaleDecimalPlace";
+                 commonVM.Group = "SaleDecimalPlace";
                 commonVM.Name = "SaleDecimalPlace";
                 var settingsValue = _common.GetSettingsValue(commonVM);
 

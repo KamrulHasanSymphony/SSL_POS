@@ -71,21 +71,10 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            if (param.field === "SupplierName") {
-                                param.field = "S.SupplierName";
+                            if (param.field === "CustomerName") {
+                                param.field = "S.Name";
                             }
-                            if (param.field === "BENumber") {
-                                param.field = "H.BENumber";
-                            }
-                            if (param.field === "ImportIDExcel") {
-                                param.field = "H.ImportIDExcel";
-                            }
-                            if (param.field === "CustomHouse") {
-                                param.field = "H.CustomHouse";
-                            }
-                            if (param.field === "FiscalYear") {
-                                param.field = "H.FiscalYear";
-                            }
+
                             if (param.field === "BranchName") {
                                 param.field = "Br.BranchName";
                             }
@@ -95,15 +84,11 @@
                             if (param.field === "Status") {
                                 param.field = "H.IsPost";
                             }
-                            if (param.field === "CurrencyRateFromBDT") {
-                                param.field = "H.CurrencyRateFromBDT";
-                            }
-                            if (param.field === "TotalQuantity") {
-                                param.field = "SD.TotalQuantity";
-                            }
-                            if (param.field === "InvoiceDateTime" || param.field === "PurchaseDate") {
+
+                            if (param.field === "InvoiceDateTime" || param.field === "H.InvoiceDateTime") {
                                 param.value = kendo.toString(param.value, "yyyy-MM-dd");
                             }
+
                         });
                     }
 
@@ -112,21 +97,10 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            if (param.field === "SupplierName") {
-                                param.field = "S.SupplierName";
+                            if (param.field === "CustomerName") {
+                                param.field = "S.Name";
                             }
-                            if (param.field === "BENumber") {
-                                param.field = "H.BENumber";
-                            }
-                            if (param.field === "ImportIDExcel") {
-                                param.field = "H.ImportIDExcel";
-                            }
-                            if (param.field === "CustomHouse") {
-                                param.field = "H.CustomHouse";
-                            }
-                            if (param.field === "FiscalYear") {
-                                param.field = "H.FiscalYear";
-                            }
+
                             if (param.field === "BranchName") {
                                 param.field = "Br.BranchName";
                             }
@@ -136,56 +110,9 @@
                             if (param.field === "Status") {
                                 param.field = "H.IsPost";
                             }
-                            if (param.field === "CurrencyRateFromBDT") {
-                                param.field = "H.CurrencyRateFromBDT";
-                            }
-                            if (param.field === "InvoiceDateTime" || param.field === "PurchaseDate") {
-                                param.value = kendo.toString(param.value, "yyyy-MM-dd");
-                            }
 
-                            if (param.field === "GrandTotalAmount") {
-                                param.field = "H.GrandTotalAmount";
-                                options.filter.filters.forEach(function (res) {
-                                    if (typeof res.value === 'string' && res.value.includes(',')) {
-                                        res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                                    }
-                                    else {
-                                        res.value = parseFloat(res.value) || 0;
-                                    }
-                                });
-                            }
-                            if (param.field === "GrandTotalSDAmount") {
-                                param.field = "H.GrandTotalSDAmount";
-                                options.filter.filters.forEach(function (res) {
-                                    if (typeof res.value === 'string' && res.value.includes(',')) {
-                                        res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                                    }
-                                    else {
-                                        res.value = parseFloat(res.value) || 0;
-                                    }
-                                });
-                            }
-                            if (param.field === "GrandTotalVATAmount") {
-                                param.field = "H.GrandTotalVATAmount";
-                                options.filter.filters.forEach(function (res) {
-                                    if (typeof res.value === 'string' && res.value.includes(',')) {
-                                        res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                                    }
-                                    else {
-                                        res.value = parseFloat(res.value) || 0;
-                                    }
-                                });
-                            }
-                            if (param.field === "TotalQuantity") {
-                                param.field = "SD.TotalQuantity";
-                                options.filter.filters.forEach(function (res) {
-                                    if (typeof res.value === 'string' && res.value.includes(',')) {
-                                        res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                                    }
-                                    else {
-                                        res.value = parseFloat(res.value) || 0;
-                                    }
-                                });
+                            if (param.field === "InvoiceDateTime" || param.field === "H.InvoiceDateTime") {
+                                param.value = kendo.toString(param.value, "yyyy-MM-dd");
                             }
 
                         });
@@ -253,7 +180,7 @@
             groupable: true,
             toolbar: ["excel", "pdf"],
             detailInit: function (e) {
-
+                debugger;
                 $("<div/>").appendTo(e.detailCell).kendoGrid({
                     dataSource: {
                         type: "json",
@@ -270,7 +197,6 @@
                                 cache: false,
                                 data: { masterId: e.data.Id }
                             },
-
                             parameterMap: function (options) {
                                 return options;
                             }
@@ -282,20 +208,16 @@
                         },
                         aggregate: [
                             { field: "Quantity", aggregate: "sum" },
-                            { field: "UnitPrice", aggregate: "sum" },
+                            { field: "UnitRate", aggregate: "sum" },   
                             { field: "SubTotal", aggregate: "sum" },
                             { field: "SD", aggregate: "sum" },
                             { field: "SDAmount", aggregate: "sum" },
                             { field: "VATRate", aggregate: "sum" },
                             { field: "VATAmount", aggregate: "sum" },
-                            { field: "OthersAmount", aggregate: "sum" },
-                            { field: "LineTotal", aggregate: "sum" },
-                            { field: "FixedVATAmount", aggregate: "sum" }
-                        ],
-                        requestEnd: function (e) {
-                            console.log("Response Data:", e.response); // Log server response
-                        }
+                            { field: "LineTotal", aggregate: "sum" }
+                        ]
                     },
+
                     scrollable: false,
                     sortable: true,
                     pageable: false,
@@ -303,40 +225,88 @@
                     messages: {
                         noRecords: "No Record Found!"
                     },
+
                     columns: [
-                        { field: "Id", hidden: true, width: 50 },
-                        { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
-                        { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "UnitPrice", title: "Unit Price", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "SD", title: "SD Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "SDAmount", title: "SD Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "OthersAmount", title: "Others Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "IsFixedVAT", hidden: true, title: "Is Fixed Vat", sortable: true, width: 100 },
-                        { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 },
-                    ],
-                    footerTemplate: function (e) {
-                        var aggregates = e.sender.dataSource.aggregates();
-                        return `
-                            <div style="font-weight: bold; text-align: right;">
-                                Total:
-                                <span>${kendo.toString(aggregates.Quantity.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.UnitPrice.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.SubTotal.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.SD.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.SDAmount.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.VATRate.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.VATAmount.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.OthersAmount.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.LineTotal.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.FixedVATAmount.sum, 'n2')}</span>
-                            </div>`;
-                    }
+                        { field: "Id", hidden: true },
+
+                        { field: "ProductName", title: "Product Name", width: 120 },
+
+                        {
+                            field: "Quantity",
+                            title: "Quantity",
+                            width: 100,
+                            aggregates: ["sum"],
+                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                            format: "{0:n2}",
+                            attributes: { style: "text-align:right;" }
+                        },
+                        {
+                            field: "UnitRate",
+                            title: "Unit Price",
+                            width: 100,
+                            aggregates: ["sum"],
+                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                            format: "{0:n2}",
+                            attributes: { style: "text-align:right;" }
+                        },
+                        {
+                            field: "SubTotal",
+                            title: "Sub Total",
+                            width: 100,
+                            aggregates: ["sum"],
+                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                            format: "{0:n2}",
+                            attributes: { style: "text-align:right;" }
+                        },
+                        {
+                            field: "SD",
+                            title: "SD Rate",
+                            width: 100,
+                            aggregates: ["sum"],
+                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                            format: "{0:n2}",
+                            attributes: { style: "text-align:right;" }
+                        },
+                        {
+                            field: "SDAmount",
+                            title: "SD Amount",
+                            width: 100,
+                            aggregates: ["sum"],
+                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                            format: "{0:n2}",
+                            attributes: { style: "text-align:right;" }
+                        },
+                        {
+                            field: "VATRate",
+                            title: "VAT Rate",
+                            width: 100,
+                            aggregates: ["sum"],
+                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                            format: "{0:n2}",
+                            attributes: { style: "text-align:right;" }
+                        },
+                        {
+                            field: "VATAmount",
+                            title: "VAT Amount",
+                            width: 100,
+                            aggregates: ["sum"],
+                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                            format: "{0:n2}",
+                            attributes: { style: "text-align:right;" }
+                        },
+                        {
+                            field: "LineTotal",
+                            title: "Line Total",
+                            width: 100,
+                            aggregates: ["sum"],
+                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                            format: "{0:n2}",
+                            attributes: { style: "text-align:right;" }
+                        }
+                    ]
                 });
             },
+
             excel: {
                 fileName: "PurchaseList.xlsx",
                 filterable: true
@@ -438,25 +408,26 @@
                     }
                 }
                 ,
-                {
-                    field: "TotalQuantity",
-                    title: "Total Quantity",
-                    sortable: true,
-                    width: 180,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },               
+                //{
+                //    field: "TotalQuantity",
+                //    title: "Total Quantity",
+                //    sortable: true,
+                //    width: 180,
+                //    aggregates: ["sum"],
+                //    format: "{0:n2}",
+                //    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                //    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                //    attributes: { style: "text-align: right;" }
+                //},               
 
 
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },
-                { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
+                { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
 
             ],
             editable: false,
-            selectable: "multiple row",
+            selectable: "multiple, row",
+      /*      persistSelection: true, */
             navigatable: true,
             columnMenu: true
         });

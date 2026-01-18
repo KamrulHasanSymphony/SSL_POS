@@ -66,6 +66,22 @@ namespace ShampanPOS.Models
         [DataType(DataType.Currency)]
         public decimal? LineTotal { get; set; }
 
+
+        [Display(Name = "Order Quantity")]
+
+        public decimal? OrderQuantity { get; set; }
+
+
+        [Display(Name = "Completed Qty")]
+
+        public decimal? CompletedQty { get; set; }
+
+        [Display(Name = "Remain Qty")]
+
+        public decimal? RemainQty { get; set; }
+
+
+
         public string? Operation { get; set; }
 
         [Display(Name = "Posted")]
