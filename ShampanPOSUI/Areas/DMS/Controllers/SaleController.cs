@@ -412,6 +412,68 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
+
+
+
+        //[HttpPost]
+        //public ActionResult MultiplePost(SaleVM vm)
+        //{
+        //    try
+        //    {
+        //        _repo = new SaleRepo();
+
+        //        if (vm.IDs == null || !vm.IDs.Any())
+        //        {
+        //            return Json(new
+        //            {
+        //                Success = false,
+        //                Status = 400,
+        //                Message = "No sale selected for posting."
+        //            });
+        //        }
+
+        //        CommonVM param = new CommonVM
+        //        {
+        //            IDs = vm.IDs,
+        //            ModifyBy = Session["UserId"]?.ToString() ?? "System",
+        //            ModifyFrom = Ordinary.GetLocalIpAddress()
+        //        };
+
+        //        ResultVM resultData = _repo.MultiplePost(param);
+
+        //        // 🔥 THIS IS THE KEY FIX
+        //        if (resultData.Status == "Fail")
+        //        {
+        //            return Json(new
+        //            {
+        //                Success = false,
+        //                Status = 400,
+        //                Message = resultData.Message   // ✅ EXACT validation message
+        //            });
+        //        }
+
+        //        return Json(new
+        //        {
+        //            Success = true,
+        //            Status = 200,
+        //            Message = resultData.Message
+        //        });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+
+        //        return Json(new
+        //        {
+        //            Success = false,
+        //            Status = 500,
+        //            Message = e.Message   // dev mode (change later)
+        //        });
+        //    }
+        //}
+
+
+
         [HttpGet]
         public ActionResult GetBranchList()
         {

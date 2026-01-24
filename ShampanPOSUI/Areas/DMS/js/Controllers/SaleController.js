@@ -51,6 +51,7 @@
 
 
         $('.btnsave').click('click', function () {
+            debugger;
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -76,10 +77,12 @@
         });
 
         $('.btnPost').on('click', function () {
+            debugger;
 
             Confirmation("Are you sure? Do You Want to Post Data?",
                 function (result) {
-                    
+                    debugger;
+
                     if (result) {
                         var model = serializeInputs("frmEntry");
                         if (model.IsPost == "True") {
@@ -481,7 +484,9 @@
                     <td class="td-LineTotal dFormat">${item.LineTotal ?? 0}</td>
 
                     <td hidden>${item.SaleOrderId ?? ""}</td>
-                    <td hidden>${item.SaleOrderDetailId ?? ""}</td>
+                    //<td >${item.Id ?? ""}</td>
+
+                    <td class="td-SaleOrderDetailId"> ${item.SaleOrderDetailId ?? item.Id ?? ""}</td>
 
                     <td>
                         <button class="btn btn-danger btn-sm remove-row-btn">
@@ -1416,10 +1421,10 @@
             return;
         }
 
-        if (hasInputFieldInTableCells($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
+        //if (hasInputFieldInTableCells($table)) {
+        //    ShowNotification(3, "Complete Details Entry");
+        //    return;
+        //};
         if (!hasLine($table)) {
             ShowNotification(3, "Complete Details Entry");
             return;
@@ -1448,7 +1453,7 @@
             ShowNotification(3, errorMessage);
             return;
         };
-
+        debugger;
 
         //model.GrandTotalAmount = model.GrandTotalAmount.replace(',', '').replace(',', '').replace(',', '');
         //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(',', '').replace(',', '').replace(',', '');
@@ -1532,7 +1537,7 @@
 
 
     function postDone(result) {
-        
+        debugger;
         var grid = $('#GridDataList').data('kendoGrid');
         if (grid) {
             grid.dataSource.read();

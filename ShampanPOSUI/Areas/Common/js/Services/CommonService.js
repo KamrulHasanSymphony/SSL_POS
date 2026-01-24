@@ -989,6 +989,94 @@
         }).done(onSuccess).fail(onFail);
     };  
 
+    var paymentpurchaseModal = function (supplierId,done, fail, dblCallBack, closeCallback) {
+        debugger;
+        var modalId = "#partialModal";
+        var dataTableId = "#modalData";
+        function showModal(html) {
+            $(modalId).html(html);
+            $('.draggable').draggable({
+                handle: ".modal-header"
+            });
+            $(modalId).modal("show");
+        }
+        function onSuccess(result) {
+            showModal(result);
+
+            if (typeof done === "function") {
+                done(result);
+            }
+            debugger;
+            bindDoubleClick(dblCallBack);
+            bindModalClose(closeCallback);
+            initializeDataTable();
+        }
+        function onFail(result) {
+            if (typeof fail === "function") {
+                fail(result);
+            }
+        }
+
+        function bindDoubleClick(callBack) {
+            $(dataTableId).off("dblclick").on("dblclick", "tr", function () {
+                if (typeof callBack === "function") {
+                    callBack($(this));
+                }
+            });
+        }
+
+        function bindModalClose(closeCallback) {
+            $(modalId).off("hidden.bs.modal").on("hidden.bs.modal", function () {
+                if (typeof closeCallback === "function") {
+                    closeCallback();
+                }
+                $(modalId).html("");
+            });
+        }
+        function initializeDataTable() {
+            if ($.fn.DataTable.isDataTable(dataTableId)) {
+                $(dataTableId).DataTable().destroy();
+            }
+
+            $(dataTableId).DataTable({
+                orderCellsTop: true,
+                fixedHeader: true,
+                serverSide: true,
+                processing: true,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                ajax: {
+                    url: '/Common/Common/_getPurchaseDatabySupplier',
+                    type: 'POST',
+                    data: function (d) {
+                        d.SupplierId = supplierId;   // 🔥 PASS supplierId
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error("AJAX Error:", error, thrown);
+                        console.error("Response:", xhr.responseText);
+                    }
+                },
+                columns: [
+                    { data: "Id", visible: false },
+                    { data: "Code", title: "Code", width: '15%', visible: true },  // Make Purchase Code visible here
+                    { data: "SupplierId", visible: false },
+                    { data: "PurchaseOrderId", visible: false },
+                    { data: "PurchaseOrderCode", title: "Purchase Order Code", width: '30%' },
+                    { data: "SupplierName", title: "Supplier Name", width: '30%' },
+                    { data: "Comments", title: "Comments", width: '30%' }
+                ],
+                columnDefs: [
+                    { width: '10%', targets: 0 }
+                ],
+            });
+        }
+
+        $.ajax({
+            //url: '/Common/Common/GetProductData',
+            url: '/Common/Common/GetPurchase',
+            method: 'get',
+        }).done(onSuccess).fail(onFail);
+    };  
+
 
 
 
@@ -1130,7 +1218,8 @@
         saleDeleveryModal: saleDeleveryModal,
         purchaseOrderIdModal: purchaseOrderIdModal,
         purchaseModal: purchaseModal,
-        saleModal: saleModal
+        saleModal: saleModal,
+        paymentpurchaseModal: paymentpurchaseModal
 
 
 

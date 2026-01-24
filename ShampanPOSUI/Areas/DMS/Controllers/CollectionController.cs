@@ -60,7 +60,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             CollectionVM vm = new CollectionVM();
             vm.Operation = "add";
-            //vm.TransactionType = "Purchase";
+            //vm.TransactionType = "Collection";
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
             //vm.BranchId = Convert.ToInt32(currentBranchId);
             //var currencyId = Session["CurrencyId"] != null ? Session["CurrencyId"].ToString() : "1";
@@ -489,6 +489,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 purchase.Operation = "add";
                 //purchase.IsPost = false;
+
+                //purchase.TransactionType = "Collection";
+
 
                 #region DecimalPlace
                 CommonVM commonVM = new CommonVM();

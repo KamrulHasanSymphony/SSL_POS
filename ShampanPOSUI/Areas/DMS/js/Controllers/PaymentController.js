@@ -140,29 +140,63 @@
             
         
 
+        //$('#details').on('click', 'input.txtPurchaseCode', function () {
+        //    var originalRow = $(this);
+        //    $('#FromDate').val($('#OrderDate').val());
+        //    var supplier = $("#SupplierId").val();
+        //    if (supplier == '' || supplier < 0) {
+
+        //    }
+        //    debugger;
+        //    originalRow.closest("td").find("input").data('touched', true);
+        //    CommonService.purchaseModal(
+        //        function success(result) {
+        //            console.log("Modal opened successfully.");
+        //        },
+        //        function fail(error) {
+        //            originalRow.closest("td").find("input").data("touched", false).focus();
+        //            console.log("Error opening modal:", error);
+        //        },
+        //        function dblClick(row) {
+        //            purchaseModalDblClick(row, originalRow);
+        //        },
+        //        function closeCallback() {
+        //            originalRow.closest("td").find("input").data("touched", false).focus();
+        //            console.log("Modal closed.");
+        //        }
+        //    );
+        //});
+
         $('#details').on('click', 'input.txtPurchaseCode', function () {
-            var originalRow = $(this);
-            $('#FromDate').val($('#OrderDate').val());
             debugger;
-            originalRow.closest("td").find("input").data('touched', true);
-            CommonService.purchaseModal(
+
+            var originalRow = $(this);
+
+            if (!getSupplierId || getSupplierId <= 0) {
+                alert("Please select Supplier first");
+                return;
+            }
+
+
+            originalRow.data('touched', true);
+
+            CommonService.paymentpurchaseModal(
+                getSupplierId,
                 function success(result) {
                     console.log("Modal opened successfully.");
                 },
                 function fail(error) {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.log("Error opening modal:", error);
+                    originalRow.data("touched", false).focus();
                 },
                 function dblClick(row) {
                     purchaseModalDblClick(row, originalRow);
                 },
                 function closeCallback() {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.log("Modal closed.");
+                    originalRow.data("touched", false).focus();
                 }
             );
-        });
 
+        });
 
         // Kendo Window Initialization
         var myWindow = $("#window");
@@ -423,25 +457,38 @@
                     this.value(parseInt(getSupplierId));  // Set initial value if available
                 }
             },
+            //change: function (e) {
+            //    var selectedItem = this.dataItem(); // Get selected item from ComboBox
+            //    if (selectedItem) {
+            //        var supplierId = selectedItem.Id;
+            //        var supplierName = selectedItem.Name;
+
+
+            //        //console.log("Supplier ID:", supplierId);  // Debugging
+            //        //console.log("Supplier Name:", supplierName);  // Debugging
+
+            //        //// Loop through all rows in the table and update SupplierName and SupplierId
+            //        //$("#details tbody tr").each(function () {
+            //        //    // Update SupplierId (hidden column) with .val() to update the hidden field
+            //        //    $(this).find("td[data-name='SupplierId']").val(supplierId); // Use .val() for hidden field
+
+            //        //    // Update SupplierName (visible column) with .text() to update the visible field
+            //        //    $(this).find("td[data-name='SupplierName']").text(supplierName); // Use .text() for visible field
+            //        //});
+            //    }
+            //}
+
             change: function (e) {
-                var selectedItem = this.dataItem(); // Get selected item from ComboBox
+                var selectedItem = this.dataItem();
                 if (selectedItem) {
-                    var supplierId = selectedItem.Id;
-                    var supplierName = selectedItem.Name;
-
-                    console.log("Supplier ID:", supplierId);  // Debugging
-                    console.log("Supplier Name:", supplierName);  // Debugging
-
-                    // Loop through all rows in the table and update SupplierName and SupplierId
-                    $("#details tbody tr").each(function () {
-                        // Update SupplierId (hidden column) with .val() to update the hidden field
-                        $(this).find("td[data-name='SupplierId']").val(supplierId); // Use .val() for hidden field
-
-                        // Update SupplierName (visible column) with .text() to update the visible field
-                        $(this).find("td[data-name='SupplierName']").text(supplierName); // Use .text() for visible field
-                    });
+                    getSupplierId = selectedItem.Id;   // ✅ keep updated
+                } else {
+                    getSupplierId = 0;
                 }
             }
+
+
+
         }).data("kendoMultiColumnComboBox");
     }
 

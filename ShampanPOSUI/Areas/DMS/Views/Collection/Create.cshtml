@@ -102,6 +102,8 @@
                         </div>
                     </div>
 
+
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)
                         <div class="input-group">
@@ -109,6 +111,30 @@
                         </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
+
+
+                    @*@if (Model.TransactionType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.CustomerId)
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.CustomerId, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            </div>
+                            <span id="titleError1" class="text-danger" style="display:none;"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.CustomerId)
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.CustomerId, new { @class = "form-control form-control-sm" })
+                            </div>
+                            <span id="titleError1" class="text-danger" style="display:none;"></span>
+                        </div>
+                    }*@
+
+
 
 
                     <div class="col-sm-2">
@@ -143,20 +169,20 @@
                     </div>
 
                     @*<div class="col-sm-2">
-                        @Html.LabelFor(model => model.TotalPaymentAmount)
-                        <div class="input-group">
-                            @Html.TextBoxFor(
-                                model => model.TotalPaymentAmount,
-                                new
-                                {
-                                    @placeholder = "Total Payment Amount",
-                                    @class = "form-control form-control-sm text-right NumberCheck priceLen",
-                                    @readonly = "readonly",  // Ensure the field is read-only
-                                    id = "TotalPaymentAmount" // Set an ID to access this field easily
-                                }
-                            )
-                        </div>
-                    </div>*@
+            @Html.LabelFor(model => model.TotalPaymentAmount)
+            <div class="input-group">
+                @Html.TextBoxFor(
+                    model => model.TotalPaymentAmount,
+                    new
+                    {
+                        @placeholder = "Total Payment Amount",
+                        @class = "form-control form-control-sm text-right NumberCheck priceLen",
+                        @readonly = "readonly",  // Ensure the field is read-only
+                        id = "TotalPaymentAmount" // Set an ID to access this field easily
+                    }
+                )
+            </div>
+        </div>*@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.Comments)
@@ -208,7 +234,7 @@
                                 <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="SaleCode">Sale Code</th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId">Sale Id</th>
                                 @*<th data-type="text" style="width:20%;" data-name="SupplierName">Supplier Name</th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SupplierId">Supplier Id</th>*@
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SupplierId">Supplier Id</th>*@
                                 <th data-type="decimal" style="width: 20%;" data-required="true" data-computed="false" data-name="SaleAmount">Sale Amount</th>
                                 <th data-type="decimal" style="width: 20%" data-required="true" data-computed="false" data-name="CollectionAmount">Collection Amount</th>
                             </tr>
@@ -224,7 +250,7 @@
                                         <td>@item.SaleCode</td>
                                         <td hidden>@item.SaleId</td>
                                         @*<td data-name="SupplierName">@item.SupplierName</td>
-                                        <td hidden data-name="SupplierId">@item.SupplierId</td>*@
+                                            <td hidden data-name="SupplierId">@item.SupplierId</td>*@
                                         <td class="dFormat">@item.SaleAmount</td>
                                         <td class="dFormat">@item.CollectionAmount</td>
                                         <td>
@@ -260,28 +286,28 @@
                             <input type="text" class="form-control form-control-sm priceLen NumberCheck text-right" name="PurchaseOrderGrandTotalAmount" id="PurchaseOrderGrandTotalAmount" />
                         </div>-->
         @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.TotalPaymentAmount)
-            <div class="input-group">
-                @Html.TextBoxFor(
-                    model => model.TotalPaymentAmount,
-                    new
-                    {
-                        @placeholder = "Total Payment Amount",
-                        @class = "form-control form-control-sm text-right NumberCheck priceLen",
-                        @readonly = "readonly",  // Make the field readonly
-                        id = "TotalPaymentAmount" // Unique ID for easy reference
-                    }
-                )
-            </div>
-        </div>*@
+                @Html.LabelFor(model => model.TotalPaymentAmount)
+                <div class="input-group">
+                    @Html.TextBoxFor(
+                        model => model.TotalPaymentAmount,
+                        new
+                        {
+                            @placeholder = "Total Payment Amount",
+                            @class = "form-control form-control-sm text-right NumberCheck priceLen",
+                            @readonly = "readonly",  // Make the field readonly
+                            id = "TotalPaymentAmount" // Unique ID for easy reference
+                        }
+                    )
+                </div>
+            </div>*@
 
 
         <!--</div>
 
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>-->
+        </div>-->
 
 
         <div class="card">
@@ -290,11 +316,11 @@
                     <div class="form-group row">
 
                         @*<div class="editor-label">
-                            <label>&nbsp;Total Payment Amount</label>
-                        </div>
-                        <div class="editor-field">
-                            <input type="text" class="form-control form-control-sm priceLen NumberCheck text-right" name="PurchaseOrderGrandTotalAmount" id="PurchaseOrderGrandTotalAmount"  />
-                        </div>*@
+                                <label>&nbsp;Total Payment Amount</label>
+                            </div>
+                            <div class="editor-field">
+                                <input type="text" class="form-control form-control-sm priceLen NumberCheck text-right" name="PurchaseOrderGrandTotalAmount" id="PurchaseOrderGrandTotalAmount"  />
+                            </div>*@
 
 
                         <div class="col-sm-2">

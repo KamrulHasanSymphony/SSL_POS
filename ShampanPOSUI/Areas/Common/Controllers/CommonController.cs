@@ -1149,5 +1149,59 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult _getPurchaseDatabySupplier()
+        {
+            try
+            {
+                _repo = new CommonRepo();
+                PurchaseDataVM vm = new PurchaseDataVM();
+
+                var search = Request.Form["search[value]"].Trim();
+                var supplierId = Request.Form["SupplierId"];
+
+                vm.PeramModel.SearchValue = search;
+                vm.PeramModel.startRec = Convert.ToInt32(Request.Form["start"]);
+                vm.PeramModel.pageSize = Convert.ToInt32(Request.Form["length"]);
+                vm.PeramModel.orderDir = Request.Form["order[0][dir]"];
+                vm.PeramModel.OrderName =
+                    Request.Form[$"columns[{Request.Form["order[0][column]"]}][name]"] ?? "M.Id";
+
+                vm.PeramModel.BranchId = Session["CurrentBranch"]?.ToString() ?? "0";
+                vm.PeramModel.FromDate = Request.Form["FromDate"];
+
+                // 🔥 Supplier filter
+                vm.SupplierId = string.IsNullOrEmpty(supplierId) ? 0 : Convert.ToInt32(supplierId);
+
+                // search bindings
+                vm.Code = search;
+                vm.PurchaseOrderCode = search;
+                vm.SupplierName = search;
+                vm.Comments = search;
+
+                ResultVM result = _repo.GetPurchaseDatabysupplier(vm);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var data = ((JArray)result.DataVM).ToObject<List<PurchaseDataVM>>();
+
+                    return Json(new
+                    {
+                        draw = Request.Form["draw"],
+                        recordsTotal = result.Count,
+                        recordsFiltered = result.Count,
+                        data = data
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new { draw = Request.Form["draw"], recordsTotal = 0, recordsFiltered = 0, data = new List<PurchaseDataVM>() });
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { draw = Request.Form["draw"], recordsTotal = 0, recordsFiltered = 0, data = new List<PurchaseDataVM>() });
+            }
+        }
+
     }
 }

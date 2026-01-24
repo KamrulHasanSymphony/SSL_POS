@@ -517,5 +517,58 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 return RedirectToAction("Index", "Purchase", new { area = "DMS", message = TempData["Message"] });
             }
         }
+
+
+        //[HttpPost]
+        //public ActionResult GetPurchaseBySupplier(CommonVM vm)
+        //{
+        //    try
+        //    {
+        //        SupplierRepo _repoo = new SupplierRepo();
+
+        //        PaymentVM purchase = new PaymentVM();
+        //        ResultVM result = _repoo.GetPurchaseBySupplier(vm);
+
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            purchase = JsonConvert.DeserializeObject<List<PaymentVM>>(result.DataVM.ToString()).FirstOrDefault();
+        //        }
+        //        else
+        //        {
+        //            TempData["message"] = result.Message;
+        //            return RedirectToAction("FromPurchaseOrder", "Purchase", new { area = "DMS" });
+        //        }
+
+        //        purchase.Operation = "add";
+        //        //purchase.IsPost = false;
+
+        //        //purchase.TransactionType = "Collection";
+
+
+        //        #region DecimalPlace
+        //        CommonVM commonVM = new CommonVM();
+        //        commonVM.Group = "SaleDecimalPlace";
+        //        commonVM.Name = "SaleDecimalPlace";
+        //        var settingsValue = _commonRepo.GetSettingsValue(commonVM);
+
+        //        if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
+        //        {
+        //            var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
+
+        //            //purchase.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
+        //        }
+
+        //        #endregion
+
+        //        return View("Create", purchase);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Session["result"] = "Fail" + "~" + e.Message;
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return RedirectToAction("Index");
+        //    }
+        //}
+
     }
 }

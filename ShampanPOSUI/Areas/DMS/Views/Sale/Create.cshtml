@@ -54,6 +54,14 @@
             <button type="button" class="button secondary" id="btnFromPurchaseOrder">
                 <span style="font-weight:bold; margin-right:5px;">+</span> Collection
             </button>
+
+
+            @*<button type="button" class="button secondary" onclick="location.href='@Url.Action( "Create","Collection",new { TransactionType = Model.TransactionType })'">
+                <span style="font-weight:bold; margin-right:5px;">+</span> Collection
+            </button>*@
+
+
+
         }
         else
         {
@@ -210,12 +218,12 @@
                                 @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
         <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
 
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="OrderQuantity"> Order Quantity </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="CompletedQty"> Completed Qty </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="RemainQty"> Remain Qty </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="OrderQuantity"> Order Quantity </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="CompletedQty"> Completed Qty </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="RemainQty"> Remain Qty </th>
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-name="Quantity"> Quantity </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="UnitRate"> Unit Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="UnitRate"> Unit Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="SubTotal"> SubTotal </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SD"> SD Rate </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATRate"> VAT Rate </th>
@@ -226,7 +234,7 @@
                                 @*<th data-type="text" style="width: 10%;">Comments</th>*@
 
                                 <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderId">Sale Order Id</th>
-                                <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderDetailId">Sale Order Detail Id</th>
+                                <th  data-type="text" style="width: 5%;" data-name="SaleOrderDetailId">Sale Order Detail Id</th>
                             </tr>
                         </thead>
                         <tbody id="lst">
@@ -254,16 +262,10 @@
                                         <td class=" dFormat "> @item.VATRate</td>
                                         <td class=" dFormat "> @item.VATAmount</td>
                                         <td class=" dFormat "> @item.LineTotal</td>
-
-
-
-                                        @if (item.SaleOrderId > 0)
-                                        {
-                                            @*<td style="color:blue;cursor:pointer;" class="details-link" data-id="@item.PurchaseOrderId"> @item.POCode </td>*@
-                                        }
                                         <td hidden> @item.SaleOrderId </td>
-                                        <td hidden> @item.SaleOrderDetailId </td>
-                                        @*<td> @item.Comments</td>*@
+                                        <td class="td-SaleOrderDetailId">
+                                            @item.SaleOrderDetailId
+                                        </td>
 
                                         <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
 

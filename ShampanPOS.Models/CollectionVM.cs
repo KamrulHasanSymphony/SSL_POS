@@ -76,6 +76,9 @@ namespace ShampanPOS.Models
         public string? Status { get; set; }
         public decimal? GrandTotal { get; set; }
 
+        public string? TransactionType { get; set; }
+
+
         public List<CollectionDetailVM> collectionDetailList { get; set; }
 
         public CollectionVM()

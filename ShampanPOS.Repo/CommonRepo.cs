@@ -4,6 +4,7 @@ using ShampanPOS.Models;
 using ShampanPOS.Repo.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using static ShampanPOS.Models.CommonModel;
 
 namespace ShampanPOS.Repo
@@ -1154,7 +1155,23 @@ namespace ShampanPOS.Repo
             }
         }
 
+        public ResultVM GetPurchaseDatabysupplier(PurchaseDataVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/GetPurchaseDatabysupplier", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
 
-
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

@@ -34,7 +34,7 @@
 
                 <div class="form-group row">
                     <div class="col-sm-2 codeWidth">
-                        @Html.LabelFor(model=>model.Code)
+                        @Html.LabelFor(model => model.Code)
                         <div style="display: flex; align-items: center;">
                             <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
                             @Html.TextBoxFor(model => model.Code, new { placeholder = "Code Auto Generate", @class = " csCode  form-control form-control-sm", @readonly = "readonly", @style = "width:140px;" }) &nbsp;
@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model=>model.Name)
+                        @Html.LabelFor(model => model.Name)
                         @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Name.", @class = "form-control form-control-sm" })
                         @Html.ValidationMessageFor(model => model.Name)
                     </div>

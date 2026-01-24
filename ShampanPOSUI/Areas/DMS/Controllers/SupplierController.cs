@@ -25,7 +25,7 @@ namespace ShampanPOS.Areas.DMS.Controllers
         SupplierRepo _repo = new SupplierRepo();
         CommonRepo _commonRepo = new CommonRepo();
 
-        // GET: DMS/BusinessType
+        // GET: DMS/Supplier
         public ActionResult Index()
         {
             return View();
