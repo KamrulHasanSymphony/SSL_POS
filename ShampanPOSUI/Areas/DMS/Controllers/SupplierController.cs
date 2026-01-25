@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ShampanPOS.Areas.DMS.Controllers
+namespace ShampanPOSUI.Areas.DMS.Controllers
 {
     [Authorize]
     [RouteArea("DMS")]

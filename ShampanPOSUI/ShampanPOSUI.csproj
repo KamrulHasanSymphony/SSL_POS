@@ -3874,6 +3874,7 @@
     <Folder Include="Areas\Common\js\Controllers\" />
     <Folder Include="Areas\DMS\Data\" />
     <Folder Include="Areas\DMS\js\Services\" />
+    <Folder Include="Areas\DMS\Views\Suppliers\" />
     <Folder Include="Areas\SetUp\Data\" />
     <Folder Include="Areas\SetUp\Views\Shared\" />
     <Folder Include="Content\Products\" />
