@@ -122,6 +122,8 @@ namespace ShampanPOS.Models
 
         //public string? CustomerCategory { get; set; }
 
+        public Dictionary<string, string>? ColunWidth { get; set; }
+        public Dictionary<string, string>? PageSize { get; set; }
 
 
 
