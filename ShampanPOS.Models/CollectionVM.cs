@@ -37,7 +37,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Transaction Date")]
         public string TransactionDate { get; set; }
 
-        [Display(Name = "Is Cash")]
+        [Display(Name = "Cash")]
         public bool IsCash { get; set; }
 
         [Display(Name = "Comments")]

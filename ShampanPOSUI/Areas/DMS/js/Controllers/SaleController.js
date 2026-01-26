@@ -15,6 +15,8 @@
         getDriverPersonId = $("#DriverPersonId").val() || 0;
         getRouteId = $("#RouteId").val() || 0;
         getCurrencyId = $("#CurrencyId").val() || 0;
+        var isManualSale = $("#IsManualSale").val() === "True";
+
 
         if ($("#IsPosted").length) {
             LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
@@ -44,10 +46,20 @@
 
         TotalCalculation();
 
-        $('#addRows').on('click', function (e) {
+        if (isManualSale) {
+            $('#addRows').on('click', function () {
+                addRow($table);
+            });
+        } else {
+            $('#addRows').prop('disabled', true).hide();
+        }
 
-            addRow($table);
-        });
+
+
+        //$('#addRows').on('click', function (e) {
+
+        //    addRow($table);
+        //});
 
 
         $('.btnsave').click('click', function () {
@@ -69,7 +81,7 @@
 
             Confirmation("Are you sure? Do You Want to Post Data?",
                 function (result) {
-                    
+
                     if (result) {
                         SelectData();
                     }
@@ -128,11 +140,9 @@
 
 
 
-
-
         $('#details').on('click', "input.txt" + "ProductName", function () {
-            
-         
+
+
             var originalRow = $(this);
             CommonService.productForSaleModal({}, fail, function (row) { productModalDblClick(row, originalRow) },
                 function () {
@@ -182,10 +192,23 @@
         $(document).on('keyup change', '.td-Quantity, .td-SubTotal, .td-SDAmount, .td-VATAmount, .td-LineTotal', function () {
             TotalCalculation();
         });
+        //$(document).on('click', '.remove-row-btn', function () {
+        //    $(this).closest('tr').remove();
+        //    TotalCalculation();
+        //});
+
+
         $(document).on('click', '.remove-row-btn', function () {
+
+            if ($("#IsManualSale").val() !== "True") {
+                ShowNotification(3, "Row delete is not allowed here.");
+                return;
+            }
+
             $(this).closest('tr').remove();
             TotalCalculation();
         });
+
 
 
         $("#btnSearchPurchaseOrder").on("click", function () {
@@ -290,6 +313,13 @@
             GetGridDataList();
 
         });
+
+
+        $("#frmEntry").validate({
+            ignore: "#details input, #details select, #details textarea"
+        });
+
+
 
     };
 
@@ -449,7 +479,7 @@
                 }
 
                 /* ================= DETAILS ================= */
-                $("#lst").empty();
+                //$("#lst").empty();
                 debugger;
                 if (!master.saleDetailsList || master.saleDetailsList.length === 0) {
                     TotalCalculation();
@@ -459,7 +489,6 @@
                 var sl = 1;
 
                 $.each(master.saleDetailsList, function (index, item) {
-
                     var row = `
                 <tr>
                     <td>${sl}</td>
@@ -484,16 +513,51 @@
                     <td class="td-LineTotal dFormat">${item.LineTotal ?? 0}</td>
 
                     <td hidden>${item.SaleOrderId ?? ""}</td>
-                    //<td >${item.Id ?? ""}</td>
-
-                    <td class="td-SaleOrderDetailId"> ${item.SaleOrderDetailId ?? item.Id ?? ""}</td>
+                    <td hidden class="td-SaleOrderDetailId">
+                        ${item.SaleOrderDetailId ?? item.Id ?? ""}
+                    </td>
 
                     <td>
-                        <button class="btn btn-danger btn-sm remove-row-btn">
+                        <button type="button" class="btn btn-danger btn-sm remove-row-btn">
                             <i class="fa fa-trash"></i>
                         </button>
                     </td>
                 </tr>`;
+
+                    //    var row = `
+                    //<tr>
+                    //    <td>${sl}</td>
+                    //    <td hidden>${item.ProductCode ?? ""}</td>
+                    //    <td>${item.ProductName ?? ""}</td>
+                    //    <td hidden>${item.ProductId ?? ""}</td>
+
+                    //    <td class="dFormat">${item.OrderQuantity ?? 0}</td>
+                    //    <td class="dFormat">${item.CompletedQty ?? 0}</td>
+                    //    <td class="dFormat">${item.RemainQty ?? 0}</td>
+
+                    //    <td class="td-Quantity dFormat">${item.Quantity ?? 0}</td>
+                    //    <td class="td-UnitRate dFormat">${item.UnitRate ?? 0}</td>
+                    //    <td class="td-SubTotal dFormat">${item.SubTotal ?? 0}</td>
+
+                    //    <td class="td-SD dFormat">${item.SD ?? 0}</td>
+                    //    <td class="td-SDAmount dFormat">${item.SDAmount ?? 0}</td>
+
+                    //    <td class="td-VATRate dFormat">${item.VATRate ?? 0}</td>
+                    //    <td class="td-VATAmount dFormat">${item.VATAmount ?? 0}</td>
+
+                    //    <td class="td-LineTotal dFormat">${item.LineTotal ?? 0}</td>
+
+                    //    <td hidden>${item.SaleOrderId ?? ""}</td>
+                    //    //<td >${item.Id ?? ""}</td>
+
+                    //    <td class="td-SaleOrderDetailId"> ${item.SaleOrderDetailId ?? item.Id ?? ""}</td>
+
+                    //    <td>
+                    //        <button class="btn btn-danger btn-sm remove-row-btn">
+                    //            <i class="fa fa-trash"></i>
+                    //        </button>
+                    //    </td>
+                    //</tr>`;
 
                     $("#lst").append(row);
                     sl++;
@@ -521,7 +585,7 @@
                     url: "/Common/Common/GetBranchList?value=",
                     dataType: "json",
                     success: function (data) {
-                        
+
                         for (var i = 0; i < data.length; i++) {
                             if (data[i].Id === 0 && data[i].Code === 'N/A') {
                                 data[i].Id = '';
@@ -590,13 +654,13 @@
     //        placeholder: "Select Customer",
     //        value: "",
     //        dataBound: function (e) {
-                
+
     //            if (getCustomerId) {
     //                this.value(parseInt(getCustomerId));
     //            }
     //        },
     //        change: function (e) {
-                
+
     //        }
     //    }).data("kendoMultiColumnComboBox");
     //};
@@ -622,13 +686,13 @@
     //        placeholder: "Select Person",
     //        value: "",
     //        dataBound: function (e) {
-                
+
     //            if (getSaleOrderId) {
     //                this.value(parseInt(getSaleOrderId));
     //            }
     //        },
     //        change: function (e) {
-                
+
     //        }
     //    }).data("kendoMultiColumnComboBox");
     //};
@@ -659,7 +723,7 @@
                 }
             },
             change: function (e) {
-                
+
             }
         }).data("kendoMultiColumnComboBox");
     };
@@ -683,13 +747,13 @@
             placeholder: "Select Route",
             value: "",
             dataBound: function (e) {
-                
+
                 if (getRouteId) {
                     this.value(parseInt(getRouteId));
                 }
             },
             change: function (e) {
-                
+
             }
         }).data("kendoMultiColumnComboBox");
     };
@@ -714,13 +778,13 @@
             placeholder: "Select Delivery Person",
             value: "",
             dataBound: function (e) {
-                
+
                 if (getDeliveryPersonId) {
                     this.value(parseInt(getDeliveryPersonId));
                 }
             },
             change: function (e) {
-                
+
             }
         }).data("kendoMultiColumnComboBox");
     };
@@ -740,13 +804,13 @@
             placeholder: "Select Driver Person",
             value: "",
             dataBound: function (e) {
-                
+
                 if (getDriverPersonId) {
                     this.value(parseInt(getDriverPersonId));
                 }
             },
             change: function (e) {
-                
+
             }
         }).data("kendoMultiColumnComboBox");
     };
@@ -763,7 +827,7 @@
         var VATRate = parseFloat(row.closest("tr").find("td.td-VATRate").text().replace(/,/g, '')) || 0;
         var VATAmount = parseFloat(row.closest("tr").find("td.td-VATAmount").text().replace(/,/g, '')) || 0;
 
-        
+
         if (!isNaN(qty * unitCost)) {
             var SubTotal = Number(parseFloat(qty * unitCost).toFixed(parseInt(decimalPlace)));
             row.closest("tr").find("td.td-SubTotal").text(SubTotal.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
@@ -939,7 +1003,7 @@
 
 
     function productModalDblClick(row, originalRow) {
-
+        debugger;
         var dataTable = $("#modalData").DataTable();
         var rowData = dataTable.row(row).data();
 
@@ -949,15 +1013,16 @@
         var UOMName = rowData.UOMName || "";
         var vatRate = rowData.VATRate || 0;
         var sdRate = rowData.SDRate || 0;
-        var CostPrice = rowData.SalesPrice || 0;
+        var CostPrice = rowData.SalesPrice || 0; 
+        //this value are coming from Product
 
         var $currentRow = originalRow.closest('tr');
-
+        //Here is Auto fill
         /* ================= PRODUCT & UOM ================= */
         originalRow.closest("td").find("input").val(ProductName);
         originalRow.closest('td').next().text(ProductId);
-        originalRow.closest('td').next().next().text(UOMId);
-        originalRow.closest('td').next().next().next().text(UOMName);
+        //originalRow.closest('td').next().next().text(UOMId);
+        //originalRow.closest('td').next().next().next().text(UOMName);
 
         /* ================= RATE / SD / VAT ================= */
         $currentRow.find('.td-UnitRate').text(
@@ -981,7 +1046,7 @@
             })
         );
 
-        $("#UOMId").val(UOMId);
+        
 
         /* ================= DEFAULT QUANTITY ================= */
         var qtyText = $currentRow.find('.td-Quantity').text().trim();
@@ -1009,7 +1074,7 @@
 
 
     function uomFromNameModalDblClick(row, originalRow) {
-        
+
         var dataTable = $("#modalData").DataTable();
         var rowData = dataTable.row(row).data();
 
@@ -1247,7 +1312,7 @@
                         { field: "SDAmount", title: "SD Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                 
+
                         { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "CompanyId", hidden: true, title: "Vat Type", sortable: true, width: 100 }
                     ],
@@ -1268,7 +1333,7 @@
                     }
                 });
             },
-            
+
 
 
 
@@ -1285,12 +1350,12 @@
                 filterable: true
             },
             pdfExport: function (e) {
-                
+
                 $(".k-grid-toolbar").hide();
                 $(".k-grouping-header").hide();
                 $(".k-floatwrap").hide();
 
-                
+
 
                 var branchName = "All Branch Name";
                 var companyName = "All Company Name";
@@ -1352,7 +1417,7 @@
                     title: "Action",
                     width: 90,
                     template: function (dataItem) {
-                        
+
                         return `
                                 <a href="/DMS/Sale/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                     <i class="fas fa-pencil-alt"></i>
@@ -1370,7 +1435,7 @@
                         ui: "datepicker"
                     }
                 },
-                
+
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,
                     filterable: {
@@ -1405,7 +1470,9 @@
 
     function save($table) {
         debugger;
-        var validator = $("#frmEntry").validate();
+        //var validator = $("#frmEntry").validate();
+        var validator = $("#frmEntry").data("validator");
+
         var model = serializeInputs("frmEntry");
         var saleorderId = $("#SaleOrderId").val();
         model.SaleOrderId = saleorderId;
@@ -1494,14 +1561,14 @@
     };
 
     function saveFail(result) {
-        
-        
+
+
         ShowNotification(3, "Query Exception!");
     };
 
 
     function SelectData() {
-        
+
         var IDs = [];
 
         var selectedRows = $("#GridDataList").data("kendoGrid").select();
@@ -1519,7 +1586,7 @@
         var model = {
             IDs: IDs
         };
-        
+
         var filteredData = [];
         var dataSource = $("#GridDataList").data("kendoGrid").dataSource;
         var rowData = dataSource.view().filter(x => IDs.includes(x.Id));
@@ -1557,10 +1624,134 @@
     };
 
     function fail(err) {
-        
+
         console.log(err);
         ShowNotification(3, "Something gone wrong");
     };
+
+    function addRow($table) {
+
+        // 🔒 GUARD: SaleOrder / FromSaleOrder থেকে add block
+        if ($("#IsManualSale").val() !== "True") {
+            ShowNotification(3, "You cannot add new item here.");
+            return;
+        }
+
+        var rowCount = $table.find('tbody tr').length + 1;
+
+        var row = `
+    <tr>
+        <!-- 1: SL -->
+        <td>${rowCount}</td>
+
+        <!-- 2: ProductCode (hidden) -->
+        <td hidden></td>
+
+        <!-- 3: ProductName -->
+        <td>
+            <input type="text" class="form-control txtProductName" />
+        </td>
+
+        <!-- 4: ProductId (hidden) -->
+        <td hidden></td>
+
+        <!-- 5: OrderQuantity -->
+        <td class="dFormat">0</td>
+
+        <!-- 6: CompletedQty -->
+        <td class="dFormat">0</td>
+
+        <!-- 7: RemainQty -->
+        <td class="dFormat">0</td>
+
+        <!-- 8: Quantity -->
+        <td class="td-Quantity dFormat">1</td>
+
+        <!-- 9: UnitRate -->
+        <td class="td-UnitRate dFormat">0</td>
+
+        <!-- 10: SubTotal -->
+        <td class="td-SubTotal dFormat">0</td>
+
+        <!-- 11: SD -->
+        <td class="td-SD dFormat">0</td>
+
+        <!-- 12: SDAmount -->
+        <td class="td-SDAmount dFormat">0</td>
+
+        <!-- 13: VATRate -->
+        <td class="td-VATRate dFormat">0</td>
+
+        <!-- 14: VATAmount -->
+        <td class="td-VATAmount dFormat">0</td>
+
+        <!-- 15: LineTotal -->
+        <td class="td-LineTotal dFormat">0</td>
+
+        <!-- 16: SaleOrderId (hidden) -->
+        <td hidden></td>
+
+        <!-- 17: SaleOrderDetailId (hidden) -->
+        <td hidden class="td-SaleOrderDetailId"></td>
+
+        <!-- 18: Action -->
+        <td>
+            <button type="button" class="btn btn-danger btn-sm remove-row-btn">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+    </tr>`;
+
+        $table.find('tbody').append(row);
+    }
+
+
+    //function addRow($table) {
+
+    //    // 🔒 GUARD: SaleOrder / FromSaleOrder থেকে add block
+    //    if ($("#IsManualSale").val() !== "True") {
+    //        ShowNotification(3, "You cannot add new item here.");
+    //        return;
+    //    }
+
+    //    var rowCount = $table.find('tbody tr').length + 1;
+
+    //    var row = `
+    //    <tr>
+    //        <td>${rowCount}</td>
+    //        <td hidden></td>
+    //        <td><input type="text" class="form-control txtProductName" /></td>
+    //        <td hidden></td>
+
+    //        <td class="td-Quantity dFormat">1</td>
+    //        <td class="td-UnitRate dFormat">0</td>
+    //        <td class="td-SubTotal dFormat">0</td>
+
+    //        <td class="td-SD dFormat">0</td>
+    //        <td class="td-SDAmount dFormat">0</td>
+
+    //        <td class="td-VATRate dFormat">0</td>
+    //        <td class="td-VATAmount dFormat">0</td>
+
+    //        <td class="td-LineTotal dFormat">0</td>
+
+    //        <td hidden></td>
+    //        <td class="td-SaleOrderDetailId"></td>
+
+    //        <td>
+    //            <button class="btn btn-danger btn-sm remove-row-btn">
+    //                <i class="fa fa-trash"></i>
+    //            </button>
+    //        </td>
+    //    </tr>
+    //`;
+
+    //    $table.find('tbody').append(row);
+    //}
+
+
+
+
 
     return {
         init: init
@@ -1569,7 +1760,7 @@
 }(CommonService, CommonAjaxService);
 
 function ReportPreview(id) {
-    
+
     const form = document.createElement('form');
     form.method = 'post';
     form.action = '/DMS/Sale/ReportPreview';

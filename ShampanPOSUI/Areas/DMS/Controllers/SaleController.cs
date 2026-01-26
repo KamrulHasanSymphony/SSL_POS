@@ -50,6 +50,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 SaleVM vm = new SaleVM();
                 vm.Operation = "add";
                 vm.TransactionType = "Sale";
+                vm.IsManualSale = true;
+
                 var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
                 vm.BranchId = Convert.ToInt32(currentBranchId);
 
@@ -89,8 +91,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
             firstDayOfMonth = firstDayOfMonth.AddMonths(-5);
-            //vm.FromDate = firstDayOfMonth.ToString("yyyy/MM/dd");
+           // vm.FromDate = firstDayOfMonth.ToString("yyyy/MM/dd");
+            vm.FromDate = "";
             //vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
+            vm.ToDate = "";
 
             #region  UserInfo
 
@@ -840,6 +844,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 purchase.Operation = "add";
                 purchase.IsPost = false;
+                purchase.IsManualSale = false;
 
                 #region DecimalPlace
                 CommonVM commonVM = new CommonVM();

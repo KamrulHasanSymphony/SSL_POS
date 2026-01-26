@@ -6,7 +6,12 @@
 }
 
 <link href="~/css/button.css" rel="stylesheet" />
-
+<style>
+    .k-picker-wrap.k-state-default {
+        width: 91% !important;
+    }
+ 
+</style>
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -58,20 +63,20 @@
                         <div class="col-sm-2">
                             @Html.LabelFor(model => model.FromDate)
                             <div class="input-group date">
-                                @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm dateRange" })
-                                <div class="input-group-append">
+                                @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm" })
+                                @*<div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
+                                </div>*@
                             </div>
                         </div>
 
                         <div class="col-sm-2">
                             @Html.LabelFor(model => model.ToDate)
                             <div class="input-group date">
-                                @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm dateRange" })
-                                <div class="input-group-append">
+                                @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm" })
+                                @*<div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
+                                </div>*@
                             </div>
                         </div>
 

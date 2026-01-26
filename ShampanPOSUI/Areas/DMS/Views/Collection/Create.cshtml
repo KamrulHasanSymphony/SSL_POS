@@ -103,7 +103,6 @@
                     </div>
 
 
-
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)
                         <div class="input-group">
@@ -113,37 +112,6 @@
                     </div>
 
 
-                    @*@if (Model.TransactionType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
-                    {
-                        <div class="col-sm-2">
-                            @Html.LabelFor(model => model.CustomerId)
-                            <div class="input-group">
-                                @Html.TextBoxFor(model => model.CustomerId, new { @class = "form-control form-control-sm", @readonly = "readonly" })
-                            </div>
-                            <span id="titleError1" class="text-danger" style="display:none;"></span>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="col-sm-2">
-                            @Html.LabelFor(model => model.CustomerId)
-                            <div class="input-group">
-                                @Html.TextBoxFor(model => model.CustomerId, new { @class = "form-control form-control-sm" })
-                            </div>
-                            <span id="titleError1" class="text-danger" style="display:none;"></span>
-                        </div>
-                    }*@
-
-
-
-
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.BankAccountId)
-                        <div class="input-group">
-                            @Html.TextBoxFor(model => model.BankAccountId, new { @class = "form-control form-control-sm" })
-                        </div>
-                        <span id="titleError1" class="text-danger" style="display:none;"></span>
-                    </div>
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.ChequeNo)
@@ -152,12 +120,14 @@
                         </div>
                         @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
                     </div>
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.ChequeBankName)
                         <div class="input-group">
                             @Html.TextBoxFor(model => model.ChequeBankName, new { placeholder = " Enter Bank Name", @class = "form-control form-control-sm" })
                         </div>
                     </div>
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.ChequeDate)
                         <div class="input-group date">
@@ -167,54 +137,46 @@
                             </div>
                         </div>
                     </div>
-
-                    @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.TotalPaymentAmount)
-            <div class="input-group">
-                @Html.TextBoxFor(
-                    model => model.TotalPaymentAmount,
-                    new
-                    {
-                        @placeholder = "Total Payment Amount",
-                        @class = "form-control form-control-sm text-right NumberCheck priceLen",
-                        @readonly = "readonly",  // Ensure the field is read-only
-                        id = "TotalPaymentAmount" // Set an ID to access this field easily
-                    }
-                )
-            </div>
-        </div>*@
-
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.Comments)
-                        <div class="input-group">
-                            @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comment", @class = "form-control form-control-sm" })
-                        </div>
-                    </div>
-
                 </div>
-                <div class="form-group row">
 
-                    <div class="col-sm-2" style="flex-direction: column">
-                        @Html.LabelFor(model => model.IsCash)
-                        <div class="Onoffbtn">
-                            <div class="input-group" style="margin-bottom: -26px; width: 78%;">
-                                <input id="IsCash"
-                                       value="@Model.IsCash"
-                                       type="checkbox"
-                                       name="my-checkbox"
-                                       @(Model.IsCash ? "checked" : "")
-                                       data-bootstrap-switch
-                                       data-off-color="danger"
-                                       data-on-color="success"
-                                       data-on-text="Cash"
-                                       data-off-text="Bank">
+                    <div class="form-group row">
+
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.BankAccountId)
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.BankAccountId, new { @class = "form-control form-control-sm" })
+                            </div>
+                            <span id="titleError1" class="text-danger" style="display:none;"></span>
+                        </div>
+
+                        <div class="col-sm-2" style="flex-direction: column">
+                            @Html.LabelFor(model => model.IsCash)
+                            <div class="Onoffbtn">
+                                <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                    <input id="IsCash"
+                                           value="@Model.IsCash"
+                                           type="checkbox"
+                                           name="my-checkbox"
+                                           @(Model.IsCash ? "checked" : "")
+                                           data-bootstrap-switch
+                                           data-off-color="danger"
+                                           data-on-color="success"
+                                           data-on-text="Cash"
+                                           data-off-text="Bank">
+                                </div>
                             </div>
                         </div>
+
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.Comments)
+                            <div class="input-group">
+                                @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comment", @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+
                     </div>
 
-                </div>
-
-            </div>
+               
         </div>
 
         <div class="card card-secondary">

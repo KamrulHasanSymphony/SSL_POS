@@ -17,6 +17,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Sale Order")]
         public int? SaleOrderId { get; set; }
         public string? SaleOrderCode { get; set; }
+        public string? Code { get; set; }
 
         [Display(Name = "Sale Order Detail")]
         public int? SaleOrderDetailId { get; set; }
@@ -25,7 +26,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Branch")]
         public int? BranchId { get; set; }
         public int? CompanyId { get; set; }
-
+         
         [Display(Name = "Branch Name")]
         public int? Branchs { get; set; }
 
@@ -35,6 +36,9 @@ namespace ShampanPOS.Models
         [Display(Name = "Product")]
         public int? ProductId { get; set; }
         public string? ProductName { get; set; }
+
+        public string? CustomerName { get; set; }
+
         [Display(Name = "Quantity")]
         [DataType(DataType.Currency)]
         public decimal? Quantity { get; set; }
@@ -100,6 +104,7 @@ namespace ShampanPOS.Models
         [Display(Name = "To Date")]
         public string? ToDate { get; set; }
 
+        public string? InvoiceDateTime { get; set; }
 
     }
 

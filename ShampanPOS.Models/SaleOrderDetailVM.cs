@@ -30,7 +30,11 @@ namespace ShampanPOS.Models
         public string? ProductName { get; set; }
         public string? ProductCode { get; set; }
 
+        [Display(Name = "Branch Name")]
+        public int? Branchs { get; set; }
 
+        [Display(Name = "Branch")]
+        public int? BranchId { get; set; }
         [Display(Name = "Quantity")]
         [DataType(DataType.Currency)]
         public decimal Quantity { get; set; }
@@ -74,7 +78,11 @@ namespace ShampanPOS.Models
         public string Operation { get; set; }
         public decimal? CompletedQty { get; set; }
         public decimal? RemainQty { get; set; }
+        [Display(Name = "From Date")]
+        public string? FromDate { get; set; }
 
+        [Display(Name = "To Date")]
+        public string? ToDate { get; set; }
     }
 
 }

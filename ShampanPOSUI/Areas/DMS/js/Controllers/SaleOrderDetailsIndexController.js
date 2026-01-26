@@ -8,6 +8,7 @@
 
       
         GetBranchList();
+        GenerateDatePicker();
         GetGridDetailsDataList();
         
         
@@ -29,6 +30,16 @@
 
         });
     };
+
+    function GenerateDatePicker() {
+        $("#FromDate").kendoDatePicker({
+            format: "yyyy-MM-dd"
+        });
+        $("#ToDate").kendoDatePicker({
+            format: "yyyy-MM-dd"
+        });
+    }
+
     function GetBranchList() {
         var branch = new kendo.data.DataSource({
             transport: {
@@ -77,7 +88,8 @@
             pageSize: 10,
             transport: {
                 read: {
-                    url: "/SaleOrder/GetDetailsGridData",
+                    //url: "/SaleOrder/GetDetailsGridData",
+                    url: "/DMS/SaleOrder/GetDetailsGridData",
                     type: "POST",
                     dataType: "json",
                     cache: false,
@@ -521,9 +533,9 @@
             },
             columns: [
                 { field: "Code", title: "Code", width: 190, sortable: true },
-                { field: "BranchName", title: "Branch Name", width: 180, sortable: true },
+                { field: "BranchName", title: "Branch Name", width: 180, hidden: true, sortable: true },
                 {
-                    field: "InvoiceDateTime", title: "Invoice Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
+                    field: "OrderDate", title: "Order Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(OrderDate), "yyyy-MM-dd") #',
                     filterable:
                     {
                         ui: "datepicker"
@@ -531,7 +543,6 @@
                 },
                 { field: "CustomerName", title: "Customer Name", width: 180, sortable: true },
                 { field: "ProductName", title: "Product Name", width: 180, sortable: true },
-                { field: "UOMName", title: "UOM Name", width: 180, sortable: true },
                 {
                     field: "Quantity",
                     title: "Quantity",
@@ -543,41 +554,8 @@
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
                     attributes: { style: "text-align: right;" }
                 },
-                { field: "CampaignName", title: "Campaign Name", width: 180, sortable: true },
-                { field: "FreeProductName", title: "Free Product Name", width: 180, sortable: true },
-                {
-                    field: "FreeQuantity",
-                    title: "Free Quantity",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                {
-                    field: "DiscountRate",
-                    title: "Discount Rate",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                {
-                    field: "DiscountAmount",
-                    title: "Discount Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
+    
+   
                 { field: "UnitRate", title: "Unit Rate", width: 140, format: "{0:n2}" },
                 {
                     field: "SubTotal",
@@ -614,17 +592,6 @@
                     attributes: { style: "text-align: right;" }
                 },
                 {
-                    field: "GrandTotalSDAmount",
-                    title: "Grand Total SD Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                {
                     field: "VATRate",
                     title: "VAT Rate",
                     sortable: true,
@@ -646,28 +613,7 @@
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
                     attributes: { style: "text-align: right;" }
                 },
-                {
-                    field: "GrandTotalVATAmount",
-                    title: "Grand Total VAT Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                {
-                    field: "GrandTotalAmount",
-                    title: "Grand Total Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
+
                 {
                     field: "LineTotal",
                     title: "Line Total",
@@ -679,9 +625,6 @@
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
                     attributes: { style: "text-align: right;" }
                 },
-                { field: "CurrencyName", title: "CurrencyName", width: 180, sortable: true },
-                { field: "SalePersonName", title: "Sale Person Name", width: 180, sortable: true },
-                { field: "RouteName", title: "Route Name", width: 180, sortable: true },
                 { field: "DeliveryAddress", title: "Delivery Address", width: 200, sortable: true },
                 {
                     field: "DeliveryDate", title: "Delivery Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(DeliveryDate), "yyyy-MM-dd") #',
@@ -690,24 +633,24 @@
                         ui: "datepicker"
                     }
                 },
-                { field: "Comments", title: "Comments", width: 200, sortable: true },
-                { field: "TransactionType", title: "Transaction Type", width: 150, sortable: true },
-                {
-                    field: "IsCompleted", title: "Is Completed", width: 100, template: '#= IsCompleted ? "Yes" : "No" #',
-                    filterable: {
-                        ui: function (element) {
-                            element.kendoDropDownList({
-                                dataSource: [
-                                    { text: "Y", value: "1" },
-                                    { text: "N", value: "0" }
-                                ],
-                                dataTextField: "text",
-                                dataValueField: "value",
-                                optionLabel: "Select Option"
-                            });
-                        }
-                    }
-                }
+                { field: "Comments", title: "Comments", width: 200, hidden: true, sortable: true },
+                { field: "TransactionType", title: "Transaction Type", width: 150, hidden: true, sortable: true }
+                //{
+                //    field: "IsCompleted", title: "Is Completed", width: 100, template: '#= IsCompleted ? "Yes" : "No" #',
+                //    filterable: {
+                //        ui: function (element) {
+                //            element.kendoDropDownList({
+                //                dataSource: [
+                //                    { text: "Y", value: "1" },
+                //                    { text: "N", value: "0" }
+                //                ],
+                //                dataTextField: "text",
+                //                dataValueField: "value",
+                //                optionLabel: "Select Option"
+                //            });
+                //        }
+                //    }
+                //}
 
                 
             ],

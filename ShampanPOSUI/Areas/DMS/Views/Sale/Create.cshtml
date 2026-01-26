@@ -94,6 +94,8 @@
                 @Html.HiddenFor(model => model.IsPost)
                 @Html.HiddenFor(model => model.BranchId)
                 @Html.HiddenFor(model => model.TransactionType)
+                @Html.HiddenFor(model => model.IsManualSale)
+
 
                 <div class="form-group row">
 
@@ -182,14 +184,14 @@
 
 
                     @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.DeliveryDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange", @readonly = "readonly" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                @Html.LabelFor(model => model.DeliveryDate)
+                <div class="input-group date">
+                    @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange", @readonly = "readonly" })
+                    <div class="input-group-append">
+                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                    </div>
                 </div>
-            </div>
-        </div>*@
+            </div>*@
                 </div>
 
 
@@ -203,7 +205,13 @@
             </div>
             <div class="card-body">
 
-                <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+                @*<button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>*@
+
+                @if (Model.IsManualSale)
+                {
+                    <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i> </button>
+                }
+
 
                 <div class="clearfix">&nbsp;</div>
 
@@ -218,15 +226,15 @@
                                 @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
         <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
 
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="OrderQuantity"> Order Quantity </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="CompletedQty"> Completed Qty </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="RemainQty"> Remain Qty </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="OrderQuantity"> Order Quantity </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="CompletedQty"> Completed Qty </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="RemainQty"> Remain Qty </th>
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-name="Quantity"> Quantity </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="UnitRate"> Unit Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="SubTotal"> SubTotal </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SD"> SD Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="UnitRate"> Unit Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="SD"> SD Rate </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATRate"> VAT Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="VATRate"> VAT Rate </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-computed="true" data-name="LineTotal"> Line Total </th>
 
@@ -234,7 +242,8 @@
                                 @*<th data-type="text" style="width: 10%;">Comments</th>*@
 
                                 <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderId">Sale Order Id</th>
-                                <th  data-type="text" style="width: 5%;" data-name="SaleOrderDetailId">Sale Order Detail Id</th>
+                                <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderDetailId">Sale Order Detail Id</th>
+                                <th style="width:5%;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="lst">
@@ -249,7 +258,7 @@
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
                                         @*<td hidden> @item.SaleId </td>
-                                        <td hidden> @item.SaleOrderDetailId </td>*@
+                                <td hidden> @item.SaleOrderDetailId </td>*@
                                         <td class=" dFormat "> @item.OrderQuantity</td>
                                         <td class=" dFormat "> @item.CompletedQty</td>
                                         <td class=" dFormat "> @item.RemainQty</td>
@@ -263,7 +272,7 @@
                                         <td class=" dFormat "> @item.VATAmount</td>
                                         <td class=" dFormat "> @item.LineTotal</td>
                                         <td hidden> @item.SaleOrderId </td>
-                                        <td class="td-SaleOrderDetailId">
+                                        <td hidden class="td-SaleOrderDetailId">
                                             @item.SaleOrderDetailId
                                         </td>
 
