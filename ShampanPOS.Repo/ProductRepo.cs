@@ -261,6 +261,24 @@ namespace ShampanPOS.Repo
         }
 
 
+        public ResultVM GetProductReport(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/GetProductReport", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
 
 

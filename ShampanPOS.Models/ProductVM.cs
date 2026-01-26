@@ -64,6 +64,9 @@ namespace ShampanPOS.Models
         [Display(Name = "Image")]
         public string? ImagePath { get; set; }
         public List<BranchProfileVM> BranchProfileList { get; set; }
+        public Dictionary<string, string>? ColunWidth { get; set; }
+        public Dictionary<string, string>? PageSize { get; set; }
+
         public ProductVM()
         {
             BranchProfileList = new List<BranchProfileVM>();
