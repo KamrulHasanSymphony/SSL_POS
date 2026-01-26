@@ -178,5 +178,6 @@ namespace ShampanPOS.Repo
                 throw new Exception("Error in DevitCredit repository: " + e.Message);
             }
         }
+
     }
 }
