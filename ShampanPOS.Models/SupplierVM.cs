@@ -69,6 +69,10 @@ namespace ShampanPOS.Models
         public string?[] IDs { get; set; }
         public string? Operation { get; set; }
         public string? Status { get; set; }
+
+        public Dictionary<string, string>? ColunWidth { get; set; }
+        public Dictionary<string, string>? PageSize { get; set; }
+
     }
 
 }
