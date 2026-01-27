@@ -218,6 +218,35 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult GetGridData(GridOptions options)
+        {
+            ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+            _repo = new CustomerRepo();
+
+            try
+            {
+                result = _repo.GetGridData(options);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    var gridData = JsonConvert.DeserializeObject<GridEntity<CustomerVM>>(result.DataVM.ToString());
+
+                    return Json(new
+                    {
+                        Items = gridData.Items,
+                        TotalCount = gridData.TotalCount
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new { Error = true, Message = "No data found." }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         public ActionResult NextPrevious(int id, string status)
         {
@@ -242,6 +271,57 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     string url = Url.Action("Edit", "Customer", new { area = "DMS", id = id });
                     return Redirect(url);
                 }
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpGet]
+        public ActionResult getReport(string id)
+        {
+            try
+            {
+                CustomerVM vm = new CustomerVM();
+                CommonVM param = new CommonVM();
+                param.Id = id;
+                ResultVM result = _repo.GetCustomerReport(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    vm = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString()).FirstOrDefault();
+                }
+                else
+                {
+                    vm = new CustomerVM();
+                }
+
+                //vm.ColunWidth = new Dictionary<string, string>
+                //{
+                //    { "Code", "5%" },
+                //    { "CustomerName", "15%" },
+                //    { "TailorMasterName", "15%" },
+                //    { "FabricTotal", "15%" },
+                //    { "MakingChargeTotal", "15%" },
+                //    { "GrandTotal", "35%" },
+                //    { "Advance", "35%" },
+                //    { "Dues", "35%" }
+                //};
+
+                vm.PageSize = new Dictionary<string, string>
+                {
+                    { "A4_Width", "210mm" },
+                    { "A4_Height", "297mm" },
+                    { "Letter_Width", "216mm" },
+                    { "Letter_Height", "279mm" },
+                    { "Orientation", "Portrait" },
+                    { "Default", "A4" }
+                };
+
+                return View("CustomerReport", vm);
             }
             catch (Exception e)
             {

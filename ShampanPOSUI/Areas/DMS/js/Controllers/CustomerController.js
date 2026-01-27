@@ -783,7 +783,7 @@
                 },
                 {
                     title: "Action",
-                    width: 170,
+                    width: 230,
                     template: function (dataItem) {
                         
                         return `
@@ -800,7 +800,15 @@
             </a>
             <a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
                         <i class='fas fa-print'></i>
-            </a>`;
+            </a>
+                      <a href="/DMS/Customer/getReport/${dataItem.Id}" 
+                          class="btn btn-success btn-sm mr-2 getReport" 
+                          title="Report">
+                           <i class="fas fa-file-alt"></i>
+                      </a>
+
+
+            `;
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
