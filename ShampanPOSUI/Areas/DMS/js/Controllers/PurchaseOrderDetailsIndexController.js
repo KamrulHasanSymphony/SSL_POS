@@ -1,4 +1,4 @@
-﻿var SaleReturnDetailsIndexController = function (CommonService, CommonAjaxService) {
+﻿var PurchaseOrderDetailsIndexController = function (CommonService, CommonAjaxService) {
 
 
     var init = function () {
@@ -8,6 +8,7 @@
         //    $("#IsPosted").val('');
         //    GetBranchList();
         //};
+
 
         GetBranchList();
         GenerateDatePicker();
@@ -88,14 +89,16 @@
             pageSize: 10,
             transport: {
                 read: {
-                    //url: "/SaleReturn/GetDetailsGridData",
-                    url: "/DMS/SaleReturn/GetDetailsGridData",
+                    //url: "/PurchaseOrder/GetDetailsGridData",
+                    url: "/DMS/PurchaseOrder/GetDetailsGridData",
+
                     type: "POST",
                     dataType: "json",
                     cache: false,
                     data: { branchId: branchId, isPost: IsPosted, fromDate: FromDate, toDate: ToDate }
                 },
                 parameterMap: function (options) {
+                    
                     if (options.sort) {
                         options.sort.forEach(function (param) {
                             if (param.field === "Id") {
@@ -104,34 +107,71 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            if (param.field === "CustomerName") {
-                                param.field = "cus.Name";
+                            if (param.field === "SupplierName") {
+                                param.field = "s.Name";
                             }
-                            if (param.field === "ProductName") {
-                                param.field = "PD.Name";
+                            if (param.field === "SupplierAddress") {
+                                param.field = "s.Address";
                             }
-                            if (param.field === "DeliveryAddress") {
-                                param.field = "H.DeliveryAddress";
+                          
+                            //if (param.field === "Status") {
+                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+
+                            //    if (statusValue.startsWith("p")) {
+                            //        param.value = 1;
+                            //    } else if (statusValue.startsWith("n")) {
+                            //        param.value = 0;
+                            //    } else {
+                            //        param.value = null;
+                            //    }
+
+                            //    param.field = "H.IsPost";
+                            //    param.operator = "eq";
+                            //}
+                            //if (param.field === "Completed") {
+                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+
+                            //    if (statusValue.startsWith("c")) {
+                            //        param.value = 1;
+                            //    } else if (statusValue.startsWith("n")) {
+                            //        param.value = 0;
+                            //    } else {
+                            //        param.value = null;
+                            //    }
+
+                            //    param.field = "H.IsCompleted";
+                            //    param.operator = "eq";
+                            //}
+                            if (param.field === "BENumber") {
+                                param.field = "H.BENumber";
                             }
-                            if (param.field === "BranchName") {
-                                param.field = "Br.Name";
+                            if (param.field === "OrderDate" && param.value) {
+                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+                                param.field = "H.OrderDate";
                             }
+                            if (param.field === "DeliveryDateTime" && param.value) {
+                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+                                param.field = "H.DeliveryDateTime";
+                            }
+
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
-                            if (param.field === "SaleReturnCode") {
-                                param.field = "H.Code";
-                            }
-                            if (param.field === "VATRate") {
-                                param.field = "D.VATRate";
-                            }
-
-                            if (param.field === "InvoiceDateTime" && param.value) {
-                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "CONVERT(VARCHAR(10), H.InvoiceDateTime, 120)";
-                            }
                             if (param.field === "TransactionType") {
                                 param.field = "H.TransactionType";
+                            }
+                            if (param.field === "ProductName") {
+                                param.field = "P.Name";
+                            }
+                            if (param.field === "FiscalYear") {
+                                param.field = "h.FiscalYear";
+                            }
+
+                            if (param.field === "BranchName") {
+                                param.field = "br.Name";
+                            }
+                            if (param.field === "BranchAddress") {
+                                param.field = "br.Address";
                             }
                         });
                     }
@@ -144,35 +184,73 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            if (param.field === "CustomerName") {
-                                param.field = "cus.Name";
+                            if (param.field === "SupplierName") {
+                                param.field = "s.Name";
                             }
-                            if (param.field === "ProductName") {
-                                param.field = "PD.Name";
-                            }
-                            if (param.field === "DeliveryAddress") {
-                                param.field = "H.DeliveryAddress";
-                            }
-                            if (param.field === "BranchName") {
-                                param.field = "Br.Name";
-                            }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
-                            if (param.field === "SaleReturnCode") {
-                                param.field = "H.Code";
-                            }
-                            if (param.field === "VATRate") {
-                                param.field = "D.VATRate";
+                            if (param.field === "SupplierAddress") {
+                                param.field = "s.Address";
                             }
 
-                            if (param.field === "InvoiceDateTime" && param.value) {
+                            //if (param.field === "Status") {
+                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+
+                            //    if (statusValue.startsWith("p")) {
+                            //        param.value = 1;
+                            //    } else if (statusValue.startsWith("n")) {
+                            //        param.value = 0;
+                            //    } else {
+                            //        param.value = null;
+                            //    }
+
+                            //    param.field = "H.IsPost";
+                            //    param.operator = "eq";
+                            //}
+                            //if (param.field === "Completed") {
+                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+
+                            //    if (statusValue.startsWith("c")) {
+                            //        param.value = 1;
+                            //    } else if (statusValue.startsWith("n")) {
+                            //        param.value = 0;
+                            //    } else {
+                            //        param.value = null;
+                            //    }
+
+                            //    param.field = "H.IsCompleted";
+                            //    param.operator = "eq";
+                            //}
+                            if (param.field === "BENumber") {
+                                param.field = "H.BENumber";
+                            }
+                            if (param.field === "OrderDate" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "CONVERT(VARCHAR(10), H.InvoiceDateTime, 120)";
+                                param.field = "H.OrderDate";
+                            }
+                            if (param.field === "DeliveryDateTime" && param.value) {
+                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+                                param.field = "H.DeliveryDateTime";
+                            }
+
+                            if (param.field === "Comments") {
+                                param.field = "H.Comments";
                             }
                             if (param.field === "TransactionType") {
                                 param.field = "H.TransactionType";
                             }
+                            if (param.field === "ProductName") {
+                                param.field = "P.Name";
+                            }
+                            if (param.field === "FiscalYear") {
+                                param.field = "h.FiscalYear";
+                            }
+
+                            if (param.field === "BranchName") {
+                                param.field = "br.Name";
+                            }
+                            if (param.field === "BranchAddress") {
+                                param.field = "br.Address";
+                            }
+
                         });
                     }
                     return options;
@@ -184,48 +262,32 @@
                 total: "TotalCount",
                 model: {
                     fields: {
-                        /* HEADER LEVEL */
-                        Id: { type: "number" },
-                        SaleReturnCode: { type: "string" },
-                        ProductCode: { type: "string" },
-                        CustomerCode: { type: "string" },
-                        BranchName: { type: "string" },
-                        CustomerName: { type: "string" },
-                        DeliveryAddress: { type: "string" },
-
-                        InvoiceDateTime: { type: "date" },
-                        Comments: { type: "string" },
-                        TransactionType: { type: "string" },
-                        Status: { type: "string" },
-
-                        CreatedBy: { type: "string" },
-                        CreatedOn: { type: "date" },
-
-                        /* DETAIL LEVEL */
-                        SaleReturnDetailId: { type: "number" },
-                        SaleReturnId: { type: "number" },
-                        ProductId: { type: "number" },
-                        ProductName: { type: "string" },
-
+                        id: { type: "number" },
+                        code: { type: "string" },
+                        deliveryAddress: { type: "string" },
+                        OrderDate: { type: "date" },
+                        invoiceDateTime: { type: "date" },
+                        DeliveryDateTime: { type: "date" },
+                        deliveryDate: { type: "date" },
+                        productName: { type: "string" },
                         Quantity: { type: "number" },
-                        UnitRate: { type: "number" },
-                        SubTotal: { type: "number" },
+                        SUBTotal: { type: "number" },
                         SD: { type: "number" },
                         SDAmount: { type: "number" },
                         VATRate: { type: "number" },
                         VATAmount: { type: "number" },
-                        LineTotal: { type: "number" }
+                        lineTotal: { type: "number" }
                     }
                 }
             },
-
             aggregate: [
                 { field: "Quantity", aggregate: "sum" },
-                { field: "SubTotal", aggregate: "sum" },
-                { field: "SD", aggregate: "sum" },
-                { field: "LineTotal", aggregate: "sum" },
+                { field: "SUBTotal", aggregate: "sum" },
                 { field: "SDAmount", aggregate: "sum" },
-                { field: "VATAmount", aggregate: "sum" }
+                { field: "VATRate", aggregate: "sum" },
+                { field: "SD", aggregate: "sum" },
+                { field: "VATAmount", aggregate: "sum" },
+                { field: "OthersAmount", aggregate: "sum" }
             ]
 
         });
@@ -263,13 +325,18 @@
             reorderable: true,
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
-            search: ["Code", "BranchName", "CustomerName", "ProductName", "DeliveryAddress", "InvoiceDateTime",  "Comments", "TransactionType", "IsPost", "Quantity", "UnitRate", "SubTotal", "SD", "SDAmount", "VATRate", "VATAmount", "LineTotal"],
+            search: ["Code", "SupplierName", "SupplierAddress", "BENumber", "OrderDate", "DeliveryDateTime", "Comments", "TransactionType","FiscalYear", "BranchName", "BranchAddress", "Quantity", "UnitPrice", "SubTotal", "SD", "SDAmount", "VATAmount", "OthersAmount"],
             excel: {
-                fileName: `SaleReturn_Details_${new Date().toISOString().split('T')[0]}.xlsx`,
+                fileName: `PurchaseOrder_Details_${new Date().toISOString().split('T')[0]}.xlsx`,
                 filterable: true
             },
+            //pdf: {
+            //    fileName: `PurchaseOrder_Details_${new Date().toISOString().split('T')[0]}.pdf`,
+            //    allPages: true,
+            //    avoidLinks: true
+            //},
             pdf: {
-                fileName: `SaleReturn_Details_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+                fileName: `PurchaseOrder_Details_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
                 allPages: true,
                 avoidLink: true,
                 filterable: true
@@ -309,7 +376,7 @@
                 }
 
 
-                var fileName = `SaleReturn_Details_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+                var fileName = `PurchaseOrder_Details_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
                 var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
                 var columnWidth = 100;
@@ -333,57 +400,67 @@
                 }, 1000);
             },
             columns: [
-                { field: "SaleReturnCode", title: "Sale Return Code", width: 190, sortable: true },
-                { field: "CustomerCode", title: "Customer Code", width: 190, sortable: true },
-                { field: "CustomerName", title: "Customer Name", width: 180, sortable: true },
-                { field: "ProductCode", title: "Product Code", width: 190, sortable: true },
+                { field: "PurchaseOrderCode", title: "Purchase Order Code", width: 180, sortable: true },
                 { field: "BranchName", title: "Branch Name", hidden: true, width: 180, sortable: true },
-                { field: "ProductName", title: "Product Name", width: 180, sortable: true },
-
-                { field: "DeliveryAddress", title: "Delivery Address", hidden: true, width: 200, sortable: true },
+                { field: "SupplierName", title: "Supplier Name", width: 180, sortable: true },
                 {
-                    field: "InvoiceDateTime",
-                    title: "Invoice Date",
-                    sortable: true,
-                    width: 150,
-                    template: '#= InvoiceDateTime ? kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") : "-" #',
-                    footerTemplate: "Total:", groupFooterTemplate: "Group Total:", 
-                    filterable: { ui: "datepicker" }
+                    field: "OrderDate", title: "Order Date", sortable: true, width: 130, template: '#= kendo.toString(kendo.parseDate(OrderDate), "yyyy-MM-dd") #',
+                    filterable: {
+                        ui: "datepicker"
+                    }
                 },
-       
-                { field: "Comments", title: "Comments", width: 200, hidden: true, sortable: true },
                 {
-                    field: "TransactionType", title: "Transaction Type", hidden: true, width: 150, sortable: true},
+                    field: "DeliveryDateTime", title: " Expected Delivery Date", sortable: true, width: 180, template: '#= kendo.toString(kendo.parseDate(DeliveryDateTime), "yyyy-MM-dd") #',
+                    filterable: {
+                        ui: "datepicker"
+                    }
+                },
+                
+
+                { field: "Comments", title: "Comments", width: 200, hidden: true, sortable: true },
+                { field: "TransactionType", title: "Transaction Type", hidden: true, width: 150, sortable: true },
+
+                { field: "ProductName", title: "Product Name", width: 200, sortable: true },
+                { field: "PeriodId", title: "Period Id", width: 200, hidden: true, sortable: true },
+                { field: "FiscalYear", title: "Fiscal Year", hidden: true, sortable: true, width: 150 },
                 {
                     field: "Quantity",
                     title: "Quantity",
+                    sortable: true,
                     width: 200,
                     aggregates: ["sum"],
                     format: "{0:n2}",
-                    footerTemplate: "#= kendo.toString(data.Quantity.sum, 'n2') #",
-                    groupFooterTemplate: " #= kendo.toString(data.Quantity.sum, 'n2') #",
-                    attributes: { style: "text-align:right" }
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
                 },
 
-                { field: "UnitRate", title: "Unit Rate", width: 140, format: "{0:n2}" },
-                
+
+                { field: "UnitPrice", title: "Unit Price", width: 140, format: "{0:n2}" },
+
                 {
                     field: "SubTotal",
                     title: "Sub Total",
-                    width: 120,
+                    sortable: true,
+                    width: 200,
                     aggregates: ["sum"],
-                    footerTemplate: "#= kendo.toString(data.SubTotal.sum, 'n2') #",
-                    groupFooterTemplate: " #= kendo.toString(data.SubTotal.sum, 'n2') #",
-                    attributes: { style: "text-align:right" }
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
                 },
                 {
                     field: "SD",
                     title: "SD",
                     sortable: true,
                     width: 200,
+                    aggregates: ["sum"],
                     format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
                     attributes: { style: "text-align: right;" }
                 },
+
                 {
                     field: "SDAmount",
                     title: "SD Amount",
@@ -391,18 +468,21 @@
                     width: 200,
                     aggregates: ["sum"],
                     format: "{0:n2}",
-                    footerTemplate: "#= kendo.toString(data.SDAmount.sum, 'n2') #",
-                    groupFooterTemplate: " #= kendo.toString(data.SDAmount.sum, 'n2') #",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
                     attributes: { style: "text-align: right;" }
                 },
                 {
                     field: "VATRate",
                     title: "VAT Rate",
+                    sortable: true,
                     width: 200,
+                    aggregates: ["sum"],
                     format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
                     attributes: { style: "text-align: right;" }
                 },
-
                 {
                     field: "VATAmount",
                     title: "VAT Amount",
@@ -410,19 +490,22 @@
                     width: 200,
                     aggregates: ["sum"],
                     format: "{0:n2}",
-                    footerTemplate: "#= kendo.toString(data.VATAmount.sum, 'n2') #",
-                    groupFooterTemplate: " #= kendo.toString(data.VATAmount.sum, 'n2') #",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
                     attributes: { style: "text-align: right;" }
                 },
                 {
-                    field: "LineTotal",
-                    title: "Line Total",
-                    width: 140,
+                    field: "OthersAmount",
+                    title: "OthersAmount",
+                    sortable: true,
+                    width: 200,
                     aggregates: ["sum"],
-                    footerTemplate: "#= kendo.toString(data.LineTotal.sum, 'n2') #",
-                    groupFooterTemplate: " #= kendo.toString(data.LineTotal.sum, 'n2') #",
-                    attributes: { style: "text-align:right" }
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
                 }
+
                 
             ],
             editable: false,

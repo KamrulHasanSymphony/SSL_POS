@@ -22,6 +22,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Sale Order Detail")]
         public int? SaleOrderDetailId { get; set; }
         public string? ProductCode { get; set; }
+        public string? CustomerCode { get; set; }
 
         [Display(Name = "Branch")]
         public int? BranchId { get; set; }

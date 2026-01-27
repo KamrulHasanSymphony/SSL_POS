@@ -56,6 +56,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             firstDayOfMonth = firstDayOfMonth.AddMonths(-5);
             //vm.FromDate = firstDayOfMonth.ToString("yyyy/MM/dd");
             //vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
+            vm.FromDate = "";
+            vm.ToDate = "";
 
             #region  UserInfo
 

@@ -78,7 +78,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             SaleOrderDetailVM vm = new SaleOrderDetailVM();
 
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-            //vm.Branchs = Convert.ToInt32(currentBranchId);
+            // vm.Branchs = Convert.ToInt32(currentBranchId);
+            vm.BranchId = Convert.ToInt32(currentBranchId);
             DateTime currentDate = DateTime.Now;
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);

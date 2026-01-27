@@ -967,10 +967,6 @@
 
 
 
-
-
-
-
     //function productModalDblClick(row, originalRow) {
 
     //    var dataTable = $("#modalData").DataTable();
@@ -1017,12 +1013,11 @@
         //this value are coming from Product
 
         var $currentRow = originalRow.closest('tr');
+
         //Here is Auto fill
-        /* ================= PRODUCT & UOM ================= */
+        /* ================= PRODUCT ================= */
         originalRow.closest("td").find("input").val(ProductName);
         originalRow.closest('td').next().text(ProductId);
-        //originalRow.closest('td').next().next().text(UOMId);
-        //originalRow.closest('td').next().next().next().text(UOMName);
 
         /* ================= RATE / SD / VAT ================= */
         $currentRow.find('.td-UnitRate').text(
@@ -1631,7 +1626,6 @@
 
     function addRow($table) {
 
-        // 🔒 GUARD: SaleOrder / FromSaleOrder থেকে add block
         if ($("#IsManualSale").val() !== "True") {
             ShowNotification(3, "You cannot add new item here.");
             return;
@@ -1748,8 +1742,6 @@
 
     //    $table.find('tbody').append(row);
     //}
-
-
 
 
 

@@ -7,6 +7,12 @@
 
 <link href="~/css/button.css" rel="stylesheet" />
 
+<style>
+    .k-picker-wrap.k-state-default {
+        width: 91% !important;
+    }
+</style>
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -59,7 +65,7 @@
                             @Html.LabelFor(model => model.FromDate)
                             <div class="input-group date">
                                 @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm" })
-                                
+
                             </div>
                         </div>
 
@@ -67,7 +73,7 @@
                             @Html.LabelFor(model => model.ToDate)
                             <div class="input-group date">
                                 @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm" })
-                               
+
                             </div>
                         </div>
 

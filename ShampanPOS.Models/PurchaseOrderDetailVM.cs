@@ -23,7 +23,9 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Line")]
         public int? Line { get; set; }
-
+        public string? BENumber { get; set; }
+        public string? SupplierName { get; set; }
+        public string? PurchaseOrderCode { get; set; }
 
         [Display(Name = "Product")]
         public int? ProductId { get; set; }
@@ -75,6 +77,14 @@ namespace ShampanPOS.Models
         public decimal? RemainQty { get; set; }
         public bool? IsCompleted { get; set; }
 
+        [Display(Name = "From Date")]
+        public string? FromDate { get; set; }
+        public int? DecimalPlace { get; set; }
+        [Display(Name = "To Date")]
+        public string? ToDate { get; set; }
+
+        [Display(Name = "Branch Name")]
+        public int? Branchs { get; set; }
     }
 
 }

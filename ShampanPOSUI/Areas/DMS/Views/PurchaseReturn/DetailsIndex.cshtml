@@ -5,6 +5,11 @@
 }
 
 <link href="~/css/button.css" rel="stylesheet" />
+<style>
+    .k-picker-wrap.k-state-default {
+        width: 91% !important;
+    }
+</style>
 
 <div class="content-header">
     <div class="container-fluid">
@@ -39,7 +44,7 @@
                     @Html.HiddenFor(model => model.BranchId)
                     @Html.HiddenFor(model => model.Id)
 
-                    @*<div class="form-group row">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             @Html.LabelFor(model => model.Branchs)
                             <div class="input-group">
@@ -48,29 +53,25 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-1">
+                        @*<div class="col-sm-1">
                             @Html.LabelFor(model => model.IsPosted)
                             @Html.DropDownListFor(model => model.IsPosted, Enumerable.Empty<SelectListItem>(), new { @class = " form-control form-control-sm", @data_selected = Model.IsPosted })
                             @Html.ValidationMessageFor(model => model.IsPosted)
-                        </div>
+                        </div>*@
 
                         <div class="col-sm-2">
                             @Html.LabelFor(model => model.FromDate)
                             <div class="input-group date">
-                                @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm dateRange" })
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
+                                @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm" })
+                               
                             </div>
                         </div>
 
                         <div class="col-sm-2">
                             @Html.LabelFor(model => model.ToDate)
                             <div class="input-group date">
-                                @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm dateRange" })
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
+                                @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm" })
+                       
                             </div>
                         </div>
 
@@ -80,7 +81,7 @@
                             </button>
                         </div>
 
-                    </div>*@
+                    </div>
 
                 </div>
             </div>

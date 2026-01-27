@@ -3,11 +3,12 @@
 
     var init = function () {
 
-        if ($("#IsPosted").length) {
-            LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
-            $("#IsPosted").val('');
-            GetBranchList();
-        };
+        //if ($("#IsPosted").length) {
+        //    LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
+        //    $("#IsPosted").val('');
+        //    GetBranchList();
+        //};
+
         GetBranchList();
         GenerateDatePicker();
         GetGridDetailsDataList();
@@ -29,7 +30,7 @@
                 gridElement.empty();
             }
 
-            //GetGridDetailsDataList();
+            GetGridDetailsDataList();
         });
     };
 
@@ -110,9 +111,20 @@
                                 param.field = "PD.Name";
                             }
                             if (param.field === "CustomerName") {
-                                param.field = "C.Name";
+                                param.field = "cus.Name";
                             }
-
+                            if (param.field === "CustomerCode") {
+                                param.field = "cus.Code";
+                            }
+                            if (param.field === "ProductCode") {
+                                param.field = "PD.Code";
+                            }
+                            if (param.field === "SubTotal") {
+                                param.field = "D.SubTotal";
+                            }
+                            if (param.field === "VATRate") {
+                                param.field = "D.VATRate";
+                            }
 
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";
@@ -123,28 +135,6 @@
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
-
-                            //if (param.field === "Status") {
-                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                            //    if (statusValue.startsWith("p")) {
-                            //        param.value = 1;
-                            //    } else if (statusValue.startsWith("n")) {
-                            //        param.value = 0;
-                            //    }
-                            //    else if (statusValue == "1") {
-                            //        param.value = 1;
-                            //    }
-                            //    else if (statusValue == "0") {
-                            //        param.value = 0;
-                            //    }
-                            //    else {
-                            //        param.value = null;
-                            //    }
-
-                            //    param.field = "H.IsPost";
-                            //    param.operator = "eq";
-                            //}
 
                             if (param.field === "InvoiceDateTime" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
@@ -169,10 +159,21 @@
                                 param.field = "PD.Name";
                             }
                             if (param.field === "CustomerName") {
-                                param.field = "C.Name";
+                                param.field = "cus.Name";
                             }
 
-
+                            if (param.field === "CustomerCode") {
+                                param.field = "cus.Code";
+                            }
+                            if (param.field === "ProductCode") {
+                                param.field = "PD.Code";
+                            }
+                            if (param.field === "SubTotal") {
+                                param.field = "D.SubTotal";
+                            }
+                            if (param.field === "VATRate") {
+                                param.field = "D.VATRate";
+                            }
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";
                             }
@@ -183,27 +184,6 @@
                                 param.field = "H.Comments";
                             }
  
-                            //if (param.field === "Status") {
-                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                            //    if (statusValue.startsWith("p")) {
-                            //        param.value = 1;
-                            //    } else if (statusValue.startsWith("n")) {
-                            //        param.value = 0;
-                            //    }
-                            //    else if (statusValue == "1") {
-                            //        param.value = 1;
-                            //    }
-                            //    else if (statusValue == "0") {
-                            //        param.value = 0;
-                            //    }
-                            //    else {
-                            //        param.value = null;
-                            //    }
-
-                            //    param.field = "H.IsPost";
-                            //    param.operator = "eq";
-                            //}
 
                             if (param.field === "InvoiceDateTime" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
@@ -215,10 +195,7 @@
                             }
                         });
                     }
-                    //options.branchId = branchId;
-                    //options.isPost = IsPosted;
-                    //options.fromDate = FromDate;
-                    //options.toDate = ToDate;
+      
 
                     return options;
                 }
@@ -254,7 +231,7 @@
             aggregate: [
                 { field: "Quantity", aggregate: "sum" },
                 { field: "LineTotal", aggregate: "sum" },
-                { field: "SubTotal", aggregate: "sum" },   // 🔥 ADD THIS
+                { field: "SubTotal", aggregate: "sum" },   
                 { field: "SDAmount", aggregate: "sum" },
                 { field: "VATRate", aggregate: "sum" },
                 { field: "SD", aggregate: "sum" },
@@ -372,7 +349,9 @@
 
                 { field: "Code", title: "Sale Code", width: 180 },
                 { field: "BranchName", title: "Branch Name", hidden: true, width: 180 },
+                { field: "CustomerCode", title: "Customer Code", width: 190, sortable: true },
                 { field: "CustomerName", title: "Customer Name", width: 180 },
+                { field: "ProductCode", title: "Product Code", width: 190, sortable: true },
                 { field: "ProductName", title: "Product Name", width: 180 },
 
                 {
@@ -387,6 +366,14 @@
                 { field: "TransactionType", title: "Transaction Type", hidden: true, width: 150 },
 
                 {
+                    field: "Quantity",
+                    title: "Quantity",
+                    width: 120,
+                    aggregates: ["sum"],
+                    footerTemplate: "#=kendo.toString(sum,'n2')#",
+                    attributes: { style: "text-align:right" }
+                },
+                {
                     field: "UnitRate",
                     title: "Unit Rate",
                     width: 120,
@@ -394,17 +381,10 @@
                     footerTemplate: "#=kendo.toString(sum,'n2')#",
                     attributes: { style: "text-align:right" }
                 },
+
                 {
                     field: "SubTotal",
                     title: "Sub Total",
-                    width: 120,
-                    aggregates: ["sum"],
-                    footerTemplate: "#=kendo.toString(sum,'n2')#",
-                    attributes: { style: "text-align:right" }
-                },
-                {
-                    field: "Quantity",
-                    title: "Quantity",
                     width: 120,
                     aggregates: ["sum"],
                     footerTemplate: "#=kendo.toString(sum,'n2')#",

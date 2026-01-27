@@ -3,12 +3,14 @@
 
     var init = function () {
           
-        if ($("#IsPosted").length) {
-            LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
-            $("#IsPosted").val('');
-            GetBranchList();
-        };
-      
+        //if ($("#IsPosted").length) {
+        //    LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
+        //    $("#IsPosted").val('');
+        //    GetBranchList();
+        //};
+
+        GetBranchList();
+        GenerateDatePicker();
         GetGridDetailsDataList();
        
         $("#indexSearch").on('click', function () {
@@ -28,6 +30,15 @@
 
         });
     };
+
+    function GenerateDatePicker() {
+        $("#FromDate").kendoDatePicker({
+            format: "yyyy-MM-dd"
+        });
+        $("#ToDate").kendoDatePicker({
+            format: "yyyy-MM-dd"
+        });
+    }
     function GetBranchList() {
         var branch = new kendo.data.DataSource({
             transport: {
@@ -77,7 +88,8 @@
             pageSize: 10,
             transport: {
                 read: {
-                    url: "/PurchaseReturn/GetDetailsGridData",
+                    //url: "/PurchaseReturn/GetDetailsGridData",
+                    url: "/DMS/PurchaseReturn/GetDetailsGridData",
                     type: "POST",
                     dataType: "json",
                     cache: false,
@@ -351,62 +363,24 @@
                     fields: {
                         id: { type: "number" },
                         code: { type: "string" },
-                        branchName: { type: "string" },
-                        customerName: { type: "string" },
-                        salePersonName: { type: "string" },
-                        routeName: { type: "string" },
                         deliveryAddress: { type: "string" },
                         invoiceDateTime: { type: "date" },
                         deliveryDate: { type: "date" },
-                        GrandTotalAmount: { type: "number" },
-                        GrandTotalSDAmount: { type: "number" },
-                        GrandTotalVATAmount: { type: "number" },
-                        comments: { type: "string" },
-                        transactionType: { type: "string" },
-                        isPost: { type: "boolean" },
-                        postBy: { type: "string" },
-                        posteOn: { type: "date" },
-                        isCompleted: { type: "boolean" },
-                        currencyName: { type: "string" },
-                        currencyRateFromBDT: { type: "number" },
-                        createdBy: { type: "string" },
-                        createdOn: { type: "date" },
-                        lastModifiedBy: { type: "string" },
-                        lastModifiedOn: { type: "date" },
-                        status: { type: "string" },
-                        distributorCode: { type: "string" },
-                        banglaName: { type: "string" },
-                        isPosted: { type: "string" },
-                        GrdTotalAmount: { type: "string" },
-                        GrdTotalSDAmount: { type: "string" },
-                        GrdTotalVATAmount: { type: "string" },
-                        deliveryPersonName: { type: "string" },
-                        driverPersonName: { type: "string" },
+                        PurchaseReturnDate: { type: "date" },
                         productName: { type: "string" },
-                        productGroupName: { type: "string" },
                         Quantity: { type: "number" },
                         UnitRate: { type: "number" },
                         SUBTotal: { type: "number" },
-                        isInclusiveDuty: { type: "boolean" },
                         SD: { type: "number" },
                         SDAmount: { type: "number" },
                         VATRate: { type: "number" },
                         VATAmount: { type: "number" },
                         lineTotal: { type: "number" },
-                        uomName: { type: "string" },
-                        uomFromName: { type: "string" },
-                        uomConversion: { type: "number" },
-                        campaignTypeId: { type: "number" },
-                        campaignDetailsId: { type: "number" },
-                        campaignHeaderId: { type: "number" }
                     }
                 }
             },
             aggregate: [
                 { field: "Line", aggregate: "sum" },
-                { field: "GrandTotalAmount", aggregate: "sum" },
-                { field: "GrandTotalSDAmount", aggregate: "sum" },
-                { field: "GrandTotalVATAmount", aggregate: "sum" },
                 { field: "SDAmount", aggregate: "sum" },
                 { field: "VATRate", aggregate: "sum" },
                 { field: "SD", aggregate: "sum" },
@@ -414,7 +388,6 @@
                 { field: "VATAmount", aggregate: "sum" },
                 { field: "OthersAmount", aggregate: "sum" },
                 { field: "UnitPrice", aggregate: "sum" },
-                { field: "CurrencyRateFromBDT", aggregate: "sum" },
                 { field: "SubTotal", aggregate: "sum" }
             
             ]
@@ -453,7 +426,7 @@
             reorderable: true,
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
-            search: ["Code", "BranchName", "SupplierName", "SupplierAddress", "BENumber", "PurchaseReturnDate", "GrandTotalAmount", "GrandTotalSDAmount", "GrandTotalVATAmount", "Comments", "TransactionType", "Status", "CurrencyName", "CurrencyRateFromBDT", "ImportIDExcel", "FileName", "FiscalYear", "PeriodId", "BranchAddress", "Line", "ProductName", "Quantity", "UnitPrice", "SubTotal", "SD", "SDAmount", "VATRate", "VATAmount", "OthersAmount", "UOMName", "UOMConversion", "VATType", ],
+            search: ["Code", "BranchName", "SupplierName", "SupplierAddress", "BENumber", "PurchaseReturnDate", "Comments", "TransactionType", "BranchAddress", "Line", "ProductName", "Quantity", "UnitPrice", "SubTotal", "SD", "SDAmount", "VATRate", "VATAmount", "OthersAmount"],
             excel: {
                 fileName: `PurchaseReturnDetails_${new Date().toISOString().split('T')[0]}.xlsx`,
                 filterable: true
@@ -523,8 +496,8 @@
                 }, 1000);
             },
             columns: [
-                { field: "Code", title: "Code", width: 180, sortable: true },
-                { field: "BranchName", title: "Branch Name", width: 180, sortable: true },
+                { field: "PurchasesReturnCode", title: "Purchases Return Code", width: 180, sortable: true },
+                { field: "BranchName", title: "Branch Name",hidden:true, width: 180, sortable: true },
                 { field: "SupplierName", title: "Supplier Name", width: 180, sortable: true },
                 { field: "SupplierAddress", title: "Supplier Address", width: 180, sortable: true },
                 { field: "BENumber", title: "BE Number", width: 180, sortable: true },
@@ -534,90 +507,14 @@
                         ui: "datepicker"
                     }
                 },
-                {
-                    field: "GrandTotalAmount",
-                    title: "Grand Total Amount",
-                    sortable: true,
-                    width: 180,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                }
-                ,
-                {
-                    field: "GrandTotalSDAmount",
-                    title: "Grand Total SD Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                {
-                    field: "GrandTotalVATAmount",
-                    title: "Grand Total VAT Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                { field: "Comments", title: "Comments", width: 200, sortable: true },
-                { field: "TransactionType", title: "Transaction Type", width: 150, sortable: true },
-                {
-                    field: "Status", title: "Status", sortable: true, width: 100,
-                    filterable: {
-                        ui: function (element) {
-                            element.kendoDropDownList({
-                                dataSource: [
-                                    { text: "Posted", value: "1" },
-                                    { text: "Not-posted", value: "0" }
-                                ],
-                                dataTextField: "text",
-                                dataValueField: "value",
-                                optionLabel: "Select Option"
-                            });
-                        }
-                    }
-                },
+        
+                { field: "Comments", title: "Comments", hidden: true, width: 200, sortable: true },
+                { field: "TransactionType", title: "Transaction Type", hidden: true, width: 150, sortable: true },
+               
                 
-                { field: "CurrencyName", title: "Currency Name", width: 200, sortable: true },
-                {
-                    field: "CurrencyRateFromBDT",
-                    title: "Currency Rate From BDT",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                { field: "ImportIDExcel", title: "Import ID Excel", width: 200, sortable: true },
-                { field: "FileName", title: "File Name", width: 200, sortable: true },
+                { field: "FiscalYear", title: "FiscalYear", hidden: true, width: 200, sortable: true },
+                { field: "PeriodId", title: "Period Id", hidden: true, width: 200, sortable: true },
                 
-                { field: "FiscalYear", title: "FiscalYear", width: 200, sortable: true },
-                { field: "PeriodId", title: "Period Id", width: 200, sortable: true },
-                
-                {
-                    field: "Line",
-                    title: "Line",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-
-                /*{ field: "IsCompleted", title: "Is Completed", width: 100, template: '#= IsCompleted ? "Yes" : "No" #' },*/
                 { field: "ProductName", title: "Product Name", width: 200, sortable: true },
                 {
                     field: "Quantity",
@@ -709,8 +606,19 @@
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
                     attributes: { style: "text-align: right;" }
                 },
-                { field: "UOMName", title: "UOM Name", width: 200, sortable: true },
-                { field: "UOMConversion", title: "UOM Conversion", width: 200, sortable: true }, { field: "VATType", title: "VAT Type", width: 200, sortable: true }
+
+                                {
+                    field: "Line",
+                    title: "Line",
+                    sortable: true,
+                    width: 200,
+                    aggregates: ["sum"],
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
+                }
+
                
                 
             ],

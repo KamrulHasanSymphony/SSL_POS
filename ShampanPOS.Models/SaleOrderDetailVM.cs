@@ -22,13 +22,15 @@ namespace ShampanPOS.Models
 
 
         [Display(Name = "Line")]
-        public int Line { get; set; }
+        public int? Line { get; set; }
 
 
         [Display(Name = "Product")]
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
         public string? ProductName { get; set; }
+        public string? CustomerName { get; set; }
         public string? ProductCode { get; set; }
+        public string? SaleOrderCode { get; set; }
 
         [Display(Name = "Branch Name")]
         public int? Branchs { get; set; }
@@ -83,6 +85,9 @@ namespace ShampanPOS.Models
 
         [Display(Name = "To Date")]
         public string? ToDate { get; set; }
+        public string? InvoiceDateTime { get; set; }
+        public string? OrderDate { get; set; }
+        public string? DeliveryDate { get; set; }
     }
 
 }

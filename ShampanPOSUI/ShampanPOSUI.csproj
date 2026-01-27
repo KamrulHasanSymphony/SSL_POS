@@ -361,6 +361,7 @@
     <Content Include="Areas\DMS\js\Controllers\DepositController.js" />
     <Content Include="Areas\DMS\js\Controllers\CollectionController.js" />
     <Content Include="Areas\DMS\js\Controllers\FromSaleController.js" />
+    <Content Include="Areas\DMS\js\Controllers\PurchaseOrderDetailsIndexController.js" />
     <Content Include="Areas\DMS\js\Controllers\WithdrawalController.js" />
     <Content Include="Areas\DMS\js\Controllers\BankAccountController.js" />
     <Content Include="Areas\DMS\js\Controllers\PaymentController.js" />
@@ -2614,6 +2615,7 @@
     <Content Include="Areas\DMS\Views\SaleReturn\FromSale.cshtml" />
     <Content Include="Areas\Common\Views\Common\_getProductDataSale.cshtml" />
     <Content Include="Areas\DMS\Views\Product\ProductReport.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseOrder\DetailsIndex.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

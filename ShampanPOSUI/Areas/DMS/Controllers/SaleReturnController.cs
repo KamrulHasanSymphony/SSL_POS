@@ -47,7 +47,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             SaleReturnDetailVM vm = new SaleReturnDetailVM();
 
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-            //vm.BranchId = Convert.ToInt32(currentBranchId);
+            vm.BranchId = Convert.ToInt32(currentBranchId);
             //vm.Branchs = Convert.ToInt32(currentBranchId);
             DateTime currentDate = DateTime.Now;
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
@@ -55,6 +55,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             firstDayOfMonth = firstDayOfMonth.AddMonths(-5);
             //vm.FromDate = firstDayOfMonth.ToString("yyyy/MM/dd");
             //vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
+            vm.FromDate = "";
+            vm.ToDate = "";
 
             #region  UserInfo
 
@@ -287,6 +289,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             _repo = new SaleReturnRepo();
             try
             {
+
                 options.vm.BranchId = branchId == "0" ? "" : branchId;
                 options.vm.IsPost = isPost;
                 options.vm.FromDate = fromDate;

@@ -16,6 +16,7 @@ namespace ShampanPOS.Models
 
         public int? CompanyId { get; set; }
         public string? SaleReturnCode { get; set; }
+        public string? CustomerCode { get; set; }
 
         //[Display(Name = "Sale")]
         //public int SaleId { get; set; }
@@ -29,6 +30,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Product")]
         public int ProductId { get; set; }
         public string? ProductName { get; set; }
+        public string? CustomerName { get; set; }
 
         public string? ProductCode { get; set; }
 
@@ -58,7 +60,20 @@ namespace ShampanPOS.Models
         public decimal LineTotal { get; set; }
 
 
+        [Display(Name = "Branch Name")]
+        public int? Branchs { get; set; }
+
+        [Display(Name = "Branch")]
+        public int? BranchId { get; set; }
+
+        [Display(Name = "From Date")]
+        public string? FromDate { get; set; }
+
+        [Display(Name = "To Date")]
+        public string? ToDate { get; set; }
 
 
+        [Display(Name = "Posted")]
+        public bool IsPost { get; set; }
     }
 }
