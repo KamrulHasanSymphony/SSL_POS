@@ -1,9 +1,8 @@
-﻿@model ShampanPOS.Models.PurchaseVM
+﻿@model ShampanPOS.Models.SaleVM
 @{
-    ViewBag.Title = "Purchase Index";
+    ViewBag.Title = "Sale Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 
 <style>
     body {
@@ -45,6 +44,10 @@
             font-weight: bold;
         }
 
+    .text-right {
+        text-align: right;
+    }
+
     @@media print {
         .sslPrint {
             display: none
@@ -64,7 +67,6 @@
 <div class="report-box">
 
     <!-- HEADER -->
-
     <table style="border:none;">
         <tr>
             <td style="width:140px;border:none;">
@@ -72,43 +74,41 @@
                      style="width:130px;height:70px;object-fit:contain;" />
             </td>
             @*<td style="text-align:right;border:none;">
-                    <h3 style="margin:0;">@Model.CompanyName</h3>
-                    <div>@Model.BranchName</div>
-                </td>*@
+            <h3 style="margin:0;">@Model.CompanyName</h3>
+            <div>@Model.BranchName</div>
+        </td>*@
 
         </tr>
     </table>
 
     <h2 style="text-align:center;border-bottom:1px solid #000;">
-        PURCHASE REPORT
+        SALES REPORT
     </h2>
 
-    <!-- PURCHASE MASTER INFO -->
-    <h3>Purchase Information</h3>
+    <!-- SALES MASTER INFO -->
+    <h3>Sales Information</h3>
     <table>
         <tr>
-            <th>Purchase Code</th>
+            <th>Sales Code</th>
             <td>@Model.Code</td>
             <th>Invoice Date</th>
             <td>@Model.InvoiceDateTime</td>
         </tr>
         <tr>
-            <th>Purchase Date</th>
-            <td>@Model.PurchaseDate</td>
-            <th>Supplier</th>
-            <td>@Model.SupplierName</td>
+            <th>Customer</th>
+            <td>@Model.CustomerName</td>
+            <th>Sales Order</th>
+            <td>@Model.SaleOrderCode</td>
         </tr>
         <tr>
-            <th>Purchase Order</th>
-            <td>@Model.PurchaseOrderCode</td>
-            <th>B/E Number</th>
-            <td>@Model.BENumber</td>
+            <th>Delivery Address</th>
+            <td colspan="3">@Model.DeliveryAddress</td>
         </tr>
         <tr>
-            <th>Fiscal Year</th>
-            <td>@Model.FiscalYear</td>
             <th>Period</th>
             <td>@Model.PeriodId</td>
+            <th>Transaction Type</th>
+            <td>@Model.TransactionType</td>
         </tr>
         <tr>
             <th>Comments</th>
@@ -116,8 +116,8 @@
         </tr>
     </table>
 
-    <!-- PURCHASE DETAILS -->
-    <h3>Purchase Items</h3>
+    <!-- SALES DETAILS -->
+    <h3>Sales Items</h3>
     <table>
         <thead>
             <tr>
@@ -125,21 +125,21 @@
                 <th>Product</th>
                 <th>Code</th>
                 <th>Qty</th>
-                <th>Unit Price</th>
+                <th>Unit Rate</th>
                 <th>SD Amt</th>
                 <th>VAT Amt</th>
                 <th>Line Total</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.purchaseDetailList)
+            @foreach (var item in Model.saleDetailsList)
             {
                 <tr>
                     <td>@item.Line</td>
                     <td>@item.ProductName</td>
                     <td>@item.ProductCode</td>
                     <td class="text-right">@item.Quantity</td>
-                    <td class="text-right">@item.UnitPrice</td>
+                    <td class="text-right">@item.UnitRate</td>
                     <td class="text-right">@item.SDAmount</td>
                     <td class="text-right">@item.VATAmount</td>
                     <td class="text-right">@item.LineTotal</td>
@@ -173,23 +173,4 @@
         </tr>
     </table>
 
-    <!-- POST -->
-    @*<h3>Posting Information</h3>
-        <table>
-            <tr>
-                <th>Posted</th>
-                <td>@(Model.IsPost ? "Yes" : "No")</td>
-                <th>Posted By</th>
-                <td>@Model.PostedBy</td>
-            </tr>
-            <tr>
-                <th>Posted On</th>
-                <td>@Model.PostedOn</td>
-                <th>Transaction Type</th>
-                <td>@Model.TransactionType</td>
-            </tr>
-        </table>*@
-
 </div>
-
-

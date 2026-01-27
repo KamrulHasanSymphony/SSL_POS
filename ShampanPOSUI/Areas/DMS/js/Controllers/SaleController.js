@@ -1406,18 +1406,24 @@
             },
             columns: [
                 {
-                    selectable: true, width: 70
+                    selectable: true, width: 40
                 },
                 {
                     title: "Action",
-                    width: 90,
+                    width: 120,
                     template: function (dataItem) {
 
                         return `
                                 <a href="/DMS/Sale/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                     <i class="fas fa-pencil-alt"></i>
-                                </a>`+
-                            "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
+                                </a>
+                           <a href="/DMS/Sale/getReport/${dataItem.Id}" 
+                          class="btn btn-success btn-sm mr-2 getReport" 
+                          title="Report">
+                           <i class="fas fa-file-alt"></i>
+                      </a>  `+
+
+                       "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
@@ -1449,7 +1455,7 @@
                 }
                 ,
                 { field: "DeliveryAddress", title: "Delivery Address", sortable: true, hidden: true, width: 250 },
-                { field: "Comments", title: "Comments", sortable: true, width: 250 },
+                { field: "Comments", title: "Comments", sortable: true, width: 250, hidden: true },
                 { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
                 { field: "CompanyName", title: "Company Name ", sortable: true, hidden: true, width: 200 }
 
