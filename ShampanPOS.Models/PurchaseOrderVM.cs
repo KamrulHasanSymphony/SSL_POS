@@ -64,7 +64,6 @@ namespace ShampanPOS.Models
         public string? Status { get; set; }
         public string? CompanyName { get; set; }
 
-
         public List<PurchaseOrderDetailVM> purchaseOrderDetailsList { get; set; }
 
         public PurchaseOrderVM()

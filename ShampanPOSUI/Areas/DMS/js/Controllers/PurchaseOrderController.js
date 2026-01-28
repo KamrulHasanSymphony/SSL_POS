@@ -1168,12 +1168,19 @@
                 },
                 {
                     title: "Action",
-                    width: 90,
+                    width: 130,
                     template: function (dataItem) {
                         return `
                                 <a href="/DMS/PurchaseOrder/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                     <i class="fas fa-pencil-alt"></i>
-                                </a>`
+                                </a>
+                         <a href="/DMS/PurchaseOrder/getReport/${dataItem.Id}" 
+                          class="btn btn-success btn-sm mr-2 getReport" 
+                          title="Report">
+                           <i class="fas fa-file-alt"></i>
+                      </a> 
+                                
+                                `
                             +
                             "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
                     }
@@ -1211,7 +1218,7 @@
                     }
                 },
                 
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, width: 200, hidden: true },
                 { field: "BranchName", hidden: true, title: "Branch Name", sortable: true, width: 200 }
                 //{ field: "CompanyName", title: "Company Name", width: 200, hidden: true, sortable: true },
 

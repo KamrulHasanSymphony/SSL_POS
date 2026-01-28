@@ -2622,6 +2622,12 @@
     <Content Include="Areas\DMS\Views\Supplier\SupplierReport.cshtml" />
     <Content Include="Areas\DMS\Views\Customer\CustomerReport.cshtml" />
     <Content Include="Areas\DMS\Views\PurchaseOrder\DetailsIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\PurchaseReport.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\SaleReport.cshtml" />
+    <Content Include="Areas\DMS\Views\SaleOrder\SaleOrderReport.cshtml" />
+    <Content Include="Areas\DMS\Views\SaleReturn\SaleReturnReport.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseOrder\PurchaseOrderReport.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseReturn\PurchaseReturnReport.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItem\Index.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItem\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItemGroup\Index.cshtml" />
