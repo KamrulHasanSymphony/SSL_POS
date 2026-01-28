@@ -576,6 +576,58 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult getReport(string id)
+        {
+            try
+            {
+                PurchaseReturnVM vm = new PurchaseReturnVM();
+                CommonVM param = new CommonVM();
+                param.Id = id;
+                ResultVM result = _repo.GetPurchaseReturnReport(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    vm = JsonConvert.DeserializeObject<List<PurchaseReturnVM>>(result.DataVM.ToString()).FirstOrDefault();
+                }
+                else
+                {
+                    vm = new PurchaseReturnVM();
+                }
+
+                //vm.ColunWidth = new Dictionary<string, string>
+                //{
+                //    { "Code", "5%" },
+                //    { "CustomerName", "15%" },
+                //    { "TailorMasterName", "15%" },
+                //    { "FabricTotal", "15%" },
+                //    { "MakingChargeTotal", "15%" },
+                //    { "GrandTotal", "35%" },
+                //    { "Advance", "35%" },
+                //    { "Dues", "35%" }
+                //};
+
+                //vm.PageSize = new Dictionary<string, string>
+                //{
+                //    { "A4_Width", "210mm" },
+                //    { "A4_Height", "297mm" },
+                //    { "Letter_Width", "216mm" },
+                //    { "Letter_Height", "279mm" },
+                //    { "Orientation", "Portrait" },
+                //    { "Default", "A4" }
+                //};
+
+                return View("PurchaseReturnReport", vm);
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return RedirectToAction("Index");
+            }
+        }
+
+
 
         //public ActionResult SummaryReport(string fromDate, string toDate, string branchId, string type, string isPost)
         //{
