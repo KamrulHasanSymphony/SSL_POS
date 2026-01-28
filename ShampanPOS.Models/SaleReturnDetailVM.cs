@@ -75,5 +75,8 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Posted")]
         public bool IsPost { get; set; }
+
+        public string? InvoiceDateTime { get; set; }
+
     }
 }

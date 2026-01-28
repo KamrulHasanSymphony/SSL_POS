@@ -21,6 +21,8 @@ namespace ShampanPOS.Models
         public int? Line { get; set; }
         public int ProductId { get; set; }
         public string? ProductCode { get; set; }
+        public string? SupplierCode { get; set; }
+
         public string? ProductName { get; set; }
         //public string? POCode { get; set; }
         public decimal Quantity { get; set; }
@@ -43,6 +45,10 @@ namespace ShampanPOS.Models
 
         [Display(Name = "To Date")]
         public string? ToDate { get; set; }
+        public string? InvoiceDateTime { get; set; }
+
+        public string? PurchaseDate { get; set; }
+
 
     }
 

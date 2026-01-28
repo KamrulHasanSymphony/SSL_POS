@@ -338,6 +338,8 @@
     <Compile Include="Areas\DMS\Controllers\BankInformationController.cs" />
     <Compile Include="Areas\DMS\Controllers\CollectionController.cs" />
     <Compile Include="Areas\DMS\Controllers\DepositController.cs" />
+    <Compile Include="Areas\DMS\Controllers\MasterItemController.cs" />
+    <Compile Include="Areas\DMS\Controllers\MasterItemGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\OverHeadController.cs" />
     <Compile Include="Areas\DMS\Controllers\PaymentController.cs" />
     <Compile Include="Areas\DMS\Controllers\SaleReturnController.cs" />
@@ -362,6 +364,8 @@
     <Content Include="Areas\DMS\js\Controllers\DepositController.js" />
     <Content Include="Areas\DMS\js\Controllers\CollectionController.js" />
     <Content Include="Areas\DMS\js\Controllers\FromSaleController.js" />
+    <Content Include="Areas\DMS\js\Controllers\MasterItemController.js" />
+    <Content Include="Areas\DMS\js\Controllers\MasterItemGroupController.js" />
     <Content Include="Areas\DMS\js\Controllers\PurchaseOrderDetailsIndexController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterSupplierController.js" />
     <Content Include="Areas\DMS\js\Controllers\WithdrawalController.js" />
@@ -2626,6 +2630,10 @@
     <Content Include="Areas\DMS\Views\SaleReturn\SaleReturnReport.cshtml" />
     <Content Include="Areas\DMS\Views\PurchaseOrder\PurchaseOrderReport.cshtml" />
     <Content Include="Areas\DMS\Views\PurchaseReturn\PurchaseReturnReport.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterItem\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterItem\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterItemGroup\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterItemGroup\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplier\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplier\Index.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplier\SupplierReport.cshtml" />

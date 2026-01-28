@@ -26,6 +26,7 @@ namespace ShampanPOS.Models
         public string? BENumber { get; set; }
         public string? SupplierName { get; set; }
         public string? PurchaseOrderCode { get; set; }
+        public string? SupplierCode { get; set; }
 
         [Display(Name = "Product")]
         public int? ProductId { get; set; }
@@ -85,6 +86,10 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Branch Name")]
         public int? Branchs { get; set; }
+
+        public string? DeliveryDateTime { get; set; }
+        public string? OrderDate { get; set; }
+
     }
 
 }

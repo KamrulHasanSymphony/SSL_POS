@@ -18,6 +18,9 @@ namespace ShampanPOS.Models
         public int? BranchId { get; set; }
         public int? CompanyId { get; set; }
         public int? Line { get; set; }
+        public string? PurchaseDate { get; set; }
+        public string? PurchaseReturnDate { get; set; }
+        public string? SupplierCode { get; set; }
         public int ProductId { get; set; }
         public string? ProductCode { get; set; }
         public string? PurchasesReturnCode { get; set; }

@@ -52,6 +52,8 @@
     <Compile Include="BankInformationRepo.cs" />
     <Compile Include="CollectionRepo.cs" />
     <Compile Include="DepositRepo.cs" />
+    <Compile Include="MasterItemGroupRepo.cs" />
+    <Compile Include="MasterItemRepo.cs" />
     <Compile Include="OverHeadRepo.cs" />
     <Compile Include="PaymentRepo.cs" />
     <Compile Include="PurchaseReturnRepo.cs" />

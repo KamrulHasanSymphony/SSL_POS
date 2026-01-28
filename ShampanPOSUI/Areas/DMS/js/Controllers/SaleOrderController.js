@@ -85,7 +85,7 @@
                         else {
                             model.IDs = model.Id;
                             var url = "/DMS/SaleOrder/MultiplePost";
-                            CommonAjaxService.multiplePost(url, model, processDone, fail);
+                            CommonAjaxService.multiplePost(url, model, processDone, /*postDone,*/ fail);
                         }
                     }
                 });
@@ -1642,6 +1642,23 @@
             ShowNotification(2, result.Message);
         }
     };
+
+
+    //function postDone(result) {
+    //    var grid = $("#GridDataList").data("kendoGrid");
+    //    if (grid) grid.dataSource.read();
+
+    //    if (result.Status == 200) {
+    //        ShowNotification(1, result.Message);
+    //        $(".btnsave").hide();
+    //        $(".btnPost").hide();
+    //        $(".sslPush").show();
+    //    } else {
+    //        ShowNotification(3, result.Message);
+    //    }
+    //}
+
+
     function fail(err) {
         console.log(err);
         ShowNotification(3, "Something gone wrong");

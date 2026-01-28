@@ -103,8 +103,15 @@
                             if (param.field === "Id") {
                                 param.field = "H.Id";
                             }
-                            if (param.field === "Code") {
+                            if (param.field === "PurchaseCode") {
                                 param.field = "H.Code";
+                            }
+                           
+                            if (param.field === "SupplierCode") {
+                                param.field = "S.Code";
+                            }
+                            if (param.field === "ProductCode") {
+                                param.field = "P.Code";
                             }
                             if (param.field === "SupplierName") {
                                 param.field = "S.Name";
@@ -120,70 +127,18 @@
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
                                 param.field = "H.PurchaseDate";
                             }
-                            if (param.field === "GrandTotalAmount") {
-                                param.field = "H.GrandTotalAmount";
-                            }
-                            if (param.field === "GrandTotalSDAmount") {
-                                param.field = "H.GrandTotalSDAmount";
-                            }
-                            if (param.field === "GrandTotalVATAmount") {
-                                param.field = "H.GrandTotalVATAmount";
-                            }
+                 
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
                             if (param.field === "TransactionType") {
                                 param.field = "H.TransactionType";
                             }
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                                if (statusValue.startsWith("p")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("n")) {
-                                    param.value = 0;
-                                } else {
-                                    param.value = null;
-                                }
-
-                                param.field = "H.IsPost";
-                                param.operator = "eq";
-                            }
-                            if (param.field === "Completed") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                                if (statusValue.startsWith("c")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("n")) {
-                                    param.value = 0;
-                                } else {
-                                    param.value = null;
-                                }
-
-                                param.field = "H.IsCompleted";
-                                param.operator = "eq";
-                            }
-                            if (param.field === "CurrencyName") {
-                                param.field = "c.Name";
-                            }
-                           
-                            if (param.field === "ImportIDExcel") {
-                                param.field = "H.ImportIDExcel";
-                            }
                             if (param.field === "FiscalYear") {
                                 param.field = "H.FiscalYear";
                             }
                             if (param.field === "BranchName") {
                                 param.field = "Br.Name";
-                            }
-                            if (param.field === "CurrencyRateFromBDT") {
-                                param.field = "H.CurrencyRateFromBDT";
-                            }
-                            if (param.field === "FileName") {
-                                param.field = "H.FileName";
-                            }
-                            if (param.field === "CustomHouse") {
-                                param.field = "H.CustomHouse";
                             }
                             if (param.field === "BranchAddress") {
                                 param.field = "Br.Address";
@@ -227,15 +182,7 @@
                             if (param.field === "OthersAmount") {
                                 param.field = "D.OthersAmount";
                             }
-                            if (param.field === "UOMName") {
-                                param.field = "Us.Name";
-                            }
-                            if (param.field === "UOMConversion") {
-                                param.field = "D.UOMConversion";
-                            }
-                            if (param.field === "VATType") {
-                                param.field = "D.VATType";
-                            }
+                            
                         });
                     }
 
@@ -245,14 +192,18 @@
                             if (param.field === "Id") {
                                 param.field = "H.Id";
                             }
-                            if (param.field === "Code") {
+                            if (param.field === "PurchaseCode") {
                                 param.field = "H.Code";
+                            }
+                           
+                            if (param.field === "SupplierCode") {
+                                param.field = "S.Code";
+                            }
+                            if (param.field === "ProductCode") {
+                                param.field = "P.Code";
                             }
                             if (param.field === "SupplierName") {
                                 param.field = "S.Name";
-                            }
-                            if (param.field === "SupplierAddress") {
-                                param.field = "S.Address";
                             }
                             if (param.field === "BENumber") {
                                 param.field = "H.BENumber";
@@ -265,75 +216,12 @@
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
                                 param.field = "CONVERT(VARCHAR(10), H.PurchaseDate, 120)";
                             }
-                            if (param.field === "GrandTotalAmount") {
-                                param.field = "H.GrandTotalAmount";
-                            }
-                            if (param.field === "GrandTotalSDAmount") {
-                                param.field = "H.GrandTotalSDAmount";
-                            }
-                            if (param.field === "GrandTotalVATAmount") {
-                                param.field = "H.GrandTotalVATAmount";
-                            }
+
                             if (param.field === "Comments") {
                                 param.field = "H.Comments";
                             }
                             if (param.field === "TransactionType") {
                                 param.field = "H.TransactionType";
-                            }
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-                                
-                                if (statusValue.startsWith("p")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("not")) {
-                                    param.value = 0;
-                                }
-                                else if (statusValue == "1") {
-                                    param.value = 1;
-                                }
-                                else if (statusValue == "0") {
-                                    param.value = 0;
-                                }
-                                else {
-                                    param.value = null;
-                                }
-
-                                param.field = "H.IsPost";
-                                param.operator = "eq";
-                            }
-                            if (param.field === "Completed") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                                if (statusValue.startsWith("c")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("n")) {
-                                    param.value = 0;
-                                }
-                                else if (statusValue == "1") {
-                                    param.value = 1;
-                                }
-                                else if (statusValue == "0") {
-                                    param.value = 0;
-                                }
-                                else {
-                                    param.value = null;
-                                }
-
-                                param.field = "H.IsCompleted";
-                                param.operator = "eq";
-                            }
-                            if (param.field === "CurrencyName") {
-                                param.field = "c.Name";
-                            }
-                           
-                            if (param.field === "ImportIDExcel") {
-                                param.field = "H.ImportIDExcel";
-                            }
-                            if (param.field === "FileName") {
-                                param.field = "H.FileName";
-                            }
-                            if (param.field === "CustomHouse") {
-                                param.field = "H.CustomHouse";
                             }
                             if (param.field === "FiscalYear") {
                                 param.field = "H.FiscalYear";
@@ -341,15 +229,12 @@
                             if (param.field === "BranchName") {
                                 param.field = "Br.Name";
                             }
-                            if (param.field === "CurrencyRateFromBDT") {
-                                param.field = "H.CurrencyRateFromBDT";
-                            }
-                           
-                            
                             if (param.field === "BranchAddress") {
                                 param.field = "Br.Address";
                             }
-                            
+                            if (param.field === "SupplierAddress") {
+                                param.field = "S.Address";
+                            }
                             if (param.field === "PeriodId") {
                                 param.field = "H.PeriodId";
                             }
@@ -385,15 +270,6 @@
                             }
                             if (param.field === "OthersAmount") {
                                 param.field = "D.OthersAmount";
-                            }
-                            if (param.field === "UOMName") {
-                                param.field = "Us.Name";
-                            }
-                            if (param.field === "UOMConversion") {
-                                param.field = "D.UOMConversion";
-                            }
-                            if (param.field === "VATType") {
-                                param.field = "D.VATType";
                             }
                         });
                     }
@@ -408,9 +284,10 @@
                     fields: {
                         id: { type: "number" },
                         code: { type: "string" },
+                        PurchaseCode: { type: "string" },
                         deliveryAddress: { type: "string" },
-                        invoiceDateTime: { type: "date" },
-                        purchaseDate: { type: "date" },
+                        //InvoiceDateTime: { type: "date" },
+                        //PurchaseDate: { type: "date" },
                         deliveryDate: { type: "date" },
                         productName: { type: "string" },
                         quantity: { type: "number" },
@@ -547,26 +424,29 @@
             },
             columns: [
                 { field: "PurchaseCode", title: "Purchase Code", width: 180, sortable: true },
-                { field: "BranchName", title: "Branch Name", width: 180, hidden:true, sortable: true },
+                { field: "BranchName", title: "Branch Name", width: 180, hidden: true, sortable: true },
+                { field: "SupplierCode", title: "Supplier Code", width: 180, sortable: true },
                 { field: "SupplierName", title: "Supplier Name", width: 180, sortable: true },
                 { field: "SupplierAddress", title: "Supplier Address", width: 180, sortable: true },
+                { field: "ProductCode", title: "Product Code", width: 180, sortable: true },
+                { field: "ProductName", title: "Product Name", width: 200, sortable: true },
+
                 { field: "BENumber", title: "BE Number", width: 180, sortable: true },
 
 
                 {
-                    field: "invoiceDateTime",
+                    field: "InvoiceDateTime",
                     title: "Invoice Date",
-                    sortable: true,
                     width: 150,
-                    template: '#= invoiceDateTime ? kendo.toString(kendo.parseDate(invoiceDateTime), "yyyy-MM-dd") : "-" #',
+                    template: "#= kendo.toString(kendo.parseDate(InvoiceDateTime), 'yyyy-MM-dd') #",
                     filterable: { ui: "datepicker" }
                 },
                 {
-                    field: "purchaseDate",
+                    field: "PurchaseDate",
                     title: "Purchase Date",
-                    sortable: true,
                     width: 150,
-                    template: '#= purchaseDate ? kendo.toString(kendo.parseDate(purchaseDate), "yyyy-MM-dd") : "-" #',
+                    template: "#= kendo.toString(kendo.parseDate(PurchaseDate), 'yyyy-MM-dd') #",
+                    footerTemplate: "Total:", groupFooterTemplate: "Group Total:", 
                     filterable: { ui: "datepicker" }
                 },
 
@@ -577,20 +457,7 @@
                 { field: "FiscalYear", title: "FiscalYear", width: 200, hidden: true, sortable: true },
                 { field: "PeriodId", title: "Period Id", width: 200, hidden: true, sortable: true },
                 { field: "PurchaseOrderId", title: "Purchase Order Id", width: 200, hidden: true, sortable: true },
-                {
-                    field: "Line",
-                    title: "Line",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
 
-            
-                { field: "ProductName", title: "Product Name", width: 200, sortable: true },
                 {
                     field: "Quantity",
                     title: "Quantity",
@@ -673,6 +540,18 @@
                 {
                     field: "OthersAmount",
                     title: "Others Amount",
+                    sortable: true,
+                    width: 200,
+                    aggregates: ["sum"],
+                    format: "{0:n2}",
+                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: right;" }
+                },
+
+                {
+                    field: "Line",
+                    title: "Line",
                     sortable: true,
                     width: 200,
                     aggregates: ["sum"],

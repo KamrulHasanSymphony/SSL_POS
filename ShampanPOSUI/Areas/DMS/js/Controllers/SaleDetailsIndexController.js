@@ -359,6 +359,7 @@
                     title: "Invoice Date",
                     width: 150,
                     template: "#= kendo.toString(kendo.parseDate(InvoiceDateTime), 'yyyy-MM-dd') #",
+                    footerTemplate: "Total:", groupFooterTemplate: "Group Total:", 
                     filterable: { ui: "datepicker" }
                 },
 
