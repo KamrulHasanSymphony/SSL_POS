@@ -1,0 +1,242 @@
+﻿@model ShampanPOS.Models.MasterSupplierVM
+@{
+    ViewBag.Title = "Master Supplier Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Master Supplier Entry </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container-fluid">
+    <form id="frmEntry">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title"> Master Supplier Info</h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.ImagePath)
+
+                <div class="form-group row">
+                    <div class="col-sm-2 codeWidth">
+                        @Html.LabelFor(model => model.Code)
+                        <div style="display: flex; align-items: center;">
+                            <span id="btnPrevious" class="fa fa-backward" style="color: darkseagreen;"></span>&nbsp;
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Code Auto Generate", @class = " csCode  form-control form-control-sm", @readonly = "readonly", @style = "width:140px;" }) &nbsp;
+                            <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Name)
+                        @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Name.", @class = "form-control form-control-sm" })
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.BanglaName)
+                        @Html.TextBoxFor(model => model.BanglaName, new { placeholder = "Enter Bangla Name", @class = "form-control form-control-sm" })
+                    </div>
+
+
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.SupplierGroupId)
+                        @Html.TextBoxFor(model => model.SupplierGroupId, new { placeholder = "Enter Supplier GroupId", @class = "form-control form-control-sm" })
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.City)
+                        @Html.TextBoxFor(model => model.City, new { placeholder = "Enter City", @class = "form-control form-control-sm" })
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.TelephoneNo)
+                        @Html.TextBoxFor(model => model.TelephoneNo, new { placeholder = "Enter Telephone Number", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                        @Html.ValidationMessageFor(model => model.TelephoneNo)
+                    </div>
+
+
+
+                </div>
+
+
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Email)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Email, new { placeholder = " Enter Email", @class = "  form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.ContactPerson)
+                        @Html.TextBoxFor(model => model.ContactPerson, new { placeholder = " Enter Contact Person", @class = "form-control form-control-sm" })
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Address)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Address, new { placeholder = " Enter Address", @class = "  form-control form-control-sm " })
+
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Address)
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.ImagePath)
+                        <div class="input-group">
+                            <input type="file" id="imageUpload" class="form-control form-control-sm" accept="image/*" style="height:1%;" />
+                            <input type="hidden" id="ImagePath" name="ImagePath" value="@Model.ImagePath" />
+                        </div>
+
+                        <!-- Ensure the preview image always exists -->
+                        <img id="imagePreview" src="@(!string.IsNullOrEmpty(Model.ImagePath) ? Url.Content(Model.ImagePath) : "")"
+                             alt="Customer Image" width="100" style="display: @(string.IsNullOrEmpty(Model.ImagePath) ? "none" : "block");" />
+
+                        <!-- Delete button, hidden by default -->
+                        <button type="button" id="deleteImageBtn" class="btn btn-danger" style="display: @(string.IsNullOrEmpty(Model.ImagePath) ? "none" : "inline-block");">
+                            <i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="Onoffbtn" style="flex-direction:column">
+                            @Html.LabelFor(model => model.IsActive)
+                            <div class="input-group" style="width: 78%;">
+                                <input id="IsActive"
+                                       value="@Model.IsActive"
+                                       type="checkbox"
+                                       name="my-checkbox"
+                                       @(Model.IsActive ? "checked" : "")
+                                       data-bootstrap-switch
+                                       data-off-color="danger"
+                                       data-on-color="success"
+                                       data-on-text="ON"
+                                       data-off-text="OFF">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
+            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/Customer/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                    <button class="button sslPrintC" data-id="@Model.Id">Print</button>
+                </div>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/DeliveryPerson/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+            }
+        </div>
+
+        <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+
+    </div>
+
+    <div class="card card-secondary auditcard">
+
+        <div class="card-header">
+            <h3 class="card-title">Audit Details</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        @Html.Label("Type")
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.Label("Created")
+                        </div>
+                        <div class="col-sm-3">
+                            @Html.Label("Updated")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                        </div>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                            <div class="clearfix">&nbsp;</div>
+                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/MasterSupplierController.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#IsActive").bootstrapSwitch();
+            MasterSupplierController.init();
+        });
+    </script>
+}
