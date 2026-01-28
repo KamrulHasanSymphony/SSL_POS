@@ -67,6 +67,7 @@
     <Compile Include="SaleRepo.cs" />
     <Compile Include="SaleReturnRepo.cs" />
     <Compile Include="MasterSupplierRepo.cs" />
+    <Compile Include="MasterSupplierGroupRepo.cs" />
     <Compile Include="UserBranchProfileRepo.cs" />
     <Compile Include="UserProfileRepo.cs" />
     <Compile Include="CompanyProfileRepo.cs" />

@@ -358,6 +358,7 @@
     <Compile Include="Areas\DMS\Controllers\ReplaceReceiveController.cs" />
     <Compile Include="Areas\DMS\Controllers\MasterSupplierController.cs" />
     <Compile Include="Areas\DMS\Controllers\SupplierController.cs" />
+    <Compile Include="Areas\DMS\Controllers\MasterSupplierGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\SupplierGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMConversationController.cs" />
@@ -368,6 +369,7 @@
     <Content Include="Areas\DMS\js\Controllers\MasterItemGroupController.js" />
     <Content Include="Areas\DMS\js\Controllers\PurchaseOrderDetailsIndexController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterSupplierController.js" />
+    <Content Include="Areas\DMS\js\Controllers\MasterSupplierGroupController.js" />
     <Content Include="Areas\DMS\js\Controllers\WithdrawalController.js" />
     <Content Include="Areas\DMS\js\Controllers\BankAccountController.js" />
     <Content Include="Areas\DMS\js\Controllers\PaymentController.js" />
@@ -2637,6 +2639,8 @@
     <Content Include="Areas\DMS\Views\MasterSupplier\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplier\Index.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplier\SupplierReport.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplierGroup\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplierGroup\Index.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />
