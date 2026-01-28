@@ -1823,7 +1823,7 @@ pre code {
 .table td, .table th {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #dee2e6;
+  border-top: 1px solid #000;
 }
 
 .table thead th {
