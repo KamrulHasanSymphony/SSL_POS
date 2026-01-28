@@ -1463,70 +1463,113 @@
 
     };
 
+    //function save($table) {
+    //    debugger;
+    //    //var validator = $("#frmEntry").validate();
+    //    var validator = $("#frmEntry").data("validator");
+
+    //    var model = serializeInputs("frmEntry");
+    //    var saleorderId = $("#SaleOrderId").val();
+    //    model.SaleOrderId = saleorderId;
+    //    var result = validator.form();
+
+    //    if (!result) {
+    //        validator.focusInvalid();
+    //        return;
+    //    }
+
+    //    if (model.IsPost == 'True') {
+    //        ShowNotification(2, "Post operation is already done, Do not update this entry");
+    //        return;
+    //    }
+
+      
+    //    if (!hasLine($table)) {
+    //        ShowNotification(3, "Complete Details Entry");
+    //        return;
+    //    };
+   
+
+    //    var details = serializeTable($table);
+
+    //    var requiredFields = ['ProductGroupName', 'ProductName', 'Quantity', 'UnitRate', 'SubTotal'];
+    //    var fieldMappings = {
+    //        'ProductGroupName': 'Product Group Name',
+    //        'ProductName': 'Product Name',
+    //        //'UOMName': 'UOM Name',
+    //        'Quantity': 'Quantity',
+    //        'UnitRate': 'Unit Rate',
+    //        'SubTotal': 'SubTotal'
+    //    };
+
+    //    var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+    //    if (errorMessage) {
+    //        ShowNotification(3, errorMessage);
+    //        return;
+    //    };
+    //    debugger;
+
+
+    //    model.saleDetailsList = details;
+
+    //    var url = "/DMS/Sale/CreateEdit";
+
+    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
+    //};
+
+
     function save($table) {
         debugger;
-        //var validator = $("#frmEntry").validate();
+
         var validator = $("#frmEntry").data("validator");
-
         var model = serializeInputs("frmEntry");
-        var saleorderId = $("#SaleOrderId").val();
-        model.SaleOrderId = saleorderId;
-        var result = validator.form();
 
-        if (!result) {
+        model.SaleOrderId = $("#SaleOrderId").val();
+
+        if (!validator.form()) {
             validator.focusInvalid();
             return;
         }
 
-        if (model.IsPost == 'True') {
+        if (model.IsPost === 'True') {
             ShowNotification(2, "Post operation is already done, Do not update this entry");
             return;
         }
 
-        //if (hasInputFieldInTableCells($table)) {
-        //    ShowNotification(3, "Complete Details Entry");
-        //    return;
-        //};
         if (!hasLine($table)) {
             ShowNotification(3, "Complete Details Entry");
             return;
-        };
-        //
-        //var customer = $("#CustomerId").val();
-        //var salePerson = $("#SalePersonId").val();
-        //var deliveryPerson = $("#DeliveryPersonId").val();
-        //var driverPerson = $("#DriverPersonId").val();
-        //var route = $("#RouteId").val();
+        }
 
         var details = serializeTable($table);
 
-        var requiredFields = ['ProductGroupName', 'ProductName', 'Quantity', 'UnitRate', 'SubTotal'];
-        var fieldMappings = {
-            'ProductGroupName': 'Product Group Name',
-            'ProductName': 'Product Name',
-            //'UOMName': 'UOM Name',
-            'Quantity': 'Quantity',
-            'UnitRate': 'Unit Rate',
-            'SubTotal': 'SubTotal'
-        };
+        for (var i = 0; i < details.length; i++) {
+            if (!details[i].ProductId) {
+                ShowNotification(3, "Product is required");
+                return;
+            }
 
-        var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        if (errorMessage) {
-            ShowNotification(3, errorMessage);
-            return;
-        };
-        debugger;
+            if (parseFloat(details[i].Quantity) <= 0) {
+                ShowNotification(3, "Quantity must be greater than zero");
+                return;
+            }
 
-        //model.GrandTotalAmount = model.GrandTotalAmount.replace(',', '').replace(',', '').replace(',', '');
-        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(',', '').replace(',', '').replace(',', '');
-        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(',', '').replace(',', '').replace(',', '');
+            if (parseFloat(details[i].UnitRate) <= 0) {
+                ShowNotification(3, "Unit Rate must be greater than zero");
+                return;
+            }
+        }
 
         model.saleDetailsList = details;
 
-        var url = "/DMS/Sale/CreateEdit";
+        CommonAjaxService.finalSave(
+            "/DMS/Sale/CreateEdit",
+            model,
+            saveDone,
+            saveFail
+        );
+    }
 
-        CommonAjaxService.finalSave(url, model, saveDone, saveFail);
-    };
 
     function saveDone(result) {
         debugger;

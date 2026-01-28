@@ -44,12 +44,20 @@
         {
             <button type="button" class="button sslPush">Already Posted</button>
 
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/Sale/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
+
         }
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
             <button type="button" class="button btnsave sslUpdate">Update</button>
 
             <button type="button" class="button btnPost sslPost">Post</button>
+
+            <button style="float:right;" type="button" title="Add New" data-url="/DMS/Sale/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                New
+            </button>
 
             <button type="button" class="button secondary" id="btnFromPurchaseOrder">
                 <span style="font-weight:bold; margin-right:5px;">+</span> Collection
@@ -68,6 +76,9 @@
             <div style="display:none;" class="divUpdate">
                 <button type="button" class="button btnsave sslUpdate">Update</button>
                 <button type="button" class="button btnPost sslPost">Post</button>
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/Sale/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
             </div>
             <div class="divSave">
                 <button class="button btnsave sslSave" type="button" id="">Save</button>
@@ -184,14 +195,14 @@
 
 
                     @*<div class="col-sm-2">
-                @Html.LabelFor(model => model.DeliveryDate)
-                <div class="input-group date">
-                    @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange", @readonly = "readonly" })
-                    <div class="input-group-append">
-                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                    </div>
-                </div>
-            </div>*@
+                            @Html.LabelFor(model => model.DeliveryDate)
+                            <div class="input-group date">
+                                @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange", @readonly = "readonly" })
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>*@
                 </div>
 
 
@@ -224,7 +235,7 @@
                                 <th data-type="text" data-search="true" data-required="true" style="width:12%;" data-name="ProductName"> Product Name </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
                                 @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
-        <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
 
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="OrderQuantity"> Order Quantity </th>
                                 <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="CompletedQty"> Completed Qty </th>
@@ -258,7 +269,7 @@
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
                                         @*<td hidden> @item.SaleId </td>
-                                <td hidden> @item.SaleOrderDetailId </td>*@
+                                            <td hidden> @item.SaleOrderDetailId </td>*@
                                         <td class=" dFormat "> @item.OrderQuantity</td>
                                         <td class=" dFormat "> @item.CompletedQty</td>
                                         <td class=" dFormat "> @item.RemainQty</td>
@@ -353,7 +364,41 @@
 
     </form>
 
+    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="card-header p-2">
 
+            @if (Model.IsPost)
+            {
+                <button type="button" class="button sslPush">Already Posted</button>
+            }
+            else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    <button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>
+
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                </div>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button" id="">Save</button>
+                </div>
+
+
+            }
+
+        </div>
+        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+    </div>
     <div class="card card-secondary auditcard">
 
         <div class="card-header">

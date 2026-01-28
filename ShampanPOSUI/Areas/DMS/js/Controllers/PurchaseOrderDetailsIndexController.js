@@ -104,8 +104,17 @@
                             if (param.field === "Id") {
                                 param.field = "H.Id";
                             }
-                            if (param.field === "Code") {
+                            if (param.field === "PurchaseOrderCode") {
                                 param.field = "H.Code";
+                            }
+                            if (param.field === "SupplierCode") {
+                                param.field = "s.Code";
+                            }
+                            if (param.field === "ProductCode") {
+                                param.field = "P.Code";
+                            }
+                            if (param.field === "VATRate") {
+                                param.field = "D.VATRate";
                             }
                             if (param.field === "SupplierName") {
                                 param.field = "s.Name";
@@ -113,35 +122,13 @@
                             if (param.field === "SupplierAddress") {
                                 param.field = "s.Address";
                             }
-                          
-                            //if (param.field === "Status") {
-                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+                            if (param.field === "UnitPrice") {
+                                param.field = "D.UnitPrice";
+                            }
+                            if (param.field === "SubTotal") {
+                                param.field = "D.SubTotal";
+                            }
 
-                            //    if (statusValue.startsWith("p")) {
-                            //        param.value = 1;
-                            //    } else if (statusValue.startsWith("n")) {
-                            //        param.value = 0;
-                            //    } else {
-                            //        param.value = null;
-                            //    }
-
-                            //    param.field = "H.IsPost";
-                            //    param.operator = "eq";
-                            //}
-                            //if (param.field === "Completed") {
-                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                            //    if (statusValue.startsWith("c")) {
-                            //        param.value = 1;
-                            //    } else if (statusValue.startsWith("n")) {
-                            //        param.value = 0;
-                            //    } else {
-                            //        param.value = null;
-                            //    }
-
-                            //    param.field = "H.IsCompleted";
-                            //    param.operator = "eq";
-                            //}
                             if (param.field === "BENumber") {
                                 param.field = "H.BENumber";
                             }
@@ -163,10 +150,7 @@
                             if (param.field === "ProductName") {
                                 param.field = "P.Name";
                             }
-                            if (param.field === "FiscalYear") {
-                                param.field = "h.FiscalYear";
-                            }
-
+                     
                             if (param.field === "BranchName") {
                                 param.field = "br.Name";
                             }
@@ -181,8 +165,17 @@
                             if (param.field === "Id") {
                                 param.field = "H.Id";
                             }
-                            if (param.field === "Code") {
+                            if (param.field === "PurchaseOrderCode") {
                                 param.field = "H.Code";
+                            }
+                            if (param.field === "SupplierCode") {
+                                param.field = "s.Code";
+                            }
+                            if (param.field === "ProductCode") {
+                                param.field = "P.Code";
+                            }
+                            if (param.field === "VATRate") {
+                                param.field = "D.VATRate";
                             }
                             if (param.field === "SupplierName") {
                                 param.field = "s.Name";
@@ -190,35 +183,13 @@
                             if (param.field === "SupplierAddress") {
                                 param.field = "s.Address";
                             }
+                            if (param.field === "UnitPrice") {
+                                param.field = "D.UnitPrice";
+                            }
+                            if (param.field === "SubTotal") {
+                                param.field = "D.SubTotal";
+                            }
 
-                            //if (param.field === "Status") {
-                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                            //    if (statusValue.startsWith("p")) {
-                            //        param.value = 1;
-                            //    } else if (statusValue.startsWith("n")) {
-                            //        param.value = 0;
-                            //    } else {
-                            //        param.value = null;
-                            //    }
-
-                            //    param.field = "H.IsPost";
-                            //    param.operator = "eq";
-                            //}
-                            //if (param.field === "Completed") {
-                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                            //    if (statusValue.startsWith("c")) {
-                            //        param.value = 1;
-                            //    } else if (statusValue.startsWith("n")) {
-                            //        param.value = 0;
-                            //    } else {
-                            //        param.value = null;
-                            //    }
-
-                            //    param.field = "H.IsCompleted";
-                            //    param.operator = "eq";
-                            //}
                             if (param.field === "BENumber") {
                                 param.field = "H.BENumber";
                             }
@@ -240,10 +211,6 @@
                             if (param.field === "ProductName") {
                                 param.field = "P.Name";
                             }
-                            if (param.field === "FiscalYear") {
-                                param.field = "h.FiscalYear";
-                            }
-
                             if (param.field === "BranchName") {
                                 param.field = "br.Name";
                             }
@@ -263,32 +230,35 @@
                 model: {
                     fields: {
                         id: { type: "number" },
-                        code: { type: "string" },
-                        deliveryAddress: { type: "string" },
+                        Code: { type: "string" },
+                        PurchaseOrderCode: { type: "string" },
+                        DeliveryAddress: { type: "string" },
                         OrderDate: { type: "date" },
-                        invoiceDateTime: { type: "date" },
                         DeliveryDateTime: { type: "date" },
-                        deliveryDate: { type: "date" },
-                        productName: { type: "string" },
+                        SupplierName: { type: "string" },
+                        ProductName: { type: "string" },
                         Quantity: { type: "number" },
-                        SUBTotal: { type: "number" },
+                        SubTotal: { type: "number" },
                         SD: { type: "number" },
                         SDAmount: { type: "number" },
                         VATRate: { type: "number" },
                         VATAmount: { type: "number" },
-                        lineTotal: { type: "number" }
+                        OthersAmount: { type: "number" }
                     }
                 }
             },
             aggregate: [
                 { field: "Quantity", aggregate: "sum" },
-                { field: "SUBTotal", aggregate: "sum" },
                 { field: "SDAmount", aggregate: "sum" },
                 { field: "VATRate", aggregate: "sum" },
                 { field: "SD", aggregate: "sum" },
+                { field: "UnitPrice", aggregate: "sum" },
                 { field: "VATAmount", aggregate: "sum" },
+                { field: "SubTotal", aggregate: "sum" },
                 { field: "OthersAmount", aggregate: "sum" }
+
             ]
+
 
         });
 
@@ -325,16 +295,27 @@
             reorderable: true,
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
-            search: ["Code", "SupplierName", "SupplierAddress", "BENumber", "OrderDate", "DeliveryDateTime", "Comments", "TransactionType","FiscalYear", "BranchName", "BranchAddress", "Quantity", "UnitPrice", "SubTotal", "SD", "SDAmount", "VATAmount", "OthersAmount"],
+            search: [
+                "PurchaseOrderCode",
+                "SupplierCode",
+                "SupplierName",
+                "ProductCode",
+                "ProductName",
+                "OrderDate",
+                "DeliveryDateTime",
+                "Comments",
+                "TransactionType",
+                "Quantity",
+                "SubTotal",
+                "SDAmount",
+                "VATAmount",
+                "OthersAmount"
+            ],
             excel: {
                 fileName: `PurchaseOrder_Details_${new Date().toISOString().split('T')[0]}.xlsx`,
                 filterable: true
             },
-            //pdf: {
-            //    fileName: `PurchaseOrder_Details_${new Date().toISOString().split('T')[0]}.pdf`,
-            //    allPages: true,
-            //    avoidLinks: true
-            //},
+    
             pdf: {
                 fileName: `PurchaseOrder_Details_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
                 allPages: true,
@@ -402,6 +383,7 @@
             columns: [
                 { field: "PurchaseOrderCode", title: "Purchase Order Code", width: 180, sortable: true },
                 { field: "BranchName", title: "Branch Name", hidden: true, width: 180, sortable: true },
+                { field: "SupplierCode", title: "Supplier Code", width: 180, sortable: true },
                 { field: "SupplierName", title: "Supplier Name", width: 180, sortable: true },
                 {
                     field: "OrderDate", title: "Order Date", sortable: true, width: 130, template: '#= kendo.toString(kendo.parseDate(OrderDate), "yyyy-MM-dd") #',
@@ -419,10 +401,10 @@
 
                 { field: "Comments", title: "Comments", width: 200, hidden: true, sortable: true },
                 { field: "TransactionType", title: "Transaction Type", hidden: true, width: 150, sortable: true },
-
-                { field: "ProductName", title: "Product Name", width: 200, sortable: true },
+                { field: "ProductCode", title: "Product Code", width: 180, sortable: true },
+                { field: "ProductName", title: "Product Name", width: 200, sortable: true, footerTemplate: "Total:", groupFooterTemplate: "Group Total:"},
                 { field: "PeriodId", title: "Period Id", width: 200, hidden: true, sortable: true },
-                { field: "FiscalYear", title: "Fiscal Year", hidden: true, sortable: true, width: 150 },
+              
                 {
                     field: "Quantity",
                     title: "Quantity",
@@ -435,9 +417,7 @@
                     attributes: { style: "text-align: right;" }
                 },
 
-
                 { field: "UnitPrice", title: "Unit Price", width: 140, format: "{0:n2}" },
-
                 {
                     field: "SubTotal",
                     title: "Sub Total",

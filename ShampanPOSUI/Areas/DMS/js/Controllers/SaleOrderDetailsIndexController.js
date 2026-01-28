@@ -399,7 +399,7 @@
                 },
 
                 { field: "CustomerName", title: "Customer Name", width: 180, sortable: true },
-                { field: "ProductName", title: "Product Name", width: 180, sortable: true },
+                { field: "ProductName", title: "Product Name", width: 180, sortable: true, footerTemplate: "Total:", groupFooterTemplate: "Group Total:"},
                 {
                     field: "Quantity",
                     title: "Quantity",

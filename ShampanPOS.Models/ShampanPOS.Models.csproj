@@ -102,6 +102,8 @@
     <Compile Include="CustomerData.cs" />
     <Compile Include="CustomerDataVM.cs" />
     <Compile Include="DepositVM.cs" />
+    <Compile Include="MasterItemGroupVM.cs" />
+    <Compile Include="MasterItemVM.cs" />
     <Compile Include="OverHeadVM.cs" />
     <Compile Include="PaymentDetailVM.cs" />
     <Compile Include="PaymentVM.cs" />
