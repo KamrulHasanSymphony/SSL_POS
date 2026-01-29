@@ -86,6 +86,29 @@
         .tab-content.active {
             display: block;
         }
+
+    button[onclick*="reportLink"] {
+        background: #138496;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s ease-in-out;
+    }
+
+        button[onclick*="reportLink"]:hover {
+            background: #117a8b;
+        }
+
+        button[onclick*="reportLink"]:focus {
+            outline: none;
+        }
+
 </style>
 
 
@@ -198,9 +221,9 @@
                                 </div>
 
                                 <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.FaxNo)
+                                    @Html.LabelFor(model => model.Email)
                                     <div class="input-group">
-                                        @Html.TextBoxFor(model => model.FaxNo, new { placeholder = "Enter Fax Number", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                                        @Html.TextBoxFor(model => model.Email, new { placeholder = "Enter Email", @class = "form-control form-control-sm", type = "email" })
                                     </div>
                                 </div>
 
@@ -244,19 +267,10 @@
         </div>*@
 
 
-
                                 <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.Email)
+                                    @Html.LabelFor(model => model.NIDNo)
                                     <div class="input-group">
-                                        @Html.TextBoxFor(model => model.Email, new { placeholder = "Enter Email", @class = "form-control form-control-sm", type = "email" })
-                                    </div>
-                                </div>
-
-
-                                <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.TINNo)
-                                    <div class="input-group">
-                                        @Html.TextBoxFor(model => model.TINNo, new { placeholder = "Enter TIN No", @class = "form-control form-control-sm" })
+                                        @Html.TextBoxFor(model => model.NIDNo, new { placeholder = "Enter NID Number", @class = "form-control form-control-sm", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
                                     </div>
                                 </div>
 
@@ -264,6 +278,13 @@
                                     @Html.LabelFor(model => model.BINNo)
                                     <div class="input-group">
                                         @Html.TextBoxFor(model => model.BINNo, new { placeholder = "Enter BIN No", @class = "form-control form-control-sm" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.TINNo)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.TINNo, new { placeholder = "Enter TIN No", @class = "form-control form-control-sm" })
                                     </div>
                                 </div>
 
@@ -282,12 +303,10 @@
                                 </div>
 
                                 <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.Comments)
-                                    <div class="input-group ">
-                                        @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comments", @class = "  form-control form-control-sm " })
-
+                                    @Html.LabelFor(model => model.FaxNo)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.FaxNo, new { placeholder = "Enter Fax Number", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
                                     </div>
-                                    @Html.ValidationMessageFor(model => model.Comments)
                                 </div>
 
 
@@ -305,72 +324,73 @@
                             <div class="form-group row">
 
 
-       <div class="col-sm-2">
-            @Html.LabelFor(model => model.NIDNo)
-            <div class="input-group">
-                @Html.TextBoxFor(model => model.NIDNo, new { placeholder = "Enter NID Number", @class = "form-control form-control-sm", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
-            </div>
-        </div>
-
-
-                                @*<div class="col-sm-2">
-                                    @Html.LabelFor(model => model.CustomerCategory)
-                                    <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.CustomerCategory, new { @class = "   ", @style = "width: 100%;" })
-                                    </div>
-                                </div><span id="titleError3" class="text-danger" style="display:none;"></span>*@
-
-                                @*<div class="col-sm-2">
-                                    @Html.LabelFor(model => model.Potential)
-                                    <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.Potential, new { @class = "dFormat NumericCheck  form-control form-control-sm " })
-                                    </div>
-                                </div>*@
-
-
                                 <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.ImagePath)
-                                    <div class="input-group">
-                                        <input type="file" id="imageUpload" class="form-control form-control-sm" accept="image/*" style="height:1%;" />
-                                        <input type="hidden" id="ImagePath" name="ImagePath" value="@Model.ImagePath" />
+                                    @Html.LabelFor(model => model.Comments)
+                                    <div class="input-group ">
+                                        @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comments", @class = "  form-control form-control-sm " })
+
                                     </div>
-
-                                    <!-- Ensure the preview image always exists -->
-                                    <img id="imagePreview" src="@(!string.IsNullOrEmpty(Model.ImagePath) ? Url.Content(Model.ImagePath) : "")"
-                                         alt="Customer Image" width="100" style="display: @(string.IsNullOrEmpty(Model.ImagePath) ? "none" : "block");" />
-
-                                    <!-- Delete button, hidden by default -->
-                                    <button type="button" id="deleteImageBtn" class="btn btn-danger" style="display: @(string.IsNullOrEmpty(Model.ImagePath) ? "none" : "inline-block");">
-                                        <i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete
-                                    </button>
+                                    @Html.ValidationMessageFor(model => model.Comments)
                                 </div>
 
-
-                                <div class="col-sm-2" style="flex-direction: column">
-                                    @Html.LabelFor(model => model.IsActive)
-                                    <div class="Onoffbtn">
-                                        <div class="input-group" style="margin-bottom: -26px; width: 78%;">
-                                            <input id="IsActive"
-                                                   value="@Model.IsActive"
-                                                   type="checkbox"
-                                                   name="my-checkbox"
-                                                   @(Model.IsActive ? "checked" : "")
-                                                   data-bootstrap-switch
-                                                   data-off-color="danger"
-                                                   data-on-color="success"
-                                                   data-on-text="ON"
-                                                   data-off-text="OFF">
+                                @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <div class="col-sm-2" style="flex-direction: column">
+                                        @Html.LabelFor(model => model.IsActive)
+                                        <div class="Onoffbtn">
+                                            <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                                <input id="IsActive"
+                                                       value="@Model.IsActive"
+                                                       type="checkbox"
+                                                       name="my-checkbox"
+                                                       @(Model.IsActive ? "checked" : "")
+                                                       data-bootstrap-switch
+                                                       data-off-color="danger"
+                                                       data-on-color="success"
+                                                       data-on-text="ON"
+                                                       data-off-text="OFF">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-
+                                }
                             </div>
 
+                                @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.CustomerCategory)
+            <div class="input-group ">
+                @Html.TextBoxFor(model => model.CustomerCategory, new { @class = "   ", @style = "width: 100%;" })
+            </div>
+        </div><span id="titleError3" class="text-danger" style="display:none;"></span>*@
+
+                                @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.Potential)
+            <div class="input-group ">
+                @Html.TextBoxFor(model => model.Potential, new { @class = "dFormat NumericCheck  form-control form-control-sm " })
+            </div>
+        </div>*@
                                 <div class="form-group row">
 
 
+                                    <div class="col-sm-2">
+                                        @Html.LabelFor(model => model.ImagePath)
+                                        <div class="input-group">
+                                            <input type="file" id="imageUpload" class="form-control form-control-sm" accept="image/*" style="height:1%;" />
+                                            <input type="hidden" id="ImagePath" name="ImagePath" value="@Model.ImagePath" />
+                                        </div>
 
+                                        <!-- Ensure the preview image always exists -->
+                                        <img id="imagePreview" src="@(!string.IsNullOrEmpty(Model.ImagePath) ? Url.Content(Model.ImagePath) : "")"
+                                             alt="Customer Image" width="100" style="display: @(string.IsNullOrEmpty(Model.ImagePath) ? "none" : "block");" />
+
+                                        <!-- Delete button, hidden by default -->
+                                        <button type="button" id="deleteImageBtn" class="btn btn-danger" style="display: @(string.IsNullOrEmpty(Model.ImagePath) ? "none" : "inline-block");">
+                                            <i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group row">
 
                                 </div>
 
@@ -390,7 +410,16 @@
                                 <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/Customer/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
                                 </button>
-                                <button class="button sslPrintC" data-id="@Model.Id">Print</button>
+                                @*<button class="button sslPrintC" data-id="@Model.Id">Print</button>*@
+                                <!-- Button without class -->
+                                <button type="button" onclick="document.getElementById('reportLink').click();">
+                                    <i class="k-icon k-i-print"></i> Print
+                                </button>
+
+                                <a id="reportLink"
+                                   href="/DMS/Customer/getReport/@Model.Id"
+                                   style="display:none;">
+                                </a>
                             </div>
 
                         }

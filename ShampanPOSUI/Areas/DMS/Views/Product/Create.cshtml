@@ -85,6 +85,29 @@
         .tab-content.active {
             display: block;
         }
+
+    button[onclick*="reportLink"] {
+        background: #138496;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s ease-in-out;
+    }
+
+        button[onclick*="reportLink"]:hover {
+            background: #117a8b;
+        }
+
+        button[onclick*="reportLink"]:focus {
+            outline: none;
+        }
+
 </style>
 
 <div id="tabs">
@@ -331,7 +354,15 @@
                                 <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/Product/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
                                 </button>
-                                <button class="button sslPrintC" data-id="@Model.Id">Print</button>
+                                @*<button class="button sslPrintC" data-id="@Model.Id">Print</button>*@
+                                <button type="button" onclick="document.getElementById('reportLink').click();">
+                                    <i class="k-icon k-i-print"></i> Print
+                                </button>
+
+                                <a id="reportLink"
+                                   href="/DMS/Product/getReport/@Model.Id"
+                                   style="display:none;">
+                                </a>
                             </div>
                         }
                         else

@@ -52,6 +52,14 @@
             border: none !important;
             box-shadow: none !important;
         }
+
+        .report-table th {
+            width: 180px;
+        }
+
+        .report-table td {
+            width: 220px;
+        }
     }
 </style>
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px 40px 0 0;">
@@ -113,41 +121,12 @@
             <td>@Model.SalePrice</td>
         </tr>
         <tr>
-            <th>VAT Rate (%)</th>
-            <td>@Model.VATRate</td>
+            <th style="width:180px;">VAT Rate (%)</th>
+            <td style="width:220px;">@Model.VATRate</td>
             <th>SD Rate (%)</th>
             <td>@Model.SDRate</td>
         </tr>
-    </table>
-    <!-- SUMMARY -->
-    <table >
-        <tr>
-            <th>Purchase Price</th>
-            <td class="text-right">@Model.PurchasePrice</td>
-        </tr>
-        <tr>
-            <th>Sale Price</th>
-            <td class="text-right">@Model.SalePrice</td>
-        </tr>
-        <tr>
-            <th>VAT Amount</th>
-            <td class="text-right">
-                @(Model.SalePrice * Model.VATRate / 100)
-            </td>
-        </tr>
-        <tr>
-            <th>SD Amount</th>
-            <td class="text-right">
-                @(Model.SalePrice * Model.SDRate / 100)
-            </td>
-        </tr>
-        @*<tr>
-            <th>Status</th>
-            <td>
-                @(Model.IsActive ? "Active" : "Inactive")
-            </td>
-        </tr>*@
-    </table>
 
+    </table>
 
 </div>
