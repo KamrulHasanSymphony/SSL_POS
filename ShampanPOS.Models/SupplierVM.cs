@@ -25,6 +25,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
 
+        [Required(ErrorMessage = "Address is required.")]
         [Display(Name = "Address")]
         public string? Address { get; set; }
 

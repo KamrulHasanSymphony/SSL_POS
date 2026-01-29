@@ -611,7 +611,7 @@
                 { field: "ProductGroupName", title: "Group Name", sortable: true, width: 200 },
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
-                { field: "UOMId", title: "UOM", sortable: true, width: 200 },
+                { field: "UOMId", title: "UOM", sortable: true, width: 130 },
                 { field: "Description", title: "Description", sortable: true, width: 200, hidden: true },
                 { field: "SalePrice", title: "Sale Price", sortable: true, width: 120 },
                 { field: "PurchasePrice", title: "Purchase Price", sortable: true, width: 120 },
