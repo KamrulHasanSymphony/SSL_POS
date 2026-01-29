@@ -201,40 +201,31 @@
 
                             <div class="form-group row">
 
-                                <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.Description)
-                                    <div class="input-group ">
-                                        @Html.TextAreaFor(model => model.Description, new { placeholder = " Enter Description", @class = "  form-control form-control-sm " })
-
-                                    </div>
-                                    @Html.ValidationMessageFor(model => model.Description)
-                                </div>
+                                @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.CtnSize)
+            <div class="input-group ">
+                @Html.TextBoxFor(model => model.CtnSize, new { placeholder = " Enter Ctn Size", @class = "  form-control form-control-sm " })
+            </div>
+            <span id="titleError1" class="text-danger" style="display:none;"></span>
+        </div>*@
 
                                 @*<div class="col-sm-2">
-                                    @Html.LabelFor(model => model.CtnSize)
-                                    <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.CtnSize, new { placeholder = " Enter Ctn Size", @class = "  form-control form-control-sm " })
-                                    </div>
-                                    <span id="titleError1" class="text-danger" style="display:none;"></span>
-                                </div>*@
+            @Html.LabelFor(model => model.CtnSize)
+            <div class="input-group ">
+                @Html.TextAreaFor(model => model.CtnSize, new { placeholder = "Enter Carton Size", @class = "  form-control form-control-sm " })
 
-                                @*<div class="col-sm-2">
-                                        @Html.LabelFor(model => model.CtnSize)
-                                        <div class="input-group ">
-                                            @Html.TextAreaFor(model => model.CtnSize, new { placeholder = "Enter Carton Size", @class = "  form-control form-control-sm " })
+            </div>
+            @Html.ValidationMessageFor(model => model.CtnSize)
+        </div>
 
-                                        </div>
-                                        @Html.ValidationMessageFor(model => model.CtnSize)
-                                    </div>
+                <div class="col-sm-2">
+                    @Html.LabelFor(model => model.CtnSizeFactor)
+                    <div class="input-group ">
+                        @Html.TextAreaFor(model => model.CtnSizeFactor, new { placeholder = "Enter Carton Size Factor", @class = "  form-control form-control-sm " })
 
-                                            <div class="col-sm-2">
-                                                @Html.LabelFor(model => model.CtnSizeFactor)
-                                                <div class="input-group ">
-                                                    @Html.TextAreaFor(model => model.CtnSizeFactor, new { placeholder = "Enter Carton Size Factor", @class = "  form-control form-control-sm " })
-
-                                                </div>
-                                                @Html.ValidationMessageFor(model => model.CtnSizeFactor)
-                                            </div>*@
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CtnSizeFactor)
+                </div>*@
 
 
                                 <div class="col-sm-2">
@@ -268,6 +259,35 @@
                                     </div>
                                     @Html.ValidationMessageFor(model => model.SalePrice)
                                 </div>
+
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(model => model.Description)
+                                    <div class="input-group ">
+                                        @Html.TextAreaFor(model => model.Description, new { placeholder = " Enter Description", @class = "  form-control form-control-sm " })
+
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Description)
+                                </div>
+
+                                <div class="col-sm-1">
+                                    @Html.LabelFor(model => model.IsActive)
+                                    <div class="Onoffbtn">
+                                        <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                            <input id="IsActive"
+                                                   value="@Model.IsActive"
+                                                   type="checkbox"
+                                                   name="my-checkbox"
+                                                   @(Model.IsActive ? "checked" : "")
+                                                   data-bootstrap-switch
+                                                   data-off-color="danger"
+                                                   data-on-color="success"
+                                                   data-on-text="Yes"
+                                                   data-off-text="No">
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
 
 
@@ -289,23 +309,6 @@
                                     </button>
                                 </div>
 
-                                <div class="col-sm-1">
-                                    @Html.LabelFor(model => model.IsActive)
-                                    <div class="Onoffbtn">
-                                        <div class="input-group" style="margin-bottom: -26px; width: 78%;">
-                                            <input id="IsActive"
-                                                   value="@Model.IsActive"
-                                                   type="checkbox"
-                                                   name="my-checkbox"
-                                                   @(Model.IsActive ? "checked" : "")
-                                                   data-bootstrap-switch
-                                                   data-off-color="danger"
-                                                   data-on-color="success"
-                                                   data-on-text="Yes"
-                                                   data-off-text="No">
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
 

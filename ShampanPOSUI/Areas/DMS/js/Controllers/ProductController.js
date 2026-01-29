@@ -406,6 +406,19 @@
                             if (param.field === "UOMName") {
                                 param.field = "uom.Name";
                             }
+                            if (param.field === "SalePrice") {
+                                param.field = "H.SalePrice";
+                            }
+                            if (param.field === "PurchasePrice") {
+                                param.field = "H.PurchasePrice";
+                            }
+                            if (param.field === "SDRate") {
+                                param.field = "H.SDRate";
+                            }
+                            if (param.field === "VATRate") {
+                                param.field = "H.VATRate";
+                            }
+
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
@@ -447,6 +460,20 @@
                             if (param.field === "UOMName") {
                                 param.field = "uom.Name";
                             }
+
+                            if (param.field === "SalePrice") {
+                                param.field = "H.SalePrice";
+                            }
+                            if (param.field === "PurchasePrice") {
+                                param.field = "H.PurchasePrice";
+                            }
+                            if (param.field === "SDRate") {
+                                param.field = "H.SDRate";
+                            }
+                            if (param.field === "VATRate") {
+                                param.field = "H.VATRate";
+                            }
+
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
@@ -515,7 +542,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "Description", "ProductGroupName","Status"]
+                fields: ["Code", "Name", "Description", "ProductGroupName", "SDRate", "VATRate", "PurchasePrice","SalePrice","Status"]
             },
             excel: {
                 fileName: "Products.xlsx",
@@ -562,7 +589,7 @@
                 },
                 {
                     title: "Action",
-                    width: 80,
+                    width: 100,
                     template: function (dataItem) {
                         
                         return `
@@ -583,7 +610,12 @@
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
                 { field: "UOMName", title: "UOM Name", sortable: true, width: 200 },
-                { field: "Description", title: "Description", sortable: true, width: 200 },
+                { field: "Description", title: "Description", sortable: true, width: 200, hidden: true },
+                { field: "SalePrice", title: "Sale Price", sortable: true, width: 120 },
+                { field: "PurchasePrice", title: "Purchase Price", sortable: true, width: 120 },
+                { field: "VATRate", title: "VAT Rate", sortable: true, width: 120 },
+                { field: "SDRate", title: "SD Rate", sortable: true, width: 120 },
+
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,
                     filterable: {
