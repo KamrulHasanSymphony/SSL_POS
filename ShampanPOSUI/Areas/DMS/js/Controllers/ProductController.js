@@ -17,7 +17,7 @@
         if (getOperation !== '') {
             GetProductGroupComboBox();
             GetCTNSIZEComboBox();
-            //GetUOMComboBox();
+            GetUOMComboBox();
         };
 
 
@@ -303,6 +303,8 @@
             }
         }).data("kendoMultiColumnComboBox");
     };
+
+
     function GetCTNSIZEComboBox() {
         var CTNSIZEComboBox = $("#CtnSize").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -333,35 +335,35 @@
         }).data("kendoMultiColumnComboBox");
     };
 
-    //function GetUOMComboBox() {
-    //    var UOMComboBox = $("#UOMId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 },
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetUOMList"
-    //            }
-    //        },
-    //        placeholder: "Select UOM",
-    //        value: "",
-    //        dataBound: function (e) {
+    function GetUOMComboBox() {
+        var UOMComboBox = $("#UOMId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 },
+            ],
+            filter: "contains",
+            filterFields: ["Code", "Name"],
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetUOMList"
+                }
+            },
+            placeholder: "Select UOM",
+            value: "",
+            dataBound: function (e) {
                 
-    //            if (getUOMId) {
-    //                this.value(parseInt(getUOMId));
-    //            }
-    //        },
-    //        change: function (e) {
+                if (getUOMId) {
+                    this.value(parseInt(getUOMId));
+                }
+            },
+            change: function (e) {
                 
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
+            }
+        }).data("kendoMultiColumnComboBox");
+    };
 
     var GetGridDataList = function () {
         
@@ -403,8 +405,8 @@
                             if (param.field === "ProductGroupName") {
                                 param.field = "PG.Name";
                             }
-                            if (param.field === "UOMName") {
-                                param.field = "uom.Name";
+                            if (param.field === "UOMId") {
+                                param.field = "H.UOMId";
                             }
                             if (param.field === "SalePrice") {
                                 param.field = "H.SalePrice";
@@ -457,8 +459,8 @@
                             if (param.field === "ProductGroupName") {
                                 param.field = "PG.Name";
                             }
-                            if (param.field === "UOMName") {
-                                param.field = "uom.Name";
+                            if (param.field === "UOMId") {
+                                param.field = "H.UOMId";
                             }
 
                             if (param.field === "SalePrice") {
@@ -609,7 +611,7 @@
                 { field: "ProductGroupName", title: "Group Name", sortable: true, width: 200 },
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
-                { field: "UOMName", title: "UOM Name", sortable: true, width: 200 },
+                { field: "UOMId", title: "UOM", sortable: true, width: 200 },
                 { field: "Description", title: "Description", sortable: true, width: 200, hidden: true },
                 { field: "SalePrice", title: "Sale Price", sortable: true, width: 120 },
                 { field: "PurchasePrice", title: "Purchase Price", sortable: true, width: 120 },
@@ -1216,6 +1218,7 @@
 
 
     function save() {
+        debugger;
 
         var isDropdownValid1 = CommonService.validateDropdown("#ProductGroupId", "#titleError1", "Product Group is required");
         var isDropdownValid2 = CommonService.validateDropdown("#UOMId", "#titleError2", "UOM is required");
