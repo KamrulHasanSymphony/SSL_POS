@@ -122,6 +122,31 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpGet]
+        public ActionResult GetMasterItemGroupList(string value)
+        {
+            try
+            {
+                List<MasterItemGroupVM> lst = new List<MasterItemGroupVM>();
+                CommonVM param = new CommonVM();
+                //param.Value = value;
+                ResultVM result = _repo.GetMasterItemGroupList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<MasterItemGroupVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         [HttpGet]
         public ActionResult GetUOMList(string value)
         {
@@ -1200,6 +1225,30 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             {
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return Json(new { draw = Request.Form["draw"], recordsTotal = 0, recordsFiltered = 0, data = new List<PurchaseDataVM>() });
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult GetItemList(string value = "")
+        {
+            try
+            {
+                List<MasterItemVM> lst = new List<MasterItemVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetItemList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<MasterItemVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 

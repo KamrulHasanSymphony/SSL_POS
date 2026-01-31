@@ -340,6 +340,7 @@
     <Compile Include="Areas\DMS\Controllers\DepositController.cs" />
     <Compile Include="Areas\DMS\Controllers\MasterItemController.cs" />
     <Compile Include="Areas\DMS\Controllers\MasterItemGroupController.cs" />
+    <Compile Include="Areas\DMS\Controllers\MasterItemProductController.cs" />
     <Compile Include="Areas\DMS\Controllers\OverHeadController.cs" />
     <Compile Include="Areas\DMS\Controllers\PaymentController.cs" />
     <Compile Include="Areas\DMS\Controllers\SaleReturnController.cs" />
@@ -363,6 +364,7 @@
     <Content Include="Areas\DMS\js\Controllers\DepositController.js" />
     <Content Include="Areas\DMS\js\Controllers\CollectionController.js" />
     <Content Include="Areas\DMS\js\Controllers\FromSaleController.js" />
+    <Content Include="Areas\DMS\js\Controllers\MasterItemProductController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterItemController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterItemGroupController.js" />
     <Content Include="Areas\DMS\js\Controllers\PurchaseOrderDetailsIndexController.js" />
@@ -2632,6 +2634,9 @@
     <Content Include="Areas\DMS\Views\MasterItem\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItemGroup\Index.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItemGroup\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterItemProduct\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterItemProduct\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\Product\FromMasterItem.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

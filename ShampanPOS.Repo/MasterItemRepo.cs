@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static ShampanPOS.Models.CommonModel;
@@ -75,8 +76,25 @@ namespace ShampanPOS.Repo
             }
         }
 
-
         public ResultVM Update(MasterItemVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/MasterItem/Update", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public ResultVM MasterUpdate(ProductVM model)
         {
             try
             {
@@ -137,9 +155,38 @@ namespace ShampanPOS.Repo
             }
             catch (Exception e)
             {
-                throw e;
+                throw e; 
             }
         }
+
+        public ResultVM InsertProductFromMasterItem(ProductVM model)
+        {
+            try
+            {
+               
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+
+         
+                var data = httpRequestHelper.PostData("api/Product/InsertFromMasterItem", authModel,JsonConvert.SerializeObject(model));
+
+      
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new ResultVM
+                {
+                    Status = "Fail",
+                    Message = "API call failed",
+                    ExMessage = ex.ToString()
+                };
+            }
+        }
+
+
 
 
     }

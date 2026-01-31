@@ -1173,5 +1173,78 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
+
+        public ResultVM GetItemList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/GetItemList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public ResultVM GetMasterItemGroupList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/MasterItemGroupList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+
+        public bool IsMasterItemGroupMappedWithProductGroup(int? masterItemGroupId)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+
+                var payload = new
+                {
+                    MasterItemGroupId = masterItemGroupId
+                };
+
+                var data = httpRequestHelper.PostData(
+                    "api/Common/IsMasterItemGroupMappedWithProductGroup",
+                    authModel,
+                    JsonConvert.SerializeObject(payload)
+                );
+
+                var result = JsonConvert.DeserializeObject<ResultVM>(data);
+
+                return result.Status != null &&
+                       result.Status.Equals("Success", StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+
+
     }
 }
