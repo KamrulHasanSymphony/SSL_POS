@@ -134,6 +134,8 @@
     <Compile Include="SaleReturnVM.cs" />
     <Compile Include="SaleVM.cs" />
     <Compile Include="Status.cs" />
+    <Compile Include="MasterSupplierVM.cs" />
+    <Compile Include="MasterSupplierGroupVM.cs" />
     <Compile Include="UserBranchProfileVM.cs" />
     <Compile Include="UserProfileVM.cs" />
     <Compile Include="CompanyProfileVM.cs" />

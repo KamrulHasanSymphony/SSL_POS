@@ -1,8 +1,9 @@
-﻿@model ShampanPOS.Models.CustomerVM
+﻿@model ShampanPOS.Models.SupplierVM
 @{
-    ViewBag.Title = "Customer Report";
+    ViewBag.Title = "Supplier Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <style>
     body {
@@ -30,7 +31,7 @@
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
         font-size: 13px;
     }
 
@@ -42,7 +43,6 @@
         table th {
             background: #e9e9e9;
             font-weight: bold;
-            width: 20%;
         }
 
     @@media print {
@@ -80,68 +80,59 @@
     </table>
 
     <h2 style="text-align:center;border-bottom:1px solid #000;">
-        CUSTOMER REPORT
+        SUPPLIER REPORT
     </h2>
 
-    <!-- BASIC INFORMATION -->
-    <h3>Customer Information</h3>
+    <!-- SUPPLIER BASIC INFO -->
+    <h3>Supplier Information</h3>
     <table>
         <tr>
-            <th>Code</th>
+            <th style="width:160px;">Code</th>
             <td>@Model.Code</td>
-            <th>Name</th>
+            <th style="width:160px;">Name</th>
             <td>@Model.Name</td>
         </tr>
         <tr>
             <th>Bangla Name</th>
             <td>@Model.BanglaName</td>
-            <th>Customer Group</th>
-            <td>@Model.CustomerGroupName</td>
+            <th>Supplier Group</th>
+            <td>@Model.SupplierGroupId</td>
         </tr>
     </table>
 
-    <!-- ADDRESS INFORMATION -->
-    <h3>Address Information</h3>
+    <!-- CONTACT INFO -->
+    <h3>Contact Information</h3>
     <table>
         <tr>
             <th>Address</th>
             <td>@Model.Address</td>
-            <th>Bangla Address</th>
-            <td>@Model.BanglaAddress</td>
+            <th>City</th>
+            <td>@Model.City</td>
         </tr>
-    </table>
-
-    <!-- CONTACT INFORMATION -->
-    <h3>Contact Information</h3>
-    <table>
         <tr>
             <th>Telephone</th>
             <td>@Model.TelephoneNo</td>
-            <th>Fax</th>
-            <td>@Model.FaxNo</td>
+            <th>Email</th>
+            <td>@Model.Email</td>
         </tr>
         <tr>
-            <th>Email</th>
-            <td colspan="3">@Model.Email</td>
+            <th>Contact Person</th>
+            <td colspan="3">@Model.ContactPerson</td>
         </tr>
     </table>
 
-    <!-- IDENTIFICATION -->
-    <h3>Identification</h3>
+    <!-- STATUS -->
+    <h3>Status</h3>
     <table>
         <tr>
-            <th>TIN No</th>
-            <td>@Model.TINNo</td>
-            <th>BIN No</th>
-            <td>@Model.BINNo</td>
-        </tr>
-        <tr>
-            <th>NID No</th>
-            <td colspan="3">@Model.NIDNo</td>
+            <th>Active</th>
+            <td>@(Model.IsActive ? "Yes" : "No")</td>
+            <th>Archived</th>
+            <td>@(Model.IsArchive ? "Yes" : "No")</td>
         </tr>
     </table>
 
-
 </div>
+
 
 

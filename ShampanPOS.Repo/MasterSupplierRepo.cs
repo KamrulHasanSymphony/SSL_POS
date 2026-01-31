@@ -1,14 +1,16 @@
 ﻿using Newtonsoft.Json;
+using Shampan.Services.CommonKendo;
 using ShampanPOS.Models;
 using ShampanPOS.Models.KendoCommon;
 using ShampanPOS.Repo.Configuration;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using static ShampanPOS.Models.CommonModel;
 
 namespace ShampanPOS.Repo
 {
-    public class CustomerRepo
+    public class MasterSupplierRepo
     {
         public ResultVM Dropdown()
         {
@@ -18,7 +20,7 @@ namespace ShampanPOS.Repo
                 AuthModel authModel = new AuthModel { token = ClaimNames.token };
 
                 #region Invoke API
-                var data = httpRequestHelper.PostData("/api/Customer/Dropdown", authModel, JsonConvert.SerializeObject(authModel));
+                var data = httpRequestHelper.PostData("/api/BusinessType/Dropdown", authModel, JsonConvert.SerializeObject(authModel));
                 ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
                 #endregion
 
@@ -39,26 +41,7 @@ namespace ShampanPOS.Repo
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
                 AuthModel authModel = new AuthModel { token = ClaimNames.token };
                 #region Invoke API
-                var data = httpRequestHelper.PostData("api/Customer/List", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public ResultVM Insert(CustomerVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Customer/Insert", authModel, JsonConvert.SerializeObject(model));
+                var data = httpRequestHelper.PostData("api/MasterSupplier/List", authModel, JsonConvert.SerializeObject(model));
                 ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
                 #endregion                
 
@@ -70,14 +53,33 @@ namespace ShampanPOS.Repo
             }
         }
 
-        public ResultVM Update(CustomerVM model)
+        public ResultVM Insert(MasterSupplierVM model)
         {
             try
             {
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
                 AuthModel authModel = new AuthModel { token = ClaimNames.token };
                 #region Invoke API
-                var data = httpRequestHelper.PostData("api/Customer/Update", authModel, JsonConvert.SerializeObject(model));
+                var data = httpRequestHelper.PostData("api/MasterSupplier/Insert", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public ResultVM Update(MasterSupplierVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/MasterSupplier/Update", authModel, JsonConvert.SerializeObject(model));
                 ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
                 #endregion                
 
@@ -96,7 +98,7 @@ namespace ShampanPOS.Repo
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
                 AuthModel authModel = new AuthModel { token = ClaimNames.token };
                 #region Invoke API
-                var data = httpRequestHelper.PostData("api/Customer/Delete", authModel, JsonConvert.SerializeObject(model));
+                var data = httpRequestHelper.PostData("api/MasterSupplier/Delete", authModel, JsonConvert.SerializeObject(model));
                 ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
                 #endregion                
 
@@ -117,7 +119,7 @@ namespace ShampanPOS.Repo
 
                 #region Invoke API 
 
-                var data = httpRequestHelper.PostData("api/Customer/GetGridData", authModel, JsonConvert.SerializeObject(options,
+                var data = httpRequestHelper.PostData("api/MasterSupplier/GetGridData", authModel, JsonConvert.SerializeObject(options,
                     new JsonSerializerSettings
                     {
                         NullValueHandling = NullValueHandling.Ignore
@@ -141,7 +143,7 @@ namespace ShampanPOS.Repo
             {
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
                 AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                var result = httpRequestHelper.PostDataReport("api/Customer/ReportPreview", authModel, JsonConvert.SerializeObject(model));
+                var result = httpRequestHelper.PostDataReport("api/MasterSupplier/ReportPreview", authModel, JsonConvert.SerializeObject(model));
 
                 return result;
             }
@@ -151,60 +153,15 @@ namespace ShampanPOS.Repo
             }
         }
 
-        public ResultVM DevitCredit(CommonVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
 
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Customer/DevitCredit", authModel, JsonConvert.SerializeObject(model));
-
-                if (string.IsNullOrEmpty(data))
-                {
-                    throw new Exception("API response is empty or null");
-                }
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                if (result.Status != "Success")
-                {
-                    throw new Exception($"API returned an error: {result.Message}");
-                }
-                return result;
-                #endregion
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error in DevitCredit repository: " + e.Message);
-            }
-        }
-
-        public ResultVM GetCustomerReport(CommonVM model)
+        public ResultVM GetMasterSupplierReport(CommonVM model)
         {
             try
             {
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
                 AuthModel authModel = new AuthModel { token = ClaimNames.token };
                 #region Invoke API
-                var data = httpRequestHelper.PostData("api/Report/GetCustomerReport", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-        public ResultVM GetCustomerByCategory(CommonVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Report/GetCustomerByCategory", authModel, JsonConvert.SerializeObject(model));
+                var data = httpRequestHelper.PostData("api/Report/GetMasterSupplierReport", authModel, JsonConvert.SerializeObject(model));
                 ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
                 #endregion
 

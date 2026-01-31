@@ -1,4 +1,4 @@
-﻿var SupplierController = function (CommonService, CommonAjaxService) {
+﻿var MasterSupplierController = function (CommonService, CommonAjaxService) {
     var getSupplierGroupId = 0;
     var init = function () {
         getSupplierGroupId = $("#SupplierGroupId").val() || 0;
@@ -40,13 +40,13 @@
         $('#btnPrevious').click('click', function () {
             var getId = $('#Id').val();
             if (parseInt(getId) > 0) {
-                window.location.href = "/DMS/Supplier/NextPrevious?id=" + getId + "&status=Previous";
+                window.location.href = "/DMS/MasterSupplier/NextPrevious?id=" + getId + "&status=Previous";
             }
         });
         $('#btnNext').click('click', function () {
             var getId = $('#Id').val();
             if (parseInt(getId) > 0) {
-                window.location.href = "/DMS/Supplier/NextPrevious?id=" + getId + "&status=Next";
+                window.location.href = "/DMS/MasterSupplier/NextPrevious?id=" + getId + "&status=Next";
             }
         });
 
@@ -87,42 +87,6 @@
             $("#imageUpload").prop("disabled", false);
         });
 
-        //// Handle file input change to preview image
-        //$("#imageUpload").on("change", function (event) {
-        //    $("#imageUpload").prop("disabled", true);
-        //    var file = event.target.files[0];
-
-        //    if (!file) {
-        //        console.error("No file selected!");
-        //        return;
-        //    }
-
-        //    var reader = new FileReader();
-
-        //    reader.onload = function (e) {
-        //        console.log("File loaded successfully!"); // Debugging
-
-        //        // Update the preview image and make it visible
-        //        $("#imagePreview").attr("src", e.target.result).show();
-        //        $("#deleteImageBtn").show();
-        //    };
-
-        //    reader.onerror = function (error) {
-        //        console.error("Error reading file:", error);
-        //    };
-
-        //    reader.readAsDataURL(file);
-        //});
-
-        //$("#deleteImageBtn").on("click", function () {
-        //    $(this).addClass("clicked");
-        //    $("#imagePreview").attr("src", "").hide(); // Hide preview
-        //    $("#ImagePath").val(""); // Clear hidden field
-        //    $("#deleteImageBtn").hide();
-        //    $("#imageUpload").val("");// Hide delete button
-        //    $("#imageUpload").prop("disabled", false);
-
-        //});
 
         var operation = $("#Operation").val();
         var imagePath = $("#ImagePath").val();
@@ -181,7 +145,7 @@
             IDs: IDs
         };
 
-        var url = "/DMS/Supplier/Delete";
+        var url = "/DMS/MasterSupplier/Delete";
 
         CommonAjaxService.deleteData(url, model, deleteDone, saveFail);
     };
@@ -197,7 +161,7 @@
             pageSize: 10,
             transport: {
                 read: {
-                    url: "/DMS/Supplier/GetGridData",
+                    url: "/DMS/MasterSupplier/GetGridData",
                     type: "POST",
                     dataType: "json",
                     cache: false
@@ -218,10 +182,6 @@
                             if (param.field === "Address") {
                                 param.field = "H.Address";
                             }
-                            if (param.field === "SupplierGroupName") {
-                                param.field = "SG.Name";
-                            }
-
                             if (param.field === "City") {
                                 param.field = "H.City";
                             }
@@ -236,9 +196,6 @@
                             }
                             if (param.field === "ContactPerson") {
                                 param.field = "H.ContactPerson";
-                            }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
                             }
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
@@ -271,11 +228,6 @@
                             if (param.field === "Address") {
                                 param.field = "H.Address";
                             }
-
-                            if (param.field === "SupplierGroupName") {
-                                param.field = "SG.Name";
-                            }
-
                             if (param.field === "City") {
                                 param.field = "H.City";
                             }
@@ -290,9 +242,6 @@
                             }
                             if (param.field === "ContactPerson") {
                                 param.field = "H.ContactPerson";
-                            }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
                             }
 
                             if (param.field === "Status") {
@@ -360,14 +309,14 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "BanglaName", "Address","SupplierGroupName", "City", "TelephoneNo", "ContactPerson","Status"]
+                fields: ["Code", "Name", "BanglaName", "Address", "City", "TelephoneNo", "ContactPerson","Status"]
             },
             excel: {
-                fileName: "Supplier.xlsx",
+                fileName: "MasterSupplier.xlsx",
                 filterable: true
             },
             pdf: {
-                fileName: `Suppliers_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+                fileName: `MasterSupplier_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
                 allPages: true,
                 avoidLinks: true,
                 filterable: true
@@ -406,7 +355,7 @@
                 }
 
 
-                var fileName = `Suppliers_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+                var fileName = `MasterSupplier_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
                 var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
                 var columnWidth = 100;
@@ -441,12 +390,12 @@
                     width: 150,
                     template: function (dataItem) {
                         return `
-                            <a href="/DMS/Supplier/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
+                            <a href="/DMS/MasterSupplier/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>    <a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
                         <i class='fas fa-print'></i>
             </a>
-                        <a href="/DMS/Supplier/getReport/${dataItem.Id}" 
+                        <a href="/DMS/MasterSupplier/getReport/${dataItem.Id}" 
                           class="btn btn-success btn-sm mr-2 getReport" 
                           title="Report">
                            <i class="fas fa-file-alt"></i>
@@ -460,13 +409,11 @@
                 { field: "Code", title: "Code", width: 150, hidden: true, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
                 { field: "BanglaName", title: "Bangla Name", width: 150, sortable: true },
-                { field: "SupplierGroupName", title: "Supplier Group Name", width: 150, sortable: true },
                 { field: "Address", title: "Address", sortable: true, width: 200 },
                 { field: "City", title: "City", sortable: true, width: 200 },
                 { field: "TelephoneNo", title: "Telephone No.", sortable: true, width: 200 },
                 { field: "Email", title: "Email", sortable: true, hidden: true, width: 200 },
                 { field: "ContactPerson", title: "Contact Person", sortable: true, width: 200 },
-                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
 
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,
@@ -543,33 +490,7 @@
             }
         }
 
-        //// Check if delete button was clicked to remove image
-        //var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-        //if (deleteImageClicked) {
-        //    formData.append("ImagePath", "");  // Mark image for deletion
-        //    $("#imagePreview").remove();
-        //    $("#ImagePath").val("");
-        //}
-
-        //var fileInput = document.getElementById("imageUpload");
-        //if (fileInput.files.length > 0) {
-        //    var file = fileInput.files[0];
-
-        //    // ✅ Validate file size (Max 25MB)
-        //    if (file.size > 26214400) { // 25MB in bytes
-        //        ShowNotification(3, "Image size cannot exceed 25MB.");
-        //        return;
-        //    }
-
-        //    formData.append("file", file);
-        //} else if (!deleteImageClicked) {
-        //    var existingImagePath = $("#ImagePath").val();
-        //    if (existingImagePath) {
-        //        formData.append("ImagePath", existingImagePath);
-        //    }
-        //}
-
-        var url = "/DMS/Supplier/CreateEdit";
+        var url = "/DMS/MasterSupplier/CreateEdit";
 
         CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
     };
@@ -682,7 +603,7 @@ function ReportPreview(id) {
     
     const form = document.createElement('form');
     form.method = 'post';
-    form.action = '/DMS/Supplier/ReportPreview';
+    form.action = '/DMS/MasterSupplier/ReportPreview';
     form.target = '_blank';
     const inputVal = document.createElement('input');
     inputVal.type = 'hidden';

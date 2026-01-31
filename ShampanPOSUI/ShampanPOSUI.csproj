@@ -357,7 +357,9 @@
     <Compile Include="Areas\DMS\Controllers\ProductGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\ProductUOMConversionController.cs" />
     <Compile Include="Areas\DMS\Controllers\ReplaceReceiveController.cs" />
+    <Compile Include="Areas\DMS\Controllers\MasterSupplierController.cs" />
     <Compile Include="Areas\DMS\Controllers\SupplierController.cs" />
+    <Compile Include="Areas\DMS\Controllers\MasterSupplierGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\SupplierGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMConversationController.cs" />
@@ -368,6 +370,8 @@
     <Content Include="Areas\DMS\js\Controllers\MasterItemController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterItemGroupController.js" />
     <Content Include="Areas\DMS\js\Controllers\PurchaseOrderDetailsIndexController.js" />
+    <Content Include="Areas\DMS\js\Controllers\MasterSupplierController.js" />
+    <Content Include="Areas\DMS\js\Controllers\MasterSupplierGroupController.js" />
     <Content Include="Areas\DMS\js\Controllers\WithdrawalController.js" />
     <Content Include="Areas\DMS\js\Controllers\BankAccountController.js" />
     <Content Include="Areas\DMS\js\Controllers\PaymentController.js" />
@@ -2634,6 +2638,13 @@
     <Content Include="Areas\DMS\Views\MasterItem\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItemGroup\Index.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItemGroup\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplier\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplier\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplier\SupplierReport.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplierGroup\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplierGroup\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\Customer\CustomersReport.cshtml" />
+    <Content Include="Areas\DMS\Views\Customer\CustomerIndex.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItemProduct\Index.cshtml" />
     <Content Include="Areas\DMS\Views\MasterItemProduct\Create.cshtml" />
     <Content Include="Areas\DMS\Views\Product\FromMasterItem.cshtml" />

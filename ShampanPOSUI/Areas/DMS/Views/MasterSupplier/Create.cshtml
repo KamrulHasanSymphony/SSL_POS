@@ -1,38 +1,14 @@
-﻿@model ShampanPOS.Models.SupplierVM
+﻿@model ShampanPOS.Models.MasterSupplierVM
 @{
-    ViewBag.Title = "Supplier Create";
+    ViewBag.Title = "Master Supplier Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<style>
-    button[onclick*="reportLink"] {
-        background: #138496;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: background 0.2s ease-in-out;
-    }
-
-        button[onclick*="reportLink"]:hover {
-            background: #117a8b;
-        }
-
-        button[onclick*="reportLink"]:focus {
-            outline: none;
-        }
-</style>
 
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Supplier Entry </h1>
+                <h1 class="m-0">Master Supplier Entry </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -48,7 +24,7 @@
     <form id="frmEntry">
         <div class="card card-secondary">
             <div class="card-header">
-                <h3 class="card-title"> Supplier Info</h3>
+                <h3 class="card-title"> Master Supplier Info</h3>
             </div>
             <div class="card-body">
 
@@ -123,14 +99,6 @@
                         </div>
                         @Html.ValidationMessageFor(model => model.Address)
                     </div>
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.Comments)
-                        <div class="input-group ">
-                            @Html.TextAreaFor(model => model.Comments, new { placeholder = " Enter Comments", @class = "  form-control form-control-sm " })
-
-                        </div>
-                        @Html.ValidationMessageFor(model => model.Comments)
-                    </div>
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.ImagePath)
@@ -183,16 +151,7 @@
                     <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/Customer/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                         New
                     </button>
-                    @*<button class="button sslPrintC" data-id="@Model.Id">Print</button>*@
-                    <button type="button" onclick="document.getElementById('reportLink').click();">
-                        <i class="k-icon k-i-print"></i> Print
-                    </button>
-
-                    <a id="reportLink"
-                       href="/DMS/Supplier/getReport/@Model.Id"
-                       style="display:none;">
-                    </a>
-
+                    <button class="button sslPrintC" data-id="@Model.Id">Print</button>
                 </div>
             }
             else
@@ -273,11 +232,11 @@
 @section scripts{
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
-    <script src="~/Areas/DMS/js/Controllers/SupplierController.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/MasterSupplierController.js"></script>
     <script>
         $(document).ready(function () {
             $("#IsActive").bootstrapSwitch();
-            SupplierController.init();
+            MasterSupplierController.init();
         });
     </script>
 }

@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ShampanPOS.Models
 {
 
-    public class SupplierVM
+    public class MasterSupplierVM
     {
         public int Id { get; set; }
         [Display(Name = "Code(Auto Generate)")]
@@ -20,14 +20,11 @@ namespace ShampanPOS.Models
         [Display(Name = "Supplier Group")]
         [Required(ErrorMessage ="Supplier Group is required")]
         public int? SupplierGroupId { get; set; }
-        public string? SupplierGroupName { get; set; }
-
         public string? GroupName { get; set; }
 
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
 
-        [Required(ErrorMessage = "Address is required.")]
         [Display(Name = "Address")]
         public string? Address { get; set; }
 
@@ -44,9 +41,6 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Contact Person")]
         public string? ContactPerson { get; set; }
-
-        [Display(Name = "Comments")]
-        public string? Comments { get; set; }
 
         [Display(Name = "Archived")]
         public bool IsArchive { get; set; }

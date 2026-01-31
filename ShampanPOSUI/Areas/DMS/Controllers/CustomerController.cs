@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Newtonsoft.Json;
 using ShampanPOS.Models;
 using ShampanPOS.Models.KendoCommon;
 using ShampanPOS.Repo;
@@ -13,10 +16,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using iTextSharp.text.pdf;
-using iTextSharp.text;
-using PageSize = iTextSharp.text.PageSize;
 using Document = iTextSharp.text.Document;
+using PageSize = iTextSharp.text.PageSize;
 
 namespace ShampanPOSUI.Areas.DMS.Controllers
 {
@@ -331,6 +332,30 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
+
+        public ActionResult CustomerIndex()
+        {
+            return View();
+        }
+
+        public ActionResult CustomerReport(int? groupId)
+        {
+            List<CustomerVM> vmList = new List<CustomerVM>();
+
+            CommonVM param = new CommonVM();
+
+            param.Id = groupId.HasValue ? groupId.Value.ToString() : "";
+
+            ResultVM result = _repo.GetCustomerByCategory(param);
+            
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert
+                            .DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
+            }
+
+            return View("CustomersReport", vmList);
+        }
 
         //[HttpPost]
         //public ActionResult Delete(CustomerVM vm)
