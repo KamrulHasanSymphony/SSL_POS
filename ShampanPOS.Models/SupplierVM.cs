@@ -20,6 +20,8 @@ namespace ShampanPOS.Models
         [Display(Name = "Supplier Group")]
         [Required(ErrorMessage ="Supplier Group is required")]
         public int? SupplierGroupId { get; set; }
+        public string? SupplierGroupName { get; set; }
+
         public string? GroupName { get; set; }
 
         [Display(Name = "Bangla Name")]

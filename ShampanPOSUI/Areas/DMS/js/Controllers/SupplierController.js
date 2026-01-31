@@ -218,6 +218,10 @@
                             if (param.field === "Address") {
                                 param.field = "H.Address";
                             }
+                            if (param.field === "SupplierGroupName") {
+                                param.field = "SG.Name";
+                            }
+
                             if (param.field === "City") {
                                 param.field = "H.City";
                             }
@@ -267,6 +271,11 @@
                             if (param.field === "Address") {
                                 param.field = "H.Address";
                             }
+
+                            if (param.field === "SupplierGroupName") {
+                                param.field = "SG.Name";
+                            }
+
                             if (param.field === "City") {
                                 param.field = "H.City";
                             }
@@ -351,7 +360,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "BanglaName", "Address", "City", "TelephoneNo", "ContactPerson","Status"]
+                fields: ["Code", "Name", "BanglaName", "Address","SupplierGroupName", "City", "TelephoneNo", "ContactPerson","Status"]
             },
             excel: {
                 fileName: "Supplier.xlsx",
@@ -451,6 +460,7 @@
                 { field: "Code", title: "Code", width: 150, hidden: true, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
                 { field: "BanglaName", title: "Bangla Name", width: 150, sortable: true },
+                { field: "SupplierGroupName", title: "Supplier Group Name", width: 150, sortable: true },
                 { field: "Address", title: "Address", sortable: true, width: 200 },
                 { field: "City", title: "City", sortable: true, width: 200 },
                 { field: "TelephoneNo", title: "Telephone No.", sortable: true, width: 200 },
