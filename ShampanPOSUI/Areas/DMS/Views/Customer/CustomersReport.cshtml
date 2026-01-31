@@ -1,0 +1,131 @@
+﻿@model List<ShampanPOS.Models.CustomerVM>
+@{
+    ViewBag.Title = "Customer Group Wise Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var groupName = Model.FirstOrDefault()?.CustomerGroupName;
+}
+
+<style>
+    body {
+        font-family: Arial;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1100px;
+        margin: 20px auto;
+        border-radius: 6px;
+    }
+
+    .sslPrint {
+        background: #17a2b8;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        table th, table td {
+            border: 1px solid #777;
+            padding: 6px;
+            text-align: left;
+        }
+
+        table th {
+            background: #e9e9e9;
+            font-weight: bold;
+            text-align: center;
+        }
+
+    @@media print {
+        .sslPrint {
+            display: none;
+        }
+
+        .report-box {
+            border: none !important;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
+    <i class="k-icon k-i-print"></i> Print
+</button>
+
+<div class="report-box">
+
+    <!-- HEADER -->
+    <table style="border:none;margin-bottom:10px;">
+        <tr>
+            <td style="border:none;width:140px;">
+                <img src="~/Content/AdminLte/dist/img/logo.png"
+                     style="width:130px;height:70px;object-fit:contain;" />
+            </td>
+            <td style="border:none;text-align:right;">
+                <strong>Customer Group:</strong> @groupName <br />
+                <strong>Total Customer:</strong> @Model.Count
+            </td>
+        </tr>
+    </table>
+
+    <h2 style="text-align:center;border-bottom:1px solid #000;">
+        CUSTOMER REPORT
+    </h2>
+
+    <!-- ALL CUSTOMER IN ONE TABLE -->
+    <table>
+        <thead>
+            <tr>
+                <th>SL</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Bangla Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>TIN</th>
+                <th>BIN</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                int sl = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align:center;">@sl</td>
+                        <td>@item.Code</td>
+                        <td>@item.Name</td>
+                        <td>@item.BanglaName</td>
+                        <td>@item.TelephoneNo</td>
+                        <td>@item.Email</td>
+                        <td>@item.Address</td>
+                        <td>@item.TINNo</td>
+                        <td>@item.BINNo</td>
+                    </tr>
+                    sl++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9" style="text-align:center;">
+                        No customer found
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
