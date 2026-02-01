@@ -34,6 +34,21 @@
                             @Html.TextBoxFor(model => model.CustomerGroupId, new { placeholder = "Select Customer Group", @class = "  form-control form-control-sm " })
                         </div>
                     </div>
+                    <!-- Category -->
+                    <div class="col-sm-2">
+                        @Html.Label("Customer Code")
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Write Customer Code", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-sm-2">
+                        @Html.Label("Customer Name")
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Write Customer Name", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
 
                     <!-- Print Button -->
                     <div class="col-sm-2" style="margin-top:26px;">
@@ -74,11 +89,23 @@
     function PrintCustomerReport() {
 
         var groupId = $("#CustomerGroupId").val();
+        var customerCode = $("#Code").val();
+        var customerName = $("#Name").val();
 
         if (!groupId) {
             groupId = "";
         }
-        var url = `/DMS/Customer/CustomerReport?groupId=${groupId}`;
+
+        if (!customerCode) {
+            customerCode = "";
+        }
+
+        if (!customerName) {
+            customerName = "";
+        }
+        var url = `/DMS/Customer/CustomerReport?groupId=${groupId}&customerCode=${customerCode}&customerName=${customerName}`;
+
+        //var url = `/DMS/Customer/CustomerReport?groupId=${groupId},customerCode=${customerCode},customerName=${customerName}`;
 
         window.open(url, "_blank");
     }

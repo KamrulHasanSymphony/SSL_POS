@@ -197,7 +197,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-        public ResultVM GetCustomerByCategory(CommonVM model)
+        public ResultVM GetCustomerByCategory(CustomerVM model)
         {
             try
             {

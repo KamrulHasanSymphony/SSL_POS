@@ -1511,10 +1511,7 @@
             ShowNotification(3, 'Address is Required.');
             return;
         }
-        if (model.BanglaAddress == "") {
-            ShowNotification(3, 'Bangla Address is Required.');
-            return;
-        }
+
         //if (parseInt(model.CustomerCategory) == 0 || model.CustomerCategory == "") {
         //    ShowNotification(3, 'Price Group is Required.');
         //    return;

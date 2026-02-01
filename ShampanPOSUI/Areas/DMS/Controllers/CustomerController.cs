@@ -338,13 +338,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View();
         }
 
-        public ActionResult CustomerReport(int? groupId)
+        public ActionResult CustomerReport(int? groupId, string customerCode, string customerName)
         {
             List<CustomerVM> vmList = new List<CustomerVM>();
 
-            CommonVM param = new CommonVM();
+            CustomerVM param = new CustomerVM();
 
-            param.Id = groupId.HasValue ? groupId.Value.ToString() : "";
+
+            if (groupId.HasValue) { param.Id = groupId.Value; }
+            param.Code = string.IsNullOrEmpty(customerCode) ? "" : customerCode;
+            param.Name = string.IsNullOrEmpty(customerName) ? "" : customerName;
 
             ResultVM result = _repo.GetCustomerByCategory(param);
             
