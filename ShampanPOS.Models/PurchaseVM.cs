@@ -112,6 +112,7 @@ namespace ShampanPOS.Models
         public string? BranchName { get; set; }
         public int? CompanyId { get; set; }
         public string? CompanyName { get; set; }
+        public string? CompanyAddress { get; set; }
 
         public PeramModel PeramModel { get; set; }
         public List<PurchaseDetailVM> purchaseDetailList { get; set; }
