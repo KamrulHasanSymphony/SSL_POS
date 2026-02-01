@@ -1655,5 +1655,17 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult FromMasterItem()
+        {
+            MasterItemVM vm = new MasterItemVM();
+            vm.Operation = "create";  
+            return View(vm);
+        }
+
+
+
+
+
     }
 }

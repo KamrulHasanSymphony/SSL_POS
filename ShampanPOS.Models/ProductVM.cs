@@ -17,7 +17,8 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Product Group"),Required]
         public int? ProductGroupId { get; set; }
-
+        public int? MasterItemId { get; set; }
+        public int? MasterItemGroupId { get; set; }
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
 
@@ -60,6 +61,7 @@ namespace ShampanPOS.Models
         public string? Operation { get; set; }
         public string? Status { get; set; }
         public string? ProductGroupName { get; set; }
+        public string? MasterItemGroupName { get; set; }
         public string? UOMName { get; set; }
         [Display(Name = "Image")]
         public string? ImagePath { get; set; }
@@ -67,9 +69,16 @@ namespace ShampanPOS.Models
         public Dictionary<string, string>? ColunWidth { get; set; }
         public Dictionary<string, string>? PageSize { get; set; }
 
+
+        public PeramModel PeramModel { get; set; }
+
+        public List<ProductVM> MasterItemList { get; set; }
+
         public ProductVM()
         {
             BranchProfileList = new List<BranchProfileVM>();
+            PeramModel = new PeramModel();
+            MasterItemList = new List<ProductVM>();
         }
 
 

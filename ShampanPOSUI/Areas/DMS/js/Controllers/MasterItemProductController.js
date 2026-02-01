@@ -1,39 +1,65 @@
-﻿var MasterItemController = function (CommonService, CommonAjaxService) {
-    var getProductGroupId = 0;
-    var getUOMId = 0;
+﻿var MasterItemProductController = function (CommonService, CommonAjaxService) {
+    //var getProductGroupId = 0;
+    var currentMasterItemGroupId = 0;
 
     var init = function () {
-      
-        getProductGroupId = $("#MasterItemGroupId").val() || 0;
-        getCtnSize = $("#CtnSize").val() || '';
-        getUOMId = $("#UOMId").val() || 0;
+
+
+       // getProductGroupId = $("#MasterItemGroupId").val() || 0;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
+        // Index/List page
         if (parseInt(getId) == 0 && getOperation == '') {
             GetGridDataList();
-        };
+        }
 
+        // Create / Edit page
         if (getOperation !== '') {
-            GetMasterProductGroupComboBox();
-            GetUOMComboBox();
+            
+
+            GetProductGroupComboBox(); 
+            InitItemsGrid();             
+            InitAddedItemGrid();         
         };
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').off('click').on('click', function (e) {
             debugger;
+            e.preventDefault();   // 🔥 very important
+
             var getId = $('#Id').val();
-            var status = "Save";
-            if (parseInt(getId) > 0) {
-                status = "Update";
-            }
-            Confirmation("Are you sure? Do You Want to " + status + " Data?",
+            var status = parseInt(getId) > 0 ? "Update" : "Save";
+
+            Confirmation(
+                "Are you sure? Do You Want to " + status + " Data?",
                 function (result) {
                     if (result) {
                         save();
                     }
-                });
+                }
+            );
         });
+
+
+
+
+
+
+        //$('.btnsave').click('click', function () {
+        //    debugger;
+        //    var getId = $('#Id').val();
+        //    var status = "Save";
+        //    if (parseInt(getId) > 0) {
+        //        status = "Update";
+        //    }
+        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
+        //        function (result) {
+        //            if (result) {
+        //                save();
+        //            }
+        //        });
+        //});
 
 
         $('.btnDelete').on('click', function () {
@@ -60,82 +86,7 @@
             }
         });
 
-        $("#imageUpload").on("change", function (event) {
 
-            //$("#imageUpload").prop("disabled", false); 
-            var file = event.target.files[0];
-
-            if (!file) {
-                console.error("No file selected!");
-                return;
-            }
-
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                console.log("File loaded successfully!");
-
-                $("#imagePreview").attr("src", e.target.result).show();
-                $("#deleteImageBtn").show();
-                $("#ImagePath").val(e.target.result);
-            };
-
-            reader.onerror = function (error) {
-                console.error("Error reading file:", error);
-            };
-
-            reader.readAsDataURL(file);
-        });
-
-        $("#deleteImageBtn").on("click", function () {
-            $(this).addClass("clicked");
-            $("#imagePreview").attr("src", "").hide();
-            $("#ImagePath").val("");
-            $("#deleteImageBtn").hide();
-            $("#imageUpload").val("");
-            $("#imageUpload").prop("disabled", false);
-        });
-
-        var operation = $("#Operation").val();
-        var imagePath = $("#ImagePath").val();
-        if (operation == "update" && imagePath !== null) {
-            
-            $("#imageUpload").prop("disabled", false);
-        }
-
-
- 
-
-        $("#download").on("click", function () {
-
-       
-            var url = "/DMS/MasterItem/ExportProductExcel";
-
-            //window.open(url + "?" + params, "_blank");
-            window.open(url + "?", "_blank");
-
-        });
-
-        $("#downloadProductStock").on("click", function () {
-
-
-            var url = "/DMS/MasterItem/ExportProductStockExcel";
-
-            //window.open(url + "?" + params, "_blank");
-            window.open(url + "?", "_blank");
-
-        });
-
-
-        $("#PurchasePriceDownload").on("click", function () {
-
-
-            var url = "/DMS/MasterItem/ExportPurchasePriceHistoriesExcel";
-
-            //window.open(url + "?" + params, "_blank");
-            window.open(url + "?", "_blank");
-
-        });
 
     };
 
@@ -170,69 +121,314 @@
         CommonAjaxService.deleteData(url, model, deleteDone, saveFail);
     };
 
-    function GetMasterProductGroupComboBox() {
-        var MasterProductGroupComboBox = $("#MasterItemGroupId").kendoMultiColumnComboBox({
+
+
+    /* =========================
+   PRODUCT GROUP DROPDOWN
+========================= */
+    function GetProductGroupComboBox() {
+        $("#MasterItemGroupId").kendoMultiColumnComboBox({
             dataTextField: "Name",
             dataValueField: "Id",
             height: 400,
             columns: [
                 { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "Description", title: "Description", width: 200 },
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name", "Description"],
-            dataSource: {
-                transport: {
-                    //read: "/Common/Common/GetProductGroupList"
-                    read: "/Common/Common/GetMasterItemGroupList?value=" + getProductGroupId
-                     
-                }
-            },
-            placeholder: "Select Product Group",
-            value: "",
-            dataBound: function (e) {
-             
-                if (getProductGroupId) {
-                    this.value(parseInt(getProductGroupId));
-                }
-            },
-            change: function (e) {
-                
-            }
-        }).data("kendoMultiColumnComboBox");
-    };
-
-
-    function GetUOMComboBox() {
-        var UOMComboBox = $("#UOMId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
+                { field: "Name", title: "Name", width: 150 }
             ],
             filter: "contains",
             filterFields: ["Code", "Name"],
             dataSource: {
                 transport: {
-                    read: "/Common/Common/GetUOMList"
+                    read: "/Common/Common/GetMasterItemGroupList"
                 }
             },
-            placeholder: "Select UOM",
-            value: "",
-            dataBound: function (e) {
-                
-                if (getUOMId) {
-                    this.value(parseInt(getUOMId));
+            placeholder: "Select Product Group",
+
+            change: function () {
+                var combo = this;
+                var dataItem = combo.dataItem();
+                var groupId = this.value();
+                var grid = $("#departments").data("kendoGrid");
+
+                if (!groupId || groupId < 1) {
+                    currentMasterItemGroupId = 0;
+                    if (grid) grid.dataSource.data([]);
+                    return;
                 }
-            },
-            change: function (e) {
-                
+
+                $("#MasterItemGroupName").val(dataItem.Name);
+
+                currentMasterItemGroupId = groupId;
+                grid.dataSource.read();
             }
-        }).data("kendoMultiColumnComboBox");
-    };
+        });
+    }
+
+
+
+    /* =========================
+       LEFT GRID (ITEM LIST)
+    ========================= */
+    function InitItemsGrid() {
+        $("#departments").kendoGrid({
+            autoBind: false,
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetItemList",
+                        dataType: "json",
+                        data: function () {
+                            return {
+                                value: currentMasterItemGroupId
+                            };
+                        }
+                    }
+                },
+                schema: {
+                    data: function (res) { return res; },
+                    total: function (res) { return res.length; }
+                },
+                pageSize: 10
+            },
+            pageable: true,
+            sortable: true,
+            resizable: true,
+            reorderable: true,
+            groupable: true,
+            columns: [
+                { field: "Id", hidden: true },
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 },
+                {
+                    title: "Action",
+                    width: 90,
+                    template: `
+                <button type="button" 
+                        class="k-button k-primary addToDetails"
+                        data-id="#: Id #"
+                        data-code="#: Code #"
+                        data-name="#: Name #">
+                    Add
+                </button>`
+                }
+            ],
+            dataBound: function () {
+                $(".addToDetails").off().on("click", function (e) {
+                    e.preventDefault(); // 🔥 stop form submit
+                    Addtolist({
+                        Id: $(this).data("id"),
+                        Code: $(this).data("code"),
+                        Name: $(this).data("name")
+                    });
+                });
+            }
+        });
+    }
+
+
+    /* =========================
+       RIGHT GRID (ADDED ITEMS)
+    ========================= */
+    function InitAddedItemGrid() {
+        $("#AddedItemGrid").kendoGrid({
+            dataSource: {
+                data: [],
+                schema: {
+                    model: {
+                        id: "ProductId",
+                        fields: {
+                            Id: { type: "number" },
+                            Code: { type: "string" },
+                            Name: { type: "string" }
+                        }
+                    }
+                }
+            },
+            columns: [
+                { field: "Id", title: "Id", width: 100 },
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 },
+                {
+                    title: "Action",
+                    width: 70,
+                    template: `
+                    <button type="button"
+                            class="k-button k-danger removeItem"
+                            title="Remove">
+                        <i class="k-icon k-i-trash"></i>
+                    </button>`
+                }
+            ],
+            dataBound: function () {
+                $(".removeItem").off().on("click", function (e) {
+                    e.preventDefault();
+
+                    var grid = $("#AddedItemGrid").data("kendoGrid");
+                    var tr = $(this).closest("tr");
+
+                    grid.removeRow(tr); // 🔥 remove row
+                });
+            }
+        });
+    }
+
+    function Addtolist(item) {
+
+        var grid = $("#AddedItemGrid").data("kendoGrid");
+        if (!grid) {
+            kendo.alert("Added Item grid not initialized!");
+            return;
+        }
+
+        var ds = grid.dataSource;
+
+        // ✅ duplicate check
+        var exists = ds.data().some(function (x) {
+            return x.MasterItemGroupId === item.Id;
+        });
+
+        if (exists) {
+            kendo.alert("This item already added!");
+            return;
+        }
+
+        // ✅ add ONLY to right grid
+        ds.add({
+            Id: item.Id,
+            Code: item.Code,
+            Name: item.Name
+        });
+    }
+
+
+
+    //function GetProductGroupComboBox() {
+    //    $("#MasterItemGroupId").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetMasterItemGroupList"
+    //            }
+    //        },
+    //        placeholder: "Select Product Group",
+
+    //        change: function () {
+    //            var groupId = this.value();
+    //            var grid = $("#departments").data("kendoGrid");
+
+    //            // ❌ invalid group
+    //            if (!groupId || groupId < 1) {
+    //                alert("Please select a product group");
+    //                grid.dataSource.data([]); // grid clear
+    //                currentMasterItemGroupId = 0;
+    //                return;
+    //            }
+
+    //            // ✅ valid group
+    //            currentMasterItemGroupId = groupId;
+    //            grid.dataSource.read(); // server call
+    //        }
+    //    });
+    //}
+
+    //function InitItemsGrid() {
+    //    $("#departments").kendoGrid({
+    //        autoBind: false, // ⛔ page load এ call করবে না
+    //        dataSource: {
+    //            transport: {
+    //                read: {
+    //                    url: "/Common/Common/GetItemList",
+    //                    dataType: "json",
+    //                    data: function () {
+    //                        return {
+    //                            value: currentMasterItemGroupId
+    //                        };
+    //                    }
+    //                }
+    //            },
+    //            schema: {
+    //                data: res => res,
+    //                total: res => res.length
+    //            },
+    //            pageSize: 10
+    //        },
+    //        pageable: true,
+    //        sortable: true,
+    //        resizable: true,
+    //        reorderable: true,
+    //        groupable: true,
+    //        columns: [
+    //            { field: "Id", hidden: true },
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 },
+    //            {
+    //                title: "Action",
+    //                width: 90,
+    //                template: `
+    //            <button class='k-button k-primary addToDetails'
+    //                data-id='#: Id #'
+    //                data-code='#: Code #'
+    //                data-name='#: Name #'>
+    //                Add
+    //            </button>`
+    //            }
+    //        ],
+    //        dataBound: function () {
+    //            $(".addToDetails").off().on("click", function () {
+    //                Addtolist({
+    //                    Id: $(this).data("id"),
+    //                    Code: $(this).data("code"),
+    //                    Name: $(this).data("name")
+    //                });
+    //            });
+    //        }
+    //    });
+    //}
+
+
+
+    //function Addtolist(item) {
+
+    //    var grid = $("#AddedItemGrid").data("kendoGrid");
+    //    if (!grid) {
+    //        kendo.alert("Added Item grid not initialized!");
+    //        return;
+    //    }
+
+    //    var ds = grid.dataSource;
+
+    //    // ✅ duplicate check
+    //    var exists = ds.data().some(function (x) {
+    //        return x.ProductId === item.Id;
+    //    });
+
+    //    if (exists) {
+    //        kendo.alert("This item already added!");
+    //        return;
+    //    }
+
+    //    // ✅ add item
+    //    ds.add({
+    //        Id: 0,
+    //        MasterItemProductId: $("#Id").val() || 0,
+    //        BranchId: $("#BranchId").val() || null,
+    //        ProductId: item.Id,
+    //        Code: item.Code,
+    //        Name: item.Name
+    //    });
+    //}
+
+
+
+
 
     var GetGridDataList = function () {
         
@@ -437,10 +633,10 @@
                     template: function (dataItem) {
                         
                         return `
-                    <a href="/DMS/MasterItem/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
+                    <a href="/DMS/MasterItemProduct/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
-                            <a href="/DMS/MasterItem/getReport/${dataItem.Id}" 
+                            <a href="/DMS/MasterItemProduct/getReport/${dataItem.Id}" 
                                class="btn btn-success btn-sm mr-2 getReport" 
                                title="Report">
                                 <i class="fas fa-file-alt"></i>
@@ -482,23 +678,137 @@
     };
 
 
+    //function save() {
+    //    debugger;
+
+    //    var isDropdownValid1 = CommonService.validateDropdown("#MasterItemGroupId", "#titleError1", "Product Group is required");
+    //    var isDropdownValid = isDropdownValid1 && isDropdownValid2;
+
+    //    var validator = $("#frmEntry").validate();
+    //    var formData = new FormData();
+
+    //    var model = serializeInputs("frmEntry");
+    //    var result = validator.form();
+
+    //    if (!result || !isDropdownValid) {
+    //        if (!result) {
+    //            validator.focusInvalid();
+    //        }
+    //        return;
+    //    }
+
+    //    for (var key in model) {
+    //        formData.append(key, model[key]);
+    //    }
+
+    //    // Handle checkbox value
+    //    formData.append("IsActive", $('#IsActive').prop('checked'));
+
+    //    var url = "/DMS/MasterItemProduct/CreateEdit";
+
+    //    CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
+    //}
+
+
+    //function save() {
+    //    debugger; 
+
+    //    var isDropdownValid1 = CommonService.validateDropdown(
+    //        "#MasterItemGroupId",
+    //        "#titleError1",
+    //        "Product Group is required"
+    //    );
+
+    //    var validator = $("#frmEntry").validate();
+    //    var formData = new FormData();
+
+    //    var model = serializeInputs("frmEntry");
+    //    var result = validator.form();
+
+    //    if (!result || !isDropdownValid1) {
+    //        if (!result) {
+    //            validator.focusInvalid();
+    //        }
+    //        return;
+    //    }
+
+    //    // form fields
+    //    for (var key in model) {
+    //        formData.append(key, model[key]);
+    //    }
+
+    //    // 🔥 RIGHT GRID DATA (CORRECT FIELD NAME)
+    //    var addedGrid = $("#AddedItemGrid").data("kendoGrid");
+    //    var addedItems = addedGrid ? addedGrid.dataSource.data().toJSON() : [];
+
+    //    formData.append(
+    //        "TransferIssueDetailsJson",
+    //        JSON.stringify(addedItems)
+    //    );
+
+    //    formData.append("IsActive", $('#IsActive').prop('checked'));
+
+    //    var url = "/DMS/MasterItemProduct/CreateEdit";
+
+    //    CommonAjaxService.finalImageSave(
+    //        url,
+    //        formData,
+    //        saveDone,
+    //        saveFail
+    //    );
+    //}
+
+    //function save() {
+
+    //    var isDropdownValid = CommonService.validateDropdown("#MasterItemGroupId","#titleError1","Product Group is required"
+    //    );
+
+    //    var validator = $("#frmEntry").validate();
+    //    if (!validator.form() || !isDropdownValid) {
+    //        validator.focusInvalid();
+    //        return;
+    //    }
+
+    //    var formData = new FormData();
+    //    var model = serializeInputs("frmEntry");
+
+    //    // append form fields
+    //    for (var key in model) {
+    //        formData.append(key, model[key]);
+    //    }
+
+    //    var grid = $("#AddedItemGrid").data("kendoGrid");
+    //    if (!grid) {
+    //        ShowNotification(3, "Added item grid not found!");
+    //        return;
+    //    }
+
+    //    var items = grid.dataSource.data().toJSON();
+    //    if (!items || items.length === 0) {
+    //        ShowNotification(3, "Please add at least one item");
+    //        return;
+    //    }
+
+    //    formData.append("SelectedMasterItemsJson", JSON.stringify(items));
+    //    formData.append("IsActive", $('#IsActive').prop('checked'));
+
+    //    CommonAjaxService.finalImageSave(
+    //        "/DMS/MasterItemProduct/CreateEdit",
+    //        formData,
+    //        saveDone,
+    //        saveFail
+    //    );
+    //}
+
     function save() {
-        debugger;
-
-        var isDropdownValid1 = CommonService.validateDropdown("#ProductGroupId", "#titleError1", "Product Group is required");
-        var isDropdownValid2 = CommonService.validateDropdown("#UOMId", "#titleError2", "UOM is required");
-        var isDropdownValid = isDropdownValid1 && isDropdownValid2;
-
         var validator = $("#frmEntry").validate();
         var formData = new FormData();
-
         var model = serializeInputs("frmEntry");
+
         var result = validator.form();
 
-        if (!result || !isDropdownValid) {
-            if (!result) {
-                validator.focusInvalid();
-            }
+        if (!result) {
+            validator.focusInvalid();
             return;
         }
 
@@ -506,43 +816,41 @@
             formData.append(key, model[key]);
         }
 
-        // Handle checkbox value
-        formData.append("IsActive", $('#IsActive').prop('checked'));
+        var department = model.DepartmentId;
 
-        
+        var grid = $("#AddedItemGrid").data("kendoGrid");
+        var details = [];
 
-        // Check if delete button was clicked to remove image
-        var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-        if (deleteImageClicked) {
-            formData.append("ImagePath", "");
-            $("#imagePreview").remove();
-            $("#ImagePath").val("");
-        }
 
-        var fileInput = document.getElementById("imageUpload");
-        if (fileInput.files.length > 0) {
-            var file = fileInput.files[0];
 
-            if (file.size > 26214400) {
-                ShowNotification(3, "Image size cannot exceed 25MB.");
-                return;
-            }
+        if (grid) {
+            var dataItems = grid.dataSource.view();
 
-      formData.append("file", file);
-        } else if (!deleteImageClicked) {
-            var existingImagePath = $("#ImagePath").val();
-            if (existingImagePath) {
-                formData.append("ImagePath", existingImagePath);
+            for (var i = 0; i < dataItems.length; i++) {
+                var item = dataItems[i];
+
+                details.push({
+                    Id: item.Id,
+                    MasterItemGroupId: item.MasterItemGroupId,
+                    Name : item.Name,
+                    Code : item.Code
+                });
             }
         }
 
+        if (details.length === 0) {
+            ShowNotification(3, "At least one detail entry is required.");
+            return;
+        }
+
+        model.MasterItemList = details;
+
+        debugger;
 
 
-        var url = "/DMS/MasterItem/CreateEdit";
-
-        CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
+        var url = "/DMS/MasterItemProduct/CreateEdit";
+        CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
-
 
     function saveDone(result) {
         
@@ -561,26 +869,9 @@
                 ShowNotification(1, result.Message);
                 $("#LastModifiedBy").val(result.Data.LastModifiedBy);
                 $("#LastModifiedOn").val(result.Data.LastModifiedOn);
-                //setTimeout(function () {
-                //    location.reload();
-                //}, 700);
-
-                $("#imageUpload").prop("disabled", true);
+      
             }
 
-            if (result.Data.ImagePath) {
-                var imagePath = result.Data.ImagePath;
-                if (!imagePath.startsWith("http") && !imagePath.startsWith("/")) {
-                    imagePath = "/" + imagePath; // Ensure it starts with "/"
-                }
-                $("#imagePreview").attr("src", imagePath + "?t=" + new Date().getTime()).show();
-                $("#deleteImageBtn").show();
-                $("#ImagePath").val(imagePath); // Update hidden field with new path
-            }
-            else {
-                $("#imagePreview").hide();
-                $("#deleteImageBtn").hide();
-            }
         }
         else if (result.Status == 400) {
             ShowNotification(3, result.Message);
@@ -655,7 +946,7 @@ function ReportPreview(id) {
     
     const form = document.createElement('form');
     form.method = 'post';
-    form.action = '/DMS/MasterItem/ReportPreview';
+    form.action = '/DMS/MasterItemProduct/ReportPreview';
     form.target = '_blank';
     const inputVal = document.createElement('input');
     inputVal.type = 'hidden';

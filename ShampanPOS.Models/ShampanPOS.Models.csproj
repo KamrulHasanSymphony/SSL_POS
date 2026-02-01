@@ -103,6 +103,7 @@
     <Compile Include="CustomerDataVM.cs" />
     <Compile Include="DepositVM.cs" />
     <Compile Include="MasterItemGroupVM.cs" />
+    <Compile Include="MasterItemProductVM.cs" />
     <Compile Include="MasterItemVM.cs" />
     <Compile Include="OverHeadVM.cs" />
     <Compile Include="PaymentDetailVM.cs" />
