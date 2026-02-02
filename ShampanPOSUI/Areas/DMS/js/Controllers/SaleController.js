@@ -1410,7 +1410,7 @@
                 },
                 {
                     title: "Action",
-                    width: 120,
+                    width: 90,
                     template: function (dataItem) {
 
                         return `
@@ -1421,9 +1421,10 @@
                           class="btn btn-success btn-sm mr-2 getReport" 
                           title="Report">
                            <i class="fas fa-file-alt"></i>
-                      </a>  `+
+                      </a>  `
+                    //        +
 
-                       "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
+                    //   "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },

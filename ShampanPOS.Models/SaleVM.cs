@@ -98,6 +98,10 @@ namespace ShampanPOS.Models
         public string? BranchName { get; set; }
         public string? Status { get; set; }
         public string? IsPosted { get; set; }
+        public string? BranchAddress { get; set; }
+        public string? CompanyAddress { get; set; }
+        public string? CompanyName { get; set; }
+
         public List<SaleDetailVM> saleDetailsList { get; set; }
 
         public SaleVM()
