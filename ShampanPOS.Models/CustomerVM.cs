@@ -51,7 +51,7 @@ namespace ShampanPOS.Models
         //public string? CustomerName { get; set; }
 
         [Display(Name = "Mobile No.")]
-        //[Required(ErrorMessage = "Telephone No. is required.")]
+        [Required(ErrorMessage = "Telephone No. is required.")]
         //[StringLength(15, ErrorMessage = "Telephone No. cannot exceed 15 characters.")]
         //[RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "Invalid Telephone No. format.")]
         public string? TelephoneNo { get; set; }
@@ -60,6 +60,8 @@ namespace ShampanPOS.Models
         public string? FaxNo { get; set; }
 
         [Display(Name = "Email")]
+        [RegularExpression(
+    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",ErrorMessage = "Invalid email format")]
         public string? Email { get; set; }
 
         [Display(Name = "TIN No.")]

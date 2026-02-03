@@ -1386,10 +1386,11 @@
                             return `
             <a href="#" class="btn btn-primary btn-sm mr-2 edit edit-sale-order">
                 <i class="fas fa-pencil-alt"></i>
-            </a>` +
-                                `<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-                <i class='fas fa-print'></i>
-            </a>`;
+            </a>`
+            //                    +
+            //                    `<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
+            //    <i class='fas fa-print'></i>
+            //</a>`;
                         } else {
                             return `
             <a href="/DMS/SaleOrder/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
@@ -1403,10 +1404,11 @@
                       </a>
 
 
-            ` +
-                                `<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-                <i class='fas fa-print'></i>
-            </a>`;
+            `
+            //                    +
+            //                    `<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
+            //    <i class='fas fa-print'></i>
+            //</a>`;
                         }
                     }
                 },

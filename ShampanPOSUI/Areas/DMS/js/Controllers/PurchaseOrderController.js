@@ -1168,7 +1168,7 @@
                 },
                 {
                     title: "Action",
-                    width: 130,
+                    width: 90,
                     template: function (dataItem) {
                         return `
                                 <a href="/DMS/PurchaseOrder/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
@@ -1181,8 +1181,8 @@
                       </a> 
                                 
                                 `
-                            +
-                            "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
+                    //        +
+                    //        "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
                     }
                 },
                 { field: "Id", width: 80, hidden: true, sortable: true },

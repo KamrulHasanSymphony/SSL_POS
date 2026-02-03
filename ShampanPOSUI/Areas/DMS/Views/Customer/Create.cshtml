@@ -333,8 +333,6 @@
                                     @Html.ValidationMessageFor(model => model.Comments)
                                 </div>
 
-                                @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
-                                {
                                     <div class="col-sm-2" style="flex-direction: column">
                                         @Html.LabelFor(model => model.IsActive)
                                         <div class="Onoffbtn">
@@ -352,7 +350,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                }
                             </div>
 
                                 @*<div class="col-sm-2">
