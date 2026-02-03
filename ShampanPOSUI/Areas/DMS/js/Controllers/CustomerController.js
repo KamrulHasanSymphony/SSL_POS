@@ -783,23 +783,12 @@
                 },
                 {
                     title: "Action",
-                    width: 230,
+                    width: 100,
                     template: function (dataItem) {
                         
                         return `
             <a href="/DMS/Customer/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
                 <i class="fas fa-pencil-alt"></i>
-            </a>
-           <a href="/DMS/CustomerCreditLimit/Index/${dataItem.Id}?Name=${encodeURIComponent(dataItem.Name)}&Code=${encodeURIComponent(dataItem.Code)}"
-   class="btn btn-success btn-sm mr-2" 
-   title="View Credit Limit Details">
-   <i class="fas fa-th-list"></i>
-</a>
-            <a href="/DMS/CustomerAdvance/Index/${dataItem.Id}?Name=${encodeURIComponent(dataItem.Name)}&Code=${encodeURIComponent(dataItem.Code)}" class="btn bg-info btn-sm mr-2" title="View Advance">
-                <i class="fas fa-th-list"></i>
-            </a>
-            <a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-                        <i class='fas fa-print'></i>
             </a>
                       <a href="/DMS/Customer/getReport/${dataItem.Id}" 
                           class="btn btn-success btn-sm mr-2 getReport" 

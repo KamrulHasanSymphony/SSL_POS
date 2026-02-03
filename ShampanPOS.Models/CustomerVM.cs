@@ -120,6 +120,12 @@ namespace ShampanPOS.Models
         public string? Status { get; set; }
         public string? CustomerGroupName { get; set; }
 
+        public string? BranchAddress { get; set; }
+        public string? CompanyAddress { get; set; }
+        public string? CompanyName { get; set; }
+        public string? BranchName { get; set; }
+        public int CompanyId { get; set; }
+
         //[Display(Name = " Price Group")]
 
         //public string? CustomerCategory { get; set; }
