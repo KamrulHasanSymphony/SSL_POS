@@ -22,6 +22,9 @@ namespace ShampanPOS.Models
         public int? SupplierGroupId { get; set; }
         public string? SupplierGroupName { get; set; }
 
+        public int? MasterSupplierId { get; set; }
+        public int? MasterSupplierGroupId { get; set; }
+        public string? MasterSupplierGroupName { get; set; }
         public string? GroupName { get; set; }
 
         [Display(Name = "Bangla Name")]
@@ -75,6 +78,18 @@ namespace ShampanPOS.Models
 
         public Dictionary<string, string>? ColunWidth { get; set; }
         public Dictionary<string, string>? PageSize { get; set; }
+
+        public PeramModel PeramModel { get; set; }
+
+        public List<SupplierVM> MasterSupplierList { get; set; }
+
+        public SupplierVM()
+        {
+            //BranchProfileList = new List<BranchProfileVM>();
+            PeramModel = new PeramModel();
+            MasterSupplierList = new List<SupplierVM>();
+        }
+
 
     }
 
