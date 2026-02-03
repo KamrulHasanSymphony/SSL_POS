@@ -21,7 +21,9 @@ namespace ShampanPOS.Models
         [Required(ErrorMessage ="Supplier Group is required")]
         public int? SupplierGroupId { get; set; }
         public string? GroupName { get; set; }
-
+        [Display(Name = "Master Supplier Group")]
+        public int? MasterSupplierGroupId { get; set; }
+        public string? MasterSupplierGroupName { get; set; }
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
 
@@ -70,6 +72,21 @@ namespace ShampanPOS.Models
         public Dictionary<string, string>? ColunWidth { get; set; }
         public Dictionary<string, string>? PageSize { get; set; }
 
+
+        public string? SelectedMasterItemsJson { get; set; }
+
+
+        public PeramModel PeramModel { get; set; }
+
+
+        public List<MasterSupplierVM> MasterSupplierList { get; set; }
+
+
+        public MasterSupplierVM()
+        {
+            PeramModel = new PeramModel();
+            MasterSupplierList = new List<MasterSupplierVM>();
+        }
     }
 
 }

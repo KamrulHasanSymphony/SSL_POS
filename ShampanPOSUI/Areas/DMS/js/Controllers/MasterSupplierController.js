@@ -1,14 +1,14 @@
 ﻿var MasterSupplierController = function (CommonService, CommonAjaxService) {
     var getSupplierGroupId = 0;
     var init = function () {
-        getSupplierGroupId = $("#SupplierGroupId").val() || 0;
+        getSupplierGroupId = $("#MasterSupplierGroupId").val() || 0;
         
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
         if (parseInt(getId) == 0 && getOperation == '') {
             GetGridDataList();
         }
-        GetSupplierGroupComboBox();
+        GetMasterSupplierGroupComboBox();
         $('.btnsave').click('click', function () {
             
             var getId = $('#Id').val();
@@ -96,8 +96,8 @@
         }
     };
 
-    function GetSupplierGroupComboBox() {
-        var CustomerComboBox = $("#SupplierGroupId").kendoMultiColumnComboBox({
+    function GetMasterSupplierGroupComboBox() {
+        var MasterCustomerComboBox = $("#MasterSupplierGroupId").kendoMultiColumnComboBox({
             dataTextField: "Name",
             dataValueField: "Id",
             height: 400,
@@ -110,7 +110,7 @@
             filterFields: ["Code", "Name", "BanglaName"],
             dataSource: {
                 transport: {
-                    read: "/Common/Common/GetSupplierGroupList"
+                    read: "/Common/Common/GetMasterSupplierGroupList"
                 }
             },
             placeholder: "Select Supplier",
@@ -441,12 +441,79 @@
     };
 
 
+    //function save() {
+
+    //    var isDropdownValid = CommonService.validateDropdown("#MasterSupplierGroupId", "#titleError1", "Supplier Group is required");
+    //    var validator = $("#frmEntry").validate();
+    //    var formData = new FormData();
+
+    //    var model = serializeInputs("frmEntry");
+
+    //    var result = validator.form();
+
+    //    if (!result || !isDropdownValid) {
+    //        if (!result) {
+    //            validator.focusInvalid();
+    //        }
+    //        return;
+    //    }
+
+    //    // Append form fields to FormData
+    //    for (var key in model) {
+    //        formData.append(key, model[key]);
+    //    }
+
+    //    formData.append("IsActive", $('#IsActive').prop('checked'));
+
+    //    // Check if delete button was clicked to remove image
+    //    var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
+    //    if (deleteImageClicked) {
+    //        formData.append("ImagePath", "");
+    //        $("#imagePreview").remove();
+    //        $("#ImagePath").val("");
+    //    }
+
+    //    var fileInput = document.getElementById("imageUpload");
+    //    if (fileInput.files.length > 0) {
+    //        var file = fileInput.files[0];
+
+    //        if (file.size > 26214400) {
+    //            ShowNotification(3, "Image size cannot exceed 25MB.");
+    //            return;
+    //        }
+
+    //        formData.append("file", file);
+    //    } else if (!deleteImageClicked) {
+    //        var existingImagePath = $("#ImagePath").val();
+    //        if (existingImagePath) {
+    //            formData.append("ImagePath", existingImagePath);
+    //        }
+    //    }
+
+    //    var url = "/DMS/MasterSupplier/CreateEdit";
+
+    //    CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
+    //};
+
+
     function save() {
-        
-        var isDropdownValid = CommonService.validateDropdown("#SupplierGroupId", "#titleError1", "Supplier Group is required");
+        debugger;
+
+        var supplierGroupCombo = $("#MasterSupplierGroupId")
+            .data("kendoMultiColumnComboBox");
+
+        if (supplierGroupCombo) {
+            $("#MasterSupplierGroupId").val(supplierGroupCombo.value());
+        }
+
+        var isDropdownValid = CommonService.validateDropdown(
+            "#MasterSupplierGroupId",
+            "#titleError1",
+            "Supplier Group is required"
+        );
+
         var validator = $("#frmEntry").validate();
         var formData = new FormData();
-
         var model = serializeInputs("frmEntry");
 
         var result = validator.form();
@@ -458,14 +525,12 @@
             return;
         }
 
-        // Append form fields to FormData
         for (var key in model) {
             formData.append(key, model[key]);
         }
 
         formData.append("IsActive", $('#IsActive').prop('checked'));
 
-        // Check if delete button was clicked to remove image
         var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
         if (deleteImageClicked) {
             formData.append("ImagePath", "");
@@ -491,9 +556,12 @@
         }
 
         var url = "/DMS/MasterSupplier/CreateEdit";
-
         CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
-    };
+    }
+
+
+
+
 
     function saveDone(result) {
         

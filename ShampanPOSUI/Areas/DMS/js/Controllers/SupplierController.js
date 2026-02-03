@@ -459,13 +459,13 @@
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", width: 150, hidden: true, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
-                { field: "BanglaName", title: "Bangla Name", width: 150, sortable: true },
+                { field: "BanglaName", title: "Bangla Name", width: 150, hidden: true, sortable: true },
                 { field: "SupplierGroupName", title: "Supplier Group Name", width: 150, sortable: true },
                 { field: "Address", title: "Address", sortable: true, width: 200 },
                 { field: "City", title: "City", sortable: true, width: 200 },
                 { field: "TelephoneNo", title: "Telephone No.", sortable: true, width: 200 },
                 { field: "Email", title: "Email", sortable: true, hidden: true, width: 200 },
-                { field: "ContactPerson", title: "Contact Person", sortable: true, width: 200 },
+                { field: "ContactPerson", title: "Contact Person", sortable: true, hidden: true, width: 200 },
                 { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
 
                 {

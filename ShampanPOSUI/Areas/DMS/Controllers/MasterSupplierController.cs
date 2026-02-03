@@ -38,152 +38,99 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.IsActive = true;
 
             return View("Create", vm);
-        }        
+        }
 
         [HttpPost]
         public ActionResult CreateEdit(MasterSupplierVM model, HttpPostedFileBase file)
-     {
+        {
             ResultModel<MasterSupplierVM> result = new ResultModel<MasterSupplierVM>();
-            ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+            ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error" };
             _repo = new MasterSupplierRepo();
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                // ✅ Handle Image Upload
+                if (file != null && file.ContentLength > 0)
                 {
-                    // Handle Image Upload
-                    if (file != null && file.ContentLength > 0)
+                    string uploadsFolder = Server.MapPath("~/Content/MasterSupplier");
+
+                    if (!Directory.Exists(uploadsFolder))
                     {
-                        string uploadsFolder = Server.MapPath("~/Content/MasterSupplier");
-
-                        if (!Directory.Exists(uploadsFolder))
-                        {
-                            Directory.CreateDirectory(uploadsFolder);
-                        }
-
-                        string fileExtension = Path.GetExtension(file.FileName).ToLower();
-                        string[] validImageTypes = { ".jpg", ".jpeg", ".png", ".gif" };
-
-                        if (!validImageTypes.Contains(fileExtension))
-                        {
-                            result.Message = "Invalid image file type.";
-                            return Json(result);
-                        }
-
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string filePath = Path.Combine(uploadsFolder, fileName);
-
-                        file.SaveAs(filePath);
-
-                        model.ImagePath = "/Content/MasterSupplier/" + fileName;
+                        Directory.CreateDirectory(uploadsFolder);
                     }
 
-                    if (model.Operation.ToLower() == "add")
+                    string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                    string[] validImageTypes = { ".jpg", ".jpeg", ".png", ".gif" };
+
+                    if (!validImageTypes.Contains(fileExtension))
                     {
-                        model.CreatedBy = Session["UserId"].ToString();
-                        model.CreatedOn = DateTime.Now.ToString();
-                        model.CreatedFrom = Ordinary.GetLocalIpAddress();
-
-						resultVM = _repo.Insert(model);
-
-                        if (resultVM.Status == ResultStatus.Success.ToString())
+                        return Json(new
                         {
-                            model = JsonConvert.DeserializeObject<MasterSupplierVM>(resultVM.DataVM.ToString());
-                            model.Operation = "add";
-                            Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            result =  new ResultModel<MasterSupplierVM>()
-                            {
-                                Success = true,
-                                Status = Status.Success,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-                        else
-                        {
-
-                            Session["result"] = "Fail" + "~" + resultVM.Message;
-
-                            result = new ResultModel<MasterSupplierVM>()
-                            {
-                                Status = Status.Fail,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-
+                            Success = false,
+                            Message = "Invalid image file type."
+                        });
                     }
-                    else if (model.Operation.ToLower() == "update")
-                    {
-                        model.LastModifiedBy = Session["UserId"].ToString();
-                        model.LastModifiedOn = DateTime.Now.ToString();
-                        model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
 
-                        resultVM = _repo.Update(model);
+                    string fileName = Guid.NewGuid() + fileExtension;
+                    string filePath = Path.Combine(uploadsFolder, fileName);
+                    file.SaveAs(filePath);
 
-                        if (resultVM.Status == ResultStatus.Success.ToString())
-                        {
-                            Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            result = new ResultModel<MasterSupplierVM>()
-                            {
-                                Success = true,
-                                Status = Status.Success,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-                        else
-                        {
-                            Session["result"] = "Fail" + "~" + resultVM.Message;
-
-                            result = new ResultModel<MasterSupplierVM>()
-                            {
-                                Status = Status.Fail,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Session["result"] = "Fail" + "~" + e.Message;
-                    Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                    return View("Create", model);
-                }
-            }
-            else
-            {
-                string msg = string.Empty;
-                foreach (var entry in ModelState.Values)
-                {
-                    if (entry.Errors.Count > 0)
-                    {
-                        foreach (var error in entry.Errors)
-                        {
-                            msg += "," + error.ErrorMessage;
-                        }
-                    }
+                    model.ImagePath = "/Content/MasterSupplier/" + fileName;
                 }
 
-                result = new ResultModel<MasterSupplierVM>()
+                // ✅ ADD
+                if (model.Operation.ToLower() == "add")
+                {
+                    model.CreatedBy = Session["UserId"].ToString();
+                    model.CreatedOn = DateTime.Now.ToString();
+                    model.CreatedFrom = Ordinary.GetLocalIpAddress();
+
+                    resultVM = _repo.Insert(model);
+                }
+                // ✅ UPDATE
+                else if (model.Operation.ToLower() == "update")
+                {
+                    model.LastModifiedBy = Session["UserId"].ToString();
+                    model.LastModifiedOn = DateTime.Now.ToString();
+                    model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
+
+                    resultVM = _repo.Update(model);
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+
+                if (resultVM.Status == ResultStatus.Success.ToString())
+                {
+                    return Json(new
+                    {
+                        Success = true,
+                        Status = Status.Success,
+                        Message = resultVM.Message,
+                        Data = model
+                    });
+                }
+
+                return Json(new
                 {
                     Success = false,
                     Status = Status.Fail,
-                    Message = msg,
+                    Message = resultVM.Message,
                     Data = model
-                };
-                return Json(result);
+                });
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                return Json(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
             }
         }
+
 
         [HttpGet]
         public ActionResult Edit(string id)
