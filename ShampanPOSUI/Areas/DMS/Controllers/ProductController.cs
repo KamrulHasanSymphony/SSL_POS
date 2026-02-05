@@ -1,6 +1,10 @@
-﻿using Newtonsoft.Json;
-using OfficeOpenXml.Style;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Wordprocessing;
+using ExcelDataReader;
+using Newtonsoft.Json;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using ShampanPOS.Models;
 using ShampanPOS.Models.KendoCommon;
 using ShampanPOS.Repo;
@@ -8,17 +12,14 @@ using ShampanPOS.Repo.Helper;
 using ShampanPOSUI.Persistence;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Data;
-using ExcelDataReader;
-using System.Globalization;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace ShampanPOSUI.Areas.DMS.Controllers
 {
@@ -1655,6 +1656,41 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return RedirectToAction("Index");
             }
+        }
+
+        public ActionResult ProductIndex()
+        {
+            return View();
+        }
+
+
+        public ActionResult ProductReport(int? groupId, string productCode, string productName)
+        {
+            //reportVM rVm=new reportVM();
+            string byGroup = groupId?.ToString() ?? "All";
+            List<ProductVM> vmList = new List<ProductVM>();
+
+            ProductVM param = new ProductVM();
+
+
+            if (groupId.HasValue) { param.Id = groupId.Value; }
+            param.Code = string.IsNullOrEmpty(productCode) ? "" : productCode;
+            param.Name = string.IsNullOrEmpty(productName) ? "" : productName;
+
+            ResultVM result = _repo.GetProductByCategory(param);
+
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<ProductVM>>(result.DataVM.ToString());
+
+                foreach (var item in vmList)
+                {
+                    item.ByGroup = byGroup;
+                }
+            }
+
+            return View("ProductListReport", vmList);
         }
 
         [HttpGet]

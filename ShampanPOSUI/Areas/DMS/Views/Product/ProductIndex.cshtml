@@ -1,0 +1,110 @@
+﻿@model ShampanPOS.Models.ProductVM
+@{
+    ViewBag.Title = "Product Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Product Report </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="accordion" id="reportFilterAccordion">
+        <div class="card">
+
+            <div class="card-body p-2">
+
+                <div class="form-group row">
+
+                    <!-- Category -->
+                    <div class="col-sm-2">
+                        @Html.Label("Product Group")
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.ProductGroupId, new { placeholder = "Select Product Group", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+                    <!-- Category -->
+                    <div class="col-sm-2">
+                        @Html.Label("Product Code")
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Write Customer Code", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-sm-2">
+                        @Html.Label("Product Name")
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Write Customer Name", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+
+                    <!-- Print Button -->
+                    <div class="col-sm-2" style="margin-top:26px;">
+                        <button type="button"
+                                class="btn btn-success btn-sm"
+                                onclick="PrintCustomerReport()">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/ProductController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            ProductController.init();
+        });
+
+    </script>
+
+
+}
+
+<script>
+    function PrintCustomerReport() {
+
+        var groupId = $("#ProductGroupId").val();
+        var productCode = $("#Code").val();
+        var productName = $("#Name").val();
+
+        if (!groupId) {
+            groupId = "";
+        }
+
+        if (!productCode) {
+            productCode = "";
+        }
+
+        if (!productName) {
+            productName = "";
+        }
+        var url = `/DMS/Product/ProductReport?groupId=${groupId}&productCode=${productCode}&customerName=${productName}`;
+
+        //var url = `/DMS/Customer/CustomerReport?groupId=${groupId},customerCode=${customerCode},customerName=${customerName}`;
+
+        window.open(url, "_blank");
+    }
+</script>
