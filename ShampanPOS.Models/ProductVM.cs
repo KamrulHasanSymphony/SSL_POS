@@ -69,6 +69,7 @@ namespace ShampanPOS.Models
         public Dictionary<string, string>? ColunWidth { get; set; }
         public Dictionary<string, string>? PageSize { get; set; }
 
+        public string? ByGroup { get; set; }
 
         public PeramModel PeramModel { get; set; }
 

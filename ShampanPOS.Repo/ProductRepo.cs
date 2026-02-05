@@ -72,9 +72,6 @@ namespace ShampanPOS.Repo
             }
         }
 
-
-
-
         public ResultVM Update(ProductVM model)
         {
             try
@@ -280,6 +277,24 @@ namespace ShampanPOS.Repo
             }
         }
 
+        public ResultVM GetProductByCategory(ProductVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Report/GetProductByCategory", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
 
     }
