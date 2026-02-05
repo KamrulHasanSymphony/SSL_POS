@@ -123,7 +123,10 @@ namespace ShampanPOS.Models
         public string? BranchAddress { get; set; }
         public string? CompanyAddress { get; set; }
         public string? CompanyName { get; set; }
+        public string? CompanyTelephoneNo { get; set; }
+        public string? CompanyEmail { get; set; }
         public string? BranchName { get; set; }
+        public string? ByGroup { get; set; }
         public int CompanyId { get; set; }
 
         //[Display(Name = " Price Group")]
