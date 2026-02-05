@@ -151,9 +151,11 @@ namespace ShampanPOSUI.Controllers
                 }
 
                 model.UserInfos = userInfos;
-                var currentUserImage = model.UserInfos
-                    .FirstOrDefault(x => x.UserName == model.UserName)?.ImagePath;
+                var currentUserImage = model.UserInfos.FirstOrDefault(x => x.UserName == model.UserName)?.ImagePath;
                 Session["UserImage"] = currentUserImage;
+                var userHashId = model.UserInfos .FirstOrDefault(x => x.UserName == model.UserName)?.Id;
+
+                Session["UserHashId"] = userHashId;
 
 
                 var companyResult = _companyRepo.List(commonVM);
@@ -210,6 +212,10 @@ namespace ShampanPOSUI.Controllers
                 //    Session["CompanyId"] = model.CompanyId.ToString();
                 //    return RedirectToAction("Index", "Home", new { area = "Common", branchChange = false });
                 //}
+
+
+               
+
                 if (result.Status == "Success")
                 {
                     var companyName = model.CompanyInfos
@@ -221,7 +227,7 @@ namespace ShampanPOSUI.Controllers
                     identity.AddClaim(new Claim(ClaimNames.UserId, model.UserName));
                     identity.AddClaim(new Claim(ClaimNames.CompanyId, model.CompanyId.ToString()));
                     identity.AddClaim(new Claim(ClaimNames.CompanyName, companyName ?? ""));
-                    
+
 
                     var authenticationManager = HttpContext.GetOwinContext().Authentication;
                     authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);

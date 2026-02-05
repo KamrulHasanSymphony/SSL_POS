@@ -133,6 +133,8 @@
                                             @Html.ValidationMessageFor(model => model.MasterItemGroupId)
                                         </div>
                                         @Html.HiddenFor(model => model.MasterItemGroupName)
+                                        @Html.HiddenFor(model => model.MasterItemGroupDescription)
+                                        @Html.HiddenFor(model => model.MasterItemGroupCode)
                                         <div class="card-body">
                                             <div id="departments"></div>
                                         </div>

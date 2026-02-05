@@ -117,22 +117,26 @@
                             @Html.HiddenFor(model => model.Id)
                             @Html.HiddenFor(model => model.Operation)
                             @Html.HiddenFor(model => model.ImagePath)
-                            @*@Html.Hidden("TransferIssueDetailsJson", JsonConvert.SerializeObject(Model.MasterItemList ?? new List<ShampanPOS.Models.MasterItemVM>()))*@
+                            @Html.HiddenFor(model => model.CompanyId)
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="card card-secondary">
                                         <div class="card-header">
-                                            <h3 class="card-title"> Master Supplier Product</h3>
+                                            <h3 class="card-title">Master Supplier Product</h3>
                                         </div>
                                         <div class="col-sm-6">
-                                            @Html.LabelFor(model => model.MasterSupplierGroupId)
+                                            @Html.LabelFor(model => model.MasterSupplierGroupId, htmlAttributes: new { @for = "MasterSupplierGroupId" })
                                             <div class="input-group date">
-                                                @Html.TextBoxFor(model => model.MasterSupplierGroupId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
+                                                @Html.TextBoxFor(model => model.MasterSupplierGroupId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm", id = "MasterSupplierGroupId" })
                                             </div>
                                             @Html.ValidationMessageFor(model => model.MasterSupplierGroupId)
                                         </div>
+
                                         @Html.HiddenFor(model => model.MasterSupplierGroupName)
+                                        @Html.HiddenFor(model => model.MasterSupplierGroupDescription)
+                                        @Html.HiddenFor(model => model.MasterSupplierGroupCode)
+
                                         <div class="card-body">
                                             <div id="departments"></div>
                                         </div>
@@ -155,16 +159,12 @@
                     </div>
                 </form>
 
-
-
-
                 <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
                     <div class="card-header p-2">
 
                         @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
                         {
                             <div style="display: flex; align-items: center; gap: 5px;">
-                                @*<button type="button" class="button btnsave sslUpdate">Update</button>*@
                                 <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/MasterItem/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
                                 </button>
@@ -174,7 +174,6 @@
                         else
                         {
                             <div style="display:none;" class="divUpdate">
-                                @*<button type="button" class="button btnsave sslUpdate">Update</button>*@
                                 <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/MasterItem/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
                                 </button>
@@ -198,16 +197,16 @@
                         <div class="row">
                             <div class="col-sm-2">
                                 <div class="row">
-                                    @Html.Label("Type")
+                                    @Html.Label("Type", htmlAttributes: new { @for = "auditType" })
                                 </div>
                             </div>
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        @Html.Label("Created")
+                                        @Html.Label("Created", htmlAttributes: new { @for = "Created" })
                                     </div>
                                     <div class="col-sm-3">
-                                        @Html.Label("Updated")
+                                        @Html.Label("Updated", htmlAttributes: new { @for = "Updated" })
                                     </div>
                                 </div>
                             </div>
@@ -217,23 +216,23 @@
                             <div class="col-sm-2">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
-                                        @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                                        @Html.Label("By", htmlAttributes: new { @for = "CreatedBy" })<br /><div class="clearfix">&nbsp;</div>
+                                        @Html.Label("On", htmlAttributes: new { @for = "CreatedOn" })<br /><div class="clearfix">&nbsp;</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                                        @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy form-control form-control-sm", @readonly = "readonly", id = "CreatedBy" })
                                         <div class="clearfix">&nbsp;</div>
-                                        @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                                        @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn form-control form-control-sm", @readonly = "readonly", id = "CreatedOn" })
                                     </div>
 
                                     <div class="col-sm-3">
-                                        @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                                        @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy form-control form-control-sm lub", @readonly = "readonly", id = "LastModifiedBy" })
                                         <div class="clearfix">&nbsp;</div>
-                                        @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                                        @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn form-control form-control-sm luo", @readonly = "readonly", id = "LastModifiedOn" })
                                     </div>
                                 </div>
                             </div>
@@ -245,6 +244,7 @@
             </div>
         </div>
     </div>
+
 
 
 

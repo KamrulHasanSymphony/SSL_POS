@@ -8,11 +8,17 @@ using System.ComponentModel.DataAnnotations;
 namespace ShampanPOS.Models
 {
 
-    public class MasterSupplierVM
+    public class MasterSupplierVM: Audit
     {
         public int Id { get; set; }
+
+        public int? CompanyId { get; set; }
         [Display(Name = "Code(Auto Generate)")]
         public string? Code { get; set; }
+        public string? MasterSupplierGroupCode { get; set; }
+        public string? MasterSupplierGroupDescription { get; set; }
+        public string? Description { get; set; }
+
         [Required(ErrorMessage = "Name is required.")]
         [Display(Name = "Name")]
         public string? Name { get; set; }

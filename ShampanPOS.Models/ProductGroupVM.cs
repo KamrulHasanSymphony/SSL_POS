@@ -9,6 +9,8 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Code(Auto Generate)")]
         public string? Code { get; set; }
+        public int? CompanyId { get; set; }
+        public string? UserId { get; set; }
 
         [Display(Name = "Name")]
         [Required(ErrorMessage = "Name is required.")]
