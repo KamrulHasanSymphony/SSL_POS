@@ -18,6 +18,8 @@ namespace ShampanPOS.Models
         public int? BranchId { get; set; }
         public int? CompanyId { get; set; }
 
+        public string? UserId { get; set; }
+
         public bool IsManualSale { get; set; }
 
         [Display(Name = "Customer")]

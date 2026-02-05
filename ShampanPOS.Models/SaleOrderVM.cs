@@ -16,6 +16,7 @@ namespace ShampanPOS.Models
         public string? Code { get; set; }
         [Display(Name = "Distributor")]
         public int? BranchId { get; set; }
+        public string? UserId { get; set; }
 
         [Display(Name = "Customer")]
         public int? CustomerId { get; set; }
