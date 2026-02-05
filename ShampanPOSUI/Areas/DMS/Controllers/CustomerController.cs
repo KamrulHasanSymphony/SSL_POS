@@ -86,6 +86,11 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     model.LastModifiedOn = DateTime.Now.ToString();
                     model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
 
+
+                    var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                    model.BranchId = Convert.ToInt32(currentBranchId);
+                    model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
                     if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
@@ -340,6 +345,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         public ActionResult CustomerReport(int? groupId, string customerCode, string customerName)
         {
+            //reportVM rVm=new reportVM();
+            string byGroup = groupId?.ToString() ?? "All";
             List<CustomerVM> vmList = new List<CustomerVM>();
 
             CustomerVM param = new CustomerVM();
@@ -350,12 +357,28 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             param.Name = string.IsNullOrEmpty(customerName) ? "" : customerName;
 
             ResultVM result = _repo.GetCustomerByCategory(param);
-            
+
+
             if (result.Status == "Success" && result.DataVM != null)
             {
-                vmList = JsonConvert
-                            .DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
+                vmList = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
+
+                foreach (var item in vmList)
+                {
+                    item.ByGroup = byGroup;
+                }
             }
+
+            //string Group = vmList.FirstOrDefault().CustomerGroupName;
+
+            // if(param.Id==0)
+            //{rvm.Group="All"}else {
+            //if(vmList.count>0)
+            //rvm.Group=vmList.FirstOrDefault().CustomerGroupName;
+            //}
+
+            //if(string.isnullorwhitespace(customerCode)){rvm.Code="All"} else{rvm.Code=customerCode}
+            //rVm.customerList=vmList;
 
             return View("CustomersReport", vmList);
         }

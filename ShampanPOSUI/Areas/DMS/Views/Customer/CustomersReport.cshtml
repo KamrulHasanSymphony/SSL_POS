@@ -3,7 +3,9 @@
     ViewBag.Title = "Customer Group Wise Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var groupName = Model.FirstOrDefault()?.CustomerGroupName;
+}
+@{
+    var groupName = Model.FirstOrDefault()?.ByGroup == "All" ? "All" : Model.FirstOrDefault()?.CustomerGroupName ?? "N/A";
 }
 
 <style>
@@ -69,73 +71,108 @@
         <tr>
             <td style="border:none;width:140px;">
                 <img src="~/Content/AdminLte/dist/img/logo.png"
-                     style="width:130px;height:70px;object-fit:contain;" />
+                     style="width:230px;height:120px;" />
             </td>
-            <td style="border:none;text-align:right;">
-                <strong>Customer Group:</strong> @groupName <br />
+            <td style="text-align:right;border:none;">
+                @*<h3 style="margin:0;">Symphony Softtech Limited</h3>*@
+                @*<h3 style="margin:0;">@Model.FirstOrDefault()?.CompanyName ?? "Symphony Softtech Limited"</h3>*@
+                @*<div style="font-size:16px;">@Model.BranchName</div>*@
+                @*<div>69/1 Trhidara Tower</div>*@
+                @*<div>📞 01612264439</div>*@
+                @*<div>✉️ symphonysorftech1999@gamil.com</div>*@
+                <h3 style="margin:0;"> @(Model.FirstOrDefault()?.CompanyName) </h3>
+                <div> @(Model.FirstOrDefault()?.CompanyAddress)</div>
+                <div>📞 @(Model.FirstOrDefault()?.CompanyTelephoneNo)</div>
+                <div>✉️ @(Model.FirstOrDefault()?.CompanyEmail)</div>
+
+                @*<h3 style="margin:0;"> @(Model.FirstOrDefault()?.CompanyName ?? "Symphony Softtech Limited") </h3>
+                <div> @(Model.FirstOrDefault()?.CompanyAddress ?? "69/1 Trhidara Tower")</div>
+                <div>📞 @(Model.FirstOrDefault()?.CompanyTelephoneNo ?? "01612264439")</div>
+                <div>✉️ @(Model.FirstOrDefault()?.CompanyEmail ?? "symphonysorftech1999@gamil.com")</div>*@
             </td>
+
         </tr>
     </table>
 
-    <h2 style="text-align:center;border-bottom:1px solid #000;">
+<div style="width:100%; position:relative; margin-bottom:10px;">
+
+    <!-- Center Title -->
+    <h2 style="
+        text-align:center;
+        margin:0;
+        padding-bottom:5px;
+        border-bottom:1px solid #000;
+        font-weight:normal;">
         CUSTOMER REPORT
     </h2>
 
-    <!-- ALL CUSTOMER IN ONE TABLE -->
-    <table>
-        <thead>
-            <tr>
-                <th>SL</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Bangla Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>TIN</th>
-                <th>BIN</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                int sl = 1;
-                foreach (var item in Model)
-                {
-                    <tr>
-                        <td style="text-align:center;">@sl</td>
-                        <td>@item.Code</td>
-                        <td>@item.Name</td>
-                        <td>@item.BanglaName</td>
-                        <td>@item.TelephoneNo</td>
-                        <td>@item.Email</td>
-                        <td>@item.Address</td>
-                        <td>@item.TINNo</td>
-                        <td>@item.BINNo</td>
-                    </tr>
-                    sl++;
-                }
-            }
-            else
+    <!-- Right side group name -->
+    <div style="
+        position:absolute;
+        right:0;
+        bottom:5px;
+        font-size:14px;">
+        @*<strong>Customer Group:</strong> @groupName*@
+        <strong>Customer Group:</strong> @groupName <br />
+    </div>
+
+</div>
+
+
+<!-- ALL CUSTOMER IN ONE TABLE -->
+<table>
+    <thead>
+        <tr>
+            <th>SL</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Bangla Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>TIN</th>
+            <th>BIN</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int sl = 1;
+            foreach (var item in Model)
             {
                 <tr>
-                    <td colspan="9" style="text-align:center;">
-                        No customer found
-                    </td>
+                    <td style="text-align:center;">@sl</td>
+                    <td>@item.Code</td>
+                    <td>@item.Name</td>
+                    <td>@item.BanglaName</td>
+                    <td>@item.TelephoneNo</td>
+                    <td>@item.Email</td>
+                    <td>@item.Address</td>
+                    <td>@item.TINNo</td>
+                    <td>@item.BINNo</td>
                 </tr>
+                sl++;
             }
-        </tbody>
-    </table>
-    <!-- Footer -->
-    <table style="border:none;margin-bottom:10px;">
-        <tr>
-            <td style="border:none;width:140px;">
-                
-            </td>
-            <td style="border:none;text-align:right;">
-                <br /><strong>Total Customer:</strong> @Model.Count
-            </td>
-        </tr>
-    </table>
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" style="text-align:center;">
+                    No customer found
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Footer -->
+<table style="border:none;margin-bottom:10px;">
+    <tr>
+        <td style="border:none;width:140px;">
+        </td>
+        <td style="border:none;text-align:right;">
+            <br /><strong>Total Customer:</strong> @Model.Count
+        </td>
+    </tr>
+</table>
 
 </div>

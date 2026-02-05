@@ -97,11 +97,11 @@ p {
 /*change end*/
 /*==========*/
 .report-box table tr th {
-    width: 180px !important;
+    width: 90px !important;
 }
 
 .report-box table tr td {
-    width: 220px !important;
+    width: 180px !important;
 }
 
 /*============*/
