@@ -8,10 +8,13 @@ using System.ComponentModel.DataAnnotations;
 namespace ShampanPOS.Models
 {
 
-    public class SupplierVM
+    public class SupplierVM: Audit
     {
         public int Id { get; set; }
+        public int ? CompanyId { get; set; }
         [Display(Name = "Code(Auto Generate)")]
+        public string? UserId { get; set; }
+
         public string? Code { get; set; }
         [Required(ErrorMessage = "Name is required.")]
         [Display(Name = "Name")]
@@ -25,6 +28,8 @@ namespace ShampanPOS.Models
         public int? MasterSupplierId { get; set; }
         public int? MasterSupplierGroupId { get; set; }
         public string? MasterSupplierGroupName { get; set; }
+        public string? Description { get; set; }
+
         public string? GroupName { get; set; }
 
         [Display(Name = "Bangla Name")]

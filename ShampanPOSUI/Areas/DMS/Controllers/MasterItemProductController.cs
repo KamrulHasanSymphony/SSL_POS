@@ -30,61 +30,162 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             MasterItemVM vm = new MasterItemVM();
             vm.Operation = "add";
+            var companyId = Session["CompanyId"];
+            vm.CompanyId = Convert.ToInt32(companyId);
+
             vm.IsActive = true;
 
             return View("Create", vm);
         }
 
 
+        //[HttpPost]
+        //public ActionResult CreateEdit(ProductVM model)
+        //{
+        //    ResultModel<ProductVM> result = new ResultModel<ProductVM>();
+        //    ResultVM resultVM = new ResultVM { Status ="Success", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+        //    _repo = new MasterItemRepo();
+
+    
+        //    try
+        //    {
+        //        if (model.Operation.ToLower() == "add")
+        //        {
+        //            model.CreatedBy = Session["UserId"].ToString();
+        //            model.CreatedOn = DateTime.Now.ToString();
+        //            model.CreatedFrom = Ordinary.GetLocalIpAddress();
+
+
+        //            resultVM = _repo.InsertProductFromMasterItem(model);
+
+        //            if (resultVM.Status == ResultStatus.Success.ToString())
+        //            {
+        //                model = JsonConvert.DeserializeObject<ProductVM>(resultVM.DataVM.ToString());
+        //                model.Operation = "add";
+        //                Session["result"] = resultVM.Status + "~" + resultVM.Message;
+        //                result = new ResultModel<ProductVM>()
+        //                {
+        //                    Success = true,
+        //                    Status = Status.Success,
+        //                    Message = resultVM.Message,
+        //                    Data = model
+        //                };
+        //                return Json(result);
+        //            }
+        //            else
+        //            {
+        //                Session["result"] = "Fail" + "~" + resultVM.Message;
+
+        //                result = new ResultModel<ProductVM>()
+        //                {
+        //                    Status = Status.Fail,
+        //                    Message = resultVM.Message,
+        //                    Data = model
+        //                };
+        //                return Json(result);
+        //            }
+        //        }
+        //        else if (model.Operation.ToLower() == "update")
+        //        {
+        //            model.LastModifiedBy = Session["UserId"].ToString();
+        //            model.LastModifiedOn = Ordinary.GetLocalIpAddress();
+
+        //            resultVM = _repo.MasterUpdate(model);
+
+        //            if (resultVM.Status == ResultStatus.Success.ToString())
+        //            {
+        //                Session["result"] = resultVM.Status + "~" + resultVM.Message;
+        //                result = new ResultModel<ProductVM>()
+        //                {
+        //                    Success = true,
+        //                    Status = Status.Success,
+        //                    Message = resultVM.Message,
+        //                    Data = model
+        //                };
+        //                return Json(result);
+        //            }
+        //            else
+        //            {
+        //                Session["result"] = "Fail" + "~" + resultVM.Message;
+
+        //                result = new ResultModel<ProductVM>()
+        //                {
+        //                    Status = Status.Fail,
+        //                    Message = resultVM.Message,
+        //                    Data = model
+        //                };
+        //                return Json(result);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return RedirectToAction("Index");
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Session["result"] = "Fail" + "~" + e.Message;
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return View("Create", model);
+        //    }
+
+        //}
+
+
         [HttpPost]
         public ActionResult CreateEdit(ProductVM model)
         {
-            ResultModel<ProductVM> result = new ResultModel<ProductVM>();
-            ResultVM resultVM = new ResultVM { Status ="Success", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+            ResultModel<ProductVM> result;
+            ResultVM resultVM;
+
             _repo = new MasterItemRepo();
 
-    
             try
             {
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
                 if (model.Operation.ToLower() == "add")
                 {
-                    model.CreatedBy = Session["UserId"].ToString();
+                    model.CreatedBy = Session["UserId"]?.ToString();
+                    model.UserId = Session["UserHashId"]?.ToString();
+
                     model.CreatedOn = DateTime.Now.ToString();
                     model.CreatedFrom = Ordinary.GetLocalIpAddress();
-
 
                     resultVM = _repo.InsertProductFromMasterItem(model);
 
                     if (resultVM.Status == ResultStatus.Success.ToString())
                     {
-                        model = JsonConvert.DeserializeObject<ProductVM>(resultVM.DataVM.ToString());
                         model.Operation = "add";
+
                         Session["result"] = resultVM.Status + "~" + resultVM.Message;
+
                         result = new ResultModel<ProductVM>()
                         {
                             Success = true,
                             Status = Status.Success,
                             Message = resultVM.Message,
-                            Data = model
+                            Data = model   // 🔹 NO DESERIALIZE
                         };
+
                         return Json(result);
                     }
                     else
                     {
-                        Session["result"] = "Fail" + "~" + resultVM.Message;
+                        Session["result"] = "Fail~" + resultVM.Message;
 
-                        result = new ResultModel<ProductVM>()
+                        return Json(new ResultModel<ProductVM>()
                         {
+                            Success = false,
                             Status = Status.Fail,
                             Message = resultVM.Message,
                             Data = model
-                        };
-                        return Json(result);
+                        });
                     }
                 }
                 else if (model.Operation.ToLower() == "update")
                 {
-                    model.LastModifiedBy = Session["UserId"].ToString();
+                    model.LastModifiedBy = Session["UserId"]?.ToString();
                     model.LastModifiedOn = Ordinary.GetLocalIpAddress();
 
                     resultVM = _repo.MasterUpdate(model);
@@ -92,80 +193,38 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     if (resultVM.Status == ResultStatus.Success.ToString())
                     {
                         Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                        result = new ResultModel<ProductVM>()
+
+                        return Json(new ResultModel<ProductVM>()
                         {
                             Success = true,
                             Status = Status.Success,
                             Message = resultVM.Message,
                             Data = model
-                        };
-                        return Json(result);
+                        });
                     }
                     else
                     {
-                        Session["result"] = "Fail" + "~" + resultVM.Message;
+                        Session["result"] = "Fail~" + resultVM.Message;
 
-                        result = new ResultModel<ProductVM>()
+                        return Json(new ResultModel<ProductVM>()
                         {
+                            Success = false,
                             Status = Status.Fail,
                             Message = resultVM.Message,
                             Data = model
-                        };
-                        return Json(result);
+                        });
                     }
                 }
-                else
-                {
-                    return RedirectToAction("Index");
-                }
+
+                return RedirectToAction("Index");
             }
             catch (Exception e)
             {
-                Session["result"] = "Fail" + "~" + e.Message;
+                Session["result"] = "Fail~" + e.Message;
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return View("Create", model);
             }
-
         }
-
-
-        //[HttpPost]
-        //public ActionResult CreateEdit(MasterItemVM model)
-        //{
-        //    try
-        //    {
-        //        if (model.MasterItemGroupId <= 0)
-        //        {
-        //            return Json(new { Status = 400, Message = "Master Item Group is required" });
-        //        }
-
-        //        if (string.IsNullOrEmpty(model.SelectedMasterItemsJson))
-        //        {
-        //            return Json(new { Status = 400, Message = "No item selected" });
-        //        }
-
-        //        // ✅ only service call
-        //        ResultVM result = _repo.InsertProductFromMasterItem(model);
-
-        //        return Json(new
-        //        {
-        //            Status = result.Status == "Success" ? 200 : 400,
-        //            Message = result.Message
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new
-        //        {
-        //            Status = 500,
-        //            Message = "Query Exception!",
-        //            Error = ex.Message
-        //        });
-        //    }
-        //}
-
-
-
 
     }
 }

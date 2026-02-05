@@ -21,6 +21,7 @@ namespace ShampanPOS.Models
         public string Password { get; set; }
 
         public string? Message { get; set; }
+        public string? Id { get; set; }
         public bool RememberMe { get; set; }
         public bool shouldLockout { get; set; }
         

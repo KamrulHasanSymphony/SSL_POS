@@ -16,6 +16,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Account Name")]
         public string? AccountName { get; set; }
+        public string? UserId { get; set; }
 
         public int BankId { get; set; }
 

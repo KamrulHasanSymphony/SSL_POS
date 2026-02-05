@@ -15,6 +15,8 @@ namespace ShampanPOS.Models
         [Display(Name = "Code(Auto Generate)")]
         public string? Code { get; set; }
 
+        public string? UserId { get; set; }
+
         [Required(ErrorMessage = "Supplier Group Name is required.")]
         [Display(Name = "Name")]
         public string? Name { get; set; }

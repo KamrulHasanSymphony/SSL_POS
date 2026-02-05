@@ -167,6 +167,7 @@
                             @Html.HiddenFor(model => model.Id)
                             @Html.HiddenFor(model => model.Operation)
                             @Html.HiddenFor(model => model.ImagePath)
+                            @Html.HiddenFor(model => model.CompanyId)
 
 
                             <div class="form-group row">
@@ -225,30 +226,30 @@
                             <div class="form-group row">
 
                                 @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.CtnSize)
-            <div class="input-group ">
-                @Html.TextBoxFor(model => model.CtnSize, new { placeholder = " Enter Ctn Size", @class = "  form-control form-control-sm " })
-            </div>
-            <span id="titleError1" class="text-danger" style="display:none;"></span>
-        </div>*@
+                @Html.LabelFor(model => model.CtnSize)
+                <div class="input-group ">
+                    @Html.TextBoxFor(model => model.CtnSize, new { placeholder = " Enter Ctn Size", @class = "  form-control form-control-sm " })
+                </div>
+                <span id="titleError1" class="text-danger" style="display:none;"></span>
+            </div>*@
 
                                 @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.CtnSize)
-            <div class="input-group ">
-                @Html.TextAreaFor(model => model.CtnSize, new { placeholder = "Enter Carton Size", @class = "  form-control form-control-sm " })
+                @Html.LabelFor(model => model.CtnSize)
+                <div class="input-group ">
+                    @Html.TextAreaFor(model => model.CtnSize, new { placeholder = "Enter Carton Size", @class = "  form-control form-control-sm " })
 
+                </div>
+                @Html.ValidationMessageFor(model => model.CtnSize)
             </div>
-            @Html.ValidationMessageFor(model => model.CtnSize)
-        </div>
 
-                <div class="col-sm-2">
-                    @Html.LabelFor(model => model.CtnSizeFactor)
-                    <div class="input-group ">
-                        @Html.TextAreaFor(model => model.CtnSizeFactor, new { placeholder = "Enter Carton Size Factor", @class = "  form-control form-control-sm " })
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CtnSizeFactor)
+                        <div class="input-group ">
+                            @Html.TextAreaFor(model => model.CtnSizeFactor, new { placeholder = "Enter Carton Size Factor", @class = "  form-control form-control-sm " })
 
-                    </div>
-                    @Html.ValidationMessageFor(model => model.CtnSizeFactor)
-                </div>*@
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CtnSizeFactor)
+                    </div>*@
 
 
                                 <div class="col-sm-2">

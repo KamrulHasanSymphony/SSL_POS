@@ -48,7 +48,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
-						model.SetDate();
+                        model.UserId = Session["UserHashId"]?.ToString();
+
+                        model.SetDate();
 
 						resultVM = _repo.Insert(model);
 

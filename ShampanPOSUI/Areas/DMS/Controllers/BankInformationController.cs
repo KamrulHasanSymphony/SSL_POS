@@ -58,6 +58,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
+                        model.UserId = Session["UserHashId"]?.ToString();
+
                         model.CreatedOn = DateTime.Now.ToString();
                         model.CreatedFrom = Ordinary.GetLocalIpAddress();
 

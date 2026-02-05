@@ -42,7 +42,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ProductVM vm = new ProductVM();
             vm.Operation = "add";
             vm.IsActive = true;
-
+            var companyId = Session["CompanyId"];
+            vm.CompanyId = Convert.ToInt32(companyId);
             return View("Create", vm);
         }
 
@@ -88,6 +89,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
+                        model.UserId = Session["UserHashId"].ToString();
                         model.CreatedOn = DateTime.Now.ToString();
                         model.CreatedFrom = Ordinary.GetLocalIpAddress();
 

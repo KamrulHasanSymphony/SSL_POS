@@ -30,6 +30,7 @@
 
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.Operation)
+                @Html.HiddenFor(model => model.CompanyId)
 
                 <div class="form-group row">
 
@@ -55,7 +56,7 @@
                         <div class="input-group ">
                             @Html.TextAreaFor(model => model.Description, new { placeholder = " Enter Description", @class = "  form-control form-control-sm " })
 
-                        </div> 
+                        </div>
                         @Html.ValidationMessageFor(model => model.Description)
                     </div>
 
