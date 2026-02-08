@@ -4,11 +4,10 @@
     ViewBag.Title = "Product Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var first = Model?.FirstOrDefault();
+}
 
-    var groupName = first?.ByGroup == "All"
-        ? "All"
-        : first?.ProductGroupName ?? "N/A";
+@{
+    var groupName = Model.FirstOrDefault()?.ByGroup == "All" ? "All" : Model.FirstOrDefault()?.ProductGroupName ?? "N/A";
 }
 
 <style>
@@ -99,13 +98,12 @@
 
         <!-- Right side group name -->
         <div style="
-            position:absolute;
-            right:0;
-            bottom:5px;
-            font-size:14px;">
-            <strong>Product Group:</strong> @groupName
+         position:absolute;
+         right:0;
+         bottom:5px;
+         font-size:14px;">
+            <strong>Product Group:</strong> @groupName <br />
         </div>
-
     </div>
 
     <!-- ALL PRODUCT IN ONE TABLE -->
