@@ -2654,6 +2654,7 @@
     <Content Include="Areas\DMS\Views\Product\ProductIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Product\ProductListReport.cshtml" />
     <Content Include="Areas\DMS\Views\Supplier\SupplierIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Supplier\SupplierReport.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />
