@@ -1,0 +1,101 @@
+﻿@model ShampanPOS.Models.SupplierVM
+@{
+    ViewBag.Title = "Supplier Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Product Report </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="accordion" id="reportFilterAccordion">
+        <div class="card">
+
+            <div class="card-body p-2">
+
+                <div class="form-group row">
+
+                    <!-- Category -->
+                    <div class="col-sm-2">
+                        @Html.Label("Supplier Group")
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.SupplierGroupId, new { placeholder = "Select Supplier Group", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+                    <!-- Category -->
+                    <div class="col-sm-2">
+                        @Html.Label("Supplier Code")
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Write Supplier Code", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-sm-2">
+                        @Html.Label("Supplier Name")
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Write Supplier Name", @class = "  form-control form-control-sm " })
+                        </div>
+                    </div>
+
+                    <!-- Print Button -->
+                    <div class="col-sm-2" style="margin-top:26px;">
+                        <button type="button"
+                                class="btn btn-success btn-sm"
+                                onclick="PrintSupplierReport()">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/SupplierController.js"></script>
+    <script>
+        $(document).ready(function () {
+            SupplierController.init();
+        });
+    </script>
+
+}
+<script>
+    function PrintSupplierReport() {
+
+        var groupId = $("#SupplierGroupId").val();
+        var supplierCode = $("#Code").val();
+        var supplierName = $("#Name").val();
+
+        if (!groupId) {
+            groupId = "";
+        }
+
+        if (!supplierCode) {
+            supplierCode = "";
+        }
+
+        if (!supplierName) {
+            supplierName = "";
+        }
+        var url = `/DMS/Supplier/SupplierReport?groupId=${groupId}&supplierCode=${supplierCode}&supplierName=${supplierName}`;
+
+        window.open(url, "_blank");
+    }
+</script>
