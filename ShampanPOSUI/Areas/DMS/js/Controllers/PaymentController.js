@@ -766,7 +766,7 @@
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "SupplierName", title: "Supplier Name", sortable: true, width: 200 },
 
-                { field: "AccountName", title: "Account Name", sortable: true, width: 200 },
+                //{ field: "AccountName", title: "Account Name", sortable: true, width: 200 },
                 {
                  field: "TransactionDate", title: "Transaction Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(TransactionDate), "yyyy-MM-dd") #',
                   filterable:
@@ -779,7 +779,7 @@
 
                      },
 
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                 {
                     field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
                     filterable: {
@@ -1183,7 +1183,7 @@
     //};
 
     function save($table) {
-       
+        debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
         debugger;
@@ -1241,6 +1241,8 @@
         };
 
         model.TotalPaymentAmount = model.TotalPaymentAmount.replace(/,/g, '');
+
+
         //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
         //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
 

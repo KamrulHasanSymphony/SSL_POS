@@ -324,121 +324,6 @@
     };
 
 
-    //function loadPurchaseOrderDetails(saleOrderId) {
-    //    debugger;
-
-    //    $.ajax({
-    //        url: "/DMS/SaleOrder/GetSaleOrderList",
-    //        type: "GET",
-    //        data: { saleOrderId: saleOrderId },
-    //        success: function (data) {
-
-    //            console.log("PO DATA:", data);
-
-    //            if (!data || data.length === 0) {
-    //                $("#lst").empty();
-    //                return;
-    //            }
-
-    //            // ================= MASTER (AS IT IS) =================
-    //            var master = data[0];
-
-    //            // Supplier autofill
-    //            if (master.CustomerId !== undefined && master.CustomerId !== null) {
-    //                var customerCombo = $("#CustomerId").data("kendoComboBox")
-    //                    || $("#CustomerId").data("kendoMultiColumnComboBox");
-
-    //                if (customerCombo) {
-    //                    customerCombo.value(master.CustomerId);
-    //                    customerCombo.trigger("change");
-    //                } else {
-    //                    $("#SupplierId").val(master.SupplierId);
-    //                }
-    //            }
-
-    //            // Invoice Date autofill
-    //            if (master.OrderDate) {
-    //                var date = new Date(master.OrderDate);
-    //                if (!isNaN(date.getTime())) {
-    //                    $("#InvoiceDateTime").val(date.toISOString().slice(0, 10));
-    //                }
-    //            }
-
-    //            // ================= DETAILS =================
-    //            $("#lst").empty();
-    //            debugger;
-    //            if (!master.saleOrderDetailsList || master.saleOrderDetailsList.length === 0)
-    //                return;
-
-    //            // 🔹 ADD: totals variable
-    //            let subTotal = 0;
-    //            let totalSD = 0;
-    //            let totalVAT = 0;
-    //            let grandTotal = 0;
-
-    //            var sl = 1;
-
-    //            $.each(master.saleOrderDetailsList, function (index, item) {
-    //                debugger;
-    //                // 🔹 ADD: accumulate totals from details
-    //                subTotal += parseFloat(item.SubTotal) || 0;
-    //                totalSD += parseFloat(item.SDAmount) || 0;
-    //                totalVAT += parseFloat(item.VATAmount) || 0;
-    //                grandTotal += parseFloat(item.LineTotal) || 0;
-
-    //                var row = `
-    //            <tr>
-    //                <td>${sl}</td>
-    //                <td hidden>${item.ProductCode ?? ""}</td>
-    //                <td>${item.ProductName ?? ""}</td>
-    //                <td hidden>${item.ProductId ?? ""}</td>
-    //                <td class="dFormat">${item.Quantity ?? 0}</td>
-    //                <td class="dFormat">${item.UnitRate ?? 0}</td>
-    //                <td class="dFormat">${item.SubTotal ?? 0}</td>
-    //                <td class="dFormat">${item.SD ?? 0}</td>
-    //                <td class="dFormat">${item.SDAmount ?? 0}</td>
-    //                <td class="dFormat">${item.VATRate ?? 0}</td>
-    //                <td class="dFormat">${item.VATAmount ?? 0}</td>
-    //                <td class="dFormat">${item.OthersAmount ?? 0}</td>
-    //                <td class="dFormat">${item.LineTotal ?? 0}</td>
-    //                <td hidden>${item.SaleOrderId ?? ""}</td>
-    //                <td hidden>${item.SaleOrderDetailId ?? ""}</td>
-    //                <td>
-    //                    <button class="btn btn-danger btn-sm remove-row-btn">
-    //                        <i class="fa fa-trash"></i>
-    //                    </button>
-    //                </td>
-    //            </tr>
-    //            `;
-
-    //                $("#lst").append(row);
-    //                sl++;
-    //            });
-
-    //            // ================= MASTER TOTAL AUTOFILL =================
-    //            const dp = parseInt(decimalPlace || 2);
-
-    //            $("#SubTotal").val(subTotal.toLocaleString('en', { minimumFractionDigits: dp }));
-    //            $("#TotalSD").val(totalSD.toLocaleString('en', { minimumFractionDigits: dp }));
-    //            $("#TotalVAT").val(totalVAT.toLocaleString('en', { minimumFractionDigits: dp }));
-    //            $("#GrandTotal").val(grandTotal.toLocaleString('en', { minimumFractionDigits: dp }));
-
-    //            // PaidAmount (optional, if exists in master)
-    //            if (master.PaidAmount !== undefined && master.PaidAmount !== null) {
-    //                $("#PaidAmount").val(
-    //                    parseFloat(master.PaidAmount)
-    //                        .toLocaleString('en', { minimumFractionDigits: dp })
-    //                );
-    //            }
-    //        },
-    //        error: function () {
-    //            alert("Failed to load purchase order details.");
-    //        }
-    //    });
-    //}
-
-
-
     function loadPurchaseOrderDetails(saleOrderId) {
         debugger;
 
@@ -524,49 +409,12 @@
                     </td>
                 </tr>`;
 
-                    //    var row = `
-                    //<tr>
-                    //    <td>${sl}</td>
-                    //    <td hidden>${item.ProductCode ?? ""}</td>
-                    //    <td>${item.ProductName ?? ""}</td>
-                    //    <td hidden>${item.ProductId ?? ""}</td>
-
-                    //    <td class="dFormat">${item.OrderQuantity ?? 0}</td>
-                    //    <td class="dFormat">${item.CompletedQty ?? 0}</td>
-                    //    <td class="dFormat">${item.RemainQty ?? 0}</td>
-
-                    //    <td class="td-Quantity dFormat">${item.Quantity ?? 0}</td>
-                    //    <td class="td-UnitRate dFormat">${item.UnitRate ?? 0}</td>
-                    //    <td class="td-SubTotal dFormat">${item.SubTotal ?? 0}</td>
-
-                    //    <td class="td-SD dFormat">${item.SD ?? 0}</td>
-                    //    <td class="td-SDAmount dFormat">${item.SDAmount ?? 0}</td>
-
-                    //    <td class="td-VATRate dFormat">${item.VATRate ?? 0}</td>
-                    //    <td class="td-VATAmount dFormat">${item.VATAmount ?? 0}</td>
-
-                    //    <td class="td-LineTotal dFormat">${item.LineTotal ?? 0}</td>
-
-                    //    <td hidden>${item.SaleOrderId ?? ""}</td>
-                    //    //<td >${item.Id ?? ""}</td>
-
-                    //    <td class="td-SaleOrderDetailId"> ${item.SaleOrderDetailId ?? item.Id ?? ""}</td>
-
-                    //    <td>
-                    //        <button class="btn btn-danger btn-sm remove-row-btn">
-                    //            <i class="fa fa-trash"></i>
-                    //        </button>
-                    //    </td>
-                    //</tr>`;
 
                     $("#lst").append(row);
                     sl++;
                 });
 
 
-                /* ================= 🔥 RECALCULATE ================= */
-                // IMPORTANT: do NOT manually set master totals here
-                // Always use existing calculation engine
                 TotalCalculation();
             },
             error: function () {

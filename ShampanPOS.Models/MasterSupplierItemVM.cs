@@ -7,40 +7,33 @@ using System.Threading.Tasks;
 
 namespace ShampanPOS.Models
 {
-    public class PaymentVM
+    public class MasterSupplierItemVM
     {
         public int Id { get; set; }
 
-        [Display(Name = "Code")]
-        public string? Code { get; set; }
-        public string? PaymentCode { get; set; }
-
         [Display(Name = "Supplier")]
-        public int SupplierId { get; set; }
+        public int MasterSupplierId { get; set; }
         public string? UserId { get; set; }
 
-        public string? SupplierName { get; set; }
-        public string? AccountName { get; set; }
-        public string? AccountNo { get; set; }
+        public string? MasterSupplierName { get; set; }
+        public int? CompanyId { get; set; }
 
-        [Display(Name = "Transaction Date")]
-        public string TransactionDate { get; set; }
+        [Display(Name = "Product")]
+        public int MasterProductId { get; set; }
+        public int MasterItemId { get; set; }
 
-        [Display(Name = "Bank Account")]
-        public int BankAccountId { get; set; }
+        public string? MasterProductName { get; set; }
 
-        [Display(Name = "Cash")]
-        public bool IsCash { get; set; }
 
-        [Display(Name = "Comments")]
-        public string? Comments { get; set; }
+        public int MasterItemGroupId { get; set; }
 
-        [Display(Name = "Reference")]
-        public string? Reference { get; set; }
+        public string? MasterItemGroupDescription { get; set; }
+        public string? MasterItemGroupCode { get; set; }
 
-        [Display(Name = "Total Payment Amount")]
+        public string? MasterItemGroupName { get; set; }
 
-        public decimal TotalPaymentAmount { get; set; }
+
+
 
         [Display(Name = "Archived")]
         public bool IsArchive { get; set; }
@@ -72,13 +65,5 @@ namespace ShampanPOS.Models
 
         public string?[] IDs { get; set; }
 
-
-        public List<PaymentDetailVM> paymentDetailList { get; set; }
-       
-        public PaymentVM()
-        {
-            paymentDetailList = new List<PaymentDetailVM>();
-
-        }
     }
 }

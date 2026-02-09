@@ -105,6 +105,7 @@
     <Compile Include="MasterItemGroupVM.cs" />
     <Compile Include="MasterItemProductVM.cs" />
     <Compile Include="MasterItemVM.cs" />
+    <Compile Include="MasterSupplierItemVM.cs" />
     <Compile Include="OverHeadVM.cs" />
     <Compile Include="PaymentDetailVM.cs" />
     <Compile Include="PaymentVM.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Status.cs" />
     <Compile Include="MasterSupplierVM.cs" />
     <Compile Include="MasterSupplierGroupVM.cs" />
+    <Compile Include="SupplierProductVM.cs" />
     <Compile Include="UserBranchProfileVM.cs" />
     <Compile Include="UserProfileVM.cs" />
     <Compile Include="CompanyProfileVM.cs" />

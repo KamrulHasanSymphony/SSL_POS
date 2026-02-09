@@ -317,6 +317,28 @@ namespace ShampanPOS.Repo
         }
 
 
+
+        public ResultVM GetMasterProductList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/MasterProductList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+
         public ResultVM GetDeliveryList(CommonVM model)
         {
             try
@@ -416,7 +438,26 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
- 
+
+        public ResultVM GetMasterSupplierList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/MasterSupplierList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public ResultVM GetCampaignTargetList(CommonVM model)
         {
             try

@@ -219,7 +219,33 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
- 
+
+        [HttpGet]
+        public ActionResult GetMasterProductList(string value)
+        {
+
+            try
+            {
+                List<MasterItemVM> lst = new List<MasterItemVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+
+                ResultVM result = _repo.GetMasterProductList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<MasterItemVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         [HttpGet]
         public ActionResult GetEnumTypeList(string value)
         {
@@ -325,7 +351,32 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-      
+
+        [HttpGet]
+        public ActionResult GetMasterSupplierList(string value)
+        {
+            try
+            {
+                List<MasterSupplierVM> lst = new List<MasterSupplierVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetMasterSupplierList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<MasterSupplierVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
         [HttpGet]
         public ActionResult GetReceiveByDeliveryPersonList(string value)
         {

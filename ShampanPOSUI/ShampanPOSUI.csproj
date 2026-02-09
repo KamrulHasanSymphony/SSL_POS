@@ -341,6 +341,7 @@
     <Compile Include="Areas\DMS\Controllers\MasterItemController.cs" />
     <Compile Include="Areas\DMS\Controllers\MasterItemGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\MasterItemProductController.cs" />
+    <Compile Include="Areas\DMS\Controllers\MasterSupplierItemController.cs" />
     <Compile Include="Areas\DMS\Controllers\MasterSupplierProductController.cs" />
     <Compile Include="Areas\DMS\Controllers\OverHeadController.cs" />
     <Compile Include="Areas\DMS\Controllers\PaymentController.cs" />
@@ -362,6 +363,7 @@
     <Compile Include="Areas\DMS\Controllers\SupplierController.cs" />
     <Compile Include="Areas\DMS\Controllers\MasterSupplierGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\SupplierGroupController.cs" />
+    <Compile Include="Areas\DMS\Controllers\SupplierProductController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMConversationController.cs" />
     <Content Include="Areas\DMS\js\Controllers\DepositController.js" />
@@ -371,6 +373,8 @@
     <Content Include="Areas\DMS\js\Controllers\MasterItemProductController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterItemController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterItemGroupController.js" />
+    <Content Include="Areas\DMS\js\Controllers\MasterSupplierItemController.js" />
+    <Content Include="Areas\DMS\js\Controllers\SupplierProductController.js" />
     <Content Include="Areas\DMS\js\Controllers\PurchaseOrderDetailsIndexController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterSupplierController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterSupplierGroupController.js" />
@@ -2653,6 +2657,10 @@
     <Content Include="Areas\DMS\Views\MasterSupplierProduct\Create.cshtml" />
     <Content Include="Areas\DMS\Views\Product\ProductIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Product\ProductListReport.cshtml" />
+    <Content Include="Areas\DMS\Views\SupplierProduct\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\SupplierProduct\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplierItem\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplierItem\Create.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

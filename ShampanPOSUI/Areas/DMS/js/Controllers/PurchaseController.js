@@ -18,6 +18,7 @@
         };
 
         getSupplierId = $("#SupplierId").val() || 0;
+        //getPurchaseOrderId = $("#PurchaseOrderId").val() || 0;
         getCurrencyId = $("#CurrencyId").val() || 0;
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
@@ -153,17 +154,16 @@
 
 
         $("#btnSearchPurchaseOrder").on("click", function () {
+            debugger;
             $('#FromDate').val($('#PurchaseDate').val());
 
             poWindow.center().open();
 
-            // Optional: reload grid every time window opens
-            //$("#windowGrid").data("kendoGrid").dataSource.read();
         });
 
 
         $("#windowGrid").on("dblclick", "tbody tr", function () {
-
+            debugger;
             var grid = $("#windowGrid").data("kendoGrid");
             var dataItem = grid.dataItem(this);
 
@@ -184,6 +184,7 @@
 
 
         var poWindow = $("#poWindow").kendoWindow({
+            
             title: "Purchase Order",
             modal: true,
             width: "900px",
@@ -216,12 +217,6 @@
                 { field: "OrderDate", title: "Order Date", format: "{0:dd-MMM-yyyy}" }
             ]
         });
-
-
-
-
-
-
 
 
         function loadPurchaseOrderDetails(purchaseOrderId) {
@@ -309,9 +304,6 @@
                         sl++;
                     });
 
-                    /* ================= 🔥 ONLY THIS ================= */
-                    // ❌ No manual totals
-                    // ✅ Always use calculation engine
                     TotalCalculation();
                 },
                 error: function () {
@@ -919,7 +911,7 @@
     }
 
     function productModalDblClick(row, originalRow) {
-
+        debugger;
         var dataTable = $("#modalData").DataTable();
         var rowData = dataTable.row(row).data();
 
@@ -1206,11 +1198,11 @@
                 }
             }
             ,
-            aggregate: [
-                { field: "GrandTotalAmount", aggregate: "sum" },
-                { field: "GrandTotalSDAmount", aggregate: "sum" },
-                { field: "GrandTotalVATAmount", aggregate: "sum" }
-            ]
+            //aggregate: [
+            //    { field: "GrandTotalAmount", aggregate: "sum" },
+            //    { field: "GrandTotalSDAmount", aggregate: "sum" },
+            //    { field: "GrandTotalVATAmount", aggregate: "sum" }
+            //]
         });
 
         $("#GridDataList").kendoGrid({
@@ -1615,90 +1607,12 @@
                         }
                     }
                 },
-                //{
-                //    field: "Completed", title: "Completed", sortable: true, width: 130,
-                //    filterable: {
-                //        ui: function (element) {
-                //            element.kendoDropDownList({
-                //                dataSource: [
-                //                    { text: "Completed", value: "1" },
-                //                    { text: "Not-Completed", value: "0" }
-                //                ],
-                //                dataTextField: "text",
-                //                dataValueField: "value",
-                //                optionLabel: "Select Option"
-                //            });
-                //        }
-                //    }
-                //}
-                //,
-                {
-                    field: "SubTotal",
-                    title: "Sub Total",
-                    sortable: true,
-                    width: 180,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                }
-                ,
-                {
-                    field: "TotalSD",
-                    title: "Total SD",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                }
-                ,
-                {
-                    field: "TotalVAT",
-                    title: "Total VAT",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                {
-                    field: "GrandTotal",
-                    title: "Grand Total",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
-                {
-                    field: "PaidAmount",
-                    title: "Paid Amount",
-                    sortable: true,
-                    width: 200,
-                    aggregates: ["sum"],
-                    format: "{0:n2}",
-                    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
-                },
 
                 { field: "BENumber", title: "BE Number", sortable: true, width: 130 },
-                //{ field: "ImportIDExcel", title: "Import IDExcel", sortable: true, width: 130 },
-                //{ field: "CustomHouse", title: "Custom House", sortable: true, width: 130 },
                 { field: "FiscalYear", title: "Fiscal Year", sortable: true, width: 120 },
-                //{ field: "CurrencyRateFromBDT", title: "Currency Rate FromBDT", sortable: true, width: 190 },
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },
                 { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
                 { field: "BranchAddress", title: "Branch Address", width: 200, hidden: true, sortable: true },
-                //{ field: "CompanyName", title: "Company Name", width: 200, hidden: true, sortable: true },
             ],
             editable: false,
             selectable: "multiple row",
@@ -1709,7 +1623,7 @@
     };
 
     function save($table) {
-       
+        debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
 
@@ -1773,6 +1687,7 @@
         model.GrandTotal = model.GrandTotal.replace(/,/g, '');
 
         model.purchaseDetailList = details;
+        model.PurchaseOrderId = $("input[name='PurchaseOrderId']").val() || 0;
 
         var url = "/DMS/Purchase/CreateEdit";
 

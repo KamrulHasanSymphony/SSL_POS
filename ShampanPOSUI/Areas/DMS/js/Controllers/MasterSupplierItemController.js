@@ -1,11 +1,11 @@
-﻿var MasterItemProductController = function (CommonService, CommonAjaxService) {
+﻿var MasterSupplierItemController = function (CommonService, CommonAjaxService) {
     //var getProductGroupId = 0;
     var currentMasterItemGroupId = 0;
 
     var init = function () {
 
 
-       // getProductGroupId = $("#MasterItemGroupId").val() || 0;
+        // getProductGroupId = $("#MasterItemGroupId").val() || 0;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
@@ -16,12 +16,30 @@
 
         // Create / Edit page
         if (getOperation !== '') {
-            
-            GetMasterSupplierComboBox();
-            GetProductGroupComboBox(); 
-            InitItemsGrid();             
-            InitAddedItemGrid();         
+
+
+            GetProductGroupComboBox();
+            InitItemsGrid();
+            InitAddedItemGrid();
         };
+
+
+        //$('.btnsave').off('click').on('click', function (e) {
+        //    debugger;
+        //    e.preventDefault();   // 🔥 very important
+
+        //    var getId = $('#Id').val();
+        //    var status = parseInt(getId) > 0 ? "Update" : "Save";
+
+        //    Confirmation(
+        //        "Are you sure? Do You Want to " + status + " Data?",
+        //        function (result) {
+        //            if (result) {
+        //                save();
+        //            }
+        //        }
+        //    );
+        //});
 
 
         $('.btnsave').off('click').on('click', function (e) {
@@ -45,7 +63,7 @@
 
             Confirmation("Are you sure? Do You Want to Delete Data?",
                 function (result) {
-                    
+
                     if (result) {
                         SelectData();
                     }
@@ -69,10 +87,10 @@
 
     };
 
-   
+
 
     function SelectData() {
-        
+
         var IDs = [];
 
         var selectedRows = $("#GridDataList").data("kendoGrid").select();
@@ -95,49 +113,6 @@
 
         CommonAjaxService.deleteData(url, model, deleteDone, saveFail);
     };
-
-
-
-    function GetMasterSupplierComboBox() {
-        var SupplierComboBox = $("#MasterSupplierId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetMasterSupplierList"
-                }
-            },
-            placeholder: "Select Supplier",
-            value: "",
-            dataBound: function () {
-                var id = parseInt(getMasterSupplierId);
-                if (id && id > 0) {
-                    this.value(id);
-                } else {
-                    this.value("");
-                }
-            },
-            change: function () {
-                var selectedItem = this.dataItem();
-                if (selectedItem) {
-                    getMasterSupplierId = selectedItem.Id;
-                } else {
-                    getMasterSupplierId = 0;
-                }
-            }
-
-
-        }).data("kendoMultiColumnComboBox");
-    }
-
-
 
 
 
@@ -238,13 +213,13 @@
             reorderable: true,
             groupable: true,
             columns: [
-                { field: "Id", hidden: true },  
+                { field: "Id", hidden: true },
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
-                { field: "BanglaName", title: "Bangla Name",hidden: true, width: 150 },  
-                { field: "Description", title: "Description",hidden:true, width: 150 },  
-                { field: "UOMId", title: "UOM ID",hidden:true, width: 100 },  
-                { field: "HSCodeNo", title: "HS Code No", width: 150 },  
+                { field: "BanglaName", title: "Bangla Name", hidden: true, width: 150 },
+                { field: "Description", title: "Description", hidden: true, width: 150 },
+                { field: "UOMId", title: "UOM ID", hidden: true, width: 100 },
+                { field: "HSCodeNo", title: "HS Code No", width: 150 },
                 { field: "VATRate", title: "VAT Rate", width: 100 },
                 { field: "SDRate", title: "SD Rate", width: 100 },
                 {
@@ -419,7 +394,7 @@
             UOMId: item.UOMId,
             VATRate: item.VATRate,
             HSCodeNo: item.HSCodeNo,
-            SDRate: item.SDRate,  
+            SDRate: item.SDRate,
             Description: item.Description,
             MasterItemGroupDescription: item.MasterItemGroupDescription,
             MasterItemGroupCode: item.MasterItemGroupCode,
@@ -527,7 +502,7 @@
 
 
     //function saveDone(result) {
-        
+
     //    if (result.Status == 200) {
     //        if (result.Data.Operation == "add") {
     //            ShowNotification(1, result.Message);
@@ -544,7 +519,7 @@
     //            ShowNotification(1, result.Message);
     //            $("#LastModifiedBy").val(result.Data.LastModifiedBy);
     //            $("#LastModifiedOn").val(result.Data.LastModifiedOn);
-      
+
     //        }
 
     //    }
@@ -557,14 +532,14 @@
     //};
 
     function saveFail(result) {
-        
-        
+
+
         ShowNotification(3, "Query Exception!");
     };
 
 
     function deleteDone(result) {
-        
+
         var grid = $('#GridDataList').data('kendoGrid');
         if (grid) {
             grid.dataSource.read();
@@ -581,8 +556,8 @@
     };
 
     function fail(err) {
-        
-        
+
+
         ShowNotification(3, "Something gone wrong");
     };
 
@@ -618,7 +593,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function ReportPreview(id) {
-    
+
     const form = document.createElement('form');
     form.method = 'post';
     form.action = '/DMS/MasterItemProduct/ReportPreview';

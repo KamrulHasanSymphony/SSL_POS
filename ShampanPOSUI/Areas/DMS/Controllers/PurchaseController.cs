@@ -120,7 +120,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                         resultVM = _repo.Insert(model);
 
-                        if (resultVM.Status == ResultStatus.Success.ToString())
+                      if (resultVM.Status == ResultStatus.Success.ToString())
                         {
                             model = JsonConvert.DeserializeObject<PurchaseVM>(resultVM.DataVM.ToString());
                             model.Operation = "add";

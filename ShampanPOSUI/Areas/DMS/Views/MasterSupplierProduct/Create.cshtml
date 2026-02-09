@@ -87,6 +87,31 @@
         .tab-content.active {
             display: block;
         }
+
+    .card > .card-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .divSave {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .divUpdate {
+        display: none;
+        align-items: center;
+    }
+
+        .divUpdate.show {
+            display: inline-flex;
+        }
+
+        .divUpdate button {
+            float: none !important;
+        }
+
 </style>
 
 <div id="tabs">
@@ -173,14 +198,16 @@
                         }
                         else
                         {
+                            <div class="divSave">
+                                <button class="button btnsave sslSave" type="button" id="">Save</button>
+                            </div>
+
                             <div style="display:none;" class="divUpdate">
                                 <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/MasterItem/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
                                 </button>
                             </div>
-                            <div class="divSave">
-                                <button class="button btnsave sslSave" type="button" id="">Save</button>
-                            </div>
+
                         }
 
                     </div>
