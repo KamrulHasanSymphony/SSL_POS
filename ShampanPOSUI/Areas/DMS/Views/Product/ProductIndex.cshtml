@@ -53,7 +53,7 @@
                     <div class="col-sm-2" style="margin-top:26px;">
                         <button type="button"
                                 class="btn btn-success btn-sm"
-                                onclick="PrintCustomerReport()">
+                                onclick="PrintProductReport()">
                             <i class="fas fa-print"></i> Print
                         </button>
                     </div>
@@ -70,7 +70,7 @@
 
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
-    <script src="~/Areas/DMS/js/Controllers/ProductController.js"></script>
+    @*<script src="~/Areas/DMS/js/Controllers/ProductController.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -78,33 +78,75 @@
             ProductController.init();
         });
 
-    </script>
+    </script>*@
 
 
 }
 
 <script>
-    function PrintCustomerReport() {
 
-        var groupId = $("#ProductGroupId").val();
-        var productCode = $("#Code").val();
-        var productName = $("#Name").val();
+    var groupId = $("#ProductGroupId").val();
+    GetProductGroupComboBox();
+    function GetProductGroupComboBox() {
 
-        if (!groupId) {
-            groupId = "";
-        }
+        $("#ProductGroupId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            valuePrimitive: true,
+            height: 400,
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 },
+                { field: "Description", title: "Description", width: 200 }
+            ],
+            filter: "contains",
+            filterFields: ["Code", "Name", "Description"],
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductGroupList",
+                        dataType: "json"
+                    }
+                }
+            },
+            placeholder: "Select Product Group"
+        });
+    }
 
-        if (!productCode) {
-            productCode = "";
-        }
+    function PrintProductReport() {
 
-        if (!productName) {
-            productName = "";
-        }
-        var url = `/DMS/Product/ProductReport?groupId=${groupId}&productCode=${productCode}&customerName=${productName}`;
+        var combo = $("#ProductGroupId").data("kendoMultiColumnComboBox");
 
-        //var url = `/DMS/Customer/CustomerReport?groupId=${groupId},customerCode=${customerCode},customerName=${customerName}`;
+        var groupId = combo ? combo.value() : "";
+        var productCode = $("#Code").val() || "";
+        var productName = $("#Name").val() || "";
+
+        var url = `/DMS/Product/ProductReport?groupId=${groupId}&productCode=${productCode}&productName=${productName}`;
 
         window.open(url, "_blank");
     }
+
+    //function PrintCustomerReport() {
+
+    //    var groupId = $("#ProductGroupId").val();
+    //    var productCode = $("#Code").val();
+    //    var productName = $("#Name").val();
+
+    //    if (!groupId) {
+    //        groupId = "";
+    //    }
+
+    //    if (!productCode) {
+    //        productCode = "";
+    //    }
+
+    //    if (!productName) {
+    //        productName = "";
+    //    }
+    //    var url = `/DMS/Product/ProductReport?groupId=${groupId}&productCode=${productCode}&customerName=${productName}`;
+
+    //    //var url = `/DMS/Customer/CustomerReport?groupId=${groupId},customerCode=${customerCode},customerName=${customerName}`;
+
+    //    window.open(url, "_blank");
+    //}
 </script>

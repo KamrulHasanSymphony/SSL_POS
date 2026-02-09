@@ -1,15 +1,15 @@
-﻿@model List<ShampanPOS.Models.ProductVM>
+﻿
+@model List<ShampanPOS.Models.SupplierVM>
 
 @{
-    ViewBag.Title = "Product Report";
+    ViewBag.Title = "Supplier Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
 
 @{
-    var groupName = Model.FirstOrDefault()?.ByGroup == "All" ? "All" : Model.FirstOrDefault()?.ProductGroupName ?? "N/A";
+    var groupName = Model.FirstOrDefault()?.ByGroup == "All" ? "All" : Model.FirstOrDefault()?.SupplierGroupName ?? "N/A";
 }
-
 <style>
     body {
         font-family: Arial;
@@ -93,7 +93,7 @@
             padding-bottom:5px;
             border-bottom:1px solid #000;
             font-weight:normal;">
-            PRODUCT REPORT
+            SUPPLIER REPORT
         </h2>
 
         <!-- Right side group name -->
@@ -102,25 +102,23 @@
          right:0;
          bottom:5px;
          font-size:14px;">
-            <strong>Product Group:</strong> @groupName <br />
+            <strong>Supplier Group:</strong> @groupName <br />
         </div>
     </div>
-
-    <!-- ALL PRODUCT IN ONE TABLE -->
+    <!-- ALL SUPPLIERS IN ONE TABLE -->
     <table>
         <thead>
             <tr>
-                <th style="width: 30px!important;">SL</th>
+                <th style="width: 25px!important;">SL</th>
                 <th>Code</th>
                 <th>Name</th>
                 <th>Bangla Name</th>
                 <th>Group</th>
-                <th>HS Code</th>
-                <th>UOM</th>
-                <th>Purchase Price</th>
-                <th>Sale Price</th>
-                <th>VAT (%)</th>
-                <th>SD (%)</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Telephone</th>
+                <th>Email</th>
+                <th>Contact Person</th>
             </tr>
         </thead>
         <tbody>
@@ -130,17 +128,16 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td style="text-align: center; width: 30px !important; ">@sl</td>
+                        <td style="text-align: center; width: 25px !important; ">@sl</td>
                         <td>@item.Code</td>
                         <td>@item.Name</td>
                         <td>@item.BanglaName</td>
-                        <td>@item.ProductGroupName</td>
-                        <td>@item.HSCodeNo</td>
-                        <td>@item.UOMName</td>
-                        <td style="text-align:right;">@item.PurchasePrice</td>
-                        <td style="text-align:right;">@item.SalePrice</td>
-                        <td style="text-align:right;">@item.VATRate</td>
-                        <td style="text-align:right;">@item.SDRate</td>
+                        <td>@item.SupplierGroupName</td>
+                        <td>@item.Address</td>
+                        <td>@item.City</td>
+                        <td>@item.TelephoneNo</td>
+                        <td>@item.Email</td>
+                        <td>@item.ContactPerson</td>
                     </tr>
                     sl++;
                 }
@@ -149,7 +146,7 @@
             {
                 <tr>
                     <td colspan="11" style="text-align:center;">
-                        No product found
+                        No supplier found
                     </td>
                 </tr>
             }
@@ -161,9 +158,8 @@
         <tr>
             <td style="border:none;"></td>
             <td style="border:none;text-align:right;">
-                <br /><strong>Total Product:</strong> @Model.Count
+                <br /><strong>Total Supplier:</strong> @Model.Count
             </td>
         </tr>
     </table>
-
 </div>

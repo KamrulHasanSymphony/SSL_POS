@@ -2631,7 +2631,7 @@
     <Content Include="Areas\DMS\Views\SaleReturn\FromSale.cshtml" />
     <Content Include="Areas\Common\Views\Common\_getProductDataSale.cshtml" />
     <Content Include="Areas\DMS\Views\Product\ProductReport.cshtml" />
-    <Content Include="Areas\DMS\Views\Supplier\SupplierReport.cshtml" />
+    <Content Include="Areas\DMS\Views\Supplier\SupplierListReport.cshtml" />
     <Content Include="Areas\DMS\Views\Customer\CustomerReport.cshtml" />
     <Content Include="Areas\DMS\Views\PurchaseOrder\DetailsIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Purchase\PurchaseReport.cshtml" />
@@ -2657,6 +2657,8 @@
     <Content Include="Areas\DMS\Views\MasterSupplierProduct\Create.cshtml" />
     <Content Include="Areas\DMS\Views\Product\ProductIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Product\ProductListReport.cshtml" />
+    <Content Include="Areas\DMS\Views\Supplier\SupplierIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Supplier\SupplierReport.cshtml" />
     <Content Include="Areas\DMS\Views\SupplierProduct\Index.cshtml" />
     <Content Include="Areas\DMS\Views\SupplierProduct\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplierItem\Index.cshtml" />
