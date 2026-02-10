@@ -1,184 +1,304 @@
-﻿@model ShampanPOS.Models.SupplierProductVM
+﻿
+@using Newtonsoft.Json
+@model ShampanPOS.Models.SupplierProductVM
 @{
     ViewBag.Title = "Supplier Product Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
-@{
-    var serial = 1;
-}
+<style>
+    /* Tab Container */
+    .tab-container {
+        width: 955px;
+        background: #fff;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tab List */
+    .tab-list {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        list-style: none;
+        background-color: #f8f8f8;
+        border-radius: 8px 8px 0 0;
+        border-bottom: 2px solid #ddd;
+    }
+
+    /* Tab Item */
+    .tab-item {
+        margin: 0;
+    }
+
+    /* Tab Link */
+    .tab-link {
+        display: inline-block;
+        padding: 15px 40px;
+        text-decoration: none;
+        color: #777;
+        font-weight: bold;
+        text-align: center;
+        transition: color 0.3s ease, background-color 0.3s ease;
+        border-right: 1px solid #ddd;
+        cursor: pointer;
+        border-radius: 8px 8px 0 0;
+    }
+
+    /* Remove border for the last tab */
+    .tab-item:last-child .tab-link {
+        border-right: none;
+    }
+
+    /* Tab Hover Effect */
+    .tab-link:hover {
+        background-color: #e9e9e9;
+        color: #333;
+    }
+
+    /* Active Tab */
+    .tab-link.active {
+        background-color: #e2f0f7;
+        /*color: #ddd;*/
+        border-bottom: 2px solid #1790D2;
+    }
+
+    /* Tab Content Wrapper */
+    .tab-content-wrapper {
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tab Content */
+    .tab-content {
+        display: none;
+        text-align: center;
+        color: #888;
+        font-weight: 300;
+        font-size: 15px;
+        opacity: 0;
+        transform: translateY(15px);
+        animation: fadeIn 0.5s ease 1 forwards;
+    }
+
+        /* Show Active Tab Content */
+        .tab-content.active {
+            display: block;
+        }
+
+    .card > .card-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .divSave {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .divUpdate {
+        display: none;
+        align-items: center;
+    }
+
+        .divUpdate.show {
+            display: inline-flex;
+        }
+
+        .divUpdate button {
+            float: none !important;
+        }
+</style>
+
+<div id="tabs">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0"> Supplier Product Create </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-<div class="content-header">
     <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0"> Supplier Product Entry </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
-                </ol>
+        <div class="mt-3">
+            <div id="tabs-1">
+
+                <form id="frmEntry">
+                    <div class="card card-secondary">
+                        <div class="card-body">
+
+                            @Html.HiddenFor(model => model.Id)
+                            @Html.HiddenFor(model => model.Operation)
+
+
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <div class="col-sm-2">
+                                                    @Html.LabelFor(model => model.SupplierId)
+                                                    <div class="input-group date">
+                                                        @Html.TextBoxFor(model => model.SupplierId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.SupplierId)
+                                                </div>
+                                            </div><br /><br /><br /><br />
+                                            <div class="col-md-6">
+                                                <div class="card card-secondary">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title"> Master Item Product</h3>
+                                                    </div>
+
+                                                    <div class="col-sm-6">
+                                                        @Html.LabelFor(model => model.ProductGroupId)
+                                                        <div class="input-group date">
+                                                            @Html.TextBoxFor(model => model.ProductGroupId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.ProductGroupId)
+                                                    </div>
+                                                    @Html.HiddenFor(model => model.ProductGroupName)
+                                                    @Html.HiddenFor(model => model.ProductGroupDescription)
+                                                    @Html.HiddenFor(model => model.ProductGroupCode)
+                                                    <div class="card-body">
+                                                        <div id="departments"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="card card-secondary">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">Added Item</h3>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div id="AddedItemGrid"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                </form>
+
+
+
+                <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                    <div class="card-header p-2">
+
+                        <div style="display: flex; align-items: center; gap: 5px;">
+
+                            <!-- Save button -->
+                            <div class="divSave">
+                                <button class="button btnsave sslSave" type="button">Add</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="auditshow">
+                        <img src="~/Content/Images/audit.png" title="Click for Audit" />
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="card card-secondary auditcard">
+
+                    <div class="card-header">
+                        <h3 class="card-title">Audit Details</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="row">
+                                    @Html.Label("Type")
+                                </div>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        @Html.Label("Created")
+                                    </div>
+                                    <div class="col-sm-3">
+                                        @Html.Label("Updated")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
+                                        @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
+                                        <div class="clearfix">&nbsp;</div>
+                                        @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
+                                        <div class="clearfix">&nbsp;</div>
+                                        @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+
+
+
 </div>
 
 
 
-
-
-<div class="container-fluid">
-    <form id="frmEntry">
-        <div class="card card-secondary">
-            <div class="card-header">
-                <h3 class="card-title"> Payment Info </h3>
-            </div>
-            <div class="card-body">
-
-                @Html.HiddenFor(model => model.Id)
-                @Html.HiddenFor(model => model.Operation)
-
-
-                <div class="form-group row">
-
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.SupplierId)
-                        <div class="input-group">
-                            @Html.TextBoxFor(model => model.SupplierId, new { @class = "form-control form-control-sm" })
-                        </div>
-                        <span id="titleError1" class="text-danger" style="display:none;"></span>
-                    </div>
-
-
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.ProductId)
-                        <div class="input-group">
-                            @Html.TextBoxFor(model => model.ProductId, new { @class = "form-control form-control-sm" })
-                        </div>
-                        <span id="titleError1" class="text-danger" style="display:none;"></span>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-
-
-
-    </form>
-
-    <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
-        <div class="card-header p-2">
-
-            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
-            {
-                <button type="button" class="button btnsave sslUpdate">Update</button>
-
-                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SupplierProduct/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                    New
-                </button>
-            }
-            else
-            {
-                <div style="display:none;" class="divUpdate">
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
-                    <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/SupplierProduct/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                        New
-                    </button>
-                </div>
-                <div class="divSave">
-                    <button class="button btnsave sslSave" type="button" id="">Save</button>
-                </div>
-            }
-
-        </div>
-        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
-    </div>
-
-    <div class="card card-secondary auditcard">
-
-        <div class="card-header">
-            <h3 class="card-title">Audit Details</h3>
-        </div>
-
-        <div class="card-body">
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="row">
-                        @Html.Label("Type")
-                    </div>
-                </div>
-                <div class="col-sm-10">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            @Html.Label("Created")
-                        </div>
-                        <div class="col-sm-3">
-                            @Html.Label("Updated")
-                        </div>
-                        <div class="col-sm-3">
-                            @Html.Label("Posted")
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            @Html.Label("By")<br /><div class="clearfix">&nbsp;</div>
-                            @Html.Label("On")<br /><div class="clearfix">&nbsp;</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-10">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            @Html.TextBoxFor(model => model.CreatedBy, new { @class = "CreatedBy  form-control form-control-sm ", @readonly = "readonly" })
-                            <div class="clearfix">&nbsp;</div>
-                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "CreatedOn  form-control form-control-sm ", @readonly = "readonly" })
-                        </div>
-
-                        <div class="col-sm-3">
-                            @Html.TextBoxFor(model => model.LastModifiedBy, new { @class = "LastUpdateBy  form-control form-control-sm lub", @readonly = "readonly" })
-                            <div class="clearfix">&nbsp;</div>
-                            @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
-<div id="poWindow" style="display:none;">
-    <div id="windowGrid"></div>
-</div>
 
 @section scripts{
+
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/SupplierProductController.js"></script>
 
-
     <script>
         $(document).ready(function () {
 
-            $("#tabs").tabs();
-
-            $("#IsActive").bootstrapSwitch();
-            $("#IsCash").bootstrapSwitch();
-
             SupplierProductController.init();
+
         });
+
     </script>
 
 
 }
+
 

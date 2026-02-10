@@ -21,11 +21,11 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         MasterSupplierItemRepo _repo = new MasterSupplierItemRepo();
         CommonRepo _commonRepo = new CommonRepo();
 
-        // GET: DMS/MasterSupplierItem
         public ActionResult Index()
         {
             return View();
         }
+
 
         public ActionResult Create()
         {
@@ -37,8 +37,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             return View("Create", vm);
         }
-
-
 
         [HttpPost]
         public ActionResult CreateEdit(MasterSupplierItemVM model)
@@ -141,6 +139,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         }
 
+
         [HttpGet]
         public ActionResult Edit(string id)
         {
@@ -164,7 +163,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 vm.Operation = "update";
 
-
                 return View("Create", vm);
             }
             catch (Exception e)
@@ -176,6 +174,38 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+        public ActionResult NextPrevious(int id, string status)
+        {
+            _commonRepo = new CommonRepo();
+            try
+            {
+                CommonVM vm = new CommonVM();
+                vm.Id = id.ToString();
+                vm.Status = status;
+                vm.Type = "single";
+                vm.TableName = "BranchProfiles";
+
+                ResultVM result = _commonRepo.NextPrevious(vm);
+
+                if (result.Id != "0")
+                {
+                    string url = Url.Action("Edit", "BranchProfile", new { area = "DMS", id = result.Id });
+                    return Redirect(url);
+                }
+                else
+                {
+                    string url = Url.Action("Edit", "BranchProfile", new { area = "DMS", id = id });
+                    return Redirect(url);
+                }
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return RedirectToAction("Index");
+            }
+        }
+
         [HttpPost]
         public ActionResult Delete(MasterSupplierItemVM vm)
         {
@@ -184,9 +214,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             try
             {
                 _repo = new MasterSupplierItemRepo();
-
                 CommonVM param = new CommonVM();
-
                 //param.IDs = vm.IDs;
                 param.ModifyBy = Session["UserId"].ToString();
                 param.ModifyFrom = Ordinary.GetLocalIpAddress();
@@ -195,26 +223,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 Session["result"] = resultData.Status + "~" + resultData.Message;
 
-                if (resultData.Status == "Success")
+                result = new ResultModel<MasterSupplierItemVM>()
                 {
-                    result = new ResultModel<MasterSupplierItemVM>()
-                    {
-                        Success = true,
-                        Status = Status.Success,
-                        Message = resultData.Message,
-                        Data = null
-                    };
-                }
-                else
-                {
-                    result = new ResultModel<MasterSupplierItemVM>()
-                    {
-                        Success = false,
-                        Status = Status.Fail,
-                        Message = resultData.Message,
-                        Data = null
-                    };
-                }
+                    Success = true,
+                    Status = Status.Success,
+                    Message = resultData.Message,
+                    Data = null
+                };
 
                 return Json(result);
             }
@@ -223,55 +238,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return RedirectToAction("Index");
             }
-        }
-
-        [HttpPost]
-        public ActionResult MultiplePost(MasterSupplierItemVM vm)
-        {
-            ResultModel<MasterSupplierItemVM> result = new ResultModel<MasterSupplierItemVM>();
-
-            try
-            {
-                _repo = new MasterSupplierItemRepo();
-
-                CommonVM param = new CommonVM();
-
-                //param.IDs = vm.IDs;
-                param.ModifyBy = Session["UserId"].ToString();
-                param.ModifyFrom = Ordinary.GetLocalIpAddress();
-
-                ResultVM resultData = _repo.MultiplePost(param);
-
-                Session["result"] = resultData.Status + "~" + resultData.Message;
-
-                if (resultData.Status == "Success")
-                {
-                    result = new ResultModel<MasterSupplierItemVM>()
-                    {
-                        Success = true,
-                        Status = Status.Success,
-                        Message = resultData.Message,
-                        Data = null
-                    };
-                }
-                else
-                {
-                    result = new ResultModel<MasterSupplierItemVM>()
-                    {
-                        Success = false,
-                        Status = Status.Fail,
-                        Message = resultData.Message,
-                        Data = null
-                    };
-                }
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return RedirectToAction("Index");
-            }
-
-            return Json(result);
         }
 
 
@@ -283,8 +249,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
-      
-
                 result = _repo.GetGridData(options);
 
                 if (result.Status == "Success" && result.DataVM != null)

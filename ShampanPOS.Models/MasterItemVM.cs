@@ -24,6 +24,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Product Group")]
         public int? MasterItemGroupId { get; set; }
+        public int? MasterSupplierId { get; set; }
         public string? MasterItemGroupName { get; set; }
 
         [Display(Name = "Bangla Name")]
@@ -70,8 +71,9 @@ namespace ShampanPOS.Models
         public string? ImagePath { get; set; }
 
         public int? ProductId { get; set; }
+        public string? UserId { get; set; }
 
-  
+
 
         // 🔥 VERY IMPORTANT (JS → Controller)
         public string? SelectedMasterItemsJson { get; set; }

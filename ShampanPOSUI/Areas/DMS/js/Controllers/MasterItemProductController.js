@@ -17,7 +17,6 @@
         // Create / Edit page
         if (getOperation !== '') {
             
-            GetMasterSupplierComboBox();
             GetProductGroupComboBox(); 
             InitItemsGrid();             
             InitAddedItemGrid();         
@@ -95,47 +94,6 @@
 
         CommonAjaxService.deleteData(url, model, deleteDone, saveFail);
     };
-
-
-
-    function GetMasterSupplierComboBox() {
-        var SupplierComboBox = $("#MasterSupplierId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetMasterSupplierList"
-                }
-            },
-            placeholder: "Select Supplier",
-            value: "",
-            dataBound: function () {
-                var id = parseInt(getMasterSupplierId);
-                if (id && id > 0) {
-                    this.value(id);
-                } else {
-                    this.value("");
-                }
-            },
-            change: function () {
-                var selectedItem = this.dataItem();
-                if (selectedItem) {
-                    getMasterSupplierId = selectedItem.Id;
-                } else {
-                    getMasterSupplierId = 0;
-                }
-            }
-
-
-        }).data("kendoMultiColumnComboBox");
-    }
 
 
 

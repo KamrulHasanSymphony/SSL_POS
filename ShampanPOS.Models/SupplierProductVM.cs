@@ -24,6 +24,14 @@ namespace ShampanPOS.Models
         public string? ProductName { get; set; }
         public int? CompanyId { get; set; }
 
+        public int ProductGroupId { get; set; }
+
+        public string? ProductGroupDescription { get; set; }
+
+        public string? ProductGroupCode { get; set; }
+
+        public string? ProductGroupName { get; set; }
+
 
         [Display(Name = "Archived")]
         public bool IsArchive { get; set; }
@@ -54,5 +62,17 @@ namespace ShampanPOS.Models
         public string? Status { get; set; }
 
         public string?[] IDs { get; set; }
+
+        public PeramModel PeramModel { get; set; }
+
+        public List<MasterItemVM> MasterItemList { get; set; }
+
+
+        public SupplierProductVM()
+        {
+            PeramModel = new PeramModel();
+            MasterItemList = new List<MasterItemVM>();
+        }
+
     }
 }
