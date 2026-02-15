@@ -24,7 +24,7 @@ namespace ShampanPOS.Models
 
         public string? MasterProductName { get; set; }
 
-
+        [Display(Name = "Master Item Group")]
         public int MasterItemGroupId { get; set; }
 
         public string? MasterItemGroupDescription { get; set; }

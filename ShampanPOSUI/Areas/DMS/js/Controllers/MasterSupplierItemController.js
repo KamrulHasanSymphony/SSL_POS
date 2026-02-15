@@ -5,6 +5,8 @@
 
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
+        var getgroup = $("#MasterItemGroupId").val() || 0;
+        var getMasterSupplierId = $("#MasterSupplierId").val() || 0;
 
         if (parseInt(getId) == 0 && getOperation == '') {
             GetGridDataList();
@@ -17,16 +19,17 @@
             InitItemsGrid();
             InitAddedItemGrid();
         };
+        
 
-        getMasterSupplierId = $("#MasterSupplierId").val();
-        if (getMasterSupplierId > 0) {
-            loadAddedItemsBySupplier();
-        }
+
+        //if (getMasterSupplierId > 0) {
+        //    loadAddedItemsBySupplier();
+        //}
 
 
         $('.btnsave').off('click').on('click', function (e) {
             e.preventDefault();
-
+            debugger;
             var btn = $(this);
             btn.prop("disabled", true);
 
@@ -70,6 +73,7 @@
     };
 
     function GetMasterSupplierComboBox() {
+        debugger;
         var SupplierComboBox = $("#MasterSupplierId").kendoMultiColumnComboBox({
             dataTextField: "Name",
             dataValueField: "Id",
@@ -80,21 +84,16 @@
             ],
             filter: "contains",
             filterFields: ["Code", "Name"],
+            autoBind: false, // important
             dataSource: {
                 transport: {
-                    read: "/Common/Common/GetMasterSupplierList"
+                    read: {
+                        url: "/Common/Common/GetMasterSupplierList",
+                        dataType: "json"
+                    }
                 }
             },
             placeholder: "Select Supplier",
-            value: "",
-            dataBound: function () {
-                var id = parseInt(getMasterSupplierId);
-                if (id && id > 0) {
-                    this.value(id);
-                } else {
-                    this.value("");
-                }
-            },
             change: function () {
                 var selectedItem = this.dataItem();
                 if (selectedItem) {
@@ -103,63 +102,133 @@
                     getMasterSupplierId = 0;
                 }
             }
+        }).data("kendoMultiColumnComboBox");
 
 
+        // 🔥 force load data
+        SupplierComboBox.dataSource.read().then(function () {
+
+            if (getMasterSupplierId && parseInt(getMasterSupplierId) > 0) {
+                SupplierComboBox.value(parseInt(getMasterSupplierId));
+            }
+
+        });
+    }
+
+
+
+    function GetProductGroupComboBox() {
+
+        var combo = $("#MasterItemGroupId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            autoBind: false,
+            filter: "contains",
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetMasterItemGroupList",
+                        dataType: "json"
+                    }
+                }
+            },
+            change: function () {
+
+                var groupId = this.value();
+                var dataItem = this.dataItem();
+                var grid = $("#departments").data("kendoGrid");
+
+                if (!groupId) {
+                    currentMasterItemGroupId = 0;
+                    if (grid) grid.dataSource.data([]);
+                    return;
+                }
+
+                currentMasterItemGroupId = parseInt(groupId);
+
+                if (grid) {
+                    grid.dataSource.read();
+                }
+
+                if (dataItem) {
+                    $("#MasterItemGroupName").val(dataItem.Name);
+                    $("#MasterItemGroupDescription").val(dataItem.Description);
+                    $("#MasterItemGroupCode").val(dataItem.Code);
+                }
+            }
 
         }).data("kendoMultiColumnComboBox");
     }
 
 
 
+    //function GetProductGroupComboBox() {
+
+    //    var combo = $("#MasterItemGroupId").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 },
+    //            { field: "Description", title: "Description", width: 150 },
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        autoBind: false, // important
+    //        dataSource: {
+    //            transport: {
+    //                read: {
+    //                    url: "/Common/Common/GetMasterItemGroupList",
+    //                    dataType: "json"
+    //                }
+    //            }
+    //        },
+    //        placeholder: "Select Product Group",
+
+    //        change: function () {
+    //            var dataItem = this.dataItem();
+    //            var groupId = this.value();
+    //            var grid = $("#departments").data("kendoGrid");
+
+    //            if (!groupId || groupId < 1) {
+    //                currentMasterItemGroupId = 0;
+    //                if (grid) grid.dataSource.data([]);
+    //                return;
+    //            }
+
+    //            currentMasterItemGroupId = groupId;
+
+    //            if (grid) {
+    //                grid.dataSource.read();
+    //            }
+
+    //            if (dataItem) {
+    //                $("#MasterItemGroupName").val(dataItem.Name);
+    //                $("#Description").val(dataItem.Description);
+    //                $("#Code").val(dataItem.Code);
+    //            }
+    //        }
+
+    //    }).data("kendoMultiColumnComboBox");
 
 
-    function GetProductGroupComboBox() {
-        $("#MasterItemGroupId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "Description", title: "Description", width: 150 },
+    //    // 🔥 Load data first
+    //    combo.dataSource.read().then(function () {
+    //        debugger;
+    //        if (getgroup && parseInt(getgroup) > 0) {
+    //            combo.value(parseInt(getgroup));
 
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetMasterItemGroupList"
-                }
-            },
-            placeholder: "Select Product Group",
+    //            // 🔥🔥🔥 THIS IS THE MAGIC LINE
+    //            combo.trigger("change");
+    //        }
 
+    //    });
+    //}
 
-            change: function () {
-                var dataItem = this.dataItem();
-                var groupId = this.value();
-                var grid = $("#departments").data("kendoGrid");
-
-                if (!groupId || groupId < 1) {
-                    currentMasterItemGroupId = 0;
-                    if (grid) grid.dataSource.data([]);
-                    return;
-                }
-
-                currentMasterItemGroupId = groupId;
-
-                // 🔥 FORCE reload
-                if (grid) {
-                    grid.dataSource.read();
-                }
-
-                $("#MasterItemGroupName").val(dataItem.Name);
-                $("#Description").val(dataItem.Description);
-                $("#Code").val(dataItem.Code);
-            }
-        });
-    }
 
     function InitItemsGrid() {
+        debugger;
         $("#departments").kendoGrid({
             autoBind: false,
             dataSource: {
@@ -243,70 +312,61 @@
     }
 
     function InitAddedItemGrid() {
+
+        var iteamDetailList = JSON.parse($("#iteamDetailList").val() || "[]");
+
+        console.log("Grid Data:", iteamDetailList); 
+
         $("#AddedItemGrid").kendoGrid({
             dataSource: {
-                data: [], // Initialize empty data
+                data: iteamDetailList,
+                pageSize: 20,
                 schema: {
                     model: {
-                        id: "ProductId",
+                        id: "Id",   
                         fields: {
-                            //Id: { type: "number" },
+                            Id: { type: "number" },
                             Code: { type: "string" },
                             Name: { type: "string" },
-                            MasterItemGroupName: { type: "string" },
-                            MasterItemGroupDescription: { type: "string" },
-                            MasterItemGroupCode: { type: "string" },
-                            BanglaName: { type: "string" },
-                            Description: { type: "string" },
-                            UOMId: { type: "number" },
-                            HSCodeNo: { type: "string" },
-                            VATRate: { type: "string" },
-                            SDRate: { type: "string" },
+                            MasterItemGroupName: { type: "string" }
                         }
                     }
                 }
             },
             columns: [
-                //{ field: "Id", title: "Id", width: 100 },
+                { field: "ProductId", hidden: true },
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
                 { field: "MasterItemGroupName", title: "Group", width: 150 },
-                { field: "MasterItemGroupDescription", title: "Description", width: 150, hidden: true },
-                { field: "MasterItemGroupCode", title: "Group Code", width: 150, hidden: true },
-                { field: "BanglaName", title: "Bangla Name", width: 150, hidden: true },
-                { field: "Description", title: "Address", width: 150, hidden: true },
-                { field: "UOMId", title: "UOM", width: 150, hidden: true },
-                { field: "HSCodeNo", title: "HSCode No", width: 150, hidden: true },
-                { field: "VATRate", title: "VAT Rate", width: 150, hidden: true },
-                { field: "SDRate", title: "SD Rate", width: 150, hidden: true },
                 {
                     title: "Action",
                     width: 70,
                     template: `
                 <button type="button"
-                        class="k-button k-danger removeItem"
-                        title="Remove">
+                        class="k-button k-danger removeItem">
                     <i class="k-icon k-i-trash"></i>
                 </button>`
                 }
             ],
+
             dataBound: function () {
-                // Attach click event for remove button after data is bound
+
                 $(".removeItem").off().on("click", function (e) {
                     e.preventDefault();
 
-                    // Get the Kendo Grid instance
+
                     var grid = $("#AddedItemGrid").data("kendoGrid");
 
-                    // Find the closest row (tr) to the clicked remove button
+
                     var tr = $(this).closest("tr");
 
-                    // Remove the selected row from the grid
+
                     grid.removeRow(tr);
                 });
             }
         });
     }
+
 
 
     function Addtolist(item) {
@@ -326,7 +386,8 @@
         });
 
         if (exists) {
-            kendo.alert("This supplier is already added!");
+            //kendo.alert("This supplier is already added!");
+            ShowNotification(3, "This supplier is already added!");
             return;
         }
 
@@ -360,6 +421,7 @@
             allowUnsort: true,
             autoSync: true,
             pageSize: 10,
+            //group: { field: "MasterSupplierName" },
             transport: {
                 read: {
                     url: "/DMS/MasterSupplierItem/GetGridData",
@@ -378,9 +440,9 @@
                             if (param.field === "MasterSupplierName") {
                                 param.field = "s.Name";
                             }
-                            if (param.field === "MasterProductName") {
-                                param.field = "p.Name";
-                            }
+                            //if (param.field === "MasterProductName") {
+                            //    param.field = "p.Name";
+                            //}
 
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
@@ -408,9 +470,9 @@
                             if (param.field === "MasterSupplierName") {
                                 param.field = "s.Name";
                             }
-                            if (param.field === "MasterProductName") {
-                                param.field = "p.Name";
-                            }
+                            //if (param.field === "MasterProductName") {
+                            //    param.field = "p.Name";
+                            //}
 
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
@@ -473,7 +535,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["ProductName", "ProductName"]
+                fields: ["MasterSupplierName"]
             },
             excel: {
                 fileName: "MasterSupplierItem.xlsx",
@@ -546,23 +608,25 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 35
-                },
+                //{
+                //    selectable: true, width: 35
+                //},
                 {
                     title: "Action",
-                    width: 170,
+                    width: 10,
                     template: function (dataItem) {
 
                         return `
-            <a href="/DMS/MasterSupplierItem/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
+            <a href="/DMS/MasterSupplierItem/Edit/${dataItem.MasterSupplierId}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
                 <i class="fas fa-pencil-alt"></i>
             </a>`;
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
-                { field: "MasterSupplierName", title: "Master Supplier Name", sortable: true, width: 200 },
-                { field: "MasterProductName", title: "Master Product Name", sortable: true, width: 200 },
+                {
+                    field: "MasterSupplierName", title: "Master Supplier Name",  sortable: true, width: 200
+                },
+                //{ field: "MasterProductName", title: "Master Product Name", sortable: true, width: 200 },
 
                 {
                     field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
@@ -615,7 +679,7 @@
         var masterSupplierId = model.MasterSupplierId;
 
         if (!masterSupplierId) {
-            showNotification("Please select supplier first", "warning");
+            ShowNotification("Please select supplier first", "warning");
             return; 
         }
 
@@ -626,7 +690,7 @@
 
         if (grid) {
             var dataItems = grid.dataSource.view();
-
+            debugger;
             for (var i = 0; i < dataItems.length; i++) {
                 var item = dataItems[i];
 
@@ -652,6 +716,7 @@
 
         if (details.length === 0) {
             ShowNotification(3, "At least one detail entry is required.");
+            $(".btnsave").prop("disabled", false);
             return;
         }
 
@@ -666,6 +731,8 @@
 
     function saveDone(result) {
         debugger;
+        $("#Id").val(result.Data.Id);
+        $("#Operation").val("update");
         var msg = result.Message || "";
 
         var inserted = 0;

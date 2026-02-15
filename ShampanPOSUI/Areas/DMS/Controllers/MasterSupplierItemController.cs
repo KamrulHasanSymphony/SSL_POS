@@ -31,12 +31,29 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             MasterSupplierItemVM vm = new MasterSupplierItemVM();
             vm.Operation = "add";
-
+            var companyId = Session["CompanyId"];
+            vm.CompanyId = Convert.ToInt32(companyId);
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
 
 
             return View("Create", vm);
         }
+
+
+        public ActionResult CreateSupplier()
+        {
+            MasterSupplierItemVM vm = new MasterSupplierItemVM();
+            vm.Operation = "add";
+            var companyId = Session["CompanyId"];
+            vm.CompanyId = Convert.ToInt32(companyId);
+
+            vm.IsActive = true;
+
+            return View("Create", vm);
+
+        }
+
+
 
         [HttpPost]
         public ActionResult CreateEdit(MasterSupplierItemVM model)
@@ -48,6 +65,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
 
                 var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
                 //model.BranchId = Convert.ToInt32(currentBranchId);
@@ -96,6 +114,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     model.LastModifiedBy = Session["UserId"].ToString();
                     model.LastModifiedOn = DateTime.Now.ToString();
                     model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
+                    model.CreatedBy = Session["UserId"].ToString();
+                    model.UserId = Session["UserHashId"]?.ToString();
+                    model.CreatedOn = DateTime.Now.ToString();
+                    model.CreatedFrom = Ordinary.GetLocalIpAddress();
 
                     resultVM = _repo.Update(model);
 

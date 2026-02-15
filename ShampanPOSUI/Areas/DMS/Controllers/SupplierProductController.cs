@@ -100,7 +100,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     model.LastModifiedBy = Session["UserId"].ToString();
                     model.LastModifiedOn = DateTime.Now.ToString();
                     model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
-
+                    model.CreatedBy = Session["UserId"].ToString();
+                    model.UserId = Session["UserHashId"]?.ToString();
+                    model.CreatedOn = DateTime.Now.ToString();
+                    model.CreatedFrom = Ordinary.GetLocalIpAddress();
                     resultVM = _repo.Update(model);
 
                     if (resultVM.Status == ResultStatus.Success.ToString())

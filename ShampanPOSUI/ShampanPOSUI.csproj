@@ -2663,6 +2663,7 @@
     <Content Include="Areas\DMS\Views\SupplierProduct\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplierItem\Index.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplierItem\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\MasterSupplierItem\CreateSupplier.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

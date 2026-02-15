@@ -6,6 +6,7 @@
 
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
+        getSupplierId = $("#SupplierId").val() || '';
 
         if (parseInt(getId) == 0 && getOperation == '') {
             GetGridDataList();
@@ -64,7 +65,49 @@
 
     };
 
+    //function GetMasterSupplierComboBox() {
+    //    debugger;
+    //    var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetSupplierList"
+    //            }
+    //        },
+    //        placeholder: "Select Supplier",
+    //        value: "",
+    //        dataBound: function () {
+    //            var id = parseInt(getSupplierId);
+    //            if (id && id > 0) {
+    //                this.value(id);
+    //            } else {
+    //                this.value("");
+    //            }
+    //        },
+    //        change: function () {
+    //            var selectedItem = this.dataItem();
+    //            if (selectedItem) {
+    //                getSupplierId = selectedItem.Id;
+    //            } else {
+    //                getSupplierId = 0;
+    //            }
+    //        }
+
+
+    //    }).data("kendoMultiColumnComboBox");
+    //}
+
+
     function GetMasterSupplierComboBox() {
+        debugger;
         var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
             dataTextField: "Name",
             dataValueField: "Id",
@@ -81,15 +124,7 @@
                 }
             },
             placeholder: "Select Supplier",
-            value: "",
-            dataBound: function () {
-                var id = parseInt(getSupplierId);
-                if (id && id > 0) {
-                    this.value(id);
-                } else {
-                    this.value("");
-                }
-            },
+
             change: function () {
                 var selectedItem = this.dataItem();
                 if (selectedItem) {
@@ -101,35 +136,88 @@
 
 
         }).data("kendoMultiColumnComboBox");
+
+
+        // 🔥 force load data
+        SupplierComboBox.dataSource.read().then(function () {
+
+            if (getSupplierId && parseInt(getSupplierId) > 0) {
+                SupplierComboBox.value(parseInt(getSupplierId));
+            }
+
+        });
     }
+
+
+    //function GetProductGroupComboBox() {
+    //    debugger;
+    //    $("#ProductGroupId").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 },
+    //            { field: "Description", title: "Description", width: 150 },
+
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetProductGroupList"
+    //            }
+    //        },
+    //        placeholder: "Select Product Group",
+
+    //        change: function () {
+    //            var dataItem = this.dataItem();
+    //            var groupId = this.value();
+    //            var grid = $("#departments").data("kendoGrid");
+    //            debugger;
+    //            if (groupId == null) {
+    //                currentProductGroupId = 0;
+    //                if (grid) grid.dataSource.data([]);
+    //                return;
+    //            }
+
+    //            currentProductGroupId = groupId;
+
+    //            if (grid) {
+    //                grid.dataSource.read();
+    //            }
+
+    //            $("#ProductGroupName").val(dataItem.Name);
+    //            $("#Description").val(dataItem.Description);
+    //            $("#Code").val(dataItem.Code);
+    //        }
+    //    });
+    //}
+
+
 
     function GetProductGroupComboBox() {
         debugger;
-        $("#ProductGroupId").kendoMultiColumnComboBox({
+        var combo =  $("#ProductGroupId").kendoMultiColumnComboBox({
             dataTextField: "Name",
             dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "Description", title: "Description", width: 150 },
-
-            ],
+            autoBind: false,
             filter: "contains",
-            filterFields: ["Code", "Name"],
             dataSource: {
                 transport: {
-                    read: "/Common/Common/GetProductGroupList"
+                    read: {
+                        url: "/Common/Common/GetProductGroupList",
+                        dataType: "json"
+                    }
                 }
             },
-            placeholder: "Select Product Group",
 
             change: function () {
                 var dataItem = this.dataItem();
                 var groupId = this.value();
                 var grid = $("#departments").data("kendoGrid");
-
-                if (!groupId || groupId < 1) {
+                debugger;
+                if (!groupId) {
                     currentProductGroupId = 0;
                     if (grid) grid.dataSource.data([]);
                     return;
@@ -137,17 +225,22 @@
 
                 currentProductGroupId = groupId;
 
-                // 🔥 FORCE reload
                 if (grid) {
                     grid.dataSource.read();
                 }
 
-                $("#ProductGroupName").val(dataItem.Name);
-                $("#Description").val(dataItem.Description);
-                $("#Code").val(dataItem.Code);
+                if (dataItem) {
+
+                    $("#ProductGroupName").val(dataItem.Name);
+                    $("#Description").val(dataItem.Description);
+                    $("#Code").val(dataItem.Code);
+                }
             }
         });
     }
+
+
+
 
     function InitItemsGrid() {
         debugger;
@@ -232,43 +325,103 @@
         });
     }
 
+    //function InitAddedItemGrid() {
+    //    debugger;
+    //    $("#AddedItemGrid").kendoGrid({
+    //        dataSource: {
+    //            data: [],
+    //            schema: {
+    //                model: {
+    //                    id: "ProductId",
+    //                    fields: {
+    //                        Id: { type: "number" },
+    //                        Code: { type: "string" },
+    //                        Name: { type: "string" },
+    //                        ProductGroupName: { type: "string" },
+    //                        ProductGroupDescription: { type: "string" },
+    //                        ProductGroupCode: { type: "string" },
+    //                        BanglaName: { type: "string" },
+    //                        Description: { type: "string" },
+    //                        UOMId: { type: "number" },
+    //                        HSCodeNo: { type: "string" },
+    //                        VATRate: { type: "string" },
+    //                        SDRate: { type: "string" },
+    //                    }
+    //                }
+    //            }
+    //        },
+    //        columns: [
+    //            { field: "Id", title: "Id", width: 100 },
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 },
+    //            { field: "ProductGroupName", title: "Group", width: 150 },
+    //            { field: "ProductGroupDescription", title: "Description", width: 150, hidden: true },
+    //            { field: "ProductGroupCode", title: "Group Code", width: 150, hidden: true },
+    //            { field: "BanglaName", title: "Bangla Name", width: 150, hidden: true },
+    //            { field: "Description", title: "Address", width: 150, hidden: true },
+    //            { field: "UOMId", title: "UOM", width: 150, hidden: true },
+    //            { field: "HSCodeNo", title: "HSCode No", width: 150, hidden: true },
+    //            { field: "VATRate", title: "VAT Rate", width: 150, hidden: true },
+    //            { field: "SDRate", title: "SD Rate", width: 150, hidden: true },
+    //            {
+    //                title: "Action",
+    //                width: 70,
+    //                template: `
+    //            <button type="button"
+    //                    class="k-button k-danger removeItem"
+    //                    title="Remove">
+    //                <i class="k-icon k-i-trash"></i>
+    //            </button>`
+    //            }
+    //        ],
+    //        dataBound: function () {
+
+    //            $(".removeItem").off().on("click", function (e) {
+    //                e.preventDefault();
+
+
+    //                var grid = $("#AddedItemGrid").data("kendoGrid");
+
+
+    //                var tr = $(this).closest("tr");
+
+
+    //                grid.removeRow(tr);
+    //            });
+    //        }
+    //    });
+    //}
+
+
     function InitAddedItemGrid() {
+
+
+        var iteamDetailList = JSON.parse($("#iteamDetailList").val() || "[]");
+
         $("#AddedItemGrid").kendoGrid({
             dataSource: {
-                data: [], // Initialize empty data
+                data: iteamDetailList,
+                pageSize: 20,
                 schema: {
                     model: {
-                        id: "ProductId",
+                        id: "Id",
                         fields: {
                             Id: { type: "number" },
                             Code: { type: "string" },
                             Name: { type: "string" },
                             ProductGroupName: { type: "string" },
-                            ProductGroupDescription: { type: "string" },
-                            ProductGroupCode: { type: "string" },
-                            BanglaName: { type: "string" },
-                            Description: { type: "string" },
-                            UOMId: { type: "number" },
-                            HSCodeNo: { type: "string" },
-                            VATRate: { type: "string" },
-                            SDRate: { type: "string" },
+                            
                         }
                     }
                 }
             },
             columns: [
-                { field: "Id", title: "Id", width: 100 },
+                { field: "Id", hidden: true },
+                { field: "ProductId", hidden: true },
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
                 { field: "ProductGroupName", title: "Group", width: 150 },
-                { field: "ProductGroupDescription", title: "Description", width: 150, hidden: true },
-                { field: "ProductGroupCode", title: "Group Code", width: 150, hidden: true },
-                { field: "BanglaName", title: "Bangla Name", width: 150, hidden: true },
-                { field: "Description", title: "Address", width: 150, hidden: true },
-                { field: "UOMId", title: "UOM", width: 150, hidden: true },
-                { field: "HSCodeNo", title: "HSCode No", width: 150, hidden: true },
-                { field: "VATRate", title: "VAT Rate", width: 150, hidden: true },
-                { field: "SDRate", title: "SD Rate", width: 150, hidden: true },
+                
                 {
                     title: "Action",
                     width: 70,
@@ -281,22 +434,26 @@
                 }
             ],
             dataBound: function () {
-                // Attach click event for remove button after data is bound
+
                 $(".removeItem").off().on("click", function (e) {
                     e.preventDefault();
 
-                    // Get the Kendo Grid instance
+
                     var grid = $("#AddedItemGrid").data("kendoGrid");
 
-                    // Find the closest row (tr) to the clicked remove button
+
                     var tr = $(this).closest("tr");
 
-                    // Remove the selected row from the grid
+
                     grid.removeRow(tr);
                 });
             }
         });
     }
+
+
+
+
 
     function Addtolist(item) {
         debugger;
@@ -315,7 +472,7 @@
         });
 
         if (exists) {
-            kendo.alert("This supplier is already added!");
+            ShowNotification(3, "This supplier is already added!");
             return;
         }
 
@@ -350,6 +507,7 @@
             allowUnsort: true,
             autoSync: true,
             pageSize: 10,
+            //group: { field: "SupplierName" },
             transport: {
                 read: {
                     url: "/DMS/SupplierProduct/GetGridData",
@@ -368,9 +526,9 @@
                             if (param.field === "SupplierName") {
                                 param.field = "s.Name";
                             }
-                            if (param.field === "ProductName") {
-                                param.field = "p.Name";
-                            }
+                            //if (param.field === "ProductName") {
+                            //    param.field = "p.Name";
+                            //}
 
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
@@ -398,9 +556,9 @@
                             if (param.field === "SupplierName") {
                                 param.field = "s.Name";
                             }
-                            if (param.field === "ProductName") {
-                                param.field = "p.Name";
-                            }
+                            //if (param.field === "ProductName") {
+                            //    param.field = "p.Name";
+                            //}
 
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
@@ -463,7 +621,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["ProductName", "ProductName"]
+                fields: ["SupplierName"]
             },
             excel: {
                 fileName: "SupplierProduct.xlsx",
@@ -536,23 +694,22 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 35
-                },
+                //{
+                //    selectable: true, width: 35
+                //},
                 {
                     title: "Action",
-                    width: 170,
+                    width: 10,
                     template: function (dataItem) {
-
                         return `
-            <a href="/DMS/SupplierProduct/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
+            <a href="/DMS/SupplierProduct/Edit/${dataItem.SupplierId}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
                 <i class="fas fa-pencil-alt"></i>
             </a>`;
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
-                { field: "SupplierName", title: "Supplier Name", sortable: true, width: 200 },
-                { field: "ProductName", title: "Product Name", sortable: true, width: 200 },
+                { field: "SupplierName", title: "Supplier Name", sortable: true,  width: 200 },
+                //{ field: "ProductName", title: "Product Name", sortable: true, width: 200 },
 
                 {
                     field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
@@ -614,6 +771,7 @@
 
                 details.push({
                     Id: item.Id,
+                    ProductId: item.Id,
                     Code: item.Code,
                     Name: item.Name,
                     BanglaName: item.BanglaName,
@@ -632,6 +790,7 @@
 
         if (details.length === 0) {
             ShowNotification(3, "At least one detail entry is required.");
+            $(".btnsave").prop("disabled", false);
             return;
         }
 
@@ -646,6 +805,9 @@
 
     function saveDone(result) {
         debugger;
+
+        $("#Id").val(result.Data.Id);
+        $("#Operation").val("update");
         var msg = result.Message || "";
 
         var inserted = 0;

@@ -24,6 +24,7 @@ namespace ShampanPOS.Models
         public string? ProductName { get; set; }
         public int? CompanyId { get; set; }
 
+        [Display(Name = "Product Group")]
         public int ProductGroupId { get; set; }
 
         public string? ProductGroupDescription { get; set; }

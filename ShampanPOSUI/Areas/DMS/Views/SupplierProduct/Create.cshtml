@@ -1,4 +1,6 @@
 ﻿
+@using ShampanPOS.Models
+
 @using Newtonsoft.Json
 @model ShampanPOS.Models.SupplierProductVM
 @{
@@ -141,55 +143,56 @@
 
                             @Html.HiddenFor(model => model.Id)
                             @Html.HiddenFor(model => model.Operation)
+                            @Html.Hidden("iteamDetailList", JsonConvert.SerializeObject(Model.MasterItemList ?? new List<MasterItemVM>()))
 
 
-                                        <div class="row">
+                            <div class="row">
 
-                                            <div class="col-md-12">
-                                                <div class="col-sm-2">
-                                                    @Html.LabelFor(model => model.SupplierId)
-                                                    <div class="input-group date">
-                                                        @Html.TextBoxFor(model => model.SupplierId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
-                                                    </div>
-                                                    @Html.ValidationMessageFor(model => model.SupplierId)
-                                                </div>
-                                            </div><br /><br /><br /><br />
-                                            <div class="col-md-6">
-                                                <div class="card card-secondary">
-                                                    <div class="card-header">
-                                                        <h3 class="card-title"> Master Item Product</h3>
-                                                    </div>
-
-                                                    <div class="col-sm-6">
-                                                        @Html.LabelFor(model => model.ProductGroupId)
-                                                        <div class="input-group date">
-                                                            @Html.TextBoxFor(model => model.ProductGroupId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
-                                                        </div>
-                                                        @Html.ValidationMessageFor(model => model.ProductGroupId)
-                                                    </div>
-                                                    @Html.HiddenFor(model => model.ProductGroupName)
-                                                    @Html.HiddenFor(model => model.ProductGroupDescription)
-                                                    @Html.HiddenFor(model => model.ProductGroupCode)
-                                                    <div class="card-body">
-                                                        <div id="departments"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="card card-secondary">
-                                                    <div class="card-header">
-                                                        <h3 class="card-title">Added Item</h3>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div id="AddedItemGrid"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                <div class="col-md-12">
+                                    <div class="col-sm-2">
+                                        @Html.LabelFor(model => model.SupplierId)
+                                        <div class="input-group date">
+                                            @Html.TextBoxFor(model => model.SupplierId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.SupplierId)
+                                    </div>
+                                </div><br /><br /><br /><br />
+                                <div class="col-md-6">
+                                    <div class="card card-secondary">
+                                        <div class="card-header">
+                                            <h3 class="card-title"> Item Product</h3>
                                         </div>
 
+                                        <div class="col-sm-6">
+                                            @Html.LabelFor(model => model.ProductGroupId)
+                                            <div class="input-group date">
+                                                @Html.TextBoxFor(model => model.ProductGroupId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.ProductGroupId)
+                                        </div>
+                                        @Html.HiddenFor(model => model.ProductGroupName)
+                                        @Html.HiddenFor(model => model.ProductGroupDescription)
+                                        @Html.HiddenFor(model => model.ProductGroupCode)
+                                        <div class="card-body">
+                                            <div id="departments"></div>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <div class="card card-secondary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Added Item</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="AddedItemGrid"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </form>
 
 
