@@ -106,6 +106,7 @@ namespace ShampanPOS.Models
         public int? Branchs { get; set; }       
         public Audit Audit { get; set; }
         public string? UserId { get; set; }
+        public string? Code { get; set; }
 
         public BranchProfile()
         {

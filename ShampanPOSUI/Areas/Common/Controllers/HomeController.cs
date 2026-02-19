@@ -67,6 +67,79 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return RedirectToAction("Index", "Login", new { area = (string)null });
             }
         }
+
+
+
+
+        //public ActionResult Index(bool branchChange)
+        //{
+        //    ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+        //    CommonVM vm = new CommonVM();
+
+        //    try
+        //    {
+        //        if (User.Identity.IsAuthenticated || (Session["UserId"] != null && !string.IsNullOrEmpty(Session["UserId"].ToString())))
+        //        {
+        //            List<BranchProfile> branchProfiles = new List<BranchProfile>();
+        //            List<BranchProfileVM> lst = new List<BranchProfileVM>();
+
+        //            Session["BranchChanged"] = branchChange ? "1" : "0";
+
+        //            if (branchChange)
+        //            {
+        //                TempData["BranchChanged"] = true;
+        //                return View(branchProfiles);
+        //            }
+
+        //            if (Session["UserId"] != null)
+        //            {
+        //                if (Session["CurrentBranch"] == null)
+        //                {
+        //                    //branchProfiles = new List<BranchProfile>();
+        //                    BranchProfileRepo _branchRepo = new BranchProfileRepo();
+        //                    vm.UserId = Session["UserHashId"].ToString();
+        //                    //resultVM = userBranchProfileRepo.List(vm);
+
+        //                    resultVM = _branchRepo.UserWiseBranchList(vm);
+        //                    if (resultVM.Status == ResultStatus.Success.ToString())
+        //                    {
+        //                        branchProfiles = JsonConvert.DeserializeObject<List<BranchProfile>>(resultVM.DataVM.ToString());
+        //                        branchProfiles[0].BranchID = Convert.ToInt32(branchProfiles[0].Id);
+        //                        branchProfiles[0].BranchCode = branchProfiles[0].Code;
+        //                        branchProfiles[0].UserId = vm.UserId;
+
+
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    BranchProfile branch = new BranchProfile
+        //                    {
+        //                        BranchID = 0,
+        //                        BranchCode = "",
+        //                    };
+        //                    branchProfiles.Add(branch);
+        //                }
+        //            }
+
+        //            return View(branchProfiles);
+        //        }
+
+
+        //        else
+        //        {
+        //            return RedirectToAction("Index", "Login", new { area = (string)null });
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return RedirectToAction("Index", "Login", new { area = (string)null });
+        //    }
+        //}
+
+
+
         [HttpGet]
         public JsonResult LoadBranchProfiles()
         {
@@ -83,12 +156,14 @@ namespace ShampanPOSUI.Areas.Common.Controllers
 
                     vm.UserId = Session["UserId"].ToString();
                     resultVM = _branchRepo.List(vm);
+                   // resultVM = _branchRepo.UserWiseBranchList(vm);
                 }
                 else
                 {
                     UserBranchProfileRepo userBranchProfileRepo = new UserBranchProfileRepo();
-                    vm.UserId = Session["UserId"].ToString();
-                    resultVM = userBranchProfileRepo.List(vm);
+                    vm.UserId = Session["UserHashId"].ToString();
+                    //resultVM = userBranchProfileRepo.List(vm);
+                    resultVM = _branchRepo.UserWiseBranchList(vm);
                 }
 
 
@@ -133,6 +208,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                     List<BranchProfileVM> lst = new List<BranchProfileVM>();
                     vm.UserId = branch.UserId;
                     resultVM = _branchRepo.List(vm);
+                    //resultVM = _branchRepo.UserWiseBranchList(vm);
 
                     if (resultVM.Status == ResultStatus.Success.ToString())
                     {

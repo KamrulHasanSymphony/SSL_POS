@@ -88,28 +88,7 @@
 </style>
 
 
-<div id="tabs">
 
-    @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
-    {
-        <div class="container-fluid d-flex justify-content-between">
-            <div class="tab-container">
-                <ul class="tab-list">
-                    <li class="tab-item">
-                        <a href="#tabs-1" class="tab-link active" data-tab="1"> Distributor</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#tabs-2" class="tab-link" data-tab="1" id="btnBranchCreditLimit"> Credit Limit</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#tabs-3" class="tab-link" data-tab="1" id="btnBranchAdvance"> Advance</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    }
-    else
-    {
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -124,7 +103,7 @@
                 </div>
             </div>
         </div>
-    }
+    
 
 
     <div id="tabs-1">
@@ -377,7 +356,7 @@
     </div>
 
 
-    @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+    @*@if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
     {
 
         <div id="tabs-2">
@@ -415,10 +394,10 @@
         </div>
 
 
-    }
+    }*@
 
 
-</div>
+
 
 @section scripts{
 

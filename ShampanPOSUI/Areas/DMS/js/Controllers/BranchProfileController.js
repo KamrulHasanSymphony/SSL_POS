@@ -83,6 +83,7 @@
     };
 
     function GetBranchProfileComboBox() {
+        debugger;
         var BranchProfileComboBox = $("#EnumTypeId").kendoMultiColumnComboBox({
             dataTextField: "Name",
             dataValueField: "Id",

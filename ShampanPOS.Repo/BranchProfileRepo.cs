@@ -93,6 +93,28 @@ namespace ShampanPOS.Repo
             }
         }
 
+
+        public ResultVM UserWiseBranchList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/BranchProfile/UserWiseBranchList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+
         public ResultVM Insert(BranchProfileVM model)
         {
             try

@@ -234,6 +234,7 @@ namespace ShampanPOSUI.Controllers
 
                     // ✅ Store values in Session
                     Session["UserId"] = model.UserName;
+                    Session["UserName"] = model.UserName;
                     Session["CompanyId"] = model.CompanyId.ToString();
 
                     return RedirectToAction("Index", "Home", new { area = "Common", branchChange = false });

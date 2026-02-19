@@ -7,6 +7,7 @@
 
     var currentBranchName = Session["CurrentBranchName"] != null ? Session["CurrentBranchName"].ToString() : "";
     var UserId = Session["UserId"] != null ? Session["UserId"].ToString() : "";
+    var UserName = Session["UserName"] != null ? Session["UserName"].ToString() : "";
     var userImage = Session["UserImage"] != null ? Session["UserImage"].ToString() : "";
 }
 
@@ -151,7 +152,7 @@
                 <div class="col-md-12">
                     <label class="custom-label">
                         <a href="#" class="d-block">
-                            <b>User : </b>  @UserId
+                            <b>User : </b>  @UserName
                         </a>
                     </label>
                 </div>
