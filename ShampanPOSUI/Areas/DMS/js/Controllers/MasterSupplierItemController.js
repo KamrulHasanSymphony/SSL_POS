@@ -88,8 +88,8 @@
             dataSource: {
                 transport: {
                     read: {
-                        url: "/Common/Common/GetMasterSupplierList",
-                        dataType: "json"
+                        url: "/Common/Common/GetMasterSupplierList"
+                        //dataType: "json"
                     }
                 }
             },
@@ -144,7 +144,8 @@
                     return;
                 }
 
-                currentMasterItemGroupId = parseInt(groupId);
+                //currentMasterItemGroupId = parseInt(groupId);
+                currentMasterItemGroupId = groupId;
 
                 if (grid) {
                     grid.dataSource.read();
@@ -315,7 +316,7 @@
 
         var iteamDetailList = JSON.parse($("#iteamDetailList").val() || "[]");
 
-        console.log("Grid Data:", iteamDetailList); 
+        //console.log("Grid Data:", iteamDetailList); 
 
         $("#AddedItemGrid").kendoGrid({
             dataSource: {
