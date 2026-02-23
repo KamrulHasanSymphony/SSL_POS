@@ -369,6 +369,7 @@
     <Content Include="Areas\DMS\js\Controllers\DepositController.js" />
     <Content Include="Areas\DMS\js\Controllers\CollectionController.js" />
     <Content Include="Areas\DMS\js\Controllers\FromSaleController.js" />
+    <Content Include="Areas\DMS\js\Controllers\MasterController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterSupplierProductController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterItemProductController.js" />
     <Content Include="Areas\DMS\js\Controllers\MasterItemController.js" />

@@ -51,8 +51,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
 
-            if (ModelState.IsValid)
-            {
+          
                 try
                 {
                     if (file != null && file.ContentLength > 0)
@@ -162,19 +161,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     return View("Create", model);
                 }
             }
-            else
-            {
-                result = new ResultModel<MasterItemVM>()
-                {
-                    Success = false,
-                    Status = Status.Fail,
-                    Message = "Model State Error!",
-                    Data = model
-                };
-                return Json(result);
-            }
+            
 
-        }
+        
 
         [HttpGet]
         public ActionResult Edit(string id)

@@ -301,7 +301,7 @@
                 }
             },
             columns: [
-                { field: "Id", title: "Id", width: 100 },
+                { field: "Id", title: "Id", hidden: true, width: 100 },
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
                 { field: "MasterItemGroupName", title: "Group", width: 150 },

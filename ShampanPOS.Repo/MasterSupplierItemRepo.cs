@@ -52,6 +52,27 @@ namespace ShampanPOS.Repo
             }
         }
 
+
+        public ResultVM InsertSupplierProduct(SupplierProductVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/SupplierProduct/InsertSupplierProduct", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
         public ResultVM Update(MasterSupplierItemVM model)
         {
             try
@@ -59,7 +80,7 @@ namespace ShampanPOS.Repo
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
                 AuthModel authModel = new AuthModel { token = ClaimNames.token };
                 #region Invoke API
-                var data = httpRequestHelper.PostData("api/MasterSupplierItem/Update", authModel, JsonConvert.SerializeObject(model));
+                var data = httpRequestHelper.PostData("api/MasterSupplierItem/Insert", authModel, JsonConvert.SerializeObject(model));
                 ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
                 #endregion                
 

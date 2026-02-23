@@ -15,6 +15,8 @@ namespace ShampanPOS.Models
         public int? CompanyId { get; set; }
         [Display(Name = "Code(Auto Generate)")]
         public string? Code { get; set; }
+        public string? MasterItemCode { get; set; }
+
         public string? MasterSupplierGroupCode { get; set; }
         public string? MasterSupplierGroupDescription { get; set; }
         public string? Description { get; set; }
@@ -26,6 +28,11 @@ namespace ShampanPOS.Models
         [Display(Name = "Supplier Group")]
         [Required(ErrorMessage ="Supplier Group is required")]
         public int? SupplierGroupId { get; set; }
+        public int? MasterItemId { get; set; }
+        public string? MasterItemName { get; set; }
+        public int? MasterItemGroupId { get; set; }
+        public string? MasterItemGroupName { get; set; }
+        public int? MasterProductId { get; set; }
         public string? GroupName { get; set; }
         [Display(Name = "Master Supplier Group")]
         public int? MasterSupplierGroupId { get; set; }

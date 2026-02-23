@@ -730,29 +730,45 @@
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
 
+    //function saveDone(result) {
+    //    debugger;
+    //    $("#Id").val(result.Data.Id);
+    //    $("#Operation").val("update");
+    //    var msg = result.Message || "";
+
+    //    var inserted = 0;
+    //    var skipped = 0;
+
+    //    var matchInsert = msg.match(/(\d+)\s*added/i);
+    //    var matchSkip = msg.match(/(\d+)\s*skipped/i);
+
+    //    if (matchInsert) inserted = parseInt(matchInsert[1]);
+    //    if (matchSkip) skipped = parseInt(matchSkip[1]);
+
+    //    if (inserted > 0) {
+    //        ShowNotification(1, msg);
+    //    }
+    //    else if (skipped >= 0) {
+    //        ShowNotification(3, msg);
+    //    }
+    //    else {
+    //        ShowNotification(3, msg);
+    //    }
+
+    //    $(".btnsave").prop("disabled", false);
+    //}
+
+
+
     function saveDone(result) {
-        debugger;
-        $("#Id").val(result.Data.Id);
+
+        $("#Id").val(result.Data?.Id || 0);
         $("#Operation").val("update");
-        var msg = result.Message || "";
 
-        var inserted = 0;
-        var skipped = 0;
-
-        var matchInsert = msg.match(/(\d+)\s*added/i);
-        var matchSkip = msg.match(/(\d+)\s*skipped/i);
-
-        if (matchInsert) inserted = parseInt(matchInsert[1]);
-        if (matchSkip) skipped = parseInt(matchSkip[1]);
-
-        if (inserted > 0) {
-            ShowNotification(1, msg);
-        }
-        else if (skipped >= 0) {
-            ShowNotification(3, msg);
-        }
-        else {
-            ShowNotification(2, msg);
+        if (result.Success) {
+            ShowNotification(1, "Save Successfully");   
+        } else {
+            ShowNotification(3, "Save Failed");         
         }
 
         $(".btnsave").prop("disabled", false);

@@ -2,7 +2,7 @@
 @using ShampanPOS.Models
 @using Newtonsoft.Json
 
-@model ShampanPOS.Models.MasterSupplierItemVM
+@model ShampanPOS.Models.SupplierProductVM
 @{
     ViewBag.Title = "Master Supplier Item Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -146,7 +146,7 @@
 
                             <div class="row">
 
-                                <div class="col-md-12">
+                                @*<div class="col-md-12">
                                     <div class="col-sm-2">
                                         @Html.LabelFor(model => model.MasterSupplierId)
                                         <div class="input-group date">
@@ -154,7 +154,7 @@
                                         </div>
                                         @Html.ValidationMessageFor(model => model.MasterSupplierId)
                                     </div>
-                                </div><br /><br /><br /><br />
+                                </div><br /><br /><br /><br />*@
                                 <div class="col-md-6">
                                     <div class="card card-secondary">
                                         <div class="card-header">
@@ -162,22 +162,22 @@
                                         </div>
 
                                         <div class="col-sm-6">
-                                            @Html.LabelFor(model => model.MasterItemGroupId)
+                                            @Html.LabelFor(model => model.MasterSupplierId)
                                             <div class="input-group date">
-                                                @Html.TextBoxFor(model => model.MasterItemGroupId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
+                                                @Html.TextBoxFor(model => model.MasterSupplierId, new { placeholder = "Enter COA Group", @class = "form-control form-control-sm" })
                                             </div>
-                                            @Html.ValidationMessageFor(model => model.MasterItemGroupId)
+                                            @Html.ValidationMessageFor(model => model.MasterSupplierId)
                                         </div>
-                                        @Html.HiddenFor(model => model.MasterItemGroupName)
+                                        @*@Html.HiddenFor(model => model.MasterItemGroupName)
                                         @Html.HiddenFor(model => model.MasterItemGroupDescription)
-                                        @Html.HiddenFor(model => model.MasterItemGroupCode)
+                                        @Html.HiddenFor(model => model.MasterItemGroupCode)*@
                                         <div class="card-body">
                                             <div id="departments"></div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                @*<div class="col-md-6">
                                     <div class="card card-secondary">
                                         <div class="card-header">
                                             <h3 class="card-title">Added Item</h3>
@@ -186,7 +186,7 @@
                                             <div id="AddedItemGrid"></div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*@
                             </div>
 
                         </div>
@@ -209,9 +209,9 @@
 
                     </div>
 
-                    <div class="auditshow">
-                        <img src="~/Content/Images/audit.png" title="Click for Audit" />
-                    </div>
+                    @*<div class="auditshow">
+                            <img src="~/Content/Images/audit.png" title="Click for Audit" />
+                        </div>*@
                 </div>
 
 
@@ -288,11 +288,11 @@
 
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
-    <script src="~/Areas/DMS/js/Controllers/MasterSupplierItemController.js"></script>
+    <script src="~/Areas/DMS/js/Controllers/MasterController.js"></script>
 
     <script>
         $(document).ready(function () {
-            MasterSupplierItemController.init();
+            MasterController.init();
         });
 
     </script>

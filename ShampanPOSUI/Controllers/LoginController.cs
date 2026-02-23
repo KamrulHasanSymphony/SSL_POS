@@ -335,11 +335,11 @@ namespace ShampanPOSUI.Controllers
         {
             try
             {
-                if (Session["UserId"] != null)
+                if (Session["UserName"] != null)
                 {
                     CommonRepo _repo = new CommonRepo();
 
-                    var result = _repo.GetAssignedMenuList(Session["UserId"] != null ? Session["UserId"].ToString() : "");
+                    var result = _repo.GetAssignedMenuList(Session["UserName"] != null ? Session["UserName"].ToString() : "");
 
                     var model = result.ToList();
                     ViewBag.ShouldRenderMenu = model.Any();

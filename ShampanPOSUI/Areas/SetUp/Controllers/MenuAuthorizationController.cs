@@ -421,7 +421,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                 CommonVM param = new CommonVM();
                 param.Id = roleId;
                 
-                vm.UserName = UserId;
+                param.UserId = UserId;
 
                 ResultVM result = _repo.GetUserMenuAccessData(param);
 

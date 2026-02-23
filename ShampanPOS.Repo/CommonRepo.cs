@@ -37,6 +37,7 @@ namespace ShampanPOS.Repo
                 CommonDataService kendoList = new CommonDataService();
 
                 return kendoList.Select_Data_List<UserMenu>("sp_GetAssignedMenuList", "get_List", userName);
+
             }
             catch (Exception ex)
             {
@@ -457,6 +458,29 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
+
+
+
+        public ResultVM GetSupplierProductList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/GetSupplierProductList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
 
         public ResultVM GetCampaignTargetList(CommonVM model)
         {
