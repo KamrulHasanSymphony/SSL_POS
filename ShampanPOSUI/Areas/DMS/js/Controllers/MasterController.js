@@ -6,7 +6,7 @@
         var getOperation = $("#Operation").val() || '';
 
         if (parseInt(getId) == 0 && getOperation == '') {
-            GetGridDataList();
+            //GetGridDataList();
         }
 
         if (getOperation !== '') {
@@ -78,6 +78,7 @@
     function InitSupplierProductGrid() {
         debugger;
         $("#departments").kendoGrid({
+            width: "100%",
             autoBind: false,
             dataSource: {
                 transport: {
@@ -105,6 +106,9 @@
                 { field: "MasterProductId", title: "Product",hidden:true, width: 120 },
                 { field: "MasterItemName", title: "Master Item Name", width: 120 },
                 { field: "MasterItemGroupName", title: "Master Item Group Name", width: 120 },
+                { field: "BanglaName", title: "Bangla Name", width: 120 },
+                { field: "UOMId", title: "UOM Id", width: 120 },
+                { field: "HSCodeNo", title: "HS Code No", width: 120 },
                 { field: "MasterItemGroupId", title: "Master Item Group", hidden: true, width: 150 }
             ]
         });
@@ -122,10 +126,10 @@
             allowUnsort: true,
             autoSync: true,
             pageSize: 10,
-            //group: { field: "MasterSupplierName" },
+            //group: { field: "SupplierName" },
             transport: {
                 read: {
-                    url: "/DMS/MasterSupplierItem/GetGridData",
+                    url: "/DMS/SupplierProduct/GetGridData",
                     type: "POST",
                     dataType: "json",
                     cache: false
@@ -138,10 +142,10 @@
                                 param.field = "M.Id";
                             }
 
-                            if (param.field === "MasterSupplierName") {
+                            if (param.field === "SupplierName") {
                                 param.field = "s.Name";
                             }
-                            //if (param.field === "MasterProductName") {
+                            //if (param.field === "ProductName") {
                             //    param.field = "p.Name";
                             //}
 
@@ -168,10 +172,10 @@
                                 param.field = "M.Id";
                             }
 
-                            if (param.field === "MasterSupplierName") {
+                            if (param.field === "SupplierName") {
                                 param.field = "s.Name";
                             }
-                            //if (param.field === "MasterProductName") {
+                            //if (param.field === "ProductName") {
                             //    param.field = "p.Name";
                             //}
 
@@ -236,14 +240,14 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["MasterSupplierName"]
+                fields: ["SupplierName"]
             },
             excel: {
-                fileName: "MasterSupplierItem.xlsx",
+                fileName: "SupplierProduct.xlsx",
                 filterable: true
             },
             pdf: {
-                fileName: `MasterSupplierItem_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+                fileName: `SupplierProduct_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
                 allPages: true,
                 avoidLink: true,
                 filterable: true
@@ -282,7 +286,7 @@
                 }
 
 
-                var fileName = `MasterSupplierItem_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+                var fileName = `SupplierProduct_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
                 var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
                 var columnWidth = 100;
@@ -316,18 +320,15 @@
                     title: "Action",
                     width: 10,
                     template: function (dataItem) {
-
                         return `
-            <a href="/DMS/MasterSupplierItem/Edit/${dataItem.MasterSupplierId}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
+            <a href="/DMS/SupplierProduct/Edit/${dataItem.SupplierId}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
                 <i class="fas fa-pencil-alt"></i>
             </a>`;
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
-                {
-                    field: "MasterSupplierName", title: "Master Supplier Name", sortable: true, width: 200
-                },
-                //{ field: "MasterProductName", title: "Master Product Name", sortable: true, width: 200 },
+                { field: "SupplierName", title: "Supplier Name", sortable: true, width: 200 },
+                //{ field: "ProductName", title: "Product Name", sortable: true, width: 200 },
 
                 {
                     field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
@@ -390,6 +391,11 @@
 
         model.SupplierId = model.MasterSupplierId;   
         model.MasterItemList = details;              
+        //model.SourceType = "MSI";
+
+        //if ($("#Operation").val() === "update") {
+        //    model.Operation = "update"; 
+        //}
 
         var url = "/DMS/MasterSupplierItem/CreateEditSupplier";
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);

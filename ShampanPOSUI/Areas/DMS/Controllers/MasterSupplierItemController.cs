@@ -55,7 +55,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
 
-
         [HttpPost]
         public ActionResult CreateEditSupplier(SupplierProductVM model)
         {
@@ -118,7 +117,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     model.CreatedOn = DateTime.Now.ToString();
                     model.CreatedFrom = Ordinary.GetLocalIpAddress();
 
-                    resultVM = _repo.InsertSupplierProduct(model);
+                    resultVM = _repo.UpdateSupplierProduct(model);
 
                     if (resultVM.Status == ResultStatus.Success.ToString())
                     {
@@ -159,9 +158,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
         }
-
-
-
 
 
         [HttpPost]

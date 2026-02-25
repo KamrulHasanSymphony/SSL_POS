@@ -15,6 +15,8 @@ namespace ShampanPOS.Models
         [Display(Name = "Supplier")]
         public int SupplierId { get; set; }
         public string? UserId { get; set; }
+
+        [Display(Name = "Master Supplier")]
         public int? MasterSupplierId { get; set; }
         public string? SupplierName { get; set; }
   
@@ -64,6 +66,14 @@ namespace ShampanPOS.Models
 
         public string?[] IDs { get; set; }
 
+        [Display(Name = "UOM")]
+        public int? UOMId { get; set; }
+
+        [Display(Name = "HS Code No.")]
+        public string? HSCodeNo { get; set; }
+
+        [Display(Name = "Bangla Name")]
+        public string? BanglaName { get; set; }
         public PeramModel PeramModel { get; set; }
 
         public List<MasterItemVM> MasterItemList { get; set; }

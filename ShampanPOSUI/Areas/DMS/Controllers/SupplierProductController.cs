@@ -171,6 +171,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 vm.Operation = "update";
 
+                //if (!string.IsNullOrEmpty(vm.SourceType) && vm.SourceType == "MSI")
+                //{
+                //    return RedirectToAction(
+                //        "CreateSupplier",
+                //        "MasterSupplierItem",
+                //        new { id = vm.SupplierId }
+                //    );
+                //}
+
+
                 return View("Create", vm);
             }
             catch (Exception e)
@@ -180,6 +190,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 return RedirectToAction("Index");
             }
         }
+
 
         public ActionResult NextPrevious(int id, string status)
         {
