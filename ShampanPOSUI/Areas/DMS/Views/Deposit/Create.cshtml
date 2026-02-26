@@ -131,7 +131,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.FromBankAccountId)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.FromBankAccountId, new { @class = "   ", @style = "width: 100%;" })
+                                        @Html.TextBoxFor(model => model.FromBankAccountId, new { @class = "required form-control form-control-sm ", @style = "width: 100%;" })
                                     </div>
                                     <span id="titleError2" class="text-danger" style="display:none;"></span>
                                 </div>
@@ -139,7 +139,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.ToBankAccountId)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.ToBankAccountId, new { @class = "   ", @style = "width: 100%;" })
+                                        @Html.TextBoxFor(model => model.ToBankAccountId, new { @class = "required form-control form-control-sm", @style = "width: 100%;" })
                                     </div>
                                     <span id="titleError2" class="text-danger" style="display:none;"></span>
                                 </div>
@@ -160,7 +160,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.ChequeDate)
                                     <div class="input-group date">
-                                        @Html.TextBoxFor(model => model.ChequeDate, new { @class = "  form-control form-control-sm dateRange" })
+                                        @Html.TextBoxFor(model => model.ChequeDate, new { @class = " form-control form-control-sm dateRange" })
                                         <div class="input-group-append">
                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                         </div>
@@ -170,7 +170,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.TransactionDate)
                                     <div class="input-group date">
-                                        @Html.TextBoxFor(model => model.TransactionDate, new { @class = "  form-control form-control-sm dateRange" })
+                                        @Html.TextBoxFor(model => model.TransactionDate, new { @class = " required form-control form-control-sm dateRange" })
                                         <div class="input-group-append">
                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                         </div>
@@ -367,6 +367,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/DepositController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
         $(document).ready(function () {

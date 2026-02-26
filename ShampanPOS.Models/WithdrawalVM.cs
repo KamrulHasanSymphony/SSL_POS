@@ -92,13 +92,14 @@ namespace ShampanPOS.Models
 
         [Required(ErrorMessage = "From Bank Account is required.")]
         [Display(Name = "From Bank Account")]
-        public int FromBankAccountId { get; set; }
+        public int? FromBankAccountId { get; set; }
 
         [Required(ErrorMessage = "To Bank Account is required.")]
         [Display(Name = "To Bank Account")]
+        public int? ToBankAccountId { get; set; }
+
         public int ToBankAccountId { get; set; }
 
-        [StringLength(500, ErrorMessage = "Cheque No cannot exceed 500 characters.")]
         [Display(Name = "Cheque No")]
         public string? ChequeNo { get; set; }
 
@@ -134,10 +135,9 @@ namespace ShampanPOS.Models
         [Display(Name = "Reference")]
         public string? Reference { get; set; }
 
-        [Required(ErrorMessage = "Total Deposit Amount is required.")]
-        [Range(0, double.MaxValue, ErrorMessage = "Total Deposit Amount must be a positive value.")]
+        //[Range(0, double.MaxValue, ErrorMessage = "Total Deposit Amount must be a positive value.")]
         [Display(Name = "Total Deposit Amount")]
-        public decimal TotalDepositAmount { get; set; }
+        public decimal? TotalDepositAmount { get; set; }
 
         [Display(Name = "Archived")]
         public bool IsArchive { get; set; }

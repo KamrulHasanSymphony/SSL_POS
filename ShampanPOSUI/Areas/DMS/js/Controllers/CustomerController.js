@@ -1,29 +1,12 @@
 ﻿var CustomerController = function (CommonService,CommonAjaxService) {
 
     var getCustomerGroupId = 0;
-    //var getRouteId = 0;
-    //var getAreaId = 0;
-    //var getCustomerCategory = 0;
-    //var getFocalPoint = 0;
-
 
     var init = function () {
 
         getCustomerGroupId = $("#CustomerGroupId").val() || 0;
-        //getRouteId = $("#RouteId").val() || 0;
-        //getAreaId = $("#AreaId").val() || 0;
-
-        //getCustomerCategory = $("#CustomerCategory").val() || 0;
-        //getFocalPoint= $("#FocalPointId").val() || 0;
-
 
         GetCustomerGroupComboBox();
-        //GetRouteComboBox();
-        //GetAreaComboBox();
-        //GetFocalPointComboBox();
-        //GetCustomerCategoryComboBox();
-
-
 
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
@@ -35,8 +18,20 @@
         };
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').on('click', function (e) {
             debugger;
+
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+
+            var mvcValid = form.valid();
+
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -148,41 +143,6 @@
             $("#imageUpload").prop("disabled", false);
         });
 
-        //// Handle file input change to preview image
-        //$("#imageUpload").on("change", function (event) {
-        //    $("#imageUpload").prop("disabled", true);
-        //    var file = event.target.files[0];
-
-        //    if (!file) {
-        //        console.error("No file selected!");
-        //        return;
-        //    }
-
-        //    var reader = new FileReader();
-
-        //    reader.onload = function (e) {
-
-        //        // Update the preview image and make it visible
-        //        $("#imagePreview").attr("src", e.target.result).show();
-        //        $("#deleteImageBtn").show();
-        //    };
-
-        //    reader.onerror = function (error) {
-        //        console.error("Error reading file:", error);
-        //    };
-
-        //    reader.readAsDataURL(file);
-        //});
-
-        //$("#deleteImageBtn").on("click", function () {
-        //    $(this).addClass("clicked");
-        //    $("#imagePreview").attr("src", "").hide(); // Hide preview
-        //    $("#ImagePath").val(""); // Clear hidden field
-        //    $("#deleteImageBtn").hide();
-        //    $("#imageUpload").val("");// Hide delete button
-        //    $("#imageUpload").prop("disabled", false);
-
-        //});
 
         var operation = $("#Operation").val();
         var imagePath = $("#ImagePath").val();
@@ -230,130 +190,6 @@
             }
         }).data("kendoMultiColumnComboBox");
     };
-
-    //function GetRouteComboBox() {
-    //    var CampaignComboBox = $("#RouteId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 },
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetCustomerRouteList"
-    //            }
-    //        },
-    //        placeholder: "Select Route",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getRouteId) {
-    //                this.value(parseInt(getRouteId));
-    //            }
-    //        },
-    //        change: function (e) {
-                
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-
-    //function GetAreaComboBox() {
-    //    var CampaignComboBox = $("#AreaId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-
-    //            { field: "Name", title: "Name", width: 150 },
-
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetAreaList"
-    //            }
-    //        },
-    //        placeholder: "Select Area",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getAreaId) {
-    //                this.value(parseInt(getAreaId));
-    //            }
-    //        },
-    //        change: function (e) {
-                
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-
-    //function GetFocalPointComboBox() {
-    //    var CampaignComboBox = $("#FocalPointId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-
-    //            { field: "Name", title: "Name", width: 150 },
-
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetFocalPointList"
-    //            }
-    //        },
-    //        placeholder: "Select Foca lPoint",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getFocalPoint) {
-    //                this.value(parseInt(getFocalPoint));
-    //            }
-    //        },
-    //        change: function (e) {
-
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-    //function GetCustomerCategoryComboBox() {
-
-    //    var CurrencyComboBox = $("#CustomerCategory").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Name",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Name", title: "Name", width: 150 },
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetCustomerCategoryList"
-    //            }
-    //        },
-    //        placeholder: "Select Customer Category",
-    //        value: "",
-    //        dataBound: function (e) {
-
-    //            if (getCustomerCategory) {
-
-    //                this.value(getCustomerCategory);
-
-    //            }
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-
-    //}
-
-
-
-
     function SelectCustomerCreditLimitData() {
 
         var IDs = [];
@@ -990,31 +826,6 @@
                             if (param.field === "IsActive") {
                                 param.field = "H.IsActive";
                             }
-
-                            //if (param.field === "Id") {
-                            //    param.field = "H.Id";
-                            //}
-                            //if (param.field === "AdvanceEntryDate") {
-                            //    param.field = "H.AdvanceEntryDate";
-                            //}
-                            //if (param.field === "AdvanceAmount") {
-                            //    param.field = "H.AdvanceAmount";
-                            //}
-                            //if (param.field === "PaymentDate") {
-                            //    param.field = "H.PaymentDate";
-                            //}
-                            //if (param.field === "DocumentNo") {
-                            //    param.field = "H.DocumentNo";
-                            //}
-                            //if (param.field === "BankName") {
-                            //    param.field = "H.BankName";
-                            //}
-                            //if (param.field === "CustomerGroupName") {
-                            //    param.field = "C.Name";
-                            //}
-                            //if (param.field === "Status") {
-                            //    param.field = "H.IsPost";
-                            //}
                         });
                     }
                     return options;
@@ -1445,12 +1256,8 @@
 
     function save() {
         debugger;
-        
         var isDropdownValid1 = CommonService.validateDropdown("#CustomerGroupId", "#titleError1", "Customer Group is required");
-        //var isDropdownValid2 = CommonService.validateDropdown("#RouteId", "#titleError2", "Route is required");
-        //var isDropdownValid3 = CommonService.validateDropdown("#AreaId", "#titleError3", "Area is required");
        
-
         var isDropdownValid = isDropdownValid1;
 
         var status = $('#IsActive').is(':checked');
@@ -1480,18 +1287,7 @@
             ShowNotification(3, 'Customer Group is Required.');
             return;
         }
-        //if (parseInt(model.RouteId) == 0) {
-        //    ShowNotification(3, 'Route is Required.');
-        //    return;
-        //}
-        //if (parseInt(model.AreaId) == 0) {
-        //    ShowNotification(3, 'Area is Required.');
-        //    return;
-        //}
-        //if (parseInt(model.FocalPointId) == 0 || model.FocalPointId == "") {
-        //    ShowNotification(3, 'Focal Point is Required.');
-        //    return;
-        //}
+
         if (model.TelephoneNo == "") {
             ShowNotification(3, 'Phone Number is Required.');
             return;
@@ -1501,15 +1297,7 @@
             return;
         }
 
-        //if (parseInt(model.CustomerCategory) == 0 || model.CustomerCategory == "") {
-        //    ShowNotification(3, 'Price Group is Required.');
-        //    return;
-        //}
-        //if (model.RegularDiscountRate == "") {
-        //    ShowNotification(3, 'Regular Discount Rate is Required.');
-        //    return;
-        //}
-
+   
         // Check if delete button was clicked to remove image
         var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
         if (deleteImageClicked) {
@@ -1535,31 +1323,6 @@
             }
         }
 
-        //// Check if delete button was clicked to remove image
-        //var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-        //if (deleteImageClicked) {
-        //    formData.append("ImagePath", "");  // Mark image for deletion
-        //    $("#imagePreview").remove();
-        //    $("#ImagePath").val("");
-        //}
-
-        //var fileInput = document.getElementById("imageUpload");
-        //if (fileInput.files.length > 0) {
-        //    var file = fileInput.files[0];
-
-        //    // ✅ Validate file size (Max 25MB)
-        //    if (file.size > 26214400) { // 25MB in bytes
-        //        ShowNotification(3, "Image size cannot exceed 25MB.");
-        //        return;
-        //    }
-
-        //    formData.append("file", file);
-        //} else if (!deleteImageClicked) {
-        //    var existingImagePath = $("#ImagePath").val();
-        //    if (existingImagePath) {
-        //        formData.append("ImagePath", existingImagePath);
-        //    }
-        //}
 
         var url = "/DMS/Customer/CreateEdit";
 

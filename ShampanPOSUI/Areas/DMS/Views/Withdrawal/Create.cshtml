@@ -131,7 +131,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.FromBankAccountId)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.FromBankAccountId, new { @class = "   ", @style = "width: 100%;" })
+                                        @Html.TextBoxFor(model => model.FromBankAccountId, new { @class = " required form-control form-control-sm   ", @style = "width: 100%;" })
                                     </div>
                                     <span id="titleError2" class="text-danger" style="display:none;"></span>
                                 </div>
@@ -139,7 +139,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.ToBankAccountId)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.ToBankAccountId, new { @class = "   ", @style = "width: 100%;" })
+                                        @Html.TextBoxFor(model => model.ToBankAccountId, new { @class = "required form-control form-control-sm    ", @style = "width: 100%;" })
                                     </div>
                                     <span id="titleError2" class="text-danger" style="display:none;"></span>
                                 </div>
@@ -147,14 +147,14 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.ChequeNo)
                                     <div class="input-group">
-                                        @Html.TextBoxFor(model => model.ChequeNo, new { placeholder = "Enter Cheque No", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                                        @Html.TextBoxFor(model => model.ChequeNo, new { placeholder = "Enter Cheque No", @class = " form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
                                     </div>
                                     @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
                                 </div>
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.ChequeBankName)
                                     <div class="input-group">
-                                        @Html.TextBoxFor(model => model.ChequeBankName, new { placeholder = " Enter Bank Name", @class = "form-control form-control-sm" })
+                                        @Html.TextBoxFor(model => model.ChequeBankName, new { placeholder = " Enter Bank Name", @class = " form-control form-control-sm" })
                                     </div>
                                     @Html.ValidationMessageFor(model => model.ChequeBankName, "", new { @class = "text-danger" })
 
@@ -172,7 +172,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.TransactionDate)
                                     <div class="input-group date">
-                                        @Html.TextBoxFor(model => model.TransactionDate, new { @class = "  form-control form-control-sm dateRange" })
+                                        @Html.TextBoxFor(model => model.TransactionDate, new { @class = " required form-control form-control-sm dateRange" })
                                         <div class="input-group-append">
                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                         </div>
@@ -191,7 +191,7 @@
                                             new
                                             {
                                                 @placeholder = "Total Deposit Amount",
-                                                @class = "form-control form-control-sm text-right NumberCheck priceLen",
+                                                @class = " form-control form-control-sm text-right NumberCheck priceLen",
                                                 id = "TotalDepositAmount" // Set an ID to access this field easily
                                             }
                                         )

@@ -4,7 +4,9 @@
 
     var init = function () {
 
-        getBankId = $("#BankId").val() || 0;
+        //getBankId = $("#BankId").val() || 0;
+
+        getBankId = $("#BankId").val();
 
         GetBankIdComboBox();
 
@@ -18,7 +20,7 @@
         };
 
 
-        $('.btnsave').click('click', function (e) {
+        $('.btnsave').on('click', function (e) {
             debugger;
 
             e.preventDefault();
@@ -114,11 +116,17 @@
             placeholder: "Select Bank",
             value: "",
             dataBound: function (e) {
-                if (getBankId) {
-                    this.value(parseInt(getBankId));
+                //if (getBankId) {
+                //    this.value(parseInt(getBankId));
+                //}
+                if (getBankId && getBankId !== "0") {
+                    this.value(getBankId);
+                } else {
+                    this.value("");   
                 }
             },
             change: function (e) {
+                $("#BankId").val(this.value());
 
             }
         }).data("kendoMultiColumnComboBox");

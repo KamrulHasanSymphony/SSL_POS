@@ -16,8 +16,7 @@
             Visibility(true);
         };
 
-        //getSupplierId = $("#SupplierId").val() || 0;
-        getCustomerId = $("#CustomerId").val() || 0;
+        //getCustomerId = $("#CustomerId").val() || 0;
         getBankAccountId = $("#BankAccountId").val();
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
@@ -30,8 +29,7 @@
         if (getOperation !== '') {
             GetBankAccountComboBox();
             GetCustomerComboBox();
-            //GetSupplierComboBox();
-            //TotalCalculation();
+        
         };
         calculateTotalCollect();
 
@@ -47,7 +45,16 @@
         });
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').click('click', function (e) {
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+            debugger;
+            if (!mvcValid || !customValid) {
+                return false;
+            }
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -141,40 +148,6 @@
             calculateTotalCollect();
         });   
 
-
-        //$('#details').on('change', 'input, select', function () {
-        //    debugger;
-        //    calculateTotalPaymentAmount();
-        //});
-
-        //// Call it on page load to set the initial value
-        //$(document).ready(function () {
-        //    debugger;
-        //    calculateTotalPaymentAmount();
-        //});
-
-        //$('#details').on('click', 'input.txtSaleCode', function () {
-        //    var originalRow = $(this);
-        //    $('#FromDate').val($('#OrderDate').val());
-        //    debugger;
-        //    originalRow.closest("td").find("input").data('touched', true);
-        //    CommonService.saleModal(
-        //        function success(result) {
-        //            console.log("Modal opened successfully.");
-        //        },
-        //        function fail(error) {
-        //            originalRow.closest("td").find("input").data("touched", false).focus();
-        //            console.log("Error opening modal:", error);
-        //        },
-        //        function dblClick(row) {
-        //            saleModalDblClick(row, originalRow);
-        //        },
-        //        function closeCallback() {
-        //            originalRow.closest("td").find("input").data("touched", false).focus();
-        //            console.log("Modal closed.");
-        //        }
-        //    );
-        //});
 
         $('#details').on('click', 'input.txtSaleCode', function () {
             var originalRow = $(this);
@@ -368,20 +341,6 @@
         });
     };
 
-    // Function to calculate the total payment amount from the details table
-    //function calculateTotalPaymentAmount() {
-    //    debugger;
-    //    let totalPaymentAmount = 0;
-
-    //    // Loop through each row in the details table
-    //    $('#details tbody tr').each(function () {
-    //        let paymentAmount = parseFloat($(this).find('.dFormat').text()) || 0;
-    //        totalPaymentAmount += paymentAmount;  // Add the PaymentAmount of each row to the total
-    //    });
-
-    //    // Set the total sum to the TotalPaymentAmount input field
-    //    $('#PurchaseOrderGrandTotalAmount').val(totalPaymentAmount.toFixed(decimalPlace));
-    //}
 
 
 
@@ -431,38 +390,6 @@
     }
 
 
-    //function GetBankAccountComboBox() {
-    //    debugger;
-    //    var SupplierComboBox = $("#BankAccountId").kendoMultiColumnComboBox({
-    //        dataTextField: "AccountNo",
-    //        dataValueField: "BankId",
-    //        height: 400,
-    //        columns: [
-    //            { field: "AccountNo", title: "Account No", width: 150 },
-    //            { field: "AccountName", title: "Account Name", width: 150 },
-    //            { field: "BranchName", title: "Branch Name", width: 150 }
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetBankAccountList"
-    //            }
-    //        },
-    //        placeholder: "Select BankAccount",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getBankAccountId) {
-    //                this.value(parseInt(getBankAccountId));
-    //            }
-    //        },
-    //        change: function (e) {
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-
-
-
     function GetBankAccountComboBox() {
         $("#BankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
@@ -485,8 +412,7 @@
         });
     }
 
-
-
+    var getCustomerId = $("#CustomerId").val() || "";
 
 
     function GetCustomerComboBox() {
@@ -497,24 +423,61 @@
             columns: [
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
-                { field: "BanglaName", title: "BanglaName", width: 200 },
+                { field: "BanglaName", title: "BanglaName", width: 200 }
             ],
             filter: "contains",
             filterFields: ["Code", "Name", "BanglaName"],
             dataSource: {
                 transport: {
-                    read: "/Common/Common/GetCustomerList"
+                    read: "/Common/Common/GetCustomerList" 
                 }
             },
-            placeholder: "Select Customer",
-            value: "",
+            placeholder: "Select Customer", 
+            value: "", 
             dataBound: function (e) {
-                if (getCustomerId) {
-                    this.value(parseInt(getCustomerId));
+                
+                if (getCustomerId && getCustomerId !== "0") {
+                    this.value(parseInt(getCustomerId));  
+                } else {
+                    this.value("");  
                 }
             }
         }).data("kendoMultiColumnComboBox");
-    };
+
+       
+        if (!getCustomerId || getCustomerId === "0") {
+            CustomerComboBox.value("");  
+        }
+    }
+
+
+
+    //function GetCustomerComboBox() {
+    //    var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 },
+    //            { field: "BanglaName", title: "BanglaName", width: 200 },
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name", "BanglaName"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetCustomerList"
+    //            }
+    //        },
+    //        placeholder: "Select Customer",
+    //        value: "",
+    //        dataBound: function (e) {
+    //            if (getCustomerId) {
+    //                this.value(parseInt(getCustomerId));
+    //            }
+    //        }
+    //    }).data("kendoMultiColumnComboBox");
+    //};
 
 
     function GetSupplierComboBox() {
@@ -902,8 +865,8 @@
             ShowNotification(2, "Post operation is already done, Do not update this entry");
             return;
         }
-        if (parseInt(model.SupplierId) == 0 || model.SupplierId == "") {
-            ShowNotification(3, "Supplier Required.");
+        if (parseInt(model.CustomerId) == 0 || model.CustomerId == "") {
+            ShowNotification(3, "Customer Required.");
             return;
         }
 
@@ -941,9 +904,7 @@
             return;
         };
 
-        //model.GrandTotalAmount = model.GrandTotalAmount.replace(/,/g, '');
-        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
-        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
+
 
         model.collectionDetailList = details;
 
