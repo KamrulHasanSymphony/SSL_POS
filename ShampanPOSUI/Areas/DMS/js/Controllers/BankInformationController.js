@@ -1,28 +1,7 @@
 ﻿var BankInformationController = function (CommonService, CommonAjaxService) {
 
-    //var getCustomerGroupId = 0;
-    //var getRouteId = 0;
-    //var getAreaId = 0;
-    //var getCustomerCategory = 0;
-    //var getFocalPoint = 0;
-
 
     var init = function () {
-
-        //getCustomerGroupId = $("#CustomerGroupId").val() || 0;
-        //getRouteId = $("#RouteId").val() || 0;
-        //getAreaId = $("#AreaId").val() || 0;
-
-        //getCustomerCategory = $("#CustomerCategory").val() || 0;
-        //getFocalPoint= $("#FocalPointId").val() || 0;
-
-
-        //GetCustomerGroupComboBox();
-        //GetRouteComboBox();
-        //GetAreaComboBox();
-        //GetFocalPointComboBox();
-        //GetCustomerCategoryComboBox();
-
 
 
         var getId = $("#Id").val() || 0;
@@ -35,8 +14,21 @@
         };
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').click('click', function (e) {
             debugger;
+
+            e.preventDefault(); 
+
+            var form = $("#frmEntry");
+
+            var mvcValid = form.valid(); 
+
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -148,42 +140,6 @@
             $("#imageUpload").prop("disabled", false);
         });
 
-        //// Handle file input change to preview image
-        //$("#imageUpload").on("change", function (event) {
-        //    $("#imageUpload").prop("disabled", true);
-        //    var file = event.target.files[0];
-
-        //    if (!file) {
-        //        console.error("No file selected!");
-        //        return;
-        //    }
-
-        //    var reader = new FileReader();
-
-        //    reader.onload = function (e) {
-
-        //        // Update the preview image and make it visible
-        //        $("#imagePreview").attr("src", e.target.result).show();
-        //        $("#deleteImageBtn").show();
-        //    };
-
-        //    reader.onerror = function (error) {
-        //        console.error("Error reading file:", error);
-        //    };
-
-        //    reader.readAsDataURL(file);
-        //});
-
-        //$("#deleteImageBtn").on("click", function () {
-        //    $(this).addClass("clicked");
-        //    $("#imagePreview").attr("src", "").hide(); // Hide preview
-        //    $("#ImagePath").val(""); // Clear hidden field
-        //    $("#deleteImageBtn").hide();
-        //    $("#imageUpload").val("");// Hide delete button
-        //    $("#imageUpload").prop("disabled", false);
-
-        //});
-
         var operation = $("#Operation").val();
         var imagePath = $("#ImagePath").val();
         if (operation == "update" && imagePath !== null) {
@@ -231,80 +187,6 @@
         }).data("kendoMultiColumnComboBox");
     };
 
-
-    //function SelectCustomerCreditLimitData() {
-
-    //    var IDs = [];
-
-    //    var selectedRows = $("#GridDataListofCustomerCreditLimit").data("kendoGrid").select();
-
-    //    if (selectedRows.length === 0) {
-    //        ShowNotification(3, "You are requested to Select checkbox!");
-    //        return;
-    //    }
-
-    //    selectedRows.each(function () {
-    //        var dataItem = $("#GridDataListofCustomerCreditLimit").data("kendoGrid").dataItem(this);
-    //        IDs.push(dataItem.Id);
-    //    });
-
-    //    var model = {
-    //        IDs: IDs
-    //    };
-
-    //    var filteredData = [];
-    //    var dataSource = $("#GridDataListofCustomerCreditLimit").data("kendoGrid").dataSource;
-    //    var rowData = dataSource.view().filter(x => IDs.includes(x.Id));
-    //    //filteredData = rowData.filter(x => x.IsPost === "True" && IDs.includes(x.Id));
-    //    filteredData = rowData.filter(x => x.IsPost === true && IDs.includes(x.Id));
-
-    //    if (filteredData.length > 0) {
-    //        ShowNotification(3, "Data has already been Posted.");
-    //        return;
-    //    }
-
-    //    var url = "/DMS/CustomerCreditLimit/MultiplePost";
-
-    //    CommonAjaxService.multiplePost(url, model, postDone, postfail);
-    //};
-
-
-
-    //function SelectCustomerAdvanceData() {
-
-    //    var IDs = [];
-
-    //    var selectedRows = $("#GridDataListofCustomerAdvance").data("kendoGrid").select();
-
-    //    if (selectedRows.length === 0) {
-    //        ShowNotification(3, "You are requested to Select checkbox!");
-    //        return;
-    //    }
-
-    //    selectedRows.each(function () {
-    //        var dataItem = $("#GridDataListofCustomerAdvance").data("kendoGrid").dataItem(this);
-    //        IDs.push(dataItem.Id);
-    //    });
-
-    //    var model = {
-    //        IDs: IDs
-    //    };
-
-    //    var filteredData = [];
-    //    var dataSource = $("#GridDataListofCustomerAdvance").data("kendoGrid").dataSource;
-    //    var rowData = dataSource.view().filter(x => IDs.includes(x.Id));
-    //    //filteredData = rowData.filter(x => x.IsPost === "True" && IDs.includes(x.Id));
-    //    filteredData = rowData.filter(x => x.IsPost === true && IDs.includes(x.Id));
-
-    //    if (filteredData.length > 0) {
-    //        ShowNotification(3, "Data has already been Posted.");
-    //        return;
-    //    }
-
-    //    var url = "/DMS/CustomerAdvance/MultiplePost";
-
-    //    CommonAjaxService.multiplePost(url, model, customerAdvancePostDone, customerAdvancePostfail);
-    //};
     function customerAdvancePostDone(result) {
 
         var grid = $('#GridDataListofCustomerAdvance').data('kendoGrid');

@@ -103,13 +103,24 @@
             resizable: true,
             columns: [
                 { field: "MasterItemCode", title: "Product Code", width: 150 },
-                { field: "MasterProductId", title: "Product",hidden:true, width: 120 },
-                { field: "MasterItemName", title: "Master Item Name", width: 120 },
+                { field: "MasterItemName", title: "Product Name", width: 120 },
+                { field: "MasterProductId", title: "ProductId", hidden: true, width: 120 },
+
+                { field: "Id", title: "Id", hidden: true, width: 120 },
+                { field: "Name", title: "SupplierName", hidden: true, width: 120 },
+                { field: "Code", title: "SupplierCode", hidden: true, width: 120 },
+
+                { field: "MasterItemGroupId", title: "MasterItemGroupId", hidden: true, width: 120 },
                 { field: "MasterItemGroupName", title: "Master Item Group Name", width: 120 },
+                { field: "MasterItemGroupCode", title: "MasterItemGroupCode", hidden: true, width: 120 },
+
                 { field: "BanglaName", title: "Bangla Name", width: 120 },
-                { field: "UOMId", title: "UOM Id", width: 120 },
+                { field: "UOMId", title: "UOM Id", hidden: true, width: 120 },
                 { field: "HSCodeNo", title: "HS Code No", width: 120 },
-                { field: "MasterItemGroupId", title: "Master Item Group", hidden: true, width: 150 }
+
+                { field: "MasterSupplierGroupId", title: "MasterSupplierGroupId", hidden: true, width: 120 },
+                { field: "MasterSupplierGroupName", title: "MasterSupplierGroupName",hidden:true, width: 120 },
+                { field: "MasterSupplierGroupCode", title: "MasterSupplierGroupCode", hidden: true, width: 120 },
             ]
         });
     }
@@ -384,8 +395,29 @@
         for (var i = 0; i < gridData.length; i++) {
 
             details.push({
-                Id: gridData[i].MasterProductId,
-                IsArchive: false
+                Id: gridData[i].MasterProductId,    
+
+                MasterSupplierGroupId: gridData[i].MasterSupplierGroupId,
+                MasterSupplierGroupName: gridData[i].MasterSupplierGroupName,
+                MasterSupplierGroupCode: gridData[i].MasterSupplierGroupCode,
+                
+                SupplierId: gridData[i].Id,                        
+                SupplierName: gridData[i].Name,                        
+                SupplierCode: gridData[i].Code,
+
+                MasterItemGroupId: gridData[i].MasterItemGroupId,
+                MasterItemGroupName: gridData[i].MasterItemGroupName,
+                MasterItemGroupCode: gridData[i].MasterItemGroupCode, 
+                
+                MasterProductId: gridData[i].MasterProductId,
+                MasterItemCode: gridData[i].MasterItemCode,
+                MasterItemName: gridData[i].MasterItemName,                               
+
+                BanglaName: gridData[i].BanglaName,
+                UOMId: gridData[i].UOMId,
+                HSCodeNo: gridData[i].HSCodeNo,
+                IsArchive: false,
+                IsActive: true
             });
         }
 
@@ -398,6 +430,7 @@
         //}
 
         var url = "/DMS/MasterSupplierItem/CreateEditSupplier";
+        debugger;
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
 

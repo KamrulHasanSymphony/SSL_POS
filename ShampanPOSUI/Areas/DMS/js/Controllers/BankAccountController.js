@@ -1,29 +1,12 @@
 ﻿var BankAccountController = function (CommonService, CommonAjaxService) {
 
     var getBankId = 0;
-    //var getRouteId = 0;
-    //var getAreaId = 0;
-    //var getCustomerCategory = 0;
-    //var getFocalPoint = 0;
-
 
     var init = function () {
 
         getBankId = $("#BankId").val() || 0;
-        //getRouteId = $("#RouteId").val() || 0;
-        //getAreaId = $("#AreaId").val() || 0;
-
-        //getCustomerCategory = $("#CustomerCategory").val() || 0;
-        //getFocalPoint= $("#FocalPointId").val() || 0;
-
 
         GetBankIdComboBox();
-        //GetRouteComboBox();
-        //GetAreaComboBox();
-        //GetFocalPointComboBox();
-        //GetCustomerCategoryComboBox();
-
-
 
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
@@ -35,8 +18,21 @@
         };
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').click('click', function (e) {
             debugger;
+
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+
+            var mvcValid = form.valid();
+
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {

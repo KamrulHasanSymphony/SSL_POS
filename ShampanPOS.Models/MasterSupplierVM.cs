@@ -32,6 +32,7 @@ namespace ShampanPOS.Models
         public string? MasterItemName { get; set; }
         public int? MasterItemGroupId { get; set; }
         public string? MasterItemGroupName { get; set; }
+        public string? MasterItemGroupCode { get; set; }
         public int? MasterProductId { get; set; }
         public string? GroupName { get; set; }
         [Display(Name = "Master Supplier Group")]

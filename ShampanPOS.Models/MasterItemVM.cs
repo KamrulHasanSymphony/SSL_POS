@@ -20,12 +20,13 @@ namespace ShampanPOS.Models
         [Display(Name = "Name")]
         public string? Name { get; set; }
         public string? MasterItemGroupDescription { get; set; }
-        public string? MasterItemGroupCode { get; set; }
 
         [Display(Name = "Product Group")]
         public int? MasterItemGroupId { get; set; }
-        public int? MasterSupplierId { get; set; }
         public string? MasterItemGroupName { get; set; }
+        public string? MasterItemGroupCode { get; set; }
+
+        public int? MasterSupplierId { get; set; }
 
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
@@ -73,8 +74,17 @@ namespace ShampanPOS.Models
         public int? ProductId { get; set; }
         public string? UserId { get; set; }
 
+        public int? MasterProductId { get; set; }
+        public string? MasterItemName { get; set; }
+        public string? MasterItemCode { get; set; }
 
+        public int? SupplierId { get; set; }
+        public string? SupplierName { get; set; }
+        public string? SupplierCode { get; set; }
 
+        public int? MasterSupplierGroupId { get; set; }
+        public string? MasterSupplierGroupName { get; set; }
+        public string? MasterSupplierGroupCode { get; set; }
         // 🔥 VERY IMPORTANT (JS → Controller)
         public string? SelectedMasterItemsJson { get; set; }
 

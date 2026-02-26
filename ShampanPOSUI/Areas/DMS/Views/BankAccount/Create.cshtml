@@ -150,9 +150,13 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.BankId)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.BankId, new { @class = "   ", @style = "width: 100%;" })
+                                        @Html.TextBoxFor(model => model.BankId, new { @class = "required form-control form-control-sm ", @style = "width: 100%;" })
                                     </div>
-                                    <span id="titleError2" class="text-danger" style="display:none;"></span>
+
+                                    @*@Html.ValidationMessageFor(model => model.BankId, "", new { @class = "text-danger" })*@
+                                    <span class="field-validation-error text-danger" data-valmsg-for="BankId" data-valmsg-replace="true"></span>
+
+                                    @*<span id="titleError2" class="text-danger" style="display:none;"></span>*@
                                 </div>
 
                                 <div class="col-sm-2">
@@ -160,7 +164,11 @@
                                     <div class="input-group">
                                         @Html.TextBoxFor(model => model.BranchName, new { placeholder = " Enter Branch Name", @class = "form-control form-control-sm" })
                                     </div>
+                                    @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "text-danger" })
+
                                 </div>
+
+
                                 <div class="col-sm-2" style="flex-direction: column">
                                     @Html.LabelFor(model => model.IsCash)
                                     <div class="Onoffbtn">
@@ -326,6 +334,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/BankAccountController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
         $(document).ready(function () {

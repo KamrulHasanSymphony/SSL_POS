@@ -74,6 +74,11 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
+
+        public int? MasterSupplierGroupId { get; set; }
+        public string? MasterSupplierGroupName { get; set; }
+        public string? MasterSupplierGroupCode { get; set; }
+
         public PeramModel PeramModel { get; set; }
 
         public List<MasterItemVM> MasterItemList { get; set; }

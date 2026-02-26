@@ -156,6 +156,8 @@
                                     <div class="input-group">
                                         @Html.TextBoxFor(model => model.ChequeBankName, new { placeholder = " Enter Bank Name", @class = "form-control form-control-sm" })
                                     </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeBankName, "", new { @class = "text-danger" })
+
                                 </div>
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.ChequeDate)
@@ -367,6 +369,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/WithdrawalController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
         $(document).ready(function () {

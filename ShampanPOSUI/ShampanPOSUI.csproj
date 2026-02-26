@@ -334,6 +334,7 @@
     <Compile Include="Areas\Common\CommonAreaRegistration.cs" />
     <Compile Include="Areas\Common\Controllers\CommonController.cs" />
     <Compile Include="Areas\Common\Controllers\HomeController.cs" />
+    <Content Include="Areas\Common\js\Services\CommonValidationHelper.js" />
     <Compile Include="Areas\DMS\Controllers\BankAccountController.cs" />
     <Compile Include="Areas\DMS\Controllers\BankInformationController.cs" />
     <Compile Include="Areas\DMS\Controllers\CollectionController.cs" />
@@ -3923,6 +3924,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Common\Data\" />
     <Folder Include="Areas\Common\js\Controllers\" />
+    <Folder Include="Areas\Common\Views\CommonValidationHelper\" />
     <Folder Include="Areas\DMS\Data\" />
     <Folder Include="Areas\DMS\js\Services\" />
     <Folder Include="Areas\DMS\Views\Suppliers\" />
