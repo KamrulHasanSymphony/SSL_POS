@@ -14,6 +14,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Code(Auto Generate)")]
         public string? Code { get; set; }
+
         [Required(ErrorMessage = "Customer Group Name is required.")]
         [Display(Name = "Name")]
         public string Name { get; set; }

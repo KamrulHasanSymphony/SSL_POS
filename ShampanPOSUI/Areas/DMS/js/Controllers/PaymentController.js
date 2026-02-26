@@ -44,7 +44,16 @@
         });
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').click('click', function (e) {
+            e.preventDefault();  
+            
+            var form = $("#frmEntry");
+            var mvcValid = form.valid();  
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry"); 
+            debugger;
+            if (!mvcValid || !customValid) {
+                return false; 
+            }
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -57,6 +66,9 @@
                     }
                 });
         });
+
+
+
 
         $('#btnComplete').on('click', function () {
 
@@ -137,35 +149,6 @@
             debugger;
             calculateTotalPayment();
         });     
-            
-        
-
-        //$('#details').on('click', 'input.txtPurchaseCode', function () {
-        //    var originalRow = $(this);
-        //    $('#FromDate').val($('#OrderDate').val());
-        //    var supplier = $("#SupplierId").val();
-        //    if (supplier == '' || supplier < 0) {
-
-        //    }
-        //    debugger;
-        //    originalRow.closest("td").find("input").data('touched', true);
-        //    CommonService.purchaseModal(
-        //        function success(result) {
-        //            console.log("Modal opened successfully.");
-        //        },
-        //        function fail(error) {
-        //            originalRow.closest("td").find("input").data("touched", false).focus();
-        //            console.log("Error opening modal:", error);
-        //        },
-        //        function dblClick(row) {
-        //            purchaseModalDblClick(row, originalRow);
-        //        },
-        //        function closeCallback() {
-        //            originalRow.closest("td").find("input").data("touched", false).focus();
-        //            console.log("Modal closed.");
-        //        }
-        //    );
-        //});
 
         $('#details').on('click', 'input.txtPurchaseCode', function () {
             debugger;
@@ -389,51 +372,6 @@
 
 
 
-
-    //function GetSupplierComboBox() {
-    //    var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 }
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetSupplierList"
-    //            }
-    //        },
-    //        placeholder: "Select Supplier",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getSupplierId) {
-    //                this.value(parseInt(getSupplierId));
-    //            }
-    //        },
-    //        change: function (e) {
-    //            var selectedItem = this.dataItem(); // Get selected item from ComboBox
-    //            if (selectedItem) {
-    //                var supplierId = selectedItem.Id;
-    //                var supplierName = selectedItem.Name;
-
-    //                // Loop through all rows in the table and update SupplierName and SupplierId
-    //                $("#details tbody tr").each(function () {
-    //                    debugger;
-    //                    // Update SupplierId (hidden column)
-    //                    $(this).find("td[data-name='SupplierId']").text(supplierId);
-    //                    // Update SupplierName (visible column)
-    //                    $(this).find("td[data-name='SupplierName']").text(supplierName);
-    //                });
-    //            }
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //}
-
-
-
     function GetSupplierComboBox() {
         var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -457,26 +395,6 @@
                     this.value(parseInt(getSupplierId));  // Set initial value if available
                 }
             },
-            //change: function (e) {
-            //    var selectedItem = this.dataItem(); // Get selected item from ComboBox
-            //    if (selectedItem) {
-            //        var supplierId = selectedItem.Id;
-            //        var supplierName = selectedItem.Name;
-
-
-            //        //console.log("Supplier ID:", supplierId);  // Debugging
-            //        //console.log("Supplier Name:", supplierName);  // Debugging
-
-            //        //// Loop through all rows in the table and update SupplierName and SupplierId
-            //        //$("#details tbody tr").each(function () {
-            //        //    // Update SupplierId (hidden column) with .val() to update the hidden field
-            //        //    $(this).find("td[data-name='SupplierId']").val(supplierId); // Use .val() for hidden field
-
-            //        //    // Update SupplierName (visible column) with .text() to update the visible field
-            //        //    $(this).find("td[data-name='SupplierName']").text(supplierName); // Use .text() for visible field
-            //        //});
-            //    }
-            //}
 
             change: function (e) {
                 var selectedItem = this.dataItem();
@@ -820,367 +738,6 @@
     };
 
 
-    //var GetGridDataList = function () {
-    //    debugger;
-    //    //var branchId = $("#Branchs").data("kendoComboBox").value();
-    //    //var IsPosted = $('#IsPosted').val();
-    //    //var FromDate = $('#FromDate').val();
-    //    //var ToDate = $('#ToDate').val();
-    //    var gridDataSource = new kendo.data.DataSource({
-    //        type: "json",
-    //        serverPaging: true,
-    //        serverSorting: true,
-    //        serverFiltering: true,
-    //        allowUnsort: true,
-    //        autoSync: true,
-    //        pageSize: 10,
-    //        transport: {
-    //            read: {
-    //                url: "/DMS/Payment/GetGridData",
-    //                type: "POST",
-    //                dataType: "json",
-    //                cache: false
-    //                //,
-    //                //data: { /*branchId: branchId, isPost: IsPosted, fromDate: FromDate, toDate: ToDate*/ }
-    //            },
-    //            parameterMap: function (options) {
-    //                if (options.sort) {
-    //                    options.sort.forEach(function (param) {
-    //                        if (param.field === "Id") {
-    //                            param.field = "H.Id";
-    //                        }
-    //                        if (param.field === "Code") {
-    //                            param.field = "H.Code";
-    //                        }
-    //                        if (param.field === "SupplierName") {
-    //                            param.field = "S.Name";
-    //                        }
-    //                        if (param.field === "AccountNo") {
-    //                            param.field = "e.AccountNo";
-    //                        }
-    //                        if (param.field === "TransactionDate" && param.value) {
-    //                            param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-    //                            param.field = "H.TransactionDate";
-    //                        }
-
-    //                        if (param.field === "TotalPaymentAmount") {
-    //                            param.field = "H.TotalPaymentAmount";
-    //                        }
-    //                        if (param.field === "Comments") {
-    //                            param.field = "H.Comments";
-    //                        }
-    //                        if (param.field === "Reference") {
-    //                            param.field = "H.Reference";
-    //                        }
-    //                        if (param.field === "IsCash") {
-    //                            let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-    //                            if (statusValue.startsWith("a")) {
-    //                                param.value = 1;
-    //                            } else if (statusValue.startsWith("i")) {
-    //                                param.value = 0;
-    //                            } else {
-    //                                param.value = null;
-    //                            }
-
-    //                            param.field = "H.IsCash";
-    //                            param.operator = "eq";
-    //                        }
-    //                        if (param.field === "Status") {
-    //                            let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-    //                            if (statusValue.startsWith("a")) {
-    //                                param.value = 1;
-    //                            } else if (statusValue.startsWith("i")) {
-    //                                param.value = 0;
-    //                            } else {
-    //                                param.value = null;
-    //                            }
-
-    //                            param.field = "H.IsActive";
-    //                            param.operator = "eq";
-    //                        }
-    //                    });
-    //                }
-
-    //                if (options.filter && options.filter.filters) {
-    //                    options.filter.filters.forEach(function (param) {
-    //                        if (param.field === "Id") {
-    //                            param.field = "H.Id";
-    //                        }
-    //                        if (param.field === "Code") {
-    //                            param.field = "H.Code";
-    //                        }
-    //                        if (param.field === "SupplierName") {
-    //                            param.field = "S.Name";
-    //                        }
-    //                        if (param.field === "AccountNo") {
-    //                            param.field = "e.AccountNo";
-    //                        }
-    //                        if (param.field === "TransactionDate" && param.value) {
-    //                            param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-    //                            param.field = "H.TransactionDate";
-    //                        }
-                            
-    //                        if (param.field === "TotalPaymentAmount") {
-    //                            param.field = "H.TotalPaymentAmount";
-    //                        }
-    //                        if (param.field === "Comments") {
-    //                            param.field = "H.Comments";
-    //                        }
-    //                        if (param.field === "Reference") {
-    //                            param.field = "H.Reference";
-    //                        }
-    //                        if (param.field === "IsCash") {
-    //                            let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-    //                            if (statusValue.startsWith("a")) {
-    //                                param.value = 1;
-    //                            } else if (statusValue.startsWith("i")) {
-    //                                param.value = 0;
-    //                            } else {
-    //                                param.value = null;
-    //                            }
-
-    //                            param.field = "H.IsCash";
-    //                            param.operator = "eq";
-    //                        }
-    //                        if (param.field === "Status") {
-    //                            let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-    //                            if (statusValue.startsWith("a")) {
-    //                                param.value = 1;
-    //                            } else if (statusValue.startsWith("i")) {
-    //                                param.value = 0;
-    //                            } else {
-    //                                param.value = null;
-    //                            }
-
-    //                            param.field = "H.IsActive";
-    //                            param.operator = "eq";
-    //                        }
-    //                    });
-    //                }
-    //                return options;
-    //            }
-    //        },
-    //        batch: true,
-    //        schema: {
-    //            data: "Items",
-    //            total: "TotalCount"
-    //        },
-    //        model: {
-
-    //            fields: {
-    //                InvoiceDateTime: { type: "date" },
-    //                PurchaseDate: { type: "date" },
-    //                GrandTotalAmount: { type: "number" },
-    //                GrandTotalSDAmount: { type: "number" },
-    //                GrandTotalVATAmount: { type: "number" }
-    //            }
-    //        }
-    //        ,
-    //        aggregate: [
-    //            //{ field: "GrandTotalAmount", aggregate: "sum" },
-    //            //{ field: "GrandTotalSDAmount", aggregate: "sum" },
-    //            //{ field: "GrandTotalVATAmount", aggregate: "sum" }
-    //        ]
-    //    });
-
-    //    $("#GridDataList").kendoGrid({
-    //        dataSource: [],
-    //        pageable: {
-    //            refresh: true,
-    //            serverPaging: true,
-    //            serverFiltering: true,
-    //            serverSorting: true,
-    //            pageSizes: [10, 20, 50, "all"]
-    //        },
-    //        noRecords: true,
-    //        messages: {
-    //            noRecords: "No Record Found!"
-    //        },
-    //        scrollable: true,
-    //        filterable: {
-    //            extra: true,
-    //            operators: {
-    //                string: {
-    //                    startswith: "Starts with",
-    //                    endswith: "Ends with",
-    //                    contains: "Contains",
-    //                    doesnotcontain: "Does not contain",
-    //                    eq: "Is equal to",
-    //                    neq: "Is not equal to",
-    //                    gt: "Is greater than",
-    //                    lt: "Is less than"
-    //                }
-    //            }
-    //        },
-    //        sortable: true,
-    //        resizable: true,
-    //        reorderable: true,
-    //        groupable: true,
-    //        toolbar: ["excel", "pdf", "search"],
-    //        search: ["Code", "SupplierName", "Status", "TransactionDate", "Comments","AccountNo"],
-    //        detailInit: function (e) {
-    //            debugger;
-    //            $("<div/>").appendTo(e.detailCell).kendoGrid({
-    //                dataSource: {
-    //                    type: "json",
-    //                    serverPaging: true,
-    //                    serverSorting: true,
-    //                    serverFiltering: true,
-    //                    allowUnsort: true,
-    //                    pageSize: 10,
-    //                    transport: {
-    //                        read: {
-    //                            url: "/DMS/Payment/GetPaymentDetailDataById",
-    //                            type: "GET",
-    //                            dataType: "json",
-    //                            cache: false,
-    //                            data: { masterId: e.data.Id }
-    //                        },
-
-    //                        parameterMap: function (options) {
-    //                            return options;
-    //                        }
-    //                    },
-    //                    batch: true,
-    //                    schema: {
-    //                        data: "Items",
-    //                        total: "TotalCount"
-    //                    },
-    //                    aggregate: [
-    //                        { field: "Quantity", aggregate: "sum" },
-    //                        { field: "UnitPrice", aggregate: "sum" },
-    //                        { field: "SubTotal", aggregate: "sum" },
-    //                        { field: "SD", aggregate: "sum" },
-    //                        { field: "SDAmount", aggregate: "sum" },
-    //                        { field: "VATRate", aggregate: "sum" },
-    //                        { field: "VATAmount", aggregate: "sum" },
-    //                        { field: "OthersAmount", aggregate: "sum" },
-    //                        { field: "LineTotal", aggregate: "sum" },
-    //                        { field: "FixedVATAmount", aggregate: "sum" }
-    //                    ],
-    //                    requestEnd: function (e) {
-    //                        console.log("Response Data:", e.response); // Log server response
-    //                    }
-    //                },
-    //                scrollable: false,
-    //                sortable: true,
-    //                pageable: false,
-    //                noRecords: true,
-    //                messages: {
-    //                    noRecords: "No Record Found!"
-    //                },
-    //                columns: [
-    //                    { field: "Id", hidden: true, width: 50 },
-    //                    { field: "SupplierName", title: "Supplier Name", sortable: true, width: 120 },
-    //                    { field: "PurchaseAmount", title: "Purchase Amount", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-    //                    { field: "PaymentAmount", title: "Payment Amount", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-    //                    { field: "Comments", title: "Comments", sortable: true, width: 150 },
-    //                ],
-    //                footerTemplate: function (e) {
-    //                    var aggregates = e.sender.dataSource.aggregates();
-    //                    return `
-    //                        <div style="font-weight: bold; text-align: right;">
-    //                            Total:
-    //                            <span>${kendo.toString(aggregates.Quantity.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.UnitPrice.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.SubTotal.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.SD.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.SDAmount.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.VATRate.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.VATAmount.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.OthersAmount.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.LineTotal.sum, 'n2')}</span>
-    //                            <span>${kendo.toString(aggregates.FixedVATAmount.sum, 'n2')}</span>
-    //                        </div>`;
-    //                }
-    //            });
-    //        },
-    //        excel: {
-    //            fileName: "PaymentList.xlsx",
-    //            filterable: true
-    //        },
-    //        pdf: {
-    //            fileName: `PaymentList_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
-    //            allPages: true,
-    //            avoidLink: true,
-    //            filterable: true
-    //        },
-
-    //        columns: [
-    //            {
-    //                selectable: true, width: 35
-    //            },
-    //            {
-    //                title: "Action",
-    //                width: 90,
-    //                template: function (dataItem) {
-    //                    return `
-    //                            <a href="/DMS/Payment/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
-    //                                <i class="fas fa-pencil-alt"></i>
-    //                            </a>`+
-    //                        "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
-    //                }
-    //            },
-    //            { field: "Id", width: 50, hidden: true, sortable: true },
-    //            { field: "Code", title: "Code", width: 180, sortable: true },
-    //            { field: "SupplierName", title: "Supplier Name", sortable: true, width: 180 },
-    //            { field: "AccountNo", title: "Account No", sortable: true, width: 180 },
-
-    //            {
-    //                field: "TransactionDate", title: "Transaction Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(TransactionDate), "yyyy-MM-dd") #',
-    //                filterable:
-    //                {
-    //                    ui: "datepicker"
-    //                }
-    //            },
-    //            {
-    //                field: "IsCash", title: "Is Cash", sortable: true, width: 100,
-     
-    //            },
-    //            {
-    //                field: "Status", title: "Status", sortable: true, width: 100,
-    //                filterable: {
-    //                    ui: function (element) {
-    //                        element.kendoDropDownList({
-    //                            dataSource: [
-    //                                { text: "Active", value: "1" },
-    //                                { text: "Inactive", value: "0" }
-    //                            ],
-    //                            dataTextField: "text",
-    //                            dataValueField: "value",
-    //                            optionLabel: "Select Option"
-    //                        });
-    //                    }
-    //                }
-    //            },
-    //            ,
-    //            {
-    //                field: "TotalPaymentAmount",
-    //                title: "Total Payment Amount",
-    //                sortable: true,
-    //                width: 200,
-    //                aggregates: ["sum"],
-    //                format: "{0:n2}",
-    //                footerTemplate: "#=kendo.toString(sum, 'n2')#",
-    //                groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-    //                attributes: { style: "text-align: right;" }
-    //            }
-    //            ,
-               
-    //            { field: "Comments", title: "Comments", sortable: true, width: 200 },
-    //            { field: "Reference", title: "Reference", sortable: true, width: 200 },
-    //        ],
-    //        editable: false,
-    //        selectable: "multiple row",
-    //        navigatable: true,
-    //        columnMenu: true
-    //    });
-
-    //};
 
     function save($table) {
         debugger;
@@ -1214,7 +771,6 @@
         };
 
         var isDropdownValid1 = CommonService.validateDropdown("#SupplierId", "#titleError1", "Supplier is required");
-        //var isDropdownValid2 = CommonService.validateDropdown("#CurrencyId", "#titleError2", "Currency is required");
 
         var isDropdownValid = isDropdownValid1;
         if (!result || !isDropdownValid) {
@@ -1241,10 +797,6 @@
         };
 
         model.TotalPaymentAmount = model.TotalPaymentAmount.replace(/,/g, '');
-
-
-        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
-        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
 
         model.paymentDetailList = details;
 

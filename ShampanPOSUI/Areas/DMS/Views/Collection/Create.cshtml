@@ -95,7 +95,7 @@
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.TransactionDate)
                         <div class="input-group date">
-                            @Html.TextBoxFor(model => model.TransactionDate, new { @class = "  form-control form-control-sm dateRange" })
+                            @Html.TextBoxFor(model => model.TransactionDate, new { @class = " required form-control form-control-sm dateRange" })
                             <div class="input-group-append">
                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                             </div>
@@ -106,7 +106,7 @@
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.CustomerId, new { @class = "form-control form-control-sm" })
+                            @Html.TextBoxFor(model => model.CustomerId, new { @class = "required form-control form-control-sm" })
                         </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
@@ -139,174 +139,133 @@
                     </div>
                 </div>
 
-                    <div class="form-group row">
-
-                        <div class="col-sm-2">
-                            @Html.LabelFor(model => model.BankAccountId)
-                            <div class="input-group">
-                                @Html.TextBoxFor(model => model.BankAccountId, new { @class = "form-control form-control-sm" })
-                            </div>
-                            <span id="titleError1" class="text-danger" style="display:none;"></span>
-                        </div>
-
-                        <div class="col-sm-2" style="flex-direction: column">
-                            @Html.LabelFor(model => model.IsCash)
-                            <div class="Onoffbtn">
-                                <div class="input-group" style="margin-bottom: -26px; width: 78%;">
-                                    <input id="IsCash"
-                                           value="@Model.IsCash"
-                                           type="checkbox"
-                                           name="my-checkbox"
-                                           @(Model.IsCash ? "checked" : "")
-                                           data-bootstrap-switch
-                                           data-off-color="danger"
-                                           data-on-color="success"
-                                           data-on-text="Cash"
-                                           data-off-text="Bank">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-2">
-                            @Html.LabelFor(model => model.Comments)
-                            <div class="input-group">
-                                @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comment", @class = "form-control form-control-sm" })
-                            </div>
-                        </div>
-
-                    </div>
-
-               
-        </div>
-
-        <div class="card card-secondary">
-            <div class="card-header">
-                <h3 class="card-title"> Details </h3>
-            </div>
-            <div class="card-body">
-
-                <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
-
-                <div style="overflow-x: auto; white-space: nowrap;">
-                    <table class="table table-bordered table-striped table-sm" id="details">
-                        <thead>
-                            <tr>
-                                <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="CustomerId">Customer Id</th>
-                                <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="SaleCode">Sale Code</th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId">Sale Id</th>
-                                @*<th data-type="text" style="width:20%;" data-name="SupplierName">Supplier Name</th>
-                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SupplierId">Supplier Id</th>*@
-                                <th data-type="decimal" style="width: 20%;" data-required="true" data-computed="false" data-name="SaleAmount">Sale Amount</th>
-                                <th data-type="decimal" style="width: 20%" data-required="true" data-computed="false" data-name="CollectionAmount">Collection Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lst">
-                            @if (Model != null)
-                            {
-                                foreach (var item in Model.collectionDetailList)
-                                {
-                                    <tr>
-                                        <td>@serial</td>
-                                        <td hidden>@item.CustomerId</td>
-                                        <td>@item.SaleCode</td>
-                                        <td hidden>@item.SaleId</td>
-                                        @*<td data-name="SupplierName">@item.SupplierName</td>
-                                            <td hidden data-name="SupplierId">@item.SupplierId</td>*@
-                                        <td class="dFormat">@item.SaleAmount</td>
-                                        <td class="dFormat">@item.CollectionAmount</td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm remove-row-btn">
-                                                <i class='fa fa-trash'></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    { serial++; }
-                                }
-                            }
-                        </tbody>
-                    </table>
-
-
-
-                </div>
-
-            </div>
-        </div>
-
-
-        <!--<div class="card">
-        <div class="card-header p-2">
-            <div class="card-body">
                 <div class="form-group row">
 
-                    <div class="col-md-2">
-                        <div class="editor-label">
-                            <label>&nbsp;Total Collect Amount</label>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.BankAccountId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.BankAccountId, new { @class = " form-control form-control-sm" })
                         </div>
-                        <div class="editor-field">
-                            <input type="text" class="form-control form-control-sm priceLen NumberCheck text-right" name="PurchaseOrderGrandTotalAmount" id="PurchaseOrderGrandTotalAmount" />
-                        </div>-->
-        @*<div class="col-sm-2">
-                @Html.LabelFor(model => model.TotalPaymentAmount)
-                <div class="input-group">
-                    @Html.TextBoxFor(
-                        model => model.TotalPaymentAmount,
-                        new
-                        {
-                            @placeholder = "Total Payment Amount",
-                            @class = "form-control form-control-sm text-right NumberCheck priceLen",
-                            @readonly = "readonly",  // Make the field readonly
-                            id = "TotalPaymentAmount" // Unique ID for easy reference
-                        }
-                    )
-                </div>
-            </div>*@
-
-
-        <!--</div>
-
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
+
+                    <div class="col-sm-2" style="flex-direction: column">
+                        @Html.LabelFor(model => model.IsCash)
+                        <div class="Onoffbtn">
+                            <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                <input id="IsCash"
+                                       value="@Model.IsCash"
+                                       type="checkbox"
+                                       name="my-checkbox"
+                                       @(Model.IsCash ? "checked" : "")
+                                       data-bootstrap-switch
+                                       data-off-color="danger"
+                                       data-on-color="success"
+                                       data-on-text="Cash"
+                                       data-off-text="Bank">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Comments)
+                        <div class="input-group">
+                            @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comment", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+
                 </div>
+
+
             </div>
-        </div>-->
 
-
-        <div class="card">
-            <div class="card-header p-2">
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title"> Details </h3>
+                </div>
                 <div class="card-body">
-                    <div class="form-group row">
 
-                        @*<div class="editor-label">
-                                <label>&nbsp;Total Payment Amount</label>
-                            </div>
-                            <div class="editor-field">
-                                <input type="text" class="form-control form-control-sm priceLen NumberCheck text-right" name="PurchaseOrderGrandTotalAmount" id="PurchaseOrderGrandTotalAmount"  />
-                            </div>*@
+                    <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
 
-
-                        <div class="col-sm-2">
-                            @Html.LabelFor(model => model.TotalCollectAmount)
-                            <div class="input-group">
-                                @Html.TextBoxFor(
-                                    model => model.TotalCollectAmount,
-                                    new
+                    <div style="overflow-x: auto; white-space: nowrap;">
+                        <table class="table table-bordered table-striped table-sm" id="details">
+                            <thead>
+                                <tr>
+                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="CustomerId">Customer Id</th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="SaleCode">Sale Code</th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId">Sale Id</th>
+                                    @*<th data-type="text" style="width:20%;" data-name="SupplierName">Supplier Name</th>
+                                        <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SupplierId">Supplier Id</th>*@
+                                    <th data-type="decimal" style="width: 20%;" data-required="true" data-computed="false" data-name="SaleAmount">Sale Amount</th>
+                                    <th data-type="decimal" style="width: 20%" data-required="true" data-computed="false" data-name="CollectionAmount">Collection Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lst">
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.collectionDetailList)
                                     {
-                                        @placeholder = "Total Collect Amount",
-                                        @class = "form-control form-control-sm text-right NumberCheck priceLen",
-                                        @readonly = "readonly",
-                                        id = "TotalCollectAmount"
+                                        <tr>
+                                            <td>@serial</td>
+                                            <td hidden>@item.CustomerId</td>
+                                            <td>@item.SaleCode</td>
+                                            <td hidden>@item.SaleId</td>
+                                            @*<td data-name="SupplierName">@item.SupplierName</td>
+                                                <td hidden data-name="SupplierId">@item.SupplierId</td>*@
+                                            <td class="dFormat">@item.SaleAmount</td>
+                                            <td class="dFormat">@item.CollectionAmount</td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm remove-row-btn">
+                                                    <i class='fa fa-trash'></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        { serial++; }
                                     }
-                                )
-                            </div>
-                        </div>
+                                }
+                            </tbody>
+                        </table>
 
 
 
                     </div>
+
                 </div>
             </div>
-        </div>
+
+
+
+
+            <div class="card">
+                <div class="card-header p-2">
+                    <div class="card-body">
+                        <div class="form-group row">
+
+
+
+                            <div class="col-sm-2">
+                                @Html.LabelFor(model => model.TotalCollectAmount)
+                                <div class="input-group">
+                                    @Html.TextBoxFor(
+                                        model => model.TotalCollectAmount,
+                                        new
+                                        {
+                                            @placeholder = "Total Collect Amount",
+                                            @class = "form-control form-control-sm text-right NumberCheck priceLen",
+                                            @readonly = "readonly",
+                                            id = "TotalCollectAmount"
+                                        }
+                                    )
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -396,11 +355,6 @@
                             <div class="clearfix">&nbsp;</div>
                             @Html.TextBoxFor(model => model.LastModifiedOn, new { @class = "LastUpdateOn  form-control form-control-sm luo", @readonly = "readonly" })
                         </div>
-                        @*<div class="col-sm-3">
-                                @Html.TextBoxFor(model => model.PostedBy, new { @class = "PostedBy  form-control form-control-sm ", @readonly = "readonly" })<div class="clearfix">&nbsp;</div>
-                                @Html.TextBoxFor(model => model.PostedOn, new { @class = "PostedOn  form-control form-control-sm ", @readonly = "readonly" })
-
-                            </div>*@
 
                     </div>
                 </div>
@@ -419,6 +373,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/CollectionController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
 
     <script>

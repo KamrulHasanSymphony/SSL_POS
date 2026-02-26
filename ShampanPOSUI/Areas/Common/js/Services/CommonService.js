@@ -1034,6 +1034,7 @@
             });
         }
         function initializeDataTable() {
+            debugger;
             if ($.fn.DataTable.isDataTable(dataTableId)) {
                 $(dataTableId).DataTable().destroy();
             }
