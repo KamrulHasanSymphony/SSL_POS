@@ -44,28 +44,112 @@
         });
 
 
-        $('.btnsave').click('click', function (e) {
-            e.preventDefault();  
-            
+        //$('.btnsave').click('click', function (e) {
+        //    e.preventDefault();
+
+        //    var form = $("#frmEntry");
+        //    var mvcValid = form.valid();
+        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+        //    debugger;
+        //    if (!mvcValid || !customValid) {
+        //        return false;
+        //    }
+        //    var getId = $('#Id').val();
+        //    var status = "Save";
+        //    if (parseInt(getId) > 0) {
+        //        status = "Update";
+        //    }
+        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
+        //        function (result) {
+        //            if (result) {
+        //                save($table);
+        //            }
+        //        });
+        //});
+
+
+        $('.btnsave').click(function (e) {
+
+            e.preventDefault();
+
             var form = $("#frmEntry");
-            var mvcValid = form.valid();  
-            var customValid = CommonValidationHelper.CheckValidation("#frmEntry"); 
-            debugger;
+            var $table = $('#details');
+
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
             if (!mvcValid || !customValid) {
-                return false; 
+                return false;   
             }
+
+            var details = serializeTable($table);
+
+            if (!details || details.length === 0) {
+                ShowNotification(3, "Please add at least one detail entry.");
+                return false;
+            }
+
+            var requiredFields = ['PurchaseCode', 'PurchaseAmount', 'PaymentAmount'];
+            var fieldMappings = {
+                'PurchaseCode': 'Purchase Code',
+                'PurchaseAmount': 'Purchase Amount',
+                'PaymentAmount': 'Payment Amount'
+            };
+
+            var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+
+            if (errorMessage) {
+                ShowNotification(3, errorMessage);
+                return false;
+            }
+
             var getId = $('#Id').val();
-            var status = "Save";
-            if (parseInt(getId) > 0) {
-                status = "Update";
-            }
+            var status = parseInt(getId) > 0 ? "Update" : "Save";
+
             Confirmation("Are you sure? Do You Want to " + status + " Data?",
                 function (result) {
                     if (result) {
                         save($table);
                     }
                 });
+
         });
+
+
+
+        //$('.btnsave').click(function (e) {
+        //    debugger;
+
+        //    e.preventDefault();
+
+        //    var form = $("#frmEntry");
+        //    var $table = $('#details');
+
+        //    var details = serializeTable($table);
+
+        //    if (!details || details.length === 0) {
+        //        ShowNotification(3, "Please add at least one detail entry.");
+        //        return false;
+        //    }
+
+        //    var mvcValid = form.valid();
+        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+        //    if (!mvcValid || !customValid) {
+        //        return false;
+        //    }
+
+        //    var getId = $('#Id').val();
+        //    var status = parseInt(getId) > 0 ? "Update" : "Save";
+
+        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
+        //        function (result) {
+        //            if (result) {
+        //                save($table);
+        //            }
+        //        });
+
+        //});
 
 
 
@@ -761,14 +845,6 @@
             return;
         }
 
-        if (hasInputFieldInTableCells($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
-        if (!hasLine($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
 
         var isDropdownValid1 = CommonService.validateDropdown("#SupplierId", "#titleError1", "Supplier is required");
 
@@ -780,21 +856,26 @@
             return;
         }
 
-        var details = serializeTable($table);
+        //var details = serializeTable($table);
 
-        var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
-        var fieldMappings = {
-            'ProductName': 'Product Name',
-            //'UOMName': 'UOM Name',
-            'Quantity': 'Quantity',
-            'UnitPrice': 'Unit Price'
-        };
+        //var requiredFields = ['PurchaseCode', 'PurchaseAmount', 'PaymentAmount'];
+        //var fieldMappings = {
+        //    'PurchaseCode': 'Purchase Code',
+        //    'PurchaseAmount': 'Purchase Amount',
+        //    'PaymentAmount': 'PaymentAmount'
+        //};
 
-        var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        if (errorMessage) {
-            ShowNotification(3, errorMessage);
-            return;
-        };
+        //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+        //if (errorMessage) {
+        //    ShowNotification(3, errorMessage);
+        //    return;
+        //};
+
+        //if (item.ProductName === 0 || item.ProductName === undefined || item.ProductName === null || item.ProductName === "") {
+        //    ShowNotification(3, "Product Name is required.");
+        //    return;
+        //}
+
 
         model.TotalPaymentAmount = model.TotalPaymentAmount.replace(/,/g, '');
 

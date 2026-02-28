@@ -44,7 +44,7 @@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.Name)
-                        @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Name.", @class = "form-control form-control-sm" })
+                        @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Name.", @class = "required form-control form-control-sm" })
                         @Html.ValidationMessageFor(model => model.Name)
                     </div>
 
@@ -55,11 +55,21 @@
 
 
 
+                     @*<div class="col-sm-2">
+                        @Html.LabelFor(model => model.MasterSupplierGroupId)
+                        @Html.TextBoxFor(model => model.MasterSupplierGroupId, new { placeholder = "Enter Supplier GroupId", @class = "required form-control form-control-sm" })
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>*@
+
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.MasterSupplierGroupId)
-                        @Html.TextBoxFor(model => model.MasterSupplierGroupId, new { placeholder = "Enter Supplier GroupId", @class = "form-control form-control-sm" })
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.MasterSupplierGroupId, new { placeholder = " Enter Supplier GroupId", @class = " required form-control form-control-sm " })
+                        </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.City)
                         @Html.TextBoxFor(model => model.City, new { placeholder = "Enter City", @class = "form-control form-control-sm" })
@@ -233,6 +243,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/MasterSupplierController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
     <script>
         $(document).ready(function () {
             $("#IsActive").bootstrapSwitch();

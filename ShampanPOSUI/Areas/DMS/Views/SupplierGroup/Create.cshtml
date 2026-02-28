@@ -45,7 +45,7 @@
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.Name)
                         <div class="input-group ">
-                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Group Name", @class = "  form-control form-control-sm " })
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Group Name", @class = " required form-control form-control-sm " })
                         </div>
                         @Html.ValidationMessageFor(model => model.Name)
                     </div>
@@ -180,6 +180,7 @@
 
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/SupplierGroupController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
         $(document).ready(function () {
