@@ -54,13 +54,6 @@
                         </div>
                     </div>
 
-                    @*<div class="col-sm-2">
-                        @Html.LabelFor(model => model.CurrencyId)
-                        <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" name="PurchaseCurrencyId" id="PurchaseCurrencyId" disabled />
-                        </div>
-                    </div>*@
-
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.BENumber)
                         <div class="input-group">
@@ -73,13 +66,6 @@
                 </div>
 
                 <div class="form-group row">
-
-                    @*<div class="col-sm-2">
-                        @Html.LabelFor(model => model.ImportIDExcel)
-                        <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" name="PurchaseImportIDExcel" id="PurchaseImportIDExcel" disabled />
-                        </div>
-                    </div>*@
 
                     <div class="col-sm-3">
                         @Html.LabelFor(model => model.Comments)
@@ -282,32 +268,19 @@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.SupplierId)
-                        <div class="input-group">
-                            @Html.TextBoxFor(model => model.SupplierId, new { @class = "form-control form-control-sm" })
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.SupplierId, new { @class = " required form-control form-control-sm ", @style = "width: 100%;" })
                         </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
                     </div>
-
-                    @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.CurrencyId)
-            <div class="input-group">
-                @Html.TextBoxFor(model => model.CurrencyId, new { @class = "form-control form-control-sm" })
-            </div>
-        </div>*@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.BENumber)
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.BENumber, new { placeholder = "Enter Challan Number", @class = "form-control form-control-sm" })
+                            @Html.TextBoxFor(model => model.BENumber, new { placeholder = "Enter Challan Number", @class = "required form-control form-control-sm" })
                         </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
-
-                    @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.ImportIDExcel)
-            <div class="input-group">
-                @Html.TextBoxFor(model => model.ImportIDExcel, new { placeholder = "Enter Import Excel Id", @class = "form-control form-control-sm" })
-            </div>
-        </div>*@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.Comments)
@@ -337,12 +310,6 @@
                                 <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
                                 <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="ProductName"> Product Name </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
-
-                                @*<th data-type="text" data-search="true" data-computed="false" data-required="true" style="width:8%;" data-name="UOMName"> UOM </th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="UOMId"> UOMId </th>
-                                <th data-type="decimal" style="width: 10%;" data-required="true" data-name="CtnQuantity">Ctn Qty </th>
-                                <th data-type="decimal" style="width: 10%;" data-required="true" data-name="InputQuantity"> Input Qty </th>
-                                <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="true" data-name="PcsQuantity"> Pcs Qty </th>*@
                                 <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="Quantity"> Total Qty </th>
                                 <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="UnitPrice"> Unit Price </th>
                                 <th data-type="decimal" style="width: 14%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
@@ -353,13 +320,9 @@
                                 <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="OthersAmount"> Others Amount </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
 
-                                @*<th data-type="text" style="width: 15%;" data-name="Comments">Comments</th>
-                                <th data-type="text" style="width: 15%;" data-name="ReturnReason">Reason of Return</th>
-                                <th hidden data-type="text" style="width: 5%;" data-name="UOMConversion">UOMConversion</th>*@
-
                                 @if (Model.PurchaseId > 0)
                                 {
-                                    @*<th data-type="text" data-search="false" data-required="false" data-computed="true" style="width:10%;" data-name="POCode"> Purchase Code </th>*@
+                                  
                                 }
                                 <th hidden data-type="text" style="width: 5%;" data-name="PurchaseId">PurchaseId</th>
                                 <th hidden data-type="text" style="width: 5%;" data-name="PurchaseDetailId">PurchaseDetailId</th>
@@ -375,12 +338,6 @@
                                         <td> @serial </td>
                                         <td> @item.ProductName </td>
                                         <td hidden> @item.ProductId </td>
-
-                                        @*<td> @item.UOMName </td>
-                                        <td hidden> @item.UOMId </td>
-                                        <td class=" dFormat "> @item.CtnQuantity </td>
-                                        <td class=" dFormat "> @item.InputQuantity </td>
-                                        <td class=" dFormat "> @item.PcsQuantity </td>*@
                                         <td class="dFormat"> @item.Quantity </td>
                                         <td class=" dFormat "> @item.UnitPrice</td>
                                         <td class=" dFormat "> @item.SubTotal</td>
@@ -390,13 +347,9 @@
                                         <td class=" dFormat "> @item.VATAmount</td>
                                         <td class=" dFormat "> @item.OthersAmount</td>
                                         <td class=" dFormat "> @item.LineTotal</td>
-
-                                        @*<td> @item.Comments</td>
-                                        <td> @item.ReturnReason</td>
-                                        <td hidden> @item.UOMConversion</td>*@
                                         @if (item.PurchaseId > 0)
                                         {
-                                            @*<td style="color:blue;cursor:pointer;" class="details-link" data-id="@item.PurchaseId"> @item.POCode </td>*@
+                         
                                         }
                                         <td hidden> @item.PurchaseId</td>
                                         <td hidden> @item.PurchaseDetailId</td>
@@ -418,66 +371,7 @@
             </div>
         </div>
 
-        @*<div class="card">
-            <div class="card-header p-2">
-
-                <div class="card-body">
-                    <div class="row grndBlock">
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp;Grand Total Quantity </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotalAmount", 0, new { @placeholder = "Grand Total Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp;Grand SubTotal </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandSubTotal", 0, new { @placeholder = "Grand SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Grand Total SD Amount </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotalSDAmount", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Grand Total VAT Amount </label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotalVATAmount", 0, new { @placeholder = "Grand Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm priceLen NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Grand Line Total</label>
-                            </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Line Total", @class = "trGrandTotal form-control form-control-sm  NumberCheck text-right", @readonly = "readonly" })
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-        </div>*@
-
-
-
+        
     </form>
 
     <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
@@ -585,6 +479,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/PurchaseReturnController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
 

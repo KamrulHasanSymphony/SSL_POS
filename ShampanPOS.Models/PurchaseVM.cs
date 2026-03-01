@@ -19,7 +19,6 @@ namespace ShampanPOS.Models
         public string? UserId { get; set; }
 
         [Display(Name = "Purchase Order Code")]
-
         public string? PurchaseOrderCode { get; set; }
 
         [Required]
@@ -29,10 +28,6 @@ namespace ShampanPOS.Models
         [Required(ErrorMessage = "Supplier is required")]
         [Display(Name = "Supplier")]
         public int? SupplierId { get; set; }
-
-        //[Required(ErrorMessage = "Currency is required")]
-        //[Display(Name = "Currency")]
-        //public int? CurrencyId { get; set; }
 
         [Required(ErrorMessage = "BE Number (Challan No.) is required")]
         [Display(Name = "BE Number (Challan No.)")]
@@ -118,13 +113,11 @@ namespace ShampanPOS.Models
 
         public PeramModel PeramModel { get; set; }
         public List<PurchaseDetailVM> purchaseDetailList { get; set; }
-        //public List<PurchaseDetailExportVM> purchaseDetailExportList { get; set; }
 
         public PurchaseVM()
         {
             purchaseDetailList = new List<PurchaseDetailVM>();
             PeramModel = new PeramModel();
-            //purchaseDetailExportList = new List<PurchaseDetailExportVM>();
         }
 
 

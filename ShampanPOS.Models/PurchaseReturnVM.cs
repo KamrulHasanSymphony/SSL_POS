@@ -24,16 +24,17 @@ namespace ShampanPOS.Models
         public string? UserId { get; set; }
 
 
-        [Required]
         [Display(Name = "Supplier")]
+        [Required(ErrorMessage = "Supplier is required.")]
         public int? SupplierId { get; set; }
 
         [Required(ErrorMessage = "BE Number (Challan No.) is required")]
         [Display(Name = "BE Number (Challan No.)")]
         public string? BENumber { get; set; }
 
-        [Required]
         [Display(Name = "Purchase Date")]
+        [Required(ErrorMessage = "Purchase Date is required.")]
+
         public string PurchaseDate { get; set; }
 
         public string InvoiceDateTime { get; set; }
@@ -91,6 +92,8 @@ namespace ShampanPOS.Models
 
         [Display(Name = "To Date")]
         public string? ToDate { get; set; }
+
+        [Display(Name = "Supplier Name")]
         public string? SupplierName { get; set; }
         public string? BranchName { get; set; }
 

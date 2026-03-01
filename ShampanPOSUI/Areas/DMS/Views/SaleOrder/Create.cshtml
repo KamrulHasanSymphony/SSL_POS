@@ -48,10 +48,6 @@
         }
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
-            @*<button type="button" class="button btnsave sslUpdate">Update</button>
-                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                    New
-            </button>*@
 
             <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                 New
@@ -66,15 +62,6 @@
         }
         else
         {
-            @*<div style="display:none;" class="divUpdate">
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
-                </div>
-                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                    New
-                </button>
-                <div class="divSave">
-                    <button class="button btnsave sslSave" type="button" id="">Save</button>
-            </div>*@
 
             <div style="display:none;" class="divUpdate">
 
@@ -105,18 +92,14 @@
             <div class="card-body">
 
                 @Html.HiddenFor(model => model.Id)
-                @*@Html.HiddenFor(model => model.ProductGroupId)
-                    @Html.HiddenFor(model => model.UOMId)*@
+       
                 @Html.HiddenFor(model => model.DecimalPlace)
                 @Html.HiddenFor(model => model.Operation)
                 @Html.HiddenFor(model => model.IsPost)
                 @Html.HiddenFor(model => model.BranchId)
                 @Html.HiddenFor(model => model.TransactionType)
                 @Html.HiddenFor(model => model.FromDate)
-                @*@Html.HiddenFor(model => model.InvoiceDiscountRate)
-                    @Html.HiddenFor(model => model.InvoiceDiscountAmount)
-                    @Html.HiddenFor(model => model.GrandTotalVATAmount)
-                    @Html.HiddenFor(model => model.GrandTotalSDAmount)*@
+         
                 <div class="form-group row">
 
                     <div class="col-sm-2 codeWidth">
@@ -148,30 +131,14 @@
                         </div>
                     </div>
 
-                    @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.SalePersonId)
-            <div class="input-group ">
-                @Html.TextBoxFor(model => model.SalePersonId, new { @class = "   ", @style = "width: 100%;" })
-            </div>
-            <span id="titleError1" class="text-danger" style="display:none;"></span>
-        </div>*@
-
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)
                         <div class="input-group ">
-                            @Html.TextBoxFor(model => model.CustomerId, new { @class = "   ", @style = "width: 100%;" })
+                            @Html.TextBoxFor(model => model.CustomerId, new { @class = " required form-control form-control-sm ", @style = "width: 100%;" })
                         </div>
                         <span id="titleError2" class="text-danger" style="display:none;"></span>
                     </div>
 
-
-                    @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.CurrencyId)
-            <div class="input-group ">
-                @Html.TextBoxFor(model => model.CurrencyId, new { @class = "   ", @style = "width: 100%;" })
-            </div>
-
-        </div><span id="titleError3" class="text-danger" style="display:none;"></span>*@
                     <div class="col-sm-3">
                         @Html.LabelFor(model => model.DeliveryAddress)
                         <div class="input-group ">
@@ -293,10 +260,6 @@
             }
             else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
             {
-                @*<button style="float:left;" type="button" class="button btnsave sslUpdate">Update</button>
-                    <button style="float: right; margin-left: 4px;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                        New
-                    </button>*@
 
                 <div style="display: flex; align-items: center; gap: 5px;">
                     <button style="float:left;" type="button" class="button btnsave sslUpdate">Update</button>
@@ -309,22 +272,9 @@
             }
             else
             {
-                @*<div style="display:none;" class="divUpdate">
-                        <button type="button" class="button btnsave sslUpdate">Update</button>
-                        <button style="float: right; margin-left: 2px;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                            New
-                        </button>
-                    </div>
-                    <div class="divSave">
-                        <button class="button btnsave sslSave" type="button" id="">Save</button>
-                    </div>*@
-
-
+    
                 <div style="display:none;" class="divUpdate">
                     <button type="button" class="button btnsave sslUpdate">Update</button>
-                    @*<button style="float: right; margin-left: 2px;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                            New
-                        </button>*@
 
                     <button type="button" class="button btnPost sslPost">Post</button>
                     <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
@@ -407,7 +357,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/SaleOrderController.js"></script>
-
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
     <script>
         $(document).ready(function () {
             SaleOrderController.init();

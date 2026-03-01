@@ -46,7 +46,47 @@
         });
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').click(function (e) {
+            debugger;
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+            var $table = $('#details');
+
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
+            var model = serializeInputs("frmEntry");
+
+            if (parseInt(model.SupplierId) == 0 || model.SupplierId == "") {
+                ShowNotification(3, "Supplier Is Required.");
+                return;
+            }
+
+            if (!hasLine($table)) {
+                ShowNotification(3, "Complete Details Entry");
+                return;
+            }
+
+            var details = serializeTable($table);
+
+            var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+            var fieldMappings = {
+                'ProductName': 'Product Name',
+                'Quantity': 'Quantity',
+                'UnitPrice': 'Unit Price'
+            };
+
+            var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+            if (errorMessage) {
+                ShowNotification(3, errorMessage);
+                return;
+            };
+
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -677,23 +717,6 @@
         originalRow.closest("td").find("input").data("touched", false).focus();
         $('#details').find(".td-Quantity").trigger('blur');
 
-
-
-        //var $currentRow = originalRow.closest('tr');
-        //$currentRow.find('.td-ProductCode').text(ProductCode);
-        //$currentRow.find('.td-ProductName').text(ProductName);
-        //$currentRow.find('.td-ProductId').text(ProductId);
-        //$currentRow.find('.td-UOMName').text(UOMName);
-        //$currentRow.find('.td-UOMId').text(UOMId);
-        //$currentRow.find('.td-UnitPrice').text(PurchasePrice);
-        //$currentRow.find('.td-SD').text(SDRate);
-        //$currentRow.find('.td-VATRate').text(VATRate);
-        //$currentRow.find('.td-UOMConversion').text(Conversion);
-        ////CampaignMudularitycal($currentRow)
-        //$("#partialModal").modal("hide");
-        
-        //originalRow.closest("td").find("input").data("touched", false).focus();
-        //$('#details').find(".td-Quantity").trigger('blur');
     };
 
 
@@ -947,71 +970,7 @@
                                 param.field = "S.Address";
                             }
 
-                            //if (param.field === "Code") {
-                            //    param.field = "H.Code";
-                            //}
-                            //if (param.field === "SupplierName") {
-                            //    param.field = "S.SupplierName";
-                            //}
-                            //if (param.field === "BENumber") {
-                            //    param.field = "H.BENumber";
-                            //}
-                            //if (param.field === "ImportIDExcel") {
-                            //    param.field = "H.ImportIDExcel";
-                            //}
-                            //if (param.field === "FiscalYear") {
-                            //    param.field = "H.FiscalYear";
-                            //}
-                            //if (param.field === "BranchName") {
-                            //    param.field = "Br.BranchName";
-                            //}
-                            //if (param.field === "Comments") {
-                            //    param.field = "H.Comments";
-                            //}
-                            //if (param.field === "Status") {
-                            //    param.field = "H.IsPost";
-                            //}
-                            //if (param.field === "CurrencyRateFromBDT") {
-                            //    param.field = "H.CurrencyRateFromBDT";
-                            //}
-                            //if (param.field === "PurchaseReturnDate" ) {
-                            //    param.value = kendo.toString(filter.value, "yyyy-MM-dd");
-                            //}
-
-                            //if (param.field === "GrandTotalAmount") {
-                            //    param.field = "H.GrandTotalAmount";
-                            //    options.filter.filters.forEach(function (res) {
-                            //        if (typeof res.value === 'string' && res.value.includes(',')) {
-                            //            res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                            //        }
-                            //        else {
-                            //            res.value = parseFloat(res.value) || 0;
-                            //        }
-                            //    });
-                            //}
-                            //if (filter.field === "GrandTotalSDAmount") {
-                            //    filter.field = "H.GrandTotalSDAmount";
-                            //    options.filter.filters.forEach(function (res) {
-                            //        if (typeof res.value === 'string' && res.value.includes(',')) {
-                            //            res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                            //        }
-                            //        else {
-                            //            res.value = parseFloat(res.value) || 0;
-                            //        }
-                            //    });
-                            //}
-                            //if (filter.field === "GrandTotalVATAmount") {
-                            //    filter.field = "H.GrandTotalVATAmount";
-                            //    options.filter.filters.forEach(function (res) {
-                            //        if (typeof res.value === 'string' && res.value.includes(',')) {
-                            //            res.value = parseFloat(res.value.replace(/,/g, '')) || 0;
-                            //        }
-                            //        else {
-                            //            res.value = parseFloat(res.value) || 0;
-                            //        }
-                            //    });
-                            //}
-
+                           
                         });
                     }
                     return options;
@@ -1403,8 +1362,6 @@
                            <i class="fas fa-file-alt"></i>
                       </a> 
                                 `
-                    //        +
-                    //        "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
@@ -1440,7 +1397,6 @@
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },
                 { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
                 { field: "BranchAddress", title: "Branch Address", width: 200, hidden: true, sortable: true },
-                //{ field: "CompanyName", title: "Company Name", width: 200, hidden: true, sortable: true },
             ],
             editable: false,
             selectable: "multiple row",
@@ -1482,26 +1438,21 @@
         };
 
 
-        var details = serializeTable($table);
+        //var details = serializeTable($table);
 
-        var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
-        var fieldMappings = {
-            'ProductName': 'Product Name',
-            //'UOMName': 'UOM Name',
-            'Quantity': 'Quantity',
-            'UnitPrice': 'Unit Price'
-        };
+        //var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+        //var fieldMappings = {
+        //    'ProductName': 'Product Name',
+        //    //'UOMName': 'UOM Name',
+        //    'Quantity': 'Quantity',
+        //    'UnitPrice': 'Unit Price'
+        //};
 
-        var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        if (errorMessage) {
-            ShowNotification(3, errorMessage);
-            return;
-        };
-
-        //model.GrandTotalAmount = model.GrandTotalAmount.replace(/,/g, '');
-        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
-        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
-
+        //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+        //if (errorMessage) {
+        //    ShowNotification(3, errorMessage);
+        //    return;
+        //};
 
         model.purchaseReturnDetailList = details;
 

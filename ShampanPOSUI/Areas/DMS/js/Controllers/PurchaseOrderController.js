@@ -38,7 +38,48 @@
             addRow($table);
         });
 
-        $('.btnsave').click('click', function () {
+
+        $('.btnsave').click(function (e) {
+            debugger;
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+            var $table = $('#details');
+
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
+            var model = serializeInputs("frmEntry");
+
+            if (parseInt(model.SupplierId) == 0 || model.SupplierId == "") {
+                ShowNotification(3, "Supplier Is Required.");
+                return;
+            }
+
+            if (!hasLine($table)) {
+                ShowNotification(3, "Complete Details Entry");
+                return;
+            }
+
+            var details = serializeTable($table);
+            debugger;
+            var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+            var fieldMappings = {
+                'ProductName': 'Product Name',
+                'Quantity': 'Quantity',
+                'UnitPrice': 'Unit Price'
+            };
+
+            var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+            if (errorMessage) {
+                ShowNotification(3, errorMessage);
+                return;
+            };
+
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -1289,11 +1330,6 @@
             ShowNotification(3, errorMessage);
             return;
         };
-
-        //model.GrandTotalAmount = model.GrandTotalAmount.replace(/,/g, '');
-        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
-        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
-
 
         model.purchaseOrderDetailsList = details;
 

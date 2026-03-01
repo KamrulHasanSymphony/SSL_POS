@@ -2746,24 +2746,50 @@ function getColumnSumAttr(dataName, tableId) {
 
     return sum;
 }
-
 function getRequiredFieldsCheckObj(obj, requiredFields, fieldMappings) {
-   
-    for (let i = 0; i < obj.length; i++) {
-        for (let j = 0; j < requiredFields.length; j++) {
-            const fieldName = requiredFields[j];
-            const fieldValue = obj[i][requiredFields[j]];
-            const fieldDisplayName = fieldMappings[fieldName];
-            if (fieldValue === '' || fieldValue === "0.00" || fieldValue === "0.0000" || fieldValue === "0.000000") {
 
+    for (let i = 0; i < obj.length; i++) {
+
+        for (let j = 0; j < requiredFields.length; j++) {
+
+            const fieldName = requiredFields[j];
+            const fieldValue = obj[i][fieldName];
+            const fieldDisplayName = fieldMappings[fieldName];
+
+            // 1️⃣ Null / undefined check
+            if (fieldValue === null || fieldValue === undefined || fieldValue.toString().trim() === '') {
                 return fieldDisplayName + ' field is required';
             }
-               
-            }
-        }
 
-    return null; // return null if no errors are found
+            // 2️⃣ Numeric zero check
+            if (!isNaN(fieldValue)) {
+                if (parseFloat(fieldValue) <= 0) {
+                    return fieldDisplayName + ' must be greater than 0';
+                }
+            }
+
+        }
+    }
+
+    return null;
 }
+//function getRequiredFieldsCheckObj(obj, requiredFields, fieldMappings) {
+   
+//    for (let i = 0; i < obj.length; i++) {
+//        for (let j = 0; j < requiredFields.length; j++) {
+//            const fieldName = requiredFields[j];
+//            const fieldValue = obj[i][requiredFields[j]];
+//            const fieldDisplayName = fieldMappings[fieldName];
+//            if (fieldValue === '' || fieldValue === "0.00" || fieldValue === "0.0000" || fieldValue === "0.000000") {
+
+//                return fieldDisplayName + ' field is required';
+//            }
+               
+//            }
+//        }
+
+//    return null; // return null if no errors are found
+//}
 
 function getDebitCreditFieldsCheckObj(obj) {
     for (let i = 0; i < obj.length; i++) {

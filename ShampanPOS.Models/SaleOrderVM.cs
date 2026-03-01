@@ -12,14 +12,19 @@ namespace ShampanPOS.Models
     public class SaleOrderVM
     {
         public int Id { get; set; }
+
         [Display(Name = "Code(Auto Generate)")]
         public string? Code { get; set; }
+
         [Display(Name = "Distributor")]
         public int? BranchId { get; set; }
         public string? UserId { get; set; }
 
         [Display(Name = "Customer")]
+        [Required(ErrorMessage = "Customer is required.")]
         public int? CustomerId { get; set; }
+
+        [Display(Name = "Customer Name")]
         public string? CustomerName { get; set; }
 
         [Display(Name = "Delivery Address")]
@@ -76,9 +81,7 @@ namespace ShampanPOS.Models
 
 
         public List<SaleOrderDetailVM> saleOrderDetailsList { get; set; }
-        //public decimal? Latitude { get; set; }
 
-        //public decimal? Longitude { get; set; }
         public SaleOrderVM()
         {
             saleOrderDetailsList = new List<SaleOrderDetailVM>();

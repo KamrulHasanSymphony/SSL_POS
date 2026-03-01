@@ -1,8 +1,7 @@
 ﻿var SaleOrderController = function (CommonService, CommonAjaxService) {
 
     var getCustomerId = 0;
-    //var getSalePersonId = 0;
-    //var getCurrencyId = 0;
+
     var operation = "";
     var decimalPlace = 0;
 
@@ -10,8 +9,7 @@
 
 
         getCustomerId = $("#CustomerId").val() || 0;
-        //getSalePersonId = $("#SalePersonId").val() || 0;
-        //getCurrencyId = $("#CurrencyId").val() || 0;
+
         operation = $("#Operation").val();
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
@@ -23,14 +21,7 @@
         };
 
         GetCustomerComboBox();
-        //GetSalePersonComboBox();
-        //GetCurrencyComboBox();
-        //if (operation == "add") {
-        //    GetCustomerComboBox();
-        //}
-        //else if (operation == "update") {
-        //    updateCustomerComboBox(getSalePersonId, $("#BranchId").val());
-        //}
+
 
         $(document).on('click', '.edit-sale-order', function () {
             kendo.alert("You can't edit this order because it has already been delivered.");
@@ -46,12 +37,83 @@
             addRow($table);
         });
 
-        $('.btnsave').click('click', function () {
+
+        //$('.btnsave').click(function (e) {
+        //    debugger;
+        //    e.preventDefault();
+
+        //    var form = $("#frmEntry");
+        //    var $table = $('#details');
+
+        //    var mvcValid = form.valid();
+        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+        //    if (!mvcValid || !customValid) {
+        //        return false;
+        //    }
+        //    var getId = $('#Id').val();
+        //    var status = "Save";
+        //    if (parseInt(getId) > 0) {
+        //        status = "Update";
+        //    }
+        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
+        //        function (result) {
+        //            if (result) {
+        //                save($table);
+        //            }
+        //        });
+        //});
+
+
+
+        $('.btnsave').click(function (e) {
+            debugger;
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+            var $table = $('#details');
+
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
+            var model = serializeInputs("frmEntry");
+
+            if (parseInt(model.CustomerId) == 0 || model.CustomerId == "") {
+                ShowNotification(3, "Customer Is Required.");
+                return;
+            }
+
+            if (!hasLine($table)) {
+                ShowNotification(3, "Complete Details Entry");
+                return;
+            }
+
+            var details = serializeTable($table);
+
+            var requiredFields = ['ProductName', 'UOMName', 'Quantity', 'UnitRate'];
+            var fieldMappings = {
+                'ProductName': 'Product Name',
+                'UOMName': 'UOM Name',
+                'Quantity': 'Quantity',
+                'UnitRate': 'Unit Rate'
+            };
+
+            var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+            if (errorMessage) {
+                ShowNotification(3, errorMessage);
+                return;   
+            }
+           
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
                 status = "Update";
             }
+
             Confirmation("Are you sure? Do You Want to " + status + " Data?",
                 function (result) {
                     if (result) {
@@ -59,6 +121,8 @@
                     }
                 });
         });
+
+
 
 
         $('#btnPost').on('click', function () {
@@ -188,34 +252,6 @@
         });
 
 
-        //$('#details').on('click', 'input.txtProductName', function () {
-
-        //    var customerId = $("#CustomerId").val() || 0;
-        //    // Validate customer selection
-        //    if (customerId === "0" || customerId === 0) {
-        //        ShowNotification(3, "Please select a customer first.");
-        //        return;
-        //    }
-
-        //    var originalRow = $(this);
-        //    $('#FromDate').val($('#InvoiceDateTime').val());
-        //    originalRow.closest("td").find("input").data('touched', true);
-        //    CommonService.productCodeModal(
-        //        function success(result) {
-        //        },
-        //        function fail(error) {
-        //            originalRow.closest("td").find("input").data("touched", false).focus();
-        //        },
-        //        function bindSingleClick(row) {
-                    
-        //            productModalDblClick(row, originalRow);
-        //        },
-        //        function closeCallback() {
-        //            originalRow.closest("td").find("input").data("touched", false).focus();
-        //        }
-        //    );
-
-        //});
 
         $('#details').on('click', 'input.txtProductName', function () {
             var originalRow = $(this);
@@ -519,33 +555,6 @@
         }
     }
 
-    //function GetCustomerComboBox() {
-    //    var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 },
-    //            { field: "BanglaName", title: "BanglaName", width: 200 },
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name", "BanglaName"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetCustomerList"
-    //            }
-    //        },
-    //        placeholder: "Select Customer",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getCustomerId) {
-    //                this.value(parseInt(getCustomerId));
-    //            }
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-
     function GetCustomerComboBox() {
         var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -731,78 +740,12 @@
         SDAmount = getColumnSumAttr('SDAmount', 'details');
         VATAmount = getColumnSumAttr('VATAmount', 'details');
         LineTotal = getColumnSumAttr('LineTotal', 'details');
-        //lineTotalAfterDiscount = getColumnSumAttr('LineTotalAfterDiscount', 'details');
-        // Calculate FreeGrandTotalAmount (GrandTotalAmount + sum of FreeQuantity)
-        //var freeGrandTotalAmount = FreeQuantity;
 
-        // Calculate Invoice Discount Amount & Final Invoice Value
-        //invoiceDiscountRate = parseFloat($("#InvoiceDiscountRate").val()) || 0; // Get discount rate from input
-
-
-        //invoiceDiscountAmount = (LineTotal * invoiceDiscountRate) / 100; // Calculate discount amount
-        //finalInvoiceValue = LineTotal - invoiceDiscountAmount; // Calculate final value
-
-        //ReqularRate = parseFloat($("#RegularDiscountRate").val()) || 0;
-        //ReqularDiscount = ((finalInvoiceValue * ReqularRate) / 100)
-
-        //ReqularfinalInvoiceValue = finalInvoiceValue - ReqularDiscount; // Calculate final value
-
-        //SpecialRate = parseFloat($("#SpecialDiscountRate").val()) || 0;
-
-        //if (SpecialRate != 0) {
-        //    SpecialDiscount = parseFloat($("#SpecialDiscountRate").val()) || 0;
-        //    SpecialDiscount = ((finalInvoiceValue * SpecialRate) / 100)
-
-        //}
-        //else {
-
-        //    SpecialDiscount = parseFloat($("#SpecialDiscountAmount").val()) || 0;
-        //    SpecialRate = (SpecialDiscount / ReqularfinalInvoiceValue) * 100
-        //    if (isNaN(SpecialRate)) {
-        //        SpecialRate = 0;
-        //    }
-        //    $("#SpecialDiscountRate").val(SpecialRate.toFixed(2));
-
-        //}
-
-
-       // finalInvoiceValue = ReqularfinalInvoiceValue - SpecialDiscount; // Calculate final value
-        // Update all grand total fields with proper formatting
-        //$("#GrandTotalAmount").val(formatNumber(Quantity));
-        //$("#FreeGrandTotalAmount").val(formatNumber(freeGrandTotalAmount));
-        //$("#GrandSubTotal").val(formatNumber(SubTotal));
-        //$("#GrandSubTotalAD").val(formatNumber(subTotalAfterDiscount));
-        //$("#GrandTotalSDAmount").val(formatNumber(SDAmount));
-        //$("#GrandTotalVATAmount").val(formatNumber(VATAmount));
-       // $("#GrandTotal").val(formatNumber(LineTotal));
-       // $("#LineTotalAfterDiscount").val(formatNumber(lineTotalAfterDiscount));
-
-       // $(".trFinalDiscountAmount").val(invoiceDiscountAmount);
-      //  $(".trFinalInvoiceDiscount").val(invoiceDiscountRate); //rate
-      //  $("#RegularDiscountAmount").val(ReqularDiscount.toFixed(2));
-      //  $("#SpecialDiscountAmount").val(SpecialDiscount.toFixed(2));
-
-      //  $("#AfterRegularDiscountAmount").val(ReqularfinalInvoiceValue.toFixed(2));
-      //  $("#AfterSpecialDiscountAmount").val(finalInvoiceValue.toFixed(2));
-
-      //  $(".trFinalInvoiceValue").val(finalInvoiceValue.toFixed(2));
 
     };
 
-    // Function to update row with API response data
     function updateRowWithAPIData(row, data) {
-        // Update basic fields
-        //row.find('.td-FreeProductName').text(data.FreeProductName?.trim() || '');
-        //row.find('.td-FreeProductId').text(data.FreeProductId || '');
-        //row.find('.td-FreeQuantity').text(formatNumber(data.FreeQuantity || 0));
-        //row.find('.td-DiscountRate').text(formatNumber(data.DiscountRate || 0));
-        //row.find('.td-DiscountAmount').text(formatNumber(data.DiscountAmount || 0));
-        //row.find('.td-LineDiscountRate').text(formatNumber(data.LineDiscountRate || 0));
-        //row.find('.td-LineDiscountAmount').text(formatNumber(data.LineDiscountAmount || 0));
 
-        //// Update calculated totals
-        //row.find('.td-SubTotalAfterDiscount').text(formatNumber(data.SubTotalAfterDiscount || 0));
-        //row.find('.td-LineTotalAfterDiscount').text(formatNumber(data.LineTotalAfterDiscount || 0));
     }
 
 
@@ -914,13 +857,7 @@
                 var finalRate = formatNumber(result.data.DiscountRateBasedOnTotalPrice);
                 var finalDiscountAmt = formatNumber(result.data.DiscountAmount);
 
-                //if (finalValue == null || finalValue == "NaN") {
-                //    $(".trFinalInvoiceValue").val(formatNumber(totals.subTotalAfterDiscount));
-                //}
-                //else {
-                //    $(".trFinalInvoiceValue").val(formatNumber(result.data.TotalInvoiceValue));
-
-                //}
+       
                 if (finalRate == null || finalRate == "NaN") { //Rate
                     $(".trFinalInvoiceDiscount").val(0);
                 }
@@ -1387,10 +1324,7 @@
             <a href="#" class="btn btn-primary btn-sm mr-2 edit edit-sale-order">
                 <i class="fas fa-pencil-alt"></i>
             </a>`
-            //                    +
-            //                    `<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-            //    <i class='fas fa-print'></i>
-            //</a>`;
+        
                         } else {
                             return `
             <a href="/DMS/SaleOrder/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
@@ -1405,18 +1339,14 @@
 
 
             `
-            //                    +
-            //                    `<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-            //    <i class='fas fa-print'></i>
-            //</a>`;
+   
                         }
                     }
                 },
 
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", sortable: true, width: 200 },
-                //{ field: "SalePersonName", title: "Sale Person", sortable: true, width: 200 },
-                //{ field: "RouteName", title: "Route", sortable: true, width: 200 },
+            
                 { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
                 {
                     field: "PostStatus", title: "Posted", sortable: true, width: 130,
@@ -1434,7 +1364,7 @@
                         }
                     }
                 },
-                //{ field: "CurrencyName", title: "Currency Name", sortable: true, width: 200 },
+                
                 {
                     field: "OrderDate", title: "Order Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(OrderDate), "yyyy-MM-dd") #',
                     filterable:
@@ -1449,22 +1379,7 @@
                         ui: "datepicker"
                     }
                 },
-                //{
-                //    field: "Status", title: "Is Complete", sortable: true, width: 130,
-                //    filterable: {
-                //        ui: function (element) {
-                //            element.kendoDropDownList({
-                //                dataSource: [
-                //                    { text: "Y", value: "1" },
-                //                    { text: "N", value: "0" }
-                //                ],
-                //                dataTextField: "text",
-                //                dataValueField: "value",
-                //                optionLabel: "Select Option"
-                //            });
-                //        }
-                //    }
-                //},
+         
 
                 { field: "DeliveryAddress", title: "DeliveryAddress", sortable: true, width: 200 },
                 { field: "Comments", title: "Comments", sortable: true, width: 250 },
@@ -1490,20 +1405,13 @@
 
     function save($table) {
         debugger;
-/*        var isDropdownValid1 = CommonService.validateDropdown("#SalePersonId", "#titleError1", "Sale Person is required");*/
-        var isDropdownValid2 = CommonService.validateDropdown("#CustomerId", "#titleError2", "Customer is required");
-   /*     var isDropdownValid3 = CommonService.validateDropdown("#CurrencyId", "#titleError3", "Currency is required");*/
 
+        var isDropdownValid2 = CommonService.validateDropdown("#CustomerId", "#titleError2", "Customer is required");
 
         var isDropdownValid =  isDropdownValid2;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
 
-
-        //if (parseInt(model.SalePersonId) == 0 || model.SalePersonId == "") {
-        //    ShowNotification(3, "Sale Person Is Required.");
-        //    return;
-        //}
         if (parseInt(model.CustomerId) == 0 || model.CustomerId == "") {
             ShowNotification(3, "Customer Is Required.");
             return;
@@ -1519,12 +1427,6 @@
             return;
         }
 
-
-
-        //if (hasInputFieldInTableCells($table)) {
-        //    ShowNotification(3, "Complete Details Entry");
-        //    return;
-        //};
         if (!hasLine($table)) {
             ShowNotification(3, "Complete Details Entry");
             return;
@@ -1545,12 +1447,6 @@
             ShowNotification(3, errorMessage);
             return;
         };
-
-        //model.GrandTotalAmount = model.GrandTotalAmount.replace(/,/g, '');
-        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(/,/g, '');
-        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(/,/g, '');
-        //model.InvoiceDiscountRate = model.InvoiceDiscountRate.replace(/,/g, '');
-        //model.InvoiceDiscountAmount = model.InvoiceDiscountAmount.replace(/,/g, '');
         model.saleOrderDetailsList = details;
 
         var url = "/DMS/SaleOrder/CreateEdit";
@@ -1645,20 +1541,6 @@
         }
     };
 
-
-    //function postDone(result) {
-    //    var grid = $("#GridDataList").data("kendoGrid");
-    //    if (grid) grid.dataSource.read();
-
-    //    if (result.Status == 200) {
-    //        ShowNotification(1, result.Message);
-    //        $(".btnsave").hide();
-    //        $(".btnPost").hide();
-    //        $(".sslPush").show();
-    //    } else {
-    //        ShowNotification(3, result.Message);
-    //    }
-    //}
 
 
     function fail(err) {

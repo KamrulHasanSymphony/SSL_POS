@@ -68,9 +68,6 @@
         //        });
         //});
 
-
-
-
         $('.btnsave').click(function (e) {
 
             e.preventDefault();
@@ -82,30 +79,21 @@
             var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
 
             if (!mvcValid || !customValid) {
-                console.log("Master validation stopped.");
                 return false;
             }
 
             var details = serializeTable($table);
 
             if (!details || details.length === 0) {
-                ShowNotification(3, "Please add at least one detail entry.");
+                ShowNotification(3, "Complete Details Entry.");
                 return false;
             }
 
-            //var errorMessage = getRequiredFieldsCheckObj(details,['SaleCode', 'SaleAmount', 'CollectionAmount'],
-            //    {
-            //        'SaleCode': 'Sale Code',
-            //        'SaleAmount': 'Sale Amount',
-            //        'CollectionAmount': 'Collection Amount'
-            //    });
-
-
             var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
             var fieldMappings = {
-                    'SaleCode': 'Sale Code',
-                    'SaleAmount': 'Sale Amount',
-                    'CollectionAmount': 'Collection Amount'
+                'SaleCode': 'Sale Code',
+                'SaleAmount': 'Sale Amount',
+                'CollectionAmount': 'Collection Amount'
             };
 
             var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
@@ -115,21 +103,18 @@
                 return false;
             }
 
-            Confirmation("Are you sure?",
+            Confirmation("Are you sure? Do You Want to Save Data?",
                 function (result) {
                     if (result) {
-                        save($table);
+                        save(details);   
                     }
                 });
 
         });
 
 
-
-
-
         //$('.btnsave').click(function (e) {
-        //    debugger;
+
         //    e.preventDefault();
 
         //    var form = $("#frmEntry");
@@ -145,15 +130,23 @@
         //    var details = serializeTable($table);
 
         //    if (!details || details.length === 0) {
-        //        ShowNotification(3, "Please add at least one detail entry.");
+        //        ShowNotification(3, "Complete Details Entry.");
         //        return false;
         //    }
 
+        //    //var errorMessage = getRequiredFieldsCheckObj(details,['SaleCode', 'SaleAmount', 'CollectionAmount'],
+        //    //    {
+        //    //        'SaleCode': 'Sale Code',
+        //    //        'SaleAmount': 'Sale Amount',
+        //    //        'CollectionAmount': 'Collection Amount'
+        //    //    });
+
+
         //    var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
         //    var fieldMappings = {
-        //        'SaleCode': 'Sale Code',
-        //        'SaleAmount': 'Sale Amount',
-        //        'CollectionAmount': 'Collection Amount'
+        //            'SaleCode': 'Sale Code',
+        //            'SaleAmount': 'Sale Amount',
+        //            'CollectionAmount': 'Collection Amount'
         //    };
 
         //    var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
@@ -162,18 +155,22 @@
         //        ShowNotification(3, errorMessage);
         //        return false;
         //    }
-
+        //    debugger;
         //    var getId = $('#Id').val();
         //    var status = parseInt(getId) > 0 ? "Update" : "Save";
 
         //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
         //        function (result) {
         //            if (result) {
-        //                save($table);
+        //                save();
         //            }
         //        });
 
         //});
+
+
+
+
 
 
         $('#btnComplete').on('click', function () {
@@ -559,35 +556,6 @@
     }
 
 
-
-    //function GetCustomerComboBox() {
-    //    var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 },
-    //            { field: "BanglaName", title: "BanglaName", width: 200 },
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name", "BanglaName"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetCustomerList"
-    //            }
-    //        },
-    //        placeholder: "Select Customer",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getCustomerId) {
-    //                this.value(parseInt(getCustomerId));
-    //            }
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-
-
     function GetSupplierComboBox() {
         var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -955,12 +923,11 @@
         });
 
     };
+    function save(details) {
 
-    function save($table) {
-        debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
-        debugger;
+
         var result = validator.form();
 
         if (!result) {
@@ -969,50 +936,69 @@
             return;
         }
 
-        if (model.IsPost == 'True') {
-            ShowNotification(2, "Post operation is already done, Do not update this entry");
-            return;
-        }
-        if (parseInt(model.CustomerId) == 0 || model.CustomerId == "") {
-            ShowNotification(3, "Customer Required.");
-            return;
-        }
-
-
-
-        var isDropdownValid1 = CommonService.validateDropdown("#CustomerId", "#titleError1", "Customer is required");
-
-        var isDropdownValid = isDropdownValid1;
-        if (!result || !isDropdownValid) {
-            if (!result) {
-                validator.focusInvalid();
-            }
-            return;
-        }
-
-        //var details = serializeTable($table);
-
-        //var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
-        //var fieldMappings = {
-        //    'SaleCode': 'Sale Code',
-        //    'SaleAmount': 'Sale Amount',
-        //    'CollectionAmount': 'Collection Amount'
-        //};
-
-        //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        //if (errorMessage) {
-        //    ShowNotification(3, errorMessage);
-        //    return;
-        //};
-
-
-
         model.collectionDetailList = details;
 
         var url = "/DMS/Collection/CreateEdit";
 
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
-    };
+    }
+    //function save() {
+    //    debugger;
+    //    var validator = $("#frmEntry").validate();
+    //    var model = serializeInputs("frmEntry");
+    //    debugger;
+    //    var result = validator.form();
+
+    //    if (!result) {
+    //        validator.focusInvalid();
+    //        ShowNotification(3, "Complete Required Fields.");
+    //        return;
+    //    }
+
+    //    if (model.IsPost == 'True') {
+    //        ShowNotification(2, "Post operation is already done, Do not update this entry");
+    //        return;
+    //    }
+    //    if (parseInt(model.CustomerId) == 0 || model.CustomerId == "") {
+    //        ShowNotification(3, "Customer Required.");
+    //        return;
+    //    }
+
+
+
+    //    var isDropdownValid1 = CommonService.validateDropdown("#CustomerId", "#titleError1", "Customer is required");
+
+    //    var isDropdownValid = isDropdownValid1;
+    //    if (!result || !isDropdownValid) {
+    //        if (!result) {
+    //            validator.focusInvalid();
+    //        }
+    //        return;
+    //    }
+
+    //    //var details = serializeTable($table);
+
+    //    //var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
+    //    //var fieldMappings = {
+    //    //    'SaleCode': 'Sale Code',
+    //    //    'SaleAmount': 'Sale Amount',
+    //    //    'CollectionAmount': 'Collection Amount'
+    //    //};
+
+    //    //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+    //    //if (errorMessage) {
+    //    //    ShowNotification(3, errorMessage);
+    //    //    return;
+    //    //};
+
+
+
+    //    model.collectionDetailList = details;
+
+    //    var url = "/DMS/Collection/CreateEdit";
+
+    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
+    //};
 
     function saveDone(result) {
 

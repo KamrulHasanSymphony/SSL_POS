@@ -17,6 +17,7 @@
         color: #212529;
         border: 1px solid #adb5bd;
     }
+
     .dFormat {
         text-align: right;
     }
@@ -76,16 +77,7 @@
                         </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
-
-                    @*<div class="col-sm-2">
-                                @Html.LabelFor(model => model.CurrencyId)
-                                <div class="input-group">
-                                    <input type="text" class="form-control form-control-sm" name="PurchaseOrderCurrencyName" id="PurchaseOrderCurrencyName" disabled />
-                        </div>
-                                <span id="titleError2" class="text-danger" style="display:none;"></span>
-                            </div>*@
-
-
+         
                 </div>
 
                 <div class="form-group row">
@@ -225,18 +217,18 @@
         }
         else
         {
-    <div style="display:none;" class="divUpdate">
-        <button type="button" class="button btnsave sslUpdate">Update</button>
-        <button type="button" class="button btnPost sslPost">Post</button>
-        <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+            <div style="display:none;" class="divUpdate">
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+                <button type="button" class="button btnPost sslPost">Post</button>
+                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
 
-        <button style="float:right;" type="button" title="Add New" data-url="/DMS/Purchase/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/Purchase/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                     New
-        </button>
-        <button type="button" class="button secondary" id="btnFromPurchaseOrder">
-            <span style="font-weight:bold; margin-right:5px;">+</span> Payment
-        </button>
-    </div>
+                </button>
+                <button type="button" class="button secondary" id="btnFromPurchaseOrder">
+                    <span style="font-weight:bold; margin-right:5px;">+</span> Payment
+                </button>
+            </div>
             <div class="divSave">
                 <button class="button btnsave sslSave" type="button" id="">Save</button>
 
@@ -299,24 +291,22 @@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.SupplierId)
-                        <div class="input-group">
-                            @Html.TextBoxFor(model => model.SupplierId, new { @class = "form-control form-control-sm" })
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.SupplierId, new { @class = " required form-control form-control-sm ", @style = "width: 100%;" })
                         </div>
-                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
                     </div>
 
 
                     <div class="col-sm-2" style="display:none">
                         @Html.LabelFor(model => model.PurchaseOrderId)
                         <div class="input-group">
-                            @*<input type="text" id="PurchaseOrderCode" class="form-control form-control-sm" readonly />*@
-                            @Html.TextBoxFor(model => model.PurchaseOrderId, new { @class = "form-control form-control-sm" })                            
+                            @Html.TextBoxFor(model => model.PurchaseOrderId, new { @class = "form-control form-control-sm" })
                         </div>
                     </div>
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.PurchaseOrderCode)
                         <div class="input-group">
-                            @*<input type="text" id="PurchaseOrderCode" class="form-control form-control-sm" readonly />*@
                             @Html.TextBoxFor(model => model.PurchaseOrderCode, new { @class = "form-control form-control-sm" })
 
                             <div class="input-group-append">
@@ -332,7 +322,7 @@
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.BENumber)
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.BENumber, new { placeholder = "Enter Challan Number", @class = "form-control form-control-sm" })
+                            @Html.TextBoxFor(model => model.BENumber, new { placeholder = "Enter Challan Number", @class = "required form-control form-control-sm" })
                         </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
 
@@ -377,10 +367,7 @@
                                 <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="OthersAmount"> Others Amount </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
 
-                                @*@if (Model.PurchaseOrderId > 0)
-                                {
-                                    <th data-type="text" data-search="false" data-required="false" data-computed="true" style="width:10%;" data-name="POCode"> Purchase Order Code </th>
-                                }*@
+                   
 
                                 <th hidden data-type="text" style="width: 5%;" data-name="PurchaseOrderId">PurchaseOrderId</th>
                                 <th hidden data-type="text" style="width: 5%;" data-name="PurchaseOrderDetailId">PurchaseOrderDetailId</th>
@@ -410,7 +397,7 @@
 
                                         @if (item.PurchaseOrderId > 0)
                                         {
-                                            @*<td style="color:blue;cursor:pointer;" class="details-link" data-id="@item.PurchaseOrderId"> @item.POCode </td>*@
+                                            
                                         }
                                         <td hidden> @item.PurchaseOrderId </td>
                                         <td hidden> @item.PurchaseOrderDetailId </td>
@@ -434,111 +421,66 @@
         </div>
 
         <div class="card">
-                <div class="card-header p-2">
+            <div class="card-header p-2">
 
-                    <div class="card-body">
-                        <div class="row grndBlock">
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp;Paid Amount </label>
-                                </div>
-                                <div class="editor-field">
-                                    <div class="input-group">
-                                        @Html.TextBoxFor(model => model.PaidAmount, new { placeholder = "PaidAmount", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
-                                    </div>
+                <div class="card-body">
+                    <div class="row grndBlock">
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Paid Amount </label>
+                            </div>
+                            <div class="editor-field">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.PaidAmount, new { placeholder = "PaidAmount", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp;Sub-Total </label>
-                                </div>
-                                <div class="editor-field">
-                                    <div class="input-group">
-                                        @Html.TextBoxFor(model => model.SubTotal, new { placeholder = "Sub-Total", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp;TotalSD </label>
-                                </div>
-                                <div class="editor-field">
-                                    <div class="input-group">
-                                        @Html.TextBoxFor(model => model.TotalSD, new { placeholder = "Total SD", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp;Total VAT </label>
-                                </div>
-                                <div class="editor-field">
-                                    <div class="input-group">
-                                        @Html.TextBoxFor(model => model.TotalVAT, new { placeholder = "Total VAT", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp;Grand-Total </label>
-                                </div>
-                                <div class="editor-field">
-                                    <div class="input-group">
-                                        @Html.TextBoxFor(model => model.GrandTotal, new { placeholder = "Grand Total", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
-                                    </div>
-                                </div>
-                            </div>
-                            @*<div class="col-md-2">
-            <div class="editor-label">
-                <label>&nbsp;Paid Amount </label>
-            </div>
-            <div class="editor-field">
-                @Html.TextBox("PaidAmount", 0, new { @placeholder = "Paid Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right" })
-            </div>
-        </div>*@
-
-                            @*<div class="col-md-2">
-            <div class="editor-label">
-                <label>&nbsp;SubTotal </label>
-            </div>
-            <div class="editor-field">
-                @Html.TextBox("SubTotal", 0, new { @placeholder = "SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
-            </div>
-        </div>*@
-
-                            @*<div class="col-md-2">
-            <div class="editor-label">
-                <label>&nbsp; Total SD</label>
-            </div>
-            <div class="editor-field">
-                @Html.TextBox("TotalSD", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right" })
-            </div>
-        </div>*@
-
-                            @*<div class="col-md-2">
-            <div class="editor-label">
-                <label>&nbsp; Total VAT  </label>
-            </div>
-            <div class="editor-field">
-                @Html.TextBox("TotalVAT", 0, new { @placeholder = "Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right" })
-            </div>
-        </div>*@
-
-                            @*<div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp; Grand Total</label>
-                                </div>
-                                <div class="editor-field">
-                                    @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right" })
-                                </div>
-                            </div>*@
-
                         </div>
-
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Sub-Total </label>
+                            </div>
+                            <div class="editor-field">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.SubTotal, new { placeholder = "Sub-Total", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;TotalSD </label>
+                            </div>
+                            <div class="editor-field">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.TotalSD, new { placeholder = "Total SD", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Total VAT </label>
+                            </div>
+                            <div class="editor-field">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.TotalVAT, new { placeholder = "Total VAT", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Grand-Total </label>
+                            </div>
+                            <div class="editor-field">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.GrandTotal, new { placeholder = "Grand Total", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
+
             </div>
+        </div>
 
 
     </form>
@@ -652,6 +594,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/PurchaseController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
         $(document).ready(function () {

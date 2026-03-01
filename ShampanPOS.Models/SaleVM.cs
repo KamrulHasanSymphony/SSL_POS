@@ -23,6 +23,7 @@ namespace ShampanPOS.Models
         public bool IsManualSale { get; set; }
 
         [Display(Name = "Customer")]
+        [Required(ErrorMessage = "Customer is required.")]
         public int? CustomerId { get; set; }
         public string? CustomerName { get; set; }
 

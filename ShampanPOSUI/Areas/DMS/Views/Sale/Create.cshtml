@@ -18,6 +18,7 @@
         color: #212529;
         border: 1px solid #adb5bd;
     }
+
     .dFormat {
         text-align: right;
     }
@@ -63,13 +64,6 @@
                 <span style="font-weight:bold; margin-right:5px;">+</span> Collection
             </button>
 
-
-            @*<button type="button" class="button secondary" onclick="location.href='@Url.Action( "Create","Collection",new { TransactionType = Model.TransactionType })'">
-                <span style="font-weight:bold; margin-right:5px;">+</span> Collection
-            </button>*@
-
-
-
         }
         else
         {
@@ -86,7 +80,7 @@
         }
 
     </div>
-    </div>
+</div>
 
 
 
@@ -121,12 +115,12 @@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)
-                        <div class="input-group">
-                            @Html.TextBoxFor(model => model.CustomerId, new
-                            {
-                                @class = "form-control form-control-sm"@*, @readonly = "readonly"*@})
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.CustomerId, new { placeholder = " Enter Customer Id", @class = " required form-control form-control-sm " })
                         </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
+
                     <div class="col-sm-2" style="display:none">
                         @Html.LabelFor(model => model.SaleOrderId)
                         <div class="input-group">
@@ -191,18 +185,6 @@
                         </div>
                     </div>
 
-
-
-
-                    @*<div class="col-sm-2">
-                            @Html.LabelFor(model => model.DeliveryDate)
-                            <div class="input-group date">
-                                @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange", @readonly = "readonly" })
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
-                            </div>
-                        </div>*@
                 </div>
 
 
@@ -215,8 +197,6 @@
                 <h3 class="card-title"> Details </h3>
             </div>
             <div class="card-body">
-
-                @*<button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>*@
 
                 @if (Model.IsManualSale)
                 {
@@ -473,6 +453,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/SaleController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
         $(document).ready(function () {

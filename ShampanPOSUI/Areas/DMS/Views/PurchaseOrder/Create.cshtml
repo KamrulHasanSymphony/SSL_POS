@@ -11,12 +11,12 @@
     .k-dropdown-wrap .k-input {
         line-height: 1.6em !important;
     }
+
     .button.secondary {
         background-color: #adb5bd;
         color: #212529;
         border: 1px solid #adb5bd;
     }
-
 </style>
 
 <div class="content-header">
@@ -101,13 +101,15 @@
                             <span id="btnNext" class="fa fa-forward" style="color: darkseagreen;"></span>
                         </div>
                     </div>
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.SupplierId)
                         <div class="input-group ">
-                            @Html.TextBoxFor(model => model.SupplierId, new { @class = "", @style = "width: 100%;" })
+                            @Html.TextBoxFor(model => model.SupplierId, new { @class = " required form-control form-control-sm ", @style = "width: 100%;" })
                         </div>
-                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
                     </div>
+
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.OrderDate)
@@ -162,11 +164,11 @@
                                 <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="Quantity"> Total Qty </th>
                                 <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="UnitPrice"> Unit Price </th>
                                 <th data-type="decimal" style="width: 14%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
-                                <th  data-type="decimal" style="width: 8%;" data-computed="false" data-name="SD"> SD Rate </th>
-                                <th  data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
-                                <th  data-type="decimal" style="width: 8%;" data-computed="false" data-name="VATRate"> VAT Rate </th>
-                                <th  data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
-                                <th  data-type="decimal" style="width: 8%;" data-computed="false" data-name="OthersAmount"> Others Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="SD"> SD Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="VATRate"> VAT Rate </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
+                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="OthersAmount"> Others Amount </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
 
                                 <th data-type="text" style="width: 15%;" data-name="Comments">Comments</th>
@@ -209,63 +211,6 @@
             </div>
         </div>
 
-        @*<div class="card">
-                <div class="card-header p-2">
-
-                    <div class="card-body">
-                        <div class="row grndBlock">
-
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp;Grand Total Quantity </label>
-                                </div>
-                                <div class="editor-field">
-                                    @Html.TextBox("GrandTotalAmount", 0, new { @placeholder = "Grand Total Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp;Grand SubTotal </label>
-                                </div>
-                                <div class="editor-field">
-                                    @Html.TextBox("GrandSubTotal", 0, new { @placeholder = "Grand SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp; Grand Total SD Amount </label>
-                                </div>
-                                <div class="editor-field">
-                                    @Html.TextBox("GrandTotalSDAmount", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp; Grand Total VAT Amount </label>
-                                </div>
-                                <div class="editor-field">
-                                    @Html.TextBox("GrandTotalVATAmount", 0, new { @placeholder = "Grand Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right", @readonly = "readonly" })
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="editor-label">
-                                    <label>&nbsp; Grand Line Total</label>
-                                </div>
-                                <div class="editor-field">
-                                    @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Line Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right", @readonly = "readonly" })
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>*@
 
     </form>
 
@@ -373,6 +318,8 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/PurchaseOrderController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
+
     <script>
         $(document).ready(function () {
 

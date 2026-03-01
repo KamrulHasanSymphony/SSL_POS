@@ -45,7 +45,47 @@
         });
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').click(function (e) {
+            debugger;
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+            var $table = $('#details');
+
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
+            var model = serializeInputs("frmEntry");
+
+            if (parseInt(model.SupplierId) == 0 || model.SupplierId == "") {
+                ShowNotification(3, "Supplier Is Required.");
+                return;
+            }
+
+            if (!hasLine($table)) {
+                ShowNotification(3, "Complete Details Entry");
+                return;
+            }
+
+            var details = serializeTable($table);
+
+            var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+            var fieldMappings = {
+                'ProductName': 'Product Name',
+                'Quantity': 'Quantity',
+                'UnitPrice': 'Unit Price'
+            };
+
+            var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+            if (errorMessage) {
+                ShowNotification(3, errorMessage);
+                return;
+            };
+
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -1058,21 +1098,7 @@
                                 param.field = "H.IsPost";
                                 param.operator = "eq";
                             }
-                            //if (param.field === "Completed") {
-                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                            //    if (statusValue.startsWith("c")) {
-                            //        param.value = 1;
-                            //    } else if (statusValue.startsWith("n")) {
-                            //        param.value = 0;
-                            //    } else {
-                            //        param.value = null;
-                            //    }
-
-                            //    param.field = "H.IsCompleted";
-                            //    param.operator = "eq";
-                            //}
-
+                    
                             if (param.field === "FiscalYear") {
                                 param.field = "H.FiscalYear";
                             }
@@ -1149,20 +1175,6 @@
                                 param.field = "H.IsPost";
                                 param.operator = "eq";
                             }
-                            //if (param.field === "Completed") {
-                            //    let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                            //    if (statusValue.startsWith("c")) {
-                            //        param.value = 1;
-                            //    } else if (statusValue.startsWith("n")) {
-                            //        param.value = 0;
-                            //    } else {
-                            //        param.value = null;
-                            //    }
-
-                            //    param.field = "H.IsCompleted";
-                            //    param.operator = "eq";
-                            //}
 
                             if (param.field === "FiscalYear") {
                                 param.field = "H.FiscalYear";
@@ -1568,8 +1580,6 @@
                       </a>
 
                                 `
-                    //        +
-                    //        "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
@@ -1654,7 +1664,6 @@
         };
 
         var isDropdownValid1 = CommonService.validateDropdown("#SupplierId", "#titleError1", "Supplier is required");
-        //var isDropdownValid2 = CommonService.validateDropdown("#CurrencyId", "#titleError2", "Currency is required");
 
         var isDropdownValid = isDropdownValid1;
         if (!result || !isDropdownValid) {
@@ -1664,21 +1673,20 @@
             return;
         }
 
-        var details = serializeTable($table);
+        //var details = serializeTable($table);
 
-        var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
-        var fieldMappings = {
-            'ProductName': 'Product Name',
-            //'UOMName': 'UOM Name',
-            'Quantity': 'Quantity',
-            'UnitPrice': 'Unit Price'
-        };
+        //var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+        //var fieldMappings = {
+        //    'ProductName': 'Product Name',
+        //    'Quantity': 'Quantity',
+        //    'UnitPrice': 'Unit Price'
+        //};
 
-        var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        if (errorMessage) {
-            ShowNotification(3, errorMessage);
-            return;
-        };
+        //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+        //if (errorMessage) {
+        //    ShowNotification(3, errorMessage);
+        //    return;
+        //};
 
         model.PaidAmount = model.PaidAmount.replace(/,/g, '');
         model.SubTotal = model.SubTotal.replace(/,/g, '');

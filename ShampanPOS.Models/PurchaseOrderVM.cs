@@ -21,9 +21,11 @@ namespace ShampanPOS.Models
 
         public string? BranchName { get; set; }
 
-        [Required]
         [Display(Name = "Supplier")]
+        [Required(ErrorMessage = "Supplier is required.")]
         public int? SupplierId { get; set; }
+
+        [Display(Name = "Supplier Name")]
         public string? SupplierName { get; set; }
 
         public string? SupplierAddress { get; set; }
@@ -36,6 +38,8 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Comments")]
         public string? Comments { get; set; }
+
+        [Display(Name = "Transaction Type")]
         public string? TransactionType { get; set; }
         public bool IsPost { get; set; }
         public string? PostBy { get; set; }
@@ -45,10 +49,18 @@ namespace ShampanPOS.Models
         public string? IsPosted { get; set; }
 
         public string? PeriodId { get; set; }
+
+        [Display(Name = "Created By")]
         public string? CreatedBy { get; set; }
+
+        [Display(Name = "Created On")]
         public string? CreatedOn { get; set; }
         public string? CreatedFrom { get; set; }
+
+        [Display(Name = "Last Modified By")]
         public string? LastModifiedBy { get; set; }
+
+        [Display(Name = "Last Modified On")]
         public string? LastModifiedOn { get; set; }
         public string? LastUpdateFrom { get; set; }
         public string?[] IDs { get; set; }

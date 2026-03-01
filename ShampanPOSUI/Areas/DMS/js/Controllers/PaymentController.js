@@ -71,8 +71,8 @@
         $('.btnsave').click(function (e) {
 
             e.preventDefault();
-
-            var form = $("#frmEntry");
+            
+            var form = $("#frmEntry"); 
             var $table = $('#details');
 
             var mvcValid = form.valid();
@@ -85,17 +85,17 @@
             var details = serializeTable($table);
 
             if (!details || details.length === 0) {
-                ShowNotification(3, "Please add at least one detail entry.");
+                ShowNotification(3, "Complete Details Entry.");
                 return false;
             }
-
             var requiredFields = ['PurchaseCode', 'PurchaseAmount', 'PaymentAmount'];
             var fieldMappings = {
                 'PurchaseCode': 'Purchase Code',
                 'PurchaseAmount': 'Purchase Amount',
                 'PaymentAmount': 'Payment Amount'
             };
-
+            
+            console.log(details);
             var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
 
             if (errorMessage) {
@@ -103,13 +103,20 @@
                 return false;
             }
 
-            var getId = $('#Id').val();
-            var status = parseInt(getId) > 0 ? "Update" : "Save";
+            //var getId = $('#Id').val();
+            //var status = parseInt(getId) > 0 ? "Update" : "Save";
 
-            Confirmation("Are you sure? Do You Want to " + status + " Data?",
+            //Confirmation("Are you sure? Do You Want to " + status + " Data?",
+            //    function (result) {
+            //        if (result) {
+            //            save($table);
+            //        }
+            //    });
+
+            Confirmation("Are you sure? Do You Want to Save Data?",
                 function (result) {
                     if (result) {
-                        save($table);
+                        save(details);   
                     }
                 });
 
@@ -822,12 +829,11 @@
     };
 
 
+    function save(details) {
 
-    function save($table) {
-        debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
-        debugger;
+
         var result = validator.form();
 
         if (!result) {
@@ -836,55 +842,76 @@
             return;
         }
 
-        if (model.IsPost == 'True') {
-            ShowNotification(2, "Post operation is already done, Do not update this entry");
-            return;
-        }
-        if (parseInt(model.SupplierId) == 0 || model.SupplierId == "") {
-            ShowNotification(3, "Supplier Required.");
-            return;
-        }
-
-
-        var isDropdownValid1 = CommonService.validateDropdown("#SupplierId", "#titleError1", "Supplier is required");
-
-        var isDropdownValid = isDropdownValid1;
-        if (!result || !isDropdownValid) {
-            if (!result) {
-                validator.focusInvalid();
-            }
-            return;
-        }
-
-        //var details = serializeTable($table);
-
-        //var requiredFields = ['PurchaseCode', 'PurchaseAmount', 'PaymentAmount'];
-        //var fieldMappings = {
-        //    'PurchaseCode': 'Purchase Code',
-        //    'PurchaseAmount': 'Purchase Amount',
-        //    'PaymentAmount': 'PaymentAmount'
-        //};
-
-        //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        //if (errorMessage) {
-        //    ShowNotification(3, errorMessage);
-        //    return;
-        //};
-
-        //if (item.ProductName === 0 || item.ProductName === undefined || item.ProductName === null || item.ProductName === "") {
-        //    ShowNotification(3, "Product Name is required.");
-        //    return;
-        //}
-
-
-        model.TotalPaymentAmount = model.TotalPaymentAmount.replace(/,/g, '');
-
         model.paymentDetailList = details;
 
         var url = "/DMS/Payment/CreateEdit";
 
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
-    };
+    }
+
+
+    //function save($table) {
+    //    debugger;
+    //    var validator = $("#frmEntry").validate();
+    //    var model = serializeInputs("frmEntry");
+    //    debugger;
+    //    var result = validator.form();
+
+    //    if (!result) {
+    //        validator.focusInvalid();
+    //        ShowNotification(3, "Complete Required Fields.");
+    //        return;
+    //    }
+
+    //    if (model.IsPost == 'True') {
+    //        ShowNotification(2, "Post operation is already done, Do not update this entry");
+    //        return;
+    //    }
+    //    if (parseInt(model.SupplierId) == 0 || model.SupplierId == "") {
+    //        ShowNotification(3, "Supplier Required.");
+    //        return;
+    //    }
+
+
+    //    var isDropdownValid1 = CommonService.validateDropdown("#SupplierId", "#titleError1", "Supplier is required");
+
+    //    var isDropdownValid = isDropdownValid1;
+    //    if (!result || !isDropdownValid) {
+    //        if (!result) {
+    //            validator.focusInvalid();
+    //        }
+    //        return;
+    //    }
+
+    //    //var details = serializeTable($table);
+
+    //    //var requiredFields = ['PurchaseCode', 'PurchaseAmount', 'PaymentAmount'];
+    //    //var fieldMappings = {
+    //    //    'PurchaseCode': 'Purchase Code',
+    //    //    'PurchaseAmount': 'Purchase Amount',
+    //    //    'PaymentAmount': 'PaymentAmount'
+    //    //};
+
+    //    //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+    //    //if (errorMessage) {
+    //    //    ShowNotification(3, errorMessage);
+    //    //    return;
+    //    //};
+
+    //    //if (item.ProductName === 0 || item.ProductName === undefined || item.ProductName === null || item.ProductName === "") {
+    //    //    ShowNotification(3, "Product Name is required.");
+    //    //    return;
+    //    //}
+
+
+    //    model.TotalPaymentAmount = model.TotalPaymentAmount.replace(/,/g, '');
+
+    //    model.paymentDetailList = details;
+
+    //    var url = "/DMS/Payment/CreateEdit";
+
+    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
+    //};
 
     function saveDone(result) {
 

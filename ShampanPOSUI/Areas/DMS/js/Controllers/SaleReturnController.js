@@ -15,7 +15,7 @@
             GetBranchList();
         };
 
-        getCustomerId = $("#CustomerId").val() || 0;
+        getCustomerId = $("#CustomerId").val();
         getSalePersonId = $("#SalePersonId").val() || 0;
         getDeliveryPersonId = $("#DeliveryPersonId").val() || 0;
         getDriverPersonId = $("#DriverPersonId").val() || 0;
@@ -50,7 +50,48 @@
         });
 
 
-        $('.btnsave').click('click', function () {
+        $('.btnsave').click(function (e) {
+            debugger;
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+            var $table = $('#details');
+
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
+            var model = serializeInputs("frmEntry");
+
+            if (parseInt(model.CustomerId) == 0 || model.CustomerId == "") {
+                ShowNotification(3, "Customer Is Required.");
+                return;
+            }
+
+            if (!hasLine($table)) {
+                ShowNotification(3, "Complete Details Entry");
+                return;
+            }
+
+            var details = serializeTable($table);
+
+            var requiredFields = ['ProductName', 'UOMName', 'Quantity', 'UnitRate'];
+            var fieldMappings = {
+                'ProductName': 'Product Name',
+                'UOMName': 'UOM Name',
+                'Quantity': 'Quantity',
+                'UnitRate': 'Unit Rate'
+            };
+
+            var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+            if (errorMessage) {
+                ShowNotification(3, errorMessage);
+                return;
+            }
+
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -184,19 +225,6 @@
 
         });
 
-        //$('#details').on('change', ".td-Quantity", function (event) {
-
-        //    var currentRow = $(this).closest('tr');
-
-        //    // Get quantity from input or text content
-        //    var quantity;
-        //    if (currentRow.find("td.td-Quantity input").length > 0) {
-        //        quantity = parseFloat(currentRow.find("td.td-Quantity input").val().replace(/,/g, '')) || 0;
-        //    } else {
-        //        quantity = parseFloat(currentRow.find("td.td-Quantity").text().replace(/,/g, '')) || 0;
-        //    }
-
-        //});
     };
     function GetBranchList() {
         var branch = new kendo.data.DataSource({
@@ -226,32 +254,6 @@
             suggest: true
         });
     };
-    function GetCustomerComboBox() {
-        var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "BanglaName", title: "BanglaName", width: 200 },
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name", "BanglaName"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetCustomerList"
-                }
-            },
-            placeholder: "Select Customer",
-            value: "",
-            dataBound: function (e) {
-                if (getCustomerId) {
-                    this.value(parseInt(getCustomerId));
-                }
-            }
-        }).data("kendoMultiColumnComboBox");
-    };
     //function GetCustomerComboBox() {
     //    var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
     //        dataTextField: "Name",
@@ -272,16 +274,53 @@
     //        placeholder: "Select Customer",
     //        value: "",
     //        dataBound: function (e) {
-                
     //            if (getCustomerId) {
     //                this.value(parseInt(getCustomerId));
     //            }
-    //        },
-    //        change: function (e) {
-                
     //        }
     //    }).data("kendoMultiColumnComboBox");
     //};
+
+    function GetCustomerComboBox() {
+
+        var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
+
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 },
+                { field: "BanglaName", title: "BanglaName", width: 200 },
+            ],
+
+            filter: "contains",
+            filterFields: ["Code", "Name", "BanglaName"],
+
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetCustomerList"
+                }
+            },
+
+            placeholder: "Select Customer",
+
+            autoBind: true,
+
+            dataBound: function () {
+
+                // ✅ If value is valid (>0), then set
+                if (getCustomerId && getCustomerId !== "0") {
+                    this.value(parseInt(getCustomerId));
+                } else {
+                    this.value("");   // 🔥 remove default 0
+                }
+            }
+
+        }).data("kendoMultiColumnComboBox");
+    }
+
 
     function GetSalePersonComboBox() {
         var SalePersonComboBox = $("#SalePersonId").kendoMultiColumnComboBox({
@@ -373,36 +412,7 @@
             }
         }).data("kendoMultiColumnComboBox");
     };
-    //function GetDeliveryComboBox() {
-    //    var DeliveryComboBox = $("#DeliveryPersonId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 }
 
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Sale/GetDeliveryList"
-    //            }
-    //        },
-    //        placeholder: "Select Delivery Person",
-    //        value: "",
-    //        dataBound: function (e) {
-                
-    //            if (getDeliveryPersonId) {
-    //                this.value(parseInt(getDeliveryPersonId));
-    //            }
-    //        },
-    //        change: function (e) {
-                
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
     function GetCurrencyComboBox() {
         var CurrencyComboBox = $("#CurrencyId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -596,28 +606,6 @@
         $("#GrandTotal").val(Number(parseFloat(LineTotal).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 }));
 
     };
-
-    //function productModalDblClick(row, originalRow) {
-
-    //    var dataTable = $("#modalData").DataTable();
-    //    var rowData = dataTable.row(row).data();
-
-    //    var ProductId = rowData.ProductId;
-    //    var ProductName = rowData.ProductName;
-    //    var UOMId = rowData.UOMId;
-    //    var UOMName = rowData.UOMName;
-
-    //    originalRow.closest("td").find("input").val(ProductName);
-    //    originalRow.closest('td').next().text(ProductId);
-    //    //originalRow.closest('td').next().next().text(UOMId);
-    //    //originalRow.closest('td').next().next().next().text(UOMName);
-    //    $("#UOMId").val(UOMId);
-
-    //    $("#partialModal").modal("hide");
-    //    originalRow.closest("td").find("input").data("touched", false);
-    //    originalRow.closest("td").find("input").focus();
-    //    $("#myModal1").modal("show");
-    //};
 
     function productModalDblClick(row, originalRow) {
         var dataTable = $("#modalData").DataTable();
@@ -1029,9 +1017,7 @@
                           title="Report">
                            <i class="fas fa-file-alt"></i>
                       </a> 
-                                `
-                    //        +
-                    //        "<a style='background-color: darkgreen;' href='#' onclick='ReportPreview(" + dataItem.Id + ")' class='btn btn-success btn-sm mr-2 edit ' title='Report Preview'><i class='fas fa-print'></i></a>";
+                          `
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
@@ -1105,26 +1091,21 @@
         
         var details = serializeTable($table);
 
-        var requiredFields = ['ProductGroupName', 'ProductName', 'Quantity', 'UnitRate', 'SubTotal'];
-        var fieldMappings = {
-            'ProductGroupName': 'Product Group Name',
-            'ProductName': 'Product Name',
-            //'UOMName': 'UOM Name',
-            'Quantity': 'Quantity',
-            'UnitRate': 'Unit Rate',
-            'SubTotal': 'SubTotal'
-        };
+        //var requiredFields = ['ProductGroupName', 'ProductName', 'Quantity', 'UnitRate', 'SubTotal'];
+        //var fieldMappings = {
+        //    'ProductGroupName': 'Product Group Name',
+        //    'ProductName': 'Product Name',
+        //    //'UOMName': 'UOM Name',
+        //    'Quantity': 'Quantity',
+        //    'UnitRate': 'Unit Rate',
+        //    'SubTotal': 'SubTotal'
+        //};
 
-        var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        if (errorMessage) {
-            ShowNotification(3, errorMessage);
-            return;
-        };
-
-
-        //model.GrandTotalAmount = model.GrandTotalAmount.replace(',', '').replace(',', '').replace(',', '');
-        //model.GrandTotalSDAmount = model.GrandTotalSDAmount.replace(',', '').replace(',', '').replace(',', '');
-        //model.GrandTotalVATAmount = model.GrandTotalVATAmount.replace(',', '').replace(',', '').replace(',', '');
+        //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+        //if (errorMessage) {
+        //    ShowNotification(3, errorMessage);
+        //    return;
+        //};
 
         model.saleReturnDetailList = details;
 
