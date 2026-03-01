@@ -45,28 +45,136 @@
         });
 
 
-        $('.btnsave').click('click', function (e) {
+        //$('.btnsave').click('click', function (e) {
+        //    e.preventDefault();
+
+        //    var form = $("#frmEntry");
+        //    var mvcValid = form.valid();
+        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+        //    debugger;
+        //    if (!mvcValid || !customValid) {
+        //        return false;
+        //    }
+        //    var getId = $('#Id').val();
+        //    var status = "Save";
+        //    if (parseInt(getId) > 0) {
+        //        status = "Update";
+        //    }
+        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
+        //        function (result) {
+        //            if (result) {
+        //                save($table);
+        //            }
+        //        });
+        //});
+
+
+
+
+        $('.btnsave').click(function (e) {
+
             e.preventDefault();
 
             var form = $("#frmEntry");
+            var $table = $('#details');
+
             var mvcValid = form.valid();
             var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
-            debugger;
+
             if (!mvcValid || !customValid) {
+                console.log("Master validation stopped.");
                 return false;
             }
-            var getId = $('#Id').val();
-            var status = "Save";
-            if (parseInt(getId) > 0) {
-                status = "Update";
+
+            var details = serializeTable($table);
+
+            if (!details || details.length === 0) {
+                ShowNotification(3, "Please add at least one detail entry.");
+                return false;
             }
-            Confirmation("Are you sure? Do You Want to " + status + " Data?",
+
+            //var errorMessage = getRequiredFieldsCheckObj(details,['SaleCode', 'SaleAmount', 'CollectionAmount'],
+            //    {
+            //        'SaleCode': 'Sale Code',
+            //        'SaleAmount': 'Sale Amount',
+            //        'CollectionAmount': 'Collection Amount'
+            //    });
+
+
+            var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
+            var fieldMappings = {
+                    'SaleCode': 'Sale Code',
+                    'SaleAmount': 'Sale Amount',
+                    'CollectionAmount': 'Collection Amount'
+            };
+
+            var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+
+            if (errorMessage) {
+                ShowNotification(3, errorMessage);
+                return false;
+            }
+
+            Confirmation("Are you sure?",
                 function (result) {
                     if (result) {
                         save($table);
                     }
                 });
+
         });
+
+
+
+
+
+        //$('.btnsave').click(function (e) {
+        //    debugger;
+        //    e.preventDefault();
+
+        //    var form = $("#frmEntry");
+        //    var $table = $('#details');
+
+        //    var mvcValid = form.valid();
+        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+        //    if (!mvcValid || !customValid) {
+        //        return false;
+        //    }
+
+        //    var details = serializeTable($table);
+
+        //    if (!details || details.length === 0) {
+        //        ShowNotification(3, "Please add at least one detail entry.");
+        //        return false;
+        //    }
+
+        //    var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
+        //    var fieldMappings = {
+        //        'SaleCode': 'Sale Code',
+        //        'SaleAmount': 'Sale Amount',
+        //        'CollectionAmount': 'Collection Amount'
+        //    };
+
+        //    var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+
+        //    if (errorMessage) {
+        //        ShowNotification(3, errorMessage);
+        //        return false;
+        //    }
+
+        //    var getId = $('#Id').val();
+        //    var status = parseInt(getId) > 0 ? "Update" : "Save";
+
+        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
+        //        function (result) {
+        //            if (result) {
+        //                save($table);
+        //            }
+        //        });
+
+        //});
+
 
         $('#btnComplete').on('click', function () {
 
@@ -849,7 +957,7 @@
     };
 
     function save($table) {
-       
+        debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
         debugger;
@@ -870,16 +978,9 @@
             return;
         }
 
-        if (hasInputFieldInTableCells($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
-        if (!hasLine($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
 
-        var isDropdownValid1 = CommonService.validateDropdown("#SupplierId", "#titleError1", "Supplier is required");
+
+        var isDropdownValid1 = CommonService.validateDropdown("#CustomerId", "#titleError1", "Customer is required");
 
         var isDropdownValid = isDropdownValid1;
         if (!result || !isDropdownValid) {
@@ -889,20 +990,20 @@
             return;
         }
 
-        var details = serializeTable($table);
+        //var details = serializeTable($table);
 
-        var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
-        var fieldMappings = {
-            'ProductName': 'Product Name',
-            'Quantity': 'Quantity',
-            'UnitPrice': 'Unit Price'
-        };
+        //var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
+        //var fieldMappings = {
+        //    'SaleCode': 'Sale Code',
+        //    'SaleAmount': 'Sale Amount',
+        //    'CollectionAmount': 'Collection Amount'
+        //};
 
-        var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        if (errorMessage) {
-            ShowNotification(3, errorMessage);
-            return;
-        };
+        //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+        //if (errorMessage) {
+        //    ShowNotification(3, errorMessage);
+        //    return;
+        //};
 
 
 

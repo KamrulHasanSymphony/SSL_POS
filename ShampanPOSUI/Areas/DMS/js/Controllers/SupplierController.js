@@ -9,7 +9,21 @@
             GetGridDataList();
         }
         GetSupplierGroupComboBox();
-        $('.btnsave').click('click', function () {
+
+        $('.btnsave').on('click', function (e) {
+            debugger;
+
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+
+            var mvcValid = form.valid();
+
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
             
             var getId = $('#Id').val();
             var status = "Save";
@@ -541,32 +555,6 @@
                 formData.append("ImagePath", existingImagePath);
             }
         }
-
-        //// Check if delete button was clicked to remove image
-        //var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-        //if (deleteImageClicked) {
-        //    formData.append("ImagePath", "");  // Mark image for deletion
-        //    $("#imagePreview").remove();
-        //    $("#ImagePath").val("");
-        //}
-
-        //var fileInput = document.getElementById("imageUpload");
-        //if (fileInput.files.length > 0) {
-        //    var file = fileInput.files[0];
-
-        //    // ✅ Validate file size (Max 25MB)
-        //    if (file.size > 26214400) { // 25MB in bytes
-        //        ShowNotification(3, "Image size cannot exceed 25MB.");
-        //        return;
-        //    }
-
-        //    formData.append("file", file);
-        //} else if (!deleteImageClicked) {
-        //    var existingImagePath = $("#ImagePath").val();
-        //    if (existingImagePath) {
-        //        formData.append("ImagePath", existingImagePath);
-        //    }
-        //}
 
         var url = "/DMS/Supplier/CreateEdit";
 

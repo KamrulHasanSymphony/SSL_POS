@@ -66,7 +66,7 @@ namespace ShampanPOS.Models
             public string? Comments { get; set; }
 
             [Required(ErrorMessage = "Total Collect Amount is required.")]
-            [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero.")]
+            //[Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero.")]
             [Display(Name = "Total Collect Amount")]
             public decimal TotalCollectAmount { get; set; }
 

@@ -13,16 +13,22 @@ namespace ShampanPOS.Models
         public int Id { get; set; }
 
         public int? CompanyId { get; set; }
-        [Display(Name = "Code(Auto Generate)")]
+
+        [Display(Name = "Code (Auto Generate)")]
+        [StringLength(50, ErrorMessage = "Code cannot exceed 50 characters.")]
         public string? Code { get; set; }
         public string? MasterItemCode { get; set; }
 
         public string? MasterSupplierGroupCode { get; set; }
         public string? MasterSupplierGroupDescription { get; set; }
+
+        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
+        [Display(Name = "Description")]
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Name is required.")]
         [Display(Name = "Name")]
+        [StringLength(150, ErrorMessage = "Name cannot exceed 150 characters.")]
         public string? Name { get; set; }
 
         [Display(Name = "Supplier Group")]
@@ -34,27 +40,40 @@ namespace ShampanPOS.Models
         public string? MasterItemGroupName { get; set; }
         public string? MasterItemGroupCode { get; set; }
         public int? MasterProductId { get; set; }
+
+        [StringLength(100, ErrorMessage = "Group Name cannot exceed 100 characters.")]
+        [Display(Name = "Group Name")]
         public string? GroupName { get; set; }
+
+        [Required(ErrorMessage = "Master Supplier Group is required.")]
+
         [Display(Name = "Master Supplier Group")]
         public int? MasterSupplierGroupId { get; set; }
         public string? MasterSupplierGroupName { get; set; }
+
+        [StringLength(150, ErrorMessage = "Bangla Name cannot exceed 150 characters.")]
         [Display(Name = "Bangla Name")]
         public string? BanglaName { get; set; }
 
+        [Required(ErrorMessage = "Address is required.")]
         [Display(Name = "Address")]
+        [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters.")]
         public string? Address { get; set; }
 
+        [StringLength(50, ErrorMessage = "City cannot exceed 50 characters.")]
         [Display(Name = "City")]
         public string? City { get; set; }
 
         [Display(Name = "Telephone No.")]
-        
+        [StringLength(50, ErrorMessage = "Telephone No. cannot exceed 50 characters.")]
         public string? TelephoneNo { get; set; }
 
+        [StringLength(50, ErrorMessage = "Email cannot exceed 50 characters.")]
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
         [Display(Name = "Email")]
 
         public string? Email { get; set; }
-
+        [StringLength(100, ErrorMessage = "Contact Person cannot exceed 100 characters.")]
         [Display(Name = "Contact Person")]
         public string? ContactPerson { get; set; }
 

@@ -134,7 +134,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.Name)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Product Name", @class = "  form-control form-control-sm " })
+                                        @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Product Name", @class = " required form-control form-control-sm " })
                                     </div>
                                     @Html.ValidationMessageFor(model => model.Name)
                                 </div>
@@ -149,7 +149,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.MasterItemGroupId)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.MasterItemGroupId, new { placeholder = " Enter Product GroupId", @class = "  form-control form-control-sm " })
+                                        @Html.TextBoxFor(model => model.MasterItemGroupId, new { placeholder = " Enter Product GroupId", @class = " required form-control form-control-sm " })
                                     </div>
                                     <span id="titleError1" class="text-danger" style="display:none;"></span>
                                 </div>
@@ -157,7 +157,7 @@
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.UOMId)
                                     <div class="input-group ">
-                                        @Html.TextBoxFor(model => model.UOMId, new { placeholder = " Enter UOMId", @class = "  form-control form-control-sm " })
+                                        @Html.TextBoxFor(model => model.UOMId, new { placeholder = " Enter UOMId", @class = " required form-control form-control-sm " })
                                     </div>
                                     <span id="titleError2" class="text-danger" style="display:none;"></span>
                                 </div>
@@ -381,6 +381,7 @@
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
     <script src="~/Areas/DMS/js/Controllers/MasterItemController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
         $(document).ready(function () {

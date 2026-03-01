@@ -69,7 +69,7 @@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.Name)
-                        @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Name.", @class = "form-control form-control-sm" })
+                        @Html.TextBoxFor(model => model.Name, new { placeholder = "Enter Supplier Name.", @class = "required form-control form-control-sm" })
                         @Html.ValidationMessageFor(model => model.Name)
                     </div>
 
@@ -77,14 +77,21 @@
                         @Html.LabelFor(model => model.BanglaName)
                         @Html.TextBoxFor(model => model.BanglaName, new { placeholder = "Enter Bangla Name", @class = "form-control form-control-sm" })
                     </div>
-
-
+  
+                   @*<div class="col-sm-2">
+                        @Html.LabelFor(model => model.SupplierGroupId)
+                        @Html.TextBoxFor(model => model.SupplierGroupId, new { placeholder = "Enter Supplier GroupId", @class = " required form-control form-control-sm" })
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>*@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.SupplierGroupId)
-                        @Html.TextBoxFor(model => model.SupplierGroupId, new { placeholder = "Enter Supplier GroupId", @class = "form-control form-control-sm" })
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.SupplierGroupId, new { placeholder = " Enter Supplier GroupId", @class = " required form-control form-control-sm " })
+                        </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.City)
                         @Html.TextBoxFor(model => model.City, new { placeholder = "Enter City", @class = "form-control form-control-sm" })
@@ -92,7 +99,7 @@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.TelephoneNo)
-                        @Html.TextBoxFor(model => model.TelephoneNo, new { placeholder = "Enter Telephone Number", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
+                        @Html.TextBoxFor(model => model.TelephoneNo, new { placeholder = "Enter Telephone Number", @class = "required form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
                         @Html.ValidationMessageFor(model => model.TelephoneNo)
                     </div>
 

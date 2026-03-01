@@ -47,7 +47,7 @@ namespace ShampanPOS.Models
             public string? Reference { get; set; }
 
             [Required(ErrorMessage = "Total Payment Amount is required.")]
-            [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero.")]
+            //[Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero.")]
             [Display(Name = "Total Payment Amount")]
             public decimal? TotalPaymentAmount { get; set; }
 
