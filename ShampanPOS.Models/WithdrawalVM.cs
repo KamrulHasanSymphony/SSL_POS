@@ -98,8 +98,6 @@ namespace ShampanPOS.Models
         [Display(Name = "To Bank Account")]
         public int? ToBankAccountId { get; set; }
 
-        public int ToBankAccountId { get; set; }
-
         [Display(Name = "Cheque No")]
         public string? ChequeNo { get; set; }
 
