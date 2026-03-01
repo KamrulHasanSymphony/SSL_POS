@@ -19,7 +19,14 @@ namespace ShampanPOS.Models
         [Display(Name = "Master Supplier")]
         public int? MasterSupplierId { get; set; }
         public string? SupplierName { get; set; }
-  
+        public string? SupplierCode { get; set; }
+        public string? SupplierEmail { get; set; }
+        public string? SupplierTelephoneNo { get; set; }
+        public string? SupplierCity { get; set; }
+
+
+
+
         [Display(Name = "Product")]
         public int ProductId { get; set; }
 

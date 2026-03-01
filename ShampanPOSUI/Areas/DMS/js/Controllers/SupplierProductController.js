@@ -158,6 +158,16 @@
         debugger;
         $("#departments").kendoGrid({
             autoBind: false,
+            toolbar: ["search"],
+            search: {
+                fields: [
+                    { name: "Code", operator: "contains" },
+                    { name: "Name", operator: "contains" },
+                    { name: "HSCodeNo", operator: "contains" },
+                    { name: "VATRate", operator: "contains" },
+                    { name: "SDRate", operator: "contains" }
+                ]
+            },
             dataSource: {
                 transport: {
                     read: {
@@ -369,6 +379,18 @@
                             if (param.field === "SupplierName") {
                                 param.field = "s.Name";
                             }
+                            if (param.field === "SupplierCode") {
+                                param.field = "s.Code";
+                            }
+                            if (param.field === "SupplierEmail") {
+                                param.field = "s.Email";
+                            }
+                            if (param.field === "SupplierTelephoneNo") {
+                                param.field = "s.TelephoneNo";
+                            }
+                            if (param.field === "SupplierCity") {
+                                param.field = "s.City";
+                            }
                             //if (param.field === "ProductName") {
                             //    param.field = "p.Name";
                             //}
@@ -398,6 +420,18 @@
 
                             if (param.field === "SupplierName") {
                                 param.field = "s.Name";
+                            }
+                            if (param.field === "SupplierCode") {
+                                param.field = "s.Code";
+                            }
+                            if (param.field === "SupplierEmail") {
+                                param.field = "s.Email";
+                            }
+                            if (param.field === "SupplierTelephoneNo") {
+                                param.field = "s.TelephoneNo";
+                            }
+                            if (param.field === "SupplierCity") {
+                                param.field = "s.City";
                             }
                             //if (param.field === "ProductName") {
                             //    param.field = "p.Name";
@@ -542,7 +576,7 @@
                 //},
                 {
                     title: "Action",
-                    width: 10,
+                    width: 40,
                     template: function (dataItem) {
                         return `
             <a href="/DMS/SupplierProduct/Edit/${dataItem.SupplierId}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
@@ -551,7 +585,11 @@
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
-                { field: "SupplierName", title: "Supplier Name", sortable: true,  width: 200 },
+                { field: "SupplierCode", title: "Code", sortable: true,  width: 200 },
+                { field: "SupplierName", title: "Name", sortable: true, width: 200 },
+                { field: "SupplierEmail", title: "Email", sortable: true, width: 200 },
+                { field: "SupplierTelephoneNo", title: "Telephone No", sortable: true, width: 200 },
+                { field: "SupplierCity", title: "City", sortable: true, width: 200 },
                 //{ field: "ProductName", title: "Product Name", sortable: true, width: 200 },
 
                 {
