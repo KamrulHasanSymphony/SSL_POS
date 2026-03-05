@@ -20,8 +20,50 @@
             InitAddedItemGrid();
         };
 
-        $('.btnsave').off('click').on('click', function (e) {
+        //$('.btnsave').off('click').on('click', function (e) {
+        //    e.preventDefault();
+
+        //    var btn = $(this);
+        //    btn.prop("disabled", true);
+
+        //    Confirmation("Are you sure?", function (result) {
+        //        if (result) {
+        //            save();
+        //        } else {
+        //            btn.prop("disabled", false);
+        //        }
+        //    });
+        //});
+
+
+        $('.btnsave').click(function (e) {
+            debugger;
             e.preventDefault();
+
+            var form = $("#frmEntry");
+            var $table = $('#details');
+
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
+            // 🔥 MasterItemGroup Required Check
+            var itemGroupId = $("#ProductGroupId").data("kendoMultiColumnComboBox").value();
+
+            if (!itemGroupId || parseInt(itemGroupId) === 0) {
+                ShowNotification(3, "Product Group is required.");
+                return;
+            }
+
+            // 🔥 Detail Grid Check
+            var grid = $("#AddedItemGrid").data("kendoGrid");
+            if (!grid || grid.dataSource.data().length === 0) {
+                ShowNotification(3, "Add at least one detail.");
+                return;
+            }
 
             var btn = $(this);
             btn.prop("disabled", true);
@@ -34,6 +76,7 @@
                 }
             });
         });
+
 
 
 
@@ -97,13 +140,26 @@
 
         }).data("kendoMultiColumnComboBox");
 
-
-        // 🔥 force load data
         SupplierComboBox.dataSource.read().then(function () {
 
             if (getSupplierId && parseInt(getSupplierId) > 0) {
+
                 SupplierComboBox.value(parseInt(getSupplierId));
+
+            } else {
+
+                // ✅ Ensure blank (no default 0)
+                SupplierComboBox.value("");
+                SupplierComboBox.text("");
+                getSupplierId = 0;
             }
+
+
+        //SupplierComboBox.dataSource.read().then(function () {
+
+        //    if (getSupplierId && parseInt(getSupplierId) > 0) {
+        //        SupplierComboBox.value(parseInt(getSupplierId));
+        //    }
 
         });
     }

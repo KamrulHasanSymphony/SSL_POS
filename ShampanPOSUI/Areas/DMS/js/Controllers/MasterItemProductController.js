@@ -23,20 +23,60 @@
         };
 
 
+        //$('.btnsave').off('click').on('click', function (e) {
+        //    e.preventDefault();
+
+        //    var btn = $(this);
+        //    btn.prop("disabled", true);
+
+        //    Confirmation("Are you sure?", function (result) {
+        //        if (result) {
+        //            save();
+        //        } else {
+        //            btn.prop("disabled", false);
+        //        }
+        //    });
+        //});
+
+
         $('.btnsave').off('click').on('click', function (e) {
             e.preventDefault();
 
             var btn = $(this);
-            btn.prop("disabled", true);
 
-            Confirmation("Are you sure?", function (result) {
+            // 🔥 First Validate Form
+            var validator = $("#frmEntry").validate();
+            var result = validator.form();
+
+            if (!result) {
+                validator.focusInvalid();
+                return;   
+            }
+
+            // 🔥 MasterItemGroup Required Check
+            var masterItemGroupId = $("#MasterItemGroupId").data("kendoMultiColumnComboBox").value();
+
+            if (!masterItemGroupId || parseInt(masterItemGroupId) === 0) {
+                ShowNotification(3, "Product Group is required.");
+                return;
+            }
+
+            // 🔥 Detail Grid Check
+            var grid = $("#AddedItemGrid").data("kendoGrid");
+            if (!grid || grid.dataSource.data().length === 0) {
+                ShowNotification(3, "Add at least one detail.");
+                return;
+            }
+
+            // ✅ Only if everything valid → Show Confirmation
+            Confirmation("Are you sure you want to save?", function (result) {
                 if (result) {
+                    btn.prop("disabled", true);
                     save();
-                } else {
-                    btn.prop("disabled", false);
                 }
             });
         });
+
 
 
 
@@ -122,27 +162,6 @@
             },
             placeholder: "Select Product Group",
 
-            //change: function () {
-            //    var combo = this;
-            //    var dataItem = combo.dataItem();
-            //    var groupId = this.value();
-            //    var grid = $("#departments").data("kendoGrid");
-
-            //    if (!groupId || groupId < 1) {
-            //        currentMasterItemGroupId = 0;
-            //        if (grid) grid.dataSource.data([]);
-            //        return;
-            //    }
-
-            //    $("#MasterItemGroupName").val(dataItem.Name);
-            //    $("#Description").val(dataItem.Description);
-            //    $("#Code").val(dataItem.Code);
-
-
-            //    currentMasterItemGroupId = groupId;
-            //    grid.dataSource.read();
-            //}
-
             change: function () {
                 var dataItem = this.dataItem();
                 var groupId = this.value();
@@ -224,25 +243,6 @@
                     </button>`
                 }
             ],
-            //dataBound: function () {
-            //    $(".addToDetails").off().on("click", function (e) {
-            //        e.preventDefault(); // 🔥 stop form submit
-            //        Addtolist({
-            //            Id: $(this).data("id"),
-            //            Code: $(this).data("code"),
-            //            Name: $(this).data("name"),
-            //            BanglaName: $(this).data("bangla-name"),
-            //            Description: $(this).data("description"),
-            //            UOMId: $(this).data("uom-id"),
-            //            HSCodeNo: $(this).data("hs-code"),
-            //            VATRate: $(this).data("vat-rate"),
-            //            SDRate: $(this).data("sd-rate"),
-            //            MasterItemGroupName: $("#MasterItemGroupName").val() || '',
-            //            MasterItemGroupDescription: $("#MasterItemGroupDescription").val() || '',
-            //            MasterItemGroupCode: $("#MasterItemGroupCode").val() || ''
-            //        });
-            //    });
-            //}
 
             dataBound: function () {
                 $("#departments")
@@ -388,31 +388,98 @@
 
 
 
+    //function save() {
+    //    var validator = $("#frmEntry").validate();
+    //    var formData = new FormData();
+    //    var model = serializeInputs("frmEntry");
+
+    //    var result = validator.form();
+
+    //    if (!result) {
+    //        validator.focusInvalid();
+    //        return;
+    //    }
+
+    //    for (var key in model) {
+    //        formData.append(key, model[key]);
+    //    }
+
+    //    var department = model.DepartmentId;
+
+    //    var grid = $("#AddedItemGrid").data("kendoGrid");
+    //    var details = [];
+
+
+
+    //    if (grid) {
+    //        var dataItems = grid.dataSource.view();
+
+    //        for (var i = 0; i < dataItems.length; i++) {
+    //            var item = dataItems[i];
+
+    //            details.push({
+    //                Id: item.Id,
+    //                Code: item.Code,
+    //                Name: item.Name,
+    //                BanglaName: item.BanglaName,
+    //                UOMId: item.UOMId,
+    //                VATRate: item.VATRate,
+    //                HSCodeNo: item.HSCodeNo,
+    //                SDRate: item.SDRate,
+    //                Description: item.Description,
+    //                MasterItemGroupDescription: item.MasterItemGroupDescription,
+    //                MasterItemGroupCode: item.MasterItemGroupCode,
+    //                MasterItemGroupName: item.MasterItemGroupName,
+    //                MasterItemGroupId: item.MasterItemGroupId
+    //            });
+    //        }
+    //    }
+
+    //    if (details.length === 0) {
+    //        ShowNotification(3, "At least one detail entry is required.");
+    //        return;
+    //    }
+
+    //    model.MasterItemList = details;
+
+    //    debugger;
+
+
+    //    var url = "/DMS/MasterItemProduct/CreateEdit";
+    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
+    //}
+
+
+
+
     function save() {
+
         var validator = $("#frmEntry").validate();
-        var formData = new FormData();
         var model = serializeInputs("frmEntry");
 
         var result = validator.form();
 
         if (!result) {
             validator.focusInvalid();
+            $(".btnsave").prop("disabled", false);
             return;
         }
 
-        for (var key in model) {
-            formData.append(key, model[key]);
-        }
+        var masterItemGroupId = $("#MasterItemGroupId")
+            .data("kendoMultiColumnComboBox")
+            .value();
 
-        var department = model.DepartmentId;
+        if (!masterItemGroupId || parseInt(masterItemGroupId) === 0) {
+            ShowNotification(3, "Product Group is required.");
+            $(".btnsave").prop("disabled", false);
+            return;
+        }
 
         var grid = $("#AddedItemGrid").data("kendoGrid");
         var details = [];
 
-
-
         if (grid) {
-            var dataItems = grid.dataSource.view();
+            var dataItems = grid.dataSource.data(); // better than view()
 
             for (var i = 0; i < dataItems.length; i++) {
                 var item = dataItems[i];
@@ -437,17 +504,16 @@
 
         if (details.length === 0) {
             ShowNotification(3, "At least one detail entry is required.");
+            $(".btnsave").prop("disabled", false);
             return;
         }
 
         model.MasterItemList = details;
 
-        debugger;
-
-
         var url = "/DMS/MasterItemProduct/CreateEdit";
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
+
 
 
 
@@ -478,41 +544,6 @@
     }
 
 
-
-
-
-
-
-
-    //function saveDone(result) {
-        
-    //    if (result.Status == 200) {
-    //        if (result.Data.Operation == "add") {
-    //            ShowNotification(1, result.Message);
-    //            $(".divSave").show();
-    //            $(".divUpdate").hide();
-    //            $("#Code").val(result.Data.Code);
-    //            $("#Id").val(result.Data.Id);
-    //            $("#Operation").val("update");
-    //            $("#CreatedBy").val(result.Data.CreatedBy);
-    //            $("#CreatedOn").val(result.Data.CreatedOn);
-
-    //        }
-    //        else {
-    //            ShowNotification(1, result.Message);
-    //            $("#LastModifiedBy").val(result.Data.LastModifiedBy);
-    //            $("#LastModifiedOn").val(result.Data.LastModifiedOn);
-      
-    //        }
-
-    //    }
-    //    else if (result.Status == 400) {
-    //        ShowNotification(3, result.Message);
-    //    }
-    //    else {
-    //        ShowNotification(2, result.Message);
-    //    }
-    //};
 
     function saveFail(result) {
         

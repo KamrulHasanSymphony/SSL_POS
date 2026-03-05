@@ -12,6 +12,7 @@ namespace ShampanPOS.Models
         public int Id { get; set; }
 
         [Display(Name = "Supplier")]
+        [Required(ErrorMessage = "Supplier is required")]
         public int? MasterSupplierId { get; set; }
         public string? UserId { get; set; }
 

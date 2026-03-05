@@ -37,6 +37,19 @@ namespace ShampanPOS.Models
         public string? SaleOrderCode { get; set; }
 
         public decimal SubTotal { get; set; }
+
+        public decimal? RoundUp { get; set; }
+
+        [Display(Name = "Final Payable")]
+        public decimal? FinalPayable { get; set; }
+
+        public decimal? AdvancePayment { get; set; }
+        public decimal? Payment { get; set; }
+
+
+        [Display(Name = "Dues Amount")]
+        public decimal? Dues { get; set; }
+
         public decimal TotalSD { get; set; }
         public decimal TotalVAT { get; set; }
         public decimal GrandTotal { get; set; }
@@ -106,10 +119,12 @@ namespace ShampanPOS.Models
         public string? CompanyName { get; set; }
 
         public List<SaleDetailVM> saleDetailsList { get; set; }
-
+        public List<SaleCreditCardVM> SaleCreditCardList { get; set; }
         public SaleVM()
         {
             saleDetailsList = new List<SaleDetailVM>();
+            SaleCreditCardList = new List<SaleCreditCardVM>();
+
         }
     }
 

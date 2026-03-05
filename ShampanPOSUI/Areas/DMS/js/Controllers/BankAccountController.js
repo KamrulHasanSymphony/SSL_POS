@@ -74,7 +74,7 @@
                 gridElement.empty();
             }
 
-            GetGridDataList();
+            //GetGridDataList();
 
         });
 
@@ -209,12 +209,11 @@
                                 param.field = "H.Code";
                             }
                             if (param.field === "AccountNo") {
-                                param.field = "H.AccountNo";
+                                param.field = "H.AccountNo";  
                             }
                             if (param.field === "AccountName") {
                                 param.field = "H.AccountName";
                             }
-
                             if (param.field === "BankId") {
                                 param.field = "H.BankId";
                             }
@@ -269,7 +268,6 @@
                             if (param.field === "AccountName") {
                                 param.field = "H.AccountName";
                             }
-
                             if (param.field === "BankId") {
                                 param.field = "H.BankId";
                             }
@@ -437,7 +435,7 @@
                     title: "Action",
                     width: 170,
                     template: function (dataItem) {
-
+                        console.log(dataItem);
                         return `
             <a href="/DMS/BankAccount/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
                 <i class="fas fa-pencil-alt"></i>
@@ -448,8 +446,8 @@
                 { field: "AccountName", title: "Account Name", sortable: true, width: 200 },
          
                 { field: "AccountNo", title: "Account No.", sortable: true, width: 200 },
-                { field: "BankId", title: "Bank", width: 50,  sortable: true },
-                { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
+                { field: "BankId", title: "Bank", width: 150,  sortable: true },
+                { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
               
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },
                 {
@@ -600,7 +598,7 @@
         }
     };
 
-    function fail(err) {
+    function fail(err) { 
 
 
         ShowNotification(3, "Something gone wrong");

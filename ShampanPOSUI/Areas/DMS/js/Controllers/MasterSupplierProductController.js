@@ -21,20 +21,18 @@
 
 
         //$('.btnsave').off('click').on('click', function (e) {
-        //    debugger;
-        //    e.preventDefault();   // 🔥 very important
+        //    e.preventDefault();
 
-        //    var getId = $('#Id').val();
-        //    var status = parseInt(getId) > 0 ? "Update" : "Save";
+        //    var btn = $(this);
+        //    btn.prop("disabled", true);
 
-        //    Confirmation(
-        //        "Are you sure? Do You Want to " + status + " Data?",
-        //        function (result) {
-        //            if (result) {
-        //                save();
-        //            }
+        //    Confirmation("Are you sure?", function (result) {
+        //        if (result) {
+        //            save();
+        //        } else {
+        //            btn.prop("disabled", false);
         //        }
-        //    );
+        //    });
         //});
 
 
@@ -42,16 +40,43 @@
             e.preventDefault();
 
             var btn = $(this);
-            btn.prop("disabled", true);
 
-            Confirmation("Are you sure?", function (result) {
+            // 🔥 First Validate Form
+            var validator = $("#frmEntry").validate();
+            var result = validator.form();
+
+            if (!result) {
+                validator.focusInvalid();
+                return;
+            }
+
+            // 🔥 MasterItemGroup Required Check
+            var masterSupplierGroupId = $("#MasterSupplierGroupId").data("kendoMultiColumnComboBox").value();
+
+            if (!masterSupplierGroupId || parseInt(masterSupplierGroupId) === 0) {
+                ShowNotification(3, "Supplier Group is required.");
+                return;
+            }
+
+            // 🔥 Detail Grid Check
+            var grid = $("#AddedItemGrid").data("kendoGrid");
+            if (!grid || grid.dataSource.data().length === 0) {
+                ShowNotification(3, "Add at least one detail.");
+                return;
+            }
+
+            // ✅ Only if everything valid → Show Confirmation
+            Confirmation("Are you sure you want to save?", function (result) {
                 if (result) {
+                    btn.prop("disabled", true);
                     save();
-                } else {
-                    btn.prop("disabled", false);
                 }
             });
         });
+
+
+
+
 
 
         $('.btnDelete').on('click', function () {
@@ -129,31 +154,6 @@
                 }
             },
             placeholder: "Select Product Group",
-
-            //change: function () {
-            //    var combo = this;
-            //    var dataItem = combo.dataItem();
-            //    var groupId = this.value();
-            //    var grid = $("#departments").data("kendoGrid");
-
-            //    // If no group selected or invalid group ID, reset values
-            //    if (!groupId || groupId < 1) {
-            //        currentMasterSupplierGroupId = 0;
-            //        if (grid) grid.dataSource.data([]);
-            //        return;
-            //    }
-
-            //    // Set the values in corresponding fields
-            //   // $("#Address").val(dataItem.Address);
-            //    $("#MasterSupplierGroupName").val(dataItem.Name);
-            //    $("#Description").val(dataItem.Description);
-            //    $("#Code").val(dataItem.Code);
-
-            //    currentMasterSupplierGroupId = groupId;
-
-            //    // Reload grid data after change
-            //    grid.dataSource.read();
-            //}
 
             change: function () {
                 var dataItem = this.dataItem();
@@ -244,27 +244,6 @@
             </button>`
                 }
             ],
-            //dataBound: function () {
-            //    $(".addToDetails").off().on("click", function (e) {
-            //        e.preventDefault(); // stop form submit
-            //        Addtolist({
-            //            Id: $(this).data("id"),
-            //            Code: $(this).data("code"),
-            //            Name: $(this).data("name"),
-            //            BanglaName: $(this).data("banglaName"),         
-            //            Address: $(this).data("address"),
-            //            City: $(this).data("city"),
-            //            TelephoneNo: $(this).data("telephoneNo"),     
-            //            Email: $(this).data("email"),
-            //            ContactPerson: $(this).data("contactPerson"),   
-            //            Description: $(this).data("description"),   
-            //            MasterSupplierGroupName: $("#MasterSupplierGroupName").val() || '',
-            //            MasterSupplierGroupDescription: $("#MasterSupplierGroupDescription").val() || '',
-            //            MasterSupplierGroupCode: $("#MasterSupplierGroupCode").val() || ''
-            //        });
-            //    });
-            //}
-
 
             dataBound: function () {
                 $("#departments")
@@ -402,47 +381,113 @@
     }
 
 
+    //function save() {
+    //    debugger;
+    //    var validator = $("#frmEntry").validate();
+    //    var formData = new FormData();
+    //    var model = serializeInputs("frmEntry");
+
+    //    var result = validator.form();
+
+    //    if (!result) {
+    //        validator.focusInvalid();
+    //        return;
+    //    }
+
+    //    // Append form data to FormData object
+    //    for (var key in model) {
+    //        formData.append(key, model[key]);
+    //    }
+
+    //    var grid = $("#AddedItemGrid").data("kendoGrid");
+    //    var details = [];
+
+    //    if (grid) {
+    //        var dataItems = grid.dataSource.view();
+
+    //        // Loop through the grid items and push them to the details array
+    //        for (var i = 0; i < dataItems.length; i++) {
+    //            var item = dataItems[i];
+
+    //            details.push({
+    //                Id: item.Id,
+    //                Code: item.Code,
+    //                Name: item.Name,
+    //                BanglaName: item.BanglaName,
+    //                Address: item.Address,
+    //                City: item.City,
+    //                TelephoneNo: item.TelephoneNo,
+    //                Email: item.Email,
+    //                ContactPerson: item.ContactPerson,
+    //                Description: item.Description,
+    //                MasterSupplierGroupName: item.MasterSupplierGroupName,
+    //                MasterSupplierGroupId: item.MasterSupplierGroupId,
+    //                MasterSupplierGroupDescription: item.MasterSupplierGroupDescription,
+    //                MasterSupplierGroupCode: item.MasterSupplierGroupCode
+    //            });
+    //        }
+    //    }
+
+    //    if (details.length === 0) {
+    //        ShowNotification(3, "At least one detail entry is required.");
+    //        return;
+    //    }
+
+    //    model.MasterSupplierList = details;
+
+    //    debugger;
+
+    //    // Send the data to the server
+    //    var url = "/DMS/MasterSupplierProduct/CreateEdit";
+    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
+    //}
+
+
 
     function save() {
-        debugger;
+
         var validator = $("#frmEntry").validate();
-        var formData = new FormData();
         var model = serializeInputs("frmEntry");
 
         var result = validator.form();
 
         if (!result) {
             validator.focusInvalid();
+            $(".btnsave").prop("disabled", false);
             return;
         }
 
-        // Append form data to FormData object
-        for (var key in model) {
-            formData.append(key, model[key]);
+        var masterSupplierGroupId = $("#MasterSupplierGroupId")
+            .data("kendoMultiColumnComboBox")
+            .value();
+
+        if (!masterSupplierGroupId || parseInt(masterSupplierGroupId) === 0) {
+            ShowNotification(3, "Supplier Group is required.");
+            $(".btnsave").prop("disabled", false);
+            return;
         }
 
         var grid = $("#AddedItemGrid").data("kendoGrid");
         var details = [];
 
         if (grid) {
-            var dataItems = grid.dataSource.view();
+            var dataItems = grid.dataSource.data(); // better than view()
 
-            // Loop through the grid items and push them to the details array
             for (var i = 0; i < dataItems.length; i++) {
                 var item = dataItems[i];
 
                 details.push({
-                    Id: item.Id,                         
-                    Code: item.Code,                     
-                    Name: item.Name,                     
-                    BanglaName: item.BanglaName,        
-                    Address: item.Address,                
-                    City: item.City,                     
-                    TelephoneNo: item.TelephoneNo,        
-                    Email: item.Email,                    
-                    ContactPerson: item.ContactPerson,   
-                    Description: item.Description,   
-                    MasterSupplierGroupName: item.MasterSupplierGroupName, 
+                    Id: item.Id,
+                    Code: item.Code,
+                    Name: item.Name,
+                    BanglaName: item.BanglaName,
+                    Address: item.Address,
+                    City: item.City,
+                    TelephoneNo: item.TelephoneNo,
+                    Email: item.Email,
+                    ContactPerson: item.ContactPerson,
+                    Description: item.Description,
+                    MasterSupplierGroupName: item.MasterSupplierGroupName,
                     MasterSupplierGroupId: item.MasterSupplierGroupId,
                     MasterSupplierGroupDescription: item.MasterSupplierGroupDescription,
                     MasterSupplierGroupCode: item.MasterSupplierGroupCode
@@ -452,17 +497,17 @@
 
         if (details.length === 0) {
             ShowNotification(3, "At least one detail entry is required.");
+            $(".btnsave").prop("disabled", false);
             return;
         }
 
         model.MasterSupplierList = details;
 
-        debugger;
-
-        // Send the data to the server
         var url = "/DMS/MasterSupplierProduct/CreateEdit";
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
+
+
 
 
 
@@ -491,35 +536,6 @@
 
         $(".btnsave").prop("disabled", false);
     }
-
-    //function saveDone(result) {
-        
-    //    if (result.Status == 200) {
-    //        if (result.Data.Operation == "add") {
-    //            ShowNotification(1, result.Message);
-    //            $(".divSave").show();
-    //            $(".divUpdate").hide();
-    //            $("#Code").val(result.Data.Code);
-    //            $("#Id").val(result.Data.Id);
-    //            $("#Operation").val("update");
-    //            $("#CreatedBy").val(result.Data.CreatedBy);
-    //            $("#CreatedOn").val(result.Data.CreatedOn);
-    //        }
-    //        else {
-    //            ShowNotification(1, result.Message);
-    //            $("#LastModifiedBy").val(result.Data.LastModifiedBy);
-    //            $("#LastModifiedOn").val(result.Data.LastModifiedOn);
-      
-    //        }
-
-    //    }
-    //    else if (result.Status == 400) {
-    //        ShowNotification(3, result.Message);
-    //    }
-    //    else {
-    //        ShowNotification(2, result.Message);
-    //    }
-    //};
 
     function saveFail(result) {
         

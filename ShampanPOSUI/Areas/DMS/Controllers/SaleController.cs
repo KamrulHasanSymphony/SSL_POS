@@ -106,6 +106,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             #endregion
             return View(vm);
         }
+
+
         [HttpPost]
         public ActionResult CreateEdit(SaleVM model)
         {

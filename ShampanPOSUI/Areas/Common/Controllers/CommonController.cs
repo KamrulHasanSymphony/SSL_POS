@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShampanPOS.Models;
 using ShampanPOS.Repo;
@@ -675,17 +676,42 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             return PartialView("_branchLoading", model);
         }
 
+        //[HttpGet]
+        //public ActionResult GetPaymentTypeList(string value)
+        //{
+        //    try
+        //    {
+        //        var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+
+        //        List<PaymentTypeVM> lst = new List<PaymentTypeVM>();
+        //        CommonVM param = new CommonVM();
+        //        param.Value = value;
+        //        param.BranchId = currentBranchId;
+        //        ResultVM result = _repo.GetPaymentTypeList(param);
+
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            lst = JsonConvert.DeserializeObject<List<PaymentTypeVM>>(result.DataVM.ToString());
+        //        }
+        //        return Json(lst, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
+
+
         [HttpGet]
         public ActionResult GetPaymentTypeList(string value)
         {
             try
             {
-                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-
                 List<PaymentTypeVM> lst = new List<PaymentTypeVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
-                param.BranchId = currentBranchId;
                 ResultVM result = _repo.GetPaymentTypeList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -700,6 +726,10 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
+
 
         [HttpPost]
         public ActionResult _getProductForPurchaseData()
@@ -1375,6 +1405,31 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+        [HttpGet]
+        public ActionResult GetProductModal(string value)
+        {
+            try
+            {
+                List<ProductDataVM> lst = new List<ProductDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetProductModal(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<ProductDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
 
 

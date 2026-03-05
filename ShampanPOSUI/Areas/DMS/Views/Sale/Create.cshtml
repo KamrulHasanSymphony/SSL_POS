@@ -1,4 +1,5 @@
-﻿@model ShampanPOS.Models.SaleVM
+﻿@using Newtonsoft.Json
+@model ShampanPOS.Models.SaleVM
 @{
     ViewBag.Title = "Sale Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -102,6 +103,10 @@
                 @Html.HiddenFor(model => model.IsManualSale)
 
 
+                @Html.Hidden("SaleDetailsJson", JsonConvert.SerializeObject(Model.saleDetailsList ?? new List<ShampanPOS.Models.SaleDetailVM>()))
+                @Html.Hidden("CardDetailsJson", JsonConvert.SerializeObject(Model.SaleCreditCardList ?? new List<ShampanPOS.Models.SaleCreditCardVM>()))
+
+
                 <div class="form-group row">
 
                     <div class="col-sm-2 codeWidth">
@@ -194,155 +199,151 @@
 
         <div class="card card-secondary">
             <div class="card-header">
-                <h3 class="card-title"> Details </h3>
+                <h3 class="card-title"> Sales Details </h3>
             </div>
             <div class="card-body">
-
-                @if (Model.IsManualSale)
-                {
-                    <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i> </button>
-                }
-
-
-                <div class="clearfix">&nbsp;</div>
-
-                <div style="overflow-x: auto; white-space: nowrap;">
-                    <table class="table table-bordered table-striped table-sm" id="details">
-                        <thead>
-                            <tr>
-                                <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                <th hidden data-type="text" data-search="false" data-required="false" data-computed="true" style="width:20%;" data-name="ProductCode"> Product Code </th>
-                                <th data-type="text" data-search="true" data-required="true" style="width:12%;" data-name="ProductName"> Product Name </th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
-                                @*<th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId"> SaleId </th>
-                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleOrderDetailId"> SaleOrderDetailId </th>*@
-
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="OrderQuantity"> Order Quantity </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="CompletedQty"> Completed Qty </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="RemainQty"> Remain Qty </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-name="Quantity"> Quantity </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="false" data-name="UnitRate"> Unit Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="SD"> SD Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="VATRate"> VAT Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-computed="true" data-name="LineTotal"> Line Total </th>
-
-
-                                @*<th data-type="text" style="width: 10%;">Comments</th>*@
-
-                                <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderId">Sale Order Id</th>
-                                <th hidden data-type="text" style="width: 5%;" data-name="SaleOrderDetailId">Sale Order Detail Id</th>
-                                <th style="width:5%;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lst">
-                            @if (Model != null)
-                            {
-                                foreach (var item in Model.saleDetailsList)
-                                {
-                                    <tr>
-                                        <td> @serial </td>
-                                        <td hidden> @item.ProductCode </td>
-
-                                        <td> @item.ProductName </td>
-                                        <td hidden> @item.ProductId </td>
-                                        @*<td hidden> @item.SaleId </td>
-                                            <td hidden> @item.SaleOrderDetailId </td>*@
-                                        <td class=" dFormat "> @item.OrderQuantity</td>
-                                        <td class=" dFormat "> @item.CompletedQty</td>
-                                        <td class=" dFormat "> @item.RemainQty</td>
-                                        <td class=" dFormat "> @item.Quantity</td>
-                                        <td class=" dFormat "> @item.UnitRate</td>
-                                        <td class=" dFormat "> @item.SubTotal</td>
-
-                                        <td class=" dFormat "> @item.SD</td>
-                                        <td class=" dFormat "> @item.SDAmount</td>
-                                        <td class=" dFormat "> @item.VATRate</td>
-                                        <td class=" dFormat "> @item.VATAmount</td>
-                                        <td class=" dFormat "> @item.LineTotal</td>
-                                        <td hidden> @item.SaleOrderId </td>
-                                        <td hidden class="td-SaleOrderDetailId">
-                                            @item.SaleOrderDetailId
-                                        </td>
-
-                                        <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
-
-                                    </tr>
-
-                                    { serial++; }
-                                }
-                            }
-
-
-                        </tbody>
-
-                    </table>
-                </div>
-
+                <div id="saleDetails"></div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title"> Payment Details </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="cardDetails"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-secondary">
 
-        <div class="card">
-            <div class="card-header p-2">
+                    <div class="card-header">
+                        <h3 class="card-title">Charges</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Header Row -->
+                        <div class="row font-weight-bold mb-2">
+                            <div class="col-md-3"></div> <!-- Empty space for labels -->
+                            <div class="col-sm-2 text-center">Sub-Total</div>
+                            <div class="col-sm-2 text-center">SD</div>
+                            <div class="col-sm-2 text-center">VAT</div>
+                            <div class="col-md-3 text-center">Total</div>
+                        </div>
 
-                <div class="card-body">
-                    <div class="row grndBlock">
 
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp;Paid Amount </label>
+
+                        <!-- Sub Total -->
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.SubTotal)
                             </div>
-                            <div class="editor-field">
-                                @Html.TextBox("PaidAmount", 0, new { @placeholder = "Paid Amount", @class = " dFormat trGrandTotalAmount form-control form-control-sm   priceLen NumberCheck text-right" })
+                            <div class="col-sm-2">
+                                <input id="subTotalSubtotal" class="form-control form-control-sm custom-font-size" readonly style="text-align:right;" />
+                            </div>
+                            <div class="col-sm-2">
+                                <input id="subTotalSD" class="form-control form-control-sm custom-font-size" readonly style="text-align:right;" />
+                            </div>
+                            <div class="col-sm-2">
+                                <input id="subTotalVAT" class="form-control form-control-sm custom-font-size" readonly style="text-align:right;" />
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.SubTotal, new { @class = "form-control form-control-sm custom-font-size", @readonly = "readonly", style = "text-align:right;" })
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp;SubTotal </label>
+                        <!-- Round Up -->
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.RoundUp)
                             </div>
-                            <div class="editor-field">
-                                @Html.TextBox("SubTotal", 0, new { @placeholder = "SubTotal", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.RoundUp, new { @class = "form-control form-control-sm custom-font-size", @readonly = "readonly", style = "text-align:right;" })
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Total SD</label>
+                        <!-- Final Payable -->
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FinalPayable)
                             </div>
-                            <div class="editor-field">
-                                @Html.TextBox("TotalSD", 0, new { @placeholder = "Grand Total SD Amount", @class = "trGrandTotalSDAmount form-control form-control-sm   priceLen NumberCheck text-right" })
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.FinalPayable, new { @class = "form-control form-control-sm custom-font-size", @readonly = "readonly", style = "text-align:right;" })
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Total VAT  </label>
+                        <!-- Payment -->
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.Payment)
                             </div>
-                            <div class="editor-field">
-                                @Html.TextBox("TotalVAT", 0, new { @placeholder = "Total VAT Amount", @class = "trGrandTotalVATAmount form-control form-control-sm   priceLen NumberCheck text-right" })
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.Payment, new { @class = "form-control form-control-sm custom-font-size", @readonly = "readonly", style = "text-align:right;" })
                             </div>
                         </div>
-
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp; Grand Total</label>
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.Dues)
                             </div>
-                            <div class="editor-field">
-                                @Html.TextBox("GrandTotal", 0, new { @placeholder = "Grand Total", @class = "trGrandTotal form-control form-control-sm   NumberCheck text-right" })
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-sm-2">
+
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.Dues, new { @class = "form-control form-control-sm custom-font-size", @readonly = "readonly", style = "text-align:right;" })
                             </div>
                         </div>
-
                     </div>
 
                 </div>
-
             </div>
         </div>
-
     </form>
+
+
+    <div id="saleDetailsWindow" style="display:none;">
+        <div id="saleDetailsGrid"></div>
+    </div>
+    <div id="cardDetailsWindow" style="display:none;">
+        <div id="cardDetailsGrid"></div>
+    </div>
+    <div id="itemsWindow" style="display:none;">
+        <div id="itemsGrid"></div>
+    </div>
+
 
     <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
         <div class="card-header p-2">

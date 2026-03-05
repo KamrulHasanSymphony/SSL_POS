@@ -27,9 +27,51 @@
         //}
 
 
-        $('.btnsave').off('click').on('click', function (e) {
-            e.preventDefault();
+        //$('.btnsave').off('click').on('click', function (e) {
+        //    e.preventDefault();
+        //    debugger;
+        //    var btn = $(this);
+        //    btn.prop("disabled", true);
+
+        //    Confirmation("Are you sure?", function (result) {
+        //        if (result) {
+        //            save();
+        //        } else {
+        //            btn.prop("disabled", false);
+        //        }
+        //    });
+        //});
+
+
+
+        $('.btnsave').click(function (e) {
             debugger;
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+            var $table = $('#details');
+
+            var mvcValid = form.valid();
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+
+            if (!mvcValid || !customValid) {
+                return false;
+            }
+
+            // 🔥 MasterItemGroup Required Check
+            var masterItemGroupId = $("#MasterItemGroupId").data("kendoMultiColumnComboBox").value();
+
+            if (!masterItemGroupId || parseInt(masterItemGroupId) === 0) {
+                ShowNotification(3, "Item Group is required.");
+                return;
+            }
+
+            // 🔥 Detail Grid Check
+            var grid = $("#AddedItemGrid").data("kendoGrid");
+            if (!grid || grid.dataSource.data().length === 0) {
+                ShowNotification(3, "Add at least one detail.");
+                return;
+            }
             var btn = $(this);
             btn.prop("disabled", true);
 
@@ -41,6 +83,7 @@
                 }
             });
         });
+
 
 
 
@@ -160,72 +203,6 @@
 
         }).data("kendoMultiColumnComboBox");
     }
-
-
-
-    //function GetProductGroupComboBox() {
-
-    //    var combo = $("#MasterItemGroupId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 },
-    //            { field: "Description", title: "Description", width: 150 },
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        autoBind: false, // important
-    //        dataSource: {
-    //            transport: {
-    //                read: {
-    //                    url: "/Common/Common/GetMasterItemGroupList",
-    //                    dataType: "json"
-    //                }
-    //            }
-    //        },
-    //        placeholder: "Select Product Group",
-
-    //        change: function () {
-    //            var dataItem = this.dataItem();
-    //            var groupId = this.value();
-    //            var grid = $("#departments").data("kendoGrid");
-
-    //            if (!groupId || groupId < 1) {
-    //                currentMasterItemGroupId = 0;
-    //                if (grid) grid.dataSource.data([]);
-    //                return;
-    //            }
-
-    //            currentMasterItemGroupId = groupId;
-
-    //            if (grid) {
-    //                grid.dataSource.read();
-    //            }
-
-    //            if (dataItem) {
-    //                $("#MasterItemGroupName").val(dataItem.Name);
-    //                $("#Description").val(dataItem.Description);
-    //                $("#Code").val(dataItem.Code);
-    //            }
-    //        }
-
-    //    }).data("kendoMultiColumnComboBox");
-
-
-    //    // 🔥 Load data first
-    //    combo.dataSource.read().then(function () {
-    //        debugger;
-    //        if (getgroup && parseInt(getgroup) > 0) {
-    //            combo.value(parseInt(getgroup));
-
-    //            // 🔥🔥🔥 THIS IS THE MAGIC LINE
-    //            combo.trigger("change");
-    //        }
-
-    //    });
-    //}
 
 
     function InitItemsGrid() {
@@ -729,36 +706,6 @@
         var url = "/DMS/MasterSupplierItem/CreateEdit";
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
-
-    //function saveDone(result) {
-    //    debugger;
-    //    $("#Id").val(result.Data.Id);
-    //    $("#Operation").val("update");
-    //    var msg = result.Message || "";
-
-    //    var inserted = 0;
-    //    var skipped = 0;
-
-    //    var matchInsert = msg.match(/(\d+)\s*added/i);
-    //    var matchSkip = msg.match(/(\d+)\s*skipped/i);
-
-    //    if (matchInsert) inserted = parseInt(matchInsert[1]);
-    //    if (matchSkip) skipped = parseInt(matchSkip[1]);
-
-    //    if (inserted > 0) {
-    //        ShowNotification(1, msg);
-    //    }
-    //    else if (skipped >= 0) {
-    //        ShowNotification(3, msg);
-    //    }
-    //    else {
-    //        ShowNotification(3, msg);
-    //    }
-
-    //    $(".btnsave").prop("disabled", false);
-    //}
-
-
 
     function saveDone(result) {
 
