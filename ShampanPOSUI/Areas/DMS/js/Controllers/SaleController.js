@@ -152,7 +152,7 @@
                         VATAmount: item.VATAmount,
                         SDAmount: item.SDAmount,
                         VATRate: item.VATRate,
-                        SDRate: item.SDRate,
+                        SD: item.SD,
                         LineTotal: item.LineTotal,
                         Action: item.Action
                     });
@@ -363,7 +363,7 @@
         // =======================
         var saleDetailList = JSON.parse($("#SaleDetailsJson").val() || "[]");
         debugger;
-
+        console.log(JSON.stringify(saleDetailList, null, 2));
         var saleDetails = new kendo.data.DataSource({
             
             data: saleDetailList,
@@ -381,7 +381,7 @@
                         VATAmount: { type: "number", defaultValue: 0 },
                         SDAmount: { type: "number", defaultValue: 0 },
                         VATRate: { type: "number", defaultValue: 0 },
-                        SDRate: { type: "number", defaultValue: 0 },
+                        SD: { type: "number", defaultValue: 0 },
                         LineTotal: { type: "number", defaultValue: 0 },
                         Remarks: { type: "string", defaultValue: "" }
                     }
@@ -396,14 +396,14 @@
             ],
             change: function (e) {
 
-                if (["Quantity", "UnitRate", "SDRate", "VATRate"].includes(e.field)) {
+                if (["Quantity", "UnitRate", "SD", "VATRate"].includes(e.field)) {
 
                     var item = e.items[0];
 
 
                     var qty = item.Quantity || 0;
                     var rate = item.UnitRate || 0;
-                    var sdRate = item.SDRate || 0;
+                    var sdRate = item.SD || 0;
                     var vatRate = item.VATRate || 0;
 
                     var subTotal = qty * rate;
@@ -605,8 +605,8 @@
                     footerTemplate: "<b>#= kendo.toString(sum,'n2') #</b>"
                 },
 
-                {
-                    field: "SDRate",
+                { //akhane ki thik ache?
+                    field: "SD",
                     title: "SD Rate",
                     width: 100,
                     attributes: { style: "text-align:right;" },
@@ -996,7 +996,7 @@
 
             var qty = item.Quantity || 0;
             var rate = item.UnitRate || 0;  
-            var sdRate = item.SDRate || 0;
+            var sdRate = item.SD || 0;
             var vatRate = item.VATRate || 0;
 
             // Calculate SubTotal
@@ -1132,25 +1132,109 @@
 
         kendo.bind(container, options.model);
     }
+    //function loadPurchaseOrderDetails(saleOrderId) {
+    //    debugger;
+
+    //    $.ajax({
+    //        url: "/DMS/SaleOrder/GetSaleOrderList",
+    //        type: "GET",
+    //        data: { saleOrderId: saleOrderId },
+    //        success: function (data) {
+    //            debugger;
+    //            console.log(data);
+    //            if (!data || data.length === 0) {
+    //                $("#lst").empty();
+    //                TotalCalculation();
+    //                return;
+    //            }
+
+    //            /* ================= MASTER ================= */
+    //            var master = data[0];
+    //            debugger;
+
+    //            // Customer autofill
+    //            if (master.CustomerId) {
+    //                var customerCombo =
+    //                    $("#CustomerId").data("kendoMultiColumnComboBox") ||
+    //                    $("#CustomerId").data("kendoComboBox");
+
+    //                if (customerCombo) {
+    //                    customerCombo.value(master.CustomerId);
+    //                    customerCombo.trigger("change");
+    //                }
+    //            }
+
+    //            // Invoice date autofill
+    //            if (master.OrderDate) {
+    //                var date = new Date(master.OrderDate);
+    //                if (!isNaN(date.getTime())) {
+    //                    $("#InvoiceDateTime").val(date.toISOString().slice(0, 10));
+    //                }
+    //            }
+
+    //            // DeliveryAddress autofill
+    //            if (master.DeliveryAddress) {
+    //                $("#DeliveryAddress").val(master.DeliveryAddress);
+    //            }
+
+    //            /* ================= DETAILS ================= */
+    //            if (!master.saleDetailsList || master.saleDetailsList.length === 0) {
+    //                TotalCalculation();
+    //                return;
+    //            }
+    //            console.log(master.saleDetailsList);
+    //            // Clear current grid data before adding new data
+    //            var saleDetailsGrid = $("#saleDetails").data("kendoGrid");
+
+    //            if (master.saleDetailsList && master.saleDetailsList.length > 0) {
+
+    //                // Add new data to the grid
+    //                var saleDetails = master.saleDetailsList.map((item, index) => ({
+    //                    SLNo: index + 1,  // Assuming SLNo is the row number
+    //                    Id: item.Id,
+    //                    ProductId: item.ProductId,
+    //                    ProductName: item.ProductName,
+    //                    Quantity: item.Quantity,
+    //                    UnitRate: item.UnitRate,
+    //                    SubTotal: item.SubTotal,
+    //                    VATAmount: item.VATAmount,
+    //                    SDAmount: item.SDAmount,
+    //                    VATRate: item.VATRate,
+    //                    SD: item.SD, //r akhane ki thik ache.
+    //                    LineTotal: item.LineTotal,
+    //                    Remarks: item.Remarks
+    //                }));
+
+    //                // Set the new data to the grid's data source
+    //                saleDetailsGrid.dataSource.data(saleDetails);
+    //            }
+    //            TotalCalculation();
+    //        },
+    //        error: function () {
+    //            alert("Failed to load sale order details.");
+    //        }
+    //    });
+    //}
+
+
+
+
+
     function loadPurchaseOrderDetails(saleOrderId) {
-        debugger;
 
         $.ajax({
             url: "/DMS/SaleOrder/GetSaleOrderList",
             type: "GET",
             data: { saleOrderId: saleOrderId },
             success: function (data) {
-                debugger;
-                console.log(data);
+
                 if (!data || data.length === 0) {
-                    $("#lst").empty();
                     TotalCalculation();
                     return;
                 }
 
                 /* ================= MASTER ================= */
                 var master = data[0];
-                debugger;
 
                 // Customer autofill
                 if (master.CustomerId) {
@@ -1178,33 +1262,43 @@
                 }
 
                 /* ================= DETAILS ================= */
+
                 if (!master.saleDetailsList || master.saleDetailsList.length === 0) {
                     TotalCalculation();
                     return;
                 }
-                console.log(master.saleDetailsList);
-                // Clear current grid data before adding new data
-                var saleDetailsGrid = $("#saleDetails").data("kendoGrid");
-                saleDetailsGrid.dataSource.data([]);  // Clear existing data
-                // Add new data to the grid
-                var saleDetails = master.saleDetailsList.map((item, index) => ({
-                    SLNo: index + 1,  // Assuming SLNo is the row number
-                    Id: item.Id,
-                    ProductId: item.ProductId,
-                    ProductName: item.ProductName,
-                    Quantity: item.Quantity,
-                    UnitRate: item.UnitRate,
-                    SubTotal: item.SubTotal,
-                    VATAmount: item.VATAmount,
-                    SDAmount: item.SDAmount,
-                    VATRate: item.VATRate,
-                    SDRate: item.SD,
-                    LineTotal: item.LineTotal,
-                    Remarks: item.Remarks
-                }));
 
-                // Set the new data to the grid's data source
-                saleDetailsGrid.dataSource.data(saleDetails);
+                var saleDetailsGrid = $("#saleDetails").data("kendoGrid");
+                var gridData = saleDetailsGrid.dataSource.data();
+
+                master.saleDetailsList.forEach(function (item) {
+
+                    // Duplicate Product check
+                    var exists = gridData.some(function (g) {
+                        return g.ProductId === item.ProductId;
+                    });
+
+                    if (!exists) {
+
+                        saleDetailsGrid.dataSource.add({
+                            SLNo: gridData.length + 1,
+                            Id: item.Id,
+                            ProductId: item.ProductId,
+                            ProductName: item.ProductName,
+                            Quantity: item.Quantity,
+                            UnitRate: item.UnitRate,
+                            SubTotal: item.SubTotal,
+                            VATAmount: item.VATAmount,
+                            SDAmount: item.SDAmount,
+                            VATRate: item.VATRate,
+                            SD: item.SD,
+                            LineTotal: item.LineTotal,
+                            Remarks: item.Remarks
+                        });
+
+                    }
+
+                });
 
                 TotalCalculation();
             },
@@ -1213,110 +1307,6 @@
             }
         });
     }
-
-    //function loadPurchaseOrderDetails(saleOrderId) {
-    //    debugger;
-
-    //    $.ajax({
-    //        url: "/DMS/SaleOrder/GetSaleOrderList",
-    //        type: "GET",
-    //        data: { saleOrderId: saleOrderId },
-    //        success: function (data) {
-    //            debugger;
-    //            console.log(data);
-    //            if (!data || data.length === 0) {
-    //                $("#lst").empty();
-    //                TotalCalculation();
-    //                return;
-    //            }
-
-    //            /* ================= MASTER ================= */
-    //            var master = data[0];
-    //            debugger;
-    //            // Customer autofill
-    //            if (master.CustomerId) {
-    //                var customerCombo =
-    //                    $("#CustomerId").data("kendoMultiColumnComboBox") ||
-    //                    $("#CustomerId").data("kendoComboBox");
-
-    //                if (customerCombo) {
-    //                    customerCombo.value(master.CustomerId);
-    //                    customerCombo.trigger("change");
-    //                }
-    //            }
-
-    //            // Invoice date autofill
-    //            if (master.OrderDate) {
-    //                var date = new Date(master.OrderDate);
-    //                if (!isNaN(date.getTime())) {
-    //                    $("#InvoiceDateTime").val(date.toISOString().slice(0, 10));
-    //                }
-    //            }
-
-
-    //            // DeliveryAddress autofill
-    //            if (master.DeliveryAddress) {
-    //                $("#DeliveryAddress").val(master.DeliveryAddress);  
-    //            }
-    //            /* ================= DETAILS ================= */
-    //            //$("#lst").empty();
-    //            debugger;
-    //            if (!master.saleDetailsList || master.saleDetailsList.length === 0) {
-    //                TotalCalculation();
-    //                return;
-    //            }
-
-    //            var sl = 1;
-
-    //            $.each(master.saleDetailsList, function (index, item) {
-    //                var row = `
-    //            <tr>
-    //                <td>${sl}</td>
-    //                <td hidden>${item.ProductCode ?? ""}</td>
-    //                <td>${item.ProductName ?? ""}</td>
-    //                <td hidden>${item.ProductId ?? ""}</td>
-
-    //                <td class="dFormat">${item.OrderQuantity ?? 0}</td>
-    //                <td class="dFormat">${item.CompletedQty ?? 0}</td>
-    //                <td class="dFormat">${item.RemainQty ?? 0}</td>
-
-    //                <td class="td-Quantity dFormat">${item.Quantity ?? 0}</td>
-    //                <td class="td-UnitRate dFormat">${item.UnitRate ?? 0}</td>
-    //                <td class="td-SubTotal dFormat">${item.SubTotal ?? 0}</td>
-
-    //                <td class="td-SD dFormat">${item.SD ?? 0}</td>
-    //                <td class="td-SDAmount dFormat">${item.SDAmount ?? 0}</td>
-
-    //                <td class="td-VATRate dFormat">${item.VATRate ?? 0}</td>
-    //                <td class="td-VATAmount dFormat">${item.VATAmount ?? 0}</td>
-
-    //                <td class="td-LineTotal dFormat">${item.LineTotal ?? 0}</td>
-
-    //                <td hidden>${item.SaleOrderId ?? ""}</td>
-    //                <td hidden class="td-SaleOrderDetailId">
-    //                    ${item.SaleOrderDetailId ?? item.Id ?? ""}
-    //                </td>
-
-    //                <td>
-    //                    <button type="button" class="btn btn-danger btn-sm remove-row-btn">
-    //                        <i class="fa fa-trash"></i>
-    //                    </button>
-    //                </td>
-    //            </tr>`;
-
-
-    //                $("#lst").append(row);
-    //                sl++;
-    //            });
-
-
-    //            TotalCalculation();
-    //        },
-    //        error: function () {
-    //            alert("Failed to load sale order details.");
-    //        }
-    //    });
-    //}
 
 
     function GetBranchList() {
@@ -1537,12 +1527,12 @@
             Quantity: parseFloat(item.Quantity),
             UnitRate: parseFloat(item.PurchasePrice),
             VATRate: item.VATRate || 0,
-            SDRate: item.SDRate || 0
+            SD: item.SD || 0
         });
 
         var qty = detailRow.Quantity || 0;
         var unit = detailRow.UnitRate || 0;
-        var sdRate = detailRow.SDRate || 0;
+        var sdRate = detailRow.SD || 0;
         var vatRate = detailRow.VATRate || 0;
 
         var subTotal = qty * unit;
@@ -1576,7 +1566,7 @@
 
         // Setting Rates
         detailRow.set("VATRate", item.VATRate);
-        detailRow.set("SDRate", item.SDRate);
+        detailRow.set("SD", item.SDRate);
 
         // Default quantity if empty
         if (!detailRow.Quantity || detailRow.Quantity <= 0) {
@@ -1587,7 +1577,7 @@
         detailRow.set("SubTotal", detailRow.Quantity * detailRow.SalesPrice);
 
         // SD Amount
-        var sdAmt = (detailRow.SubTotal * (detailRow.SDRate || 0)) / 100;
+        var sdAmt = (detailRow.SubTotal * (detailRow.SD || 0)) / 100;
         detailRow.set("SDAmount", sdAmt);
 
         // VAT Amount
@@ -2038,7 +2028,7 @@
                     VATAmount: item.VATAmount,
                     SDAmount: item.SDAmount,
                     VATRate: item.VATRate,
-                    SD: item.SDRate,
+                    SD: item.SD,
                     LineTotal: item.LineTotal,
                     Action: item.Action
                 });

@@ -5,7 +5,6 @@
     var getDeliveryPersonId = 0;
     var getDriverPersonId = 0;
     var getRouteId = 0;
-    var getCurrencyId = 0;
 
     var init = function () {
 
@@ -20,7 +19,6 @@
         getDeliveryPersonId = $("#DeliveryPersonId").val() || 0;
         getDriverPersonId = $("#DriverPersonId").val() || 0;
         getRouteId = $("#RouteId").val() || 0;
-        getCurrencyId = $("#CurrencyId").val() || 0;
 
 
         var getId = $("#Id").val() || 0;
@@ -35,7 +33,6 @@
         GetRouteComboBox();
         GetDeliveryComboBox();
         GetDriverComboBox();
-        GetCurrencyComboBox();
 
 
         var $table = $('#details');
@@ -78,10 +75,9 @@
 
             var details = serializeTable($table);
 
-            var requiredFields = ['ProductName', 'UOMName', 'Quantity', 'UnitRate'];
+            var requiredFields = ['ProductName', 'Quantity', 'UnitRate'];
             var fieldMappings = {
                 'ProductName': 'Product Name',
-                'UOMName': 'UOM Name',
                 'Quantity': 'Quantity',
                 'UnitRate': 'Unit Rate'
             };
@@ -254,32 +250,7 @@
             suggest: true
         });
     };
-    //function GetCustomerComboBox() {
-    //    var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "Code", title: "Code", width: 100 },
-    //            { field: "Name", title: "Name", width: 150 },
-    //            { field: "BanglaName", title: "BanglaName", width: 200 },
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name", "BanglaName"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetCustomerList"
-    //            }
-    //        },
-    //        placeholder: "Select Customer",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getCustomerId) {
-    //                this.value(parseInt(getCustomerId));
-    //            }
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
+
 
     function GetCustomerComboBox() {
 
@@ -413,34 +384,7 @@
         }).data("kendoMultiColumnComboBox");
     };
 
-    function GetCurrencyComboBox() {
-        var CurrencyComboBox = $("#CurrencyId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetCurrencieList"
-                }
-            },
-            placeholder: "Select Currency",
-            value: "",
-            dataBound: function (e) {
-                if (getCurrencyId) {
-                    this.value(parseInt(getCurrencyId));
-                }
-            },
-            change: function (e) {
-                
-            }
-        }).data("kendoMultiColumnComboBox");
-    };
+
     function GetDriverComboBox() {
         var DriverComboBox = $("#DriverPersonId").kendoMultiColumnComboBox({
             dataTextField: "Name",

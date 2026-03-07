@@ -517,8 +517,34 @@
 
 
 
+    //function saveDone(result) {
+    //    debugger;
+    //    var msg = result.Message || "";
+
+    //    var inserted = 0;
+    //    var skipped = 0;
+
+    //    var matchInsert = msg.match(/(\d+)\s*added/i);
+    //    var matchSkip = msg.match(/(\d+)\s*skipped/i);
+
+    //    if (matchInsert) inserted = parseInt(matchInsert[1]);
+    //    if (matchSkip) skipped = parseInt(matchSkip[1]);
+
+    //    if (inserted > 0) {
+    //        ShowNotification(1, msg);
+    //    }
+    //    else if (skipped >= 0) {
+    //        ShowNotification(3, msg);
+    //    }
+    //    else {
+    //        ShowNotification(2, msg);
+    //    }
+
+    //    $(".btnsave").prop("disabled", false);
+    //}
+
     function saveDone(result) {
-        debugger;
+
         var msg = result.Message || "";
 
         var inserted = 0;
@@ -542,7 +568,6 @@
 
         $(".btnsave").prop("disabled", false);
     }
-
 
 
     function saveFail(result) {

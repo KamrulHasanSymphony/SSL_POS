@@ -1,7 +1,6 @@
 ﻿var PurchaseReturnController = function (CommonService, CommonAjaxService) {
 
     var getSupplierId = 0;
-    var getCurrencyId = 0;
     var decimalPlace = 0;
 
     var init = function () {
@@ -18,7 +17,6 @@
         };
 
         getSupplierId = $("#SupplierId").val() || 0;
-        getCurrencyId = $("#CurrencyId").val() || 0;
 
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
@@ -30,7 +28,6 @@
 
         if (getOperation !== '') {
             GetSupplierComboBox();
-            GetCurrencyComboBox();
             TotalCalculation();
         };        
 
@@ -185,35 +182,6 @@
         });
 
 
-        $('#details').on('click', 'input.txtUOMName', function () {
-            var originalRow = $(this);
-            
-            var currentRow = originalRow.closest('tr');
-            var UOMId = currentRow.find('td:nth-child(6)').text().trim() || 0;
-            if (parseInt(UOMId) == 0) {
-                ShowNotification(3, 'Please Fillup Product First!');
-                return;
-            };
-            $('#UOMId').val(UOMId);
-            originalRow.closest("td").find("input").data('touched', true);
-            CommonService.uomFromNameModal(
-                function success(result) {
-                    console.log("Modal opened successfully.");
-                },
-                function fail(error) {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.error("Error opening modal:", error);
-                },
-                function dblClick(row) {
-                    uomFromNameModalDblClick(row, originalRow);
-                },
-                function closeCallback() {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.log("Modal closed.");
-                }
-            );
-        });
-
         $("#indexSearch").on('click', function () {
             var branchId = $("#Branchs").data("kendoComboBox").value();
 
@@ -228,36 +196,6 @@
             }
 
             GetGridDataList();
-
-        });
-
-        $('#details').on('blur', ".td-CtnQuantity", function (event) {
-            
-            var originalRow = $(this);
-            var currentRow = originalRow.closest('tr');
-
-            var CtnQuantity = currentRow.find('td:nth-child(7)').text().trim() || 0;
-            if (CtnQuantity != 0) {
-                computeCtnQuantity($(this), '');
-                computeSubTotal($(this), '');
-                var $currentRow = $(this).closest('tr');
-                CampaignMudularitycal($currentRow)
-            }
-        });
-
-        $('#details').on('blur', ".td-InputQuantity", function (event) {
-            
-            var originalRow = $(this);
-            var currentRow = originalRow.closest('tr');
-
-            var InputQuantity = currentRow.find('td:nth-child(8)').text().trim() || 0;
-            if (InputQuantity != 0) {
-                computeQuantity($(this), '');
-                computeSubTotal($(this), '');
-                var $currentRow = $(this).closest('tr');
-                CampaignMudularitycal($currentRow)
-            }
-
 
         });
 
@@ -299,182 +237,6 @@
 
     };
 
-
-
-    function computeCtnQuantity(row, param) {
-
-        // Get base values with proper parsing of formatted numbers
-        var Conversionfactor = parseFloat(row.closest("tr").find("td.td-UOMConversion").text().replace(/,/g, '')) || 1;
-        var CtnQuantity = parseFloat(row.closest("tr").find("td.td-CtnQuantity").text().replace(/,/g, '')) || 0;
-        var InputQuantity = 0;
-
-        var loseQty = CtnQuantity * Conversionfactor;
-        var Totalqty = CtnQuantity * Conversionfactor;
-        row.closest("tr").find("td.td-InputQuantity").text(InputQuantity.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-
-        row.closest("tr").find("td.td-PcsQuantity").text(0);
-        row.closest("tr").find("td.td-Quantity").text(Totalqty.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        //TotalCalculation();
-    }
-    function CampaignMudularitycal(Row) {
-
-        var currentRow = Row;
-        var productId = currentRow.closest('tr').find('td:nth-child(4)').text().trim() || 0;
-        var deliveryDate = $("#DeliveryDate").val();
-
-        // Get quantity from input or text content
-        var quantity;
-        if (currentRow.find("td.td-Quantity input").length > 0) {
-            quantity = parseFloat(currentRow.find("td.td-Quantity input").val().replace(/,/g, '')) || 0;
-        } else {
-            quantity = parseFloat(currentRow.find("td.td-Quantity").text().replace(/,/g, '')) || 0;
-        }
-
-        // Prepare request data
-        const requestData = {
-            ProductId: productId,
-            Quantity: quantity,
-            Date: deliveryDate
-        };
-
-        // Call API and handle calculations
-        CommonService.CampaignMudularityCalculation(requestData,
-            function success(result) {
-                if (!result || !result.data) {
-                    ShowNotification(3, "Invalid response received");
-                    return;
-                }
-
-                const row = currentRow.closest('tr');
-                //updateRowWithAPIData(row, result.data);
-                calculateRowTotals(row);
-                TotalDCalculation();
-            },
-            function fail(error) {
-                console.error("Error fetching data:", error);
-                ShowNotification(3, "There was an error processing your request.");
-            }
-        );
-    }
-    function updateRowWithAPIData(row, data) {
-        // Update basic fields
-        row.find('.td-FreeProductName').text(data.FreeProductName?.trim() || '');
-        row.find('.td-FreeProductId').text(data.FreeProductId || '');
-        row.find('.td-FreeQuantity').text(formatNumber(data.FreeQuantity || 0));
-        row.find('.td-DiscountRate').text(formatNumber(data.DiscountRate || 0));
-        row.find('.td-DiscountAmount').text(formatNumber(data.DiscountAmount || 0));
-        row.find('.td-LineDiscountRate').text(formatNumber(data.LineDiscountRate || 0));
-        row.find('.td-LineDiscountAmount').text(formatNumber(data.LineDiscountAmount || 0));
-
-        // Update calculated totals
-        row.find('.td-SubTotalAfterDiscount').text(formatNumber(data.SubTotalAfterDiscount || 0));
-        row.find('.td-LineTotalAfterDiscount').text(formatNumber(data.LineTotalAfterDiscount || 0));
-    }
-    function calculateRowTotals(row) {
-
-        
-        const quantity = parseFloat(row.find('.td-Quantity').text().replace(/,/g, '')) || 0;
-        const unitRate = parseFloat(row.find('.td-UnitPrice').text().replace(/,/g, '')) || 0;
-        const discountRate = parseFloat(row.find('.td-DiscountRate').text().replace(/,/g, '')) || 0;
-        const sdRate = parseFloat(row.find('.td-SD').text().replace(/,/g, '')) || 0;
-        const vatRate = parseFloat(row.find('.td-VATRate').text().replace(/,/g, '')) || 0;
-        const LineDiscountAmount = parseFloat(row.find('.td-LineDiscountAmount').text().replace(/,/g, '')) || 0;
-
-        // Calculate SubTotal
-        const subTotal = quantity * unitRate;
-        row.find('.td-SubTotal').text(formatNumber(subTotal));
-
-        // Calculate Discount Amount
-        const discountAmount = (subTotal * discountRate) / 100;
-        row.find('.td-DiscountAmount').text(formatNumber(discountAmount));
-
-        // Calculate SubTotal After Discount
-        const subTotalAfterDiscount = subTotal - discountAmount;
-
-        // Calculate SD Amount
-        const sdAmount = (subTotalAfterDiscount * sdRate) / 100;
-        row.find('.td-SDAmount').text(formatNumber(sdAmount));
-
-        // Calculate VAT Amount
-        const vatAmount = ((subTotalAfterDiscount + sdAmount) * vatRate) / 100;
-        row.find('.td-VATAmount').text(formatNumber(vatAmount));
-
-
-        // Calculate  orginal VAT Amount
-        const orginalvatAmount = ((subTotal + sdAmount) * vatRate) / 100;
-
-
-        // Calculate Line Total
-        const lineTotal = subTotal + sdAmount + orginalvatAmount;
-        row.find('.td-LineTotal').text(formatNumber(lineTotal));
-
-        // Calculate Line Total AfterDiscount
-        const AfterDiscountlineTotal = subTotalAfterDiscount + sdAmount + vatAmount - LineDiscountAmount;
-        row.find('.td-LineTotalAfterDiscount').text(formatNumber(AfterDiscountlineTotal));
-    }
-    function computeQuantity(row, param) {
-
-        // Get base values with proper parsing of formatted numbers
-        var Conversionfactor = parseFloat(row.closest("tr").find("td.td-UOMConversion").text().replace(/,/g, '')) || 1;
-        var InputQuantity = parseFloat(row.closest("tr").find("td.td-InputQuantity").text().replace(/,/g, '')) || 0;
-
-        var CtnQty = Math.floor(InputQuantity / Conversionfactor);
-        var loseQty = (InputQuantity - (CtnQty * Conversionfactor));
-        var Totalqty = (loseQty + (CtnQty * Conversionfactor));
-
-        row.closest("tr").find("td.td-CtnQuantity").text(CtnQty.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        row.closest("tr").find("td.td-PcsQuantity").text(loseQty.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        row.closest("tr").find("td.td-Quantity").text(Totalqty.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        //TotalCalculation();
-    }
-    function TotalDCalculation() {
-
-        // Initialize variables for totals
-        let totals = {
-            quantity: 0,
-            freeQuantity: 0,
-            subTotal: 0,
-            subTotalAfterDiscount: 0,
-            sdAmount: 0,
-            vatAmount: 0,
-            lineTotal: 0,
-            lineTotalAfterDiscount: 0
-        };
-
-        // Calculate totals from all rows
-        $('#details tbody tr').each(function () {
-            const row = $(this);
-            totals.quantity += parseFloat(row.find('.td-Quantity').text().replace(/,/g, '')) || 0;
-
-            totals.subTotal += parseFloat(row.find('.td-SubTotal').text().replace(/,/g, '')) || 0;
-            totals.subTotalAfterDiscount += parseFloat(row.find('.td-SubTotalAfterDiscount').text().replace(/,/g, '')) || 0;
-            totals.sdAmount += parseFloat(row.find('.td-SDAmount').text().replace(/,/g, '')) || 0;
-            totals.vatAmount += parseFloat(row.find('.td-VATAmount').text().replace(/,/g, '')) || 0;
-            totals.lineTotal += parseFloat(row.find('.td-LineTotal').text().replace(/,/g, '')) || 0;
-            totals.lineTotalAfterDiscount += parseFloat(row.find('.td-LineTotalAfterDiscount').text().replace(/,/g, '')) || 0;
-        });
-
-        // Calculate FreeGrandTotalAmount (only free quantity)
-        const freeGrandTotalAmount = totals.freeQuantity;
-
-        // Update all total fields
-        $("#GrandTotalAmount").val(formatNumber(totals.quantity));
-        $("#GrandSubTotal").val(formatNumber(totals.subTotal));
-        $("#GrandSubTotalAD").val(formatNumber(totals.subTotalAfterDiscount));
-        $("#GrandTotalSDAmount").val(formatNumber(totals.sdAmount));
-        $("#GrandTotalVATAmount").val(formatNumber(totals.vatAmount));
-        $("#GrandTotal").val(formatNumber(totals.lineTotal));
-
-        // Get required data for invoice calculation
-        // Prepare request data for invoice calculation
-        const invoiceRequestData = {
-            Quantity: totals.lineTotalAfterDiscount, // Send the raw number, not formatted
-        };
-    }
-    function formatNumber(value) {
-        return Number(parseFloat(value).toFixed(parseInt(decimalPlace)))
-            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-    }
     function detailsData(id) {
 
         $.ajax({
@@ -585,23 +347,6 @@
             }
         });
     };
-    
-    function uomFromNameModalDblClick(row, originalRow) {
-        
-        var dataTable = $("#modalData").DataTable();
-        var rowData = dataTable.row(row).data();
-
-        var UOMFromId = rowData.UOMFromId;
-        var UOMFromName = rowData.UOMFromName;
-        var UOMConversion = rowData.UOMConversion;
-
-        originalRow.closest("td").find("input").val(UOMFromName);
-        originalRow.closest('td').next().text(UOMFromId);
-        /*originalRow.closest('td').next().next().next().text(UOMConversion);*/
-
-        $("#partialModal").modal("hide");
-        originalRow.closest("td").find("input").data("touched", false).focus();
-    };
 
     function GetSupplierComboBox() {
         var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
@@ -626,38 +371,9 @@
                     this.value(parseInt(getSupplierId));
                 }
             },
-            change: function (e) {
+            //change: function (e) {
                 
-            }
-        }).data("kendoMultiColumnComboBox");
-    };
-
-    function GetCurrencyComboBox() {
-        var CurrencyComboBox = $("#CurrencyId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetCurrencieList"
-                }
-            },
-            placeholder: "Select Currency",
-            value: "",
-            dataBound: function (e) {
-                if (getCurrencyId) {
-                    this.value(parseInt(getCurrencyId));
-                }
-            },
-            change: function (e) {
-                
-            }
+            //}
         }).data("kendoMultiColumnComboBox");
     };
 
@@ -1132,217 +848,6 @@
                 avoidLink: true,
                 filterable: true
             },
-            pdfExport: function (e) {
-                e.preventDefault();
-                var grid = e.sender;
-                var masterData = grid.dataSource.view();
-
-                if (!kendo.drawing || !kendo.drawing.drawDOM) {
-                    return;
-                }
-
-                var groupedData = {};
-                masterData.forEach(masterRow => {
-                    if (!groupedData[masterRow.Code]) {
-                        groupedData[masterRow.Code] = [];
-                    }
-                    groupedData[masterRow.Code].push(masterRow);
-                });
-
-                var masterPdfContainer = $("<div id='masterPdfContent' style='padding:0px;font-size:11px;position:relative; height: 100vh;'>");
-                $("body").append(masterPdfContainer);
-
-                Object.keys(groupedData).forEach((code, index) => {
-                    let safeCode = code.replace(/[^a-zA-Z0-9-_]/g, "_");
-
-                    var pdfContainer = $(`
-                                        <div id="pdfContent_${safeCode}" style="padding:0px;font-size:11px;position:relative; height: 100vh">
-                                    `);
-
-                    const companyName = groupedData[code][0].CompanyName || "All CompanyNames";
-                    const branchName = groupedData[code][0].BranchName || "All Branches";
-                    const branchAddress = groupedData[code][0].BranchAddress || "All BranchAddress";
-
-                    pdfContainer.append(`
-                                        <h2 style="text-align:center;">${companyName}</h2>
-                                        <h5 style="text-align:center;">${branchName}</h5>
-                                        <h6 style="text-align:center;">${branchAddress}</h6>
-                                        <hr>
-                                    `);
-
-                    groupedData[code].forEach(masterRow => {
-                        pdfContainer.append(`
-                                                <div style="margin-bottom: 10px; display: flex; flex-wrap: wrap;">
-                                                    <div style="width: 50%; padding: 5px;">
-                                                        <p><strong>Code : </strong> ${masterRow.Code}</p>
-                                                        <p><strong>Supplier Name : </strong> ${masterRow.SupplierName}</p>
-                                                        <p><strong>Posted Status : </strong> ${masterRow.Status}</p>
-                                                        <p><strong>Currency Name : </strong> ${masterRow.CurrencyName}</p>
-                                                        <p><strong>BE Number : </strong> ${masterRow.BENumber}</p>
-                                                        <p><strong>Fiscal Year : </strong> ${masterRow.FiscalYear}</p>
-                                                    </div>
-                                                    <div style="width: 50%; padding: 5px;">
-                                                        <p><strong>Purchase Return Date : </strong> ${masterRow.PurchaseReturnDate}</p>
-                                                        <p><strong>Supplier Address : </strong> ${masterRow.SupplierAddress}</p>
-                                                        <p><strong>Completed Status : </strong> ${masterRow.Completed}</p>
-                                                        <p><strong>Currency Rate From BDT : </strong> ${Number(parseFloat(masterRow.CurrencyRateFromBDT).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</p>
-                                                        <p><strong>Comments : </strong> ${masterRow.Comments}</p>
-                                                    </div>
-                                                </div>
-                                        `);
-
-                        $.ajax({
-                            url: "/DMS/PurchaseReturn/GetPurchaseReturnDetailDataById",
-                            type: "GET",
-                            dataType: "json",
-                            data: { masterId: masterRow.Id },
-                            async: false,
-                            success: function (response) {
-                                if (response.Items && response.Items.length > 0) {
-                                    let count = 1;
-                                    let tableHTML = `
-                                                <table style="width:100%;border-collapse:collapse;margin-bottom:10px;font-size:7.5px;word-break:break-word;">
-                                                    <thead>
-                                                        <tr style="background: #ddd; text-align: center;">
-                                                            <th style="border: 1px solid #000; padding: 2px;width:16px;">SL</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">Product Name</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">UOM Name</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">UOM Conversion</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">Quantity</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">Unit Price</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">Sub Total</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">SD Rate</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">SD Amount</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">VAT Rate</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">VAT Amount</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">Others Amount</th>
-                                                            <th style="border: 1px solid #000; padding: 2px;">Line Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                <tbody>
-                                            `;
-
-                                    response.Items.forEach(item => {
-                                        let fontSize = "9px";
-
-                                        let formattedQuantity = Number(parseFloat(item.Quantity).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeQuantity = formattedQuantity.length >= 10 ? "6.5px" : "9px";
-
-                                        let formattedUnitPrice = Number(parseFloat(item.UnitPrice).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeUnitPrice = formattedUnitPrice.length >= 10 ? "6.5px" : "9px";
-
-                                        let formattedSubTotal = Number(parseFloat(item.SubTotal).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeSubTotal = formattedSubTotal.length >= 10 ? "6.5px" : "9px";
-
-                                        let formattedSD = Number(parseFloat(item.SD).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeSD = formattedSD.length >= 10 ? "6.5px" : "9px";
-
-                                        let formattedSDAmount = Number(parseFloat(item.SDAmount).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeSDAmount = formattedSDAmount.length >= 10 ? "6.5px" : "9px";
-
-                                        let formattedVATRate = Number(parseFloat(item.VATRate).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeVATRate = formattedVATRate.length >= 10 ? "6.5px" : "9px";
-
-                                        let formattedVATAmount = Number(parseFloat(item.VATAmount).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeVATAmount = formattedVATAmount.length >= 10 ? "6.5px" : "9px";
-
-                                        let formattedOthersAmount = Number(parseFloat(item.OthersAmount).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeOthersAmount = formattedOthersAmount.length >= 10 ? "6.5px" : "9px";
-
-                                        let formattedLineTotal = Number(parseFloat(item.LineTotal).toFixed(parseInt(decimalPlace)))
-                                            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-                                        let fontSizeLineTotal = formattedLineTotal.length >= 10 ? "6.5px" : "9px";
-
-                                        tableHTML += `
-                                                        <tr>
-                                                            <td style="border: 1px solid #000; padding: 2px;font-size:${fontSize};">${count++}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;font-size:${fontSize};">${item.ProductName}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;font-size:${fontSize};">${item.UOMName}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSize};">${Number(parseFloat(item.UOMConversion).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeQuantity};">${Number(parseFloat(item.Quantity).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeUnitPrice};">${Number(parseFloat(item.UnitPrice).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeSubTotal};">${Number(parseFloat(item.SubTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeSD};">${Number(parseFloat(item.SD).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeSDAmount};">${Number(parseFloat(item.SDAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeVATRate};">${Number(parseFloat(item.VATRate).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeVATAmount};">${Number(parseFloat(item.VATAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeOthersAmount};">${Number(parseFloat(item.OthersAmount).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                            <td style="border: 1px solid #000; padding: 2px;text-align:right;font-size:${fontSizeLineTotal};">${Number(parseFloat(item.LineTotal).toFixed(parseInt(decimalPlace))).toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) })}</td>
-                                                        </tr>
-                                                    `;
-                                    });
-
-                                    tableHTML += `</tbody></table>`;
-                                    pdfContainer.append(tableHTML);
-
-                                    let footerHTML = `
-                                                <div class="horizontal-layout" style="display: flex; justify-content: space-between; width: 100%; position:absolute; bottom:70px; height: 100px; left: 0">
-                                                <div style="text-align: center; width: 15%;">
-                                                    <hr style="margin: 5px auto; width: 80%;" />
-                                                    <b>Prepared by</b>
-                                                </div>
-                                                <div style="text-align: center; width: 15%;">
-                                                    <hr style="margin: 5px auto; width: 80%;" />
-                                                    <b>Entered by</b>
-                                                </div>
-                                                <div style="text-align: center; width: 15%;">
-                                                    <hr style="margin: 5px auto; width: 80%;" />
-                                                    <b>Checked by</b>
-                                                </div>
-                                                <div style="text-align: center; width: 15%;">
-                                                    <hr style="margin: 5px auto; width: 80%;" />
-                                                    <b>Posted by</b>
-                                                </div>
-                                                <div style="text-align: center; width: 15%;">
-                                                    <hr style="margin: 5px auto; width: 80%;" />
-                                                    <b>Approved by</b>
-                                                </div>
-                                            </div>
-
-                                            <div class="clearfix">&nbsp;</div>
-                                        `;
-
-                                    pdfContainer.append(footerHTML);
-                                }
-                            }
-                        });
-
-                    });
-
-                    masterPdfContainer.append(pdfContainer);
-                });
-
-                setTimeout(() => {
-                    kendo.drawing.drawDOM($("#masterPdfContent"), {
-                        paperSize: "A4",
-                        margin: { top: "1cm", left: "1cm", right: "1cm", bottom: "2cm" },
-                        landscape: false,
-                        multiPage: true
-                    }).then(function (group) {
-                        return kendo.drawing.exportPDF(group, {});
-                    }).then(function (dataURI) {
-                        if (!dataURI) {
-                            return;
-                        }
-                        kendo.saveAs({
-                            dataURI: dataURI,
-                            fileName: `PurchaseOrder_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`
-                        });
-
-                        $("#masterPdfContent").remove();
-                    }).catch(function (error) {
-                        console.log("PDF Export Error: ", error);
-                    });
-                }, 500);
-            },
             columns: [
                 {
                     selectable: true, width: 35
@@ -1438,21 +943,21 @@
         };
 
 
-        //var details = serializeTable($table);
+        var details = serializeTable($table);
 
-        //var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
-        //var fieldMappings = {
-        //    'ProductName': 'Product Name',
-        //    //'UOMName': 'UOM Name',
-        //    'Quantity': 'Quantity',
-        //    'UnitPrice': 'Unit Price'
-        //};
+        var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+        var fieldMappings = {
+            'ProductName': 'Product Name',
+            //'UOMName': 'UOM Name',
+            'Quantity': 'Quantity',
+            'UnitPrice': 'Unit Price'
+        };
 
-        //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-        //if (errorMessage) {
-        //    ShowNotification(3, errorMessage);
-        //    return;
-        //};
+        var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
+        if (errorMessage) {
+            ShowNotification(3, errorMessage);
+            return;
+        };
 
         model.purchaseReturnDetailList = details;
 
@@ -1570,47 +1075,3 @@
 
 
 }(CommonService, CommonAjaxService);
-document.addEventListener("DOMContentLoaded", function () {
-    var container = document.querySelector(".sslPrintC");
-    if (container) {
-        var id = container.getAttribute("data-id");
-        if (id) {
-            var btn = document.createElement("a");
-            btn.href = ".";
-            btn.style.backgroundColor = "skyblue";
-
-            btn.style.marginLeft = "10px";
-            btn.style.border = "none";
-            /*btn.style.borderRadius = "10px"; */
-            btn.className = "btn btn-success btn-sm mr-2 edit";
-            btn.title = "Report Preview";
-            btn.innerHTML = "<i class='fas fa-print'></i>";
-            btn.onclick = function (e) {
-                e.preventDefault();
-                ReportPreview(id);
-            };
-            container.appendChild(btn);
-        }
-    }
-});
-
-
-function ReportPreview(id) {
-    
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '/DMS/PurchaseReturn/ReportPreview';
-    form.target = '_blank';
-    const inputVal = document.createElement('input');
-    inputVal.type = 'hidden';
-    inputVal.name = 'Id';
-    inputVal.value = id;
-
-    form.appendChild(inputVal);
-
-    document.body.appendChild(form);
-
-    form.submit();
-    form.remove();
-
-};

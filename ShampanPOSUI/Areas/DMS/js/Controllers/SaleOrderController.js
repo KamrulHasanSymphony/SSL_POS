@@ -94,10 +94,9 @@
 
             var details = serializeTable($table);
 
-            var requiredFields = ['ProductName', 'UOMName', 'Quantity', 'UnitRate'];
+            var requiredFields = ['ProductName', 'Quantity', 'UnitRate'];
             var fieldMappings = {
                 'ProductName': 'Product Name',
-                'UOMName': 'UOM Name',
                 'Quantity': 'Quantity',
                 'UnitRate': 'Unit Rate'
             };
@@ -1434,10 +1433,9 @@
 
         var details = serializeTable($table);
 
-        var requiredFields = ['ProductName', 'UOMName', 'Quantity', 'UnitRate'];
+        var requiredFields = ['ProductName', 'Quantity', 'UnitRate'];
         var fieldMappings = {
             'ProductName': 'Product Name',
-            'UOMName': 'UOM Name',
             'Quantity': 'Quantity',
             'UnitRate': 'Unit Rate'
         };
