@@ -1623,7 +1623,7 @@
                                 param.field = "H.Code";
                             }
                             if (param.field === "CustomerName") {
-                                param.field = "cus.Name";
+                                param.field = "s.Name";
                             }
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";
@@ -1658,7 +1658,7 @@
                                 param.field = "H.Code";
                             }
                             if (param.field === "CustomerName") {
-                                param.field = "cus.Name";
+                                param.field = "s.Name";
                             }
                             if (param.field === "DeliveryAddress") {
                                 param.field = "H.DeliveryAddress";

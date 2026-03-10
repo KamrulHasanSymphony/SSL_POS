@@ -217,6 +217,9 @@
                             if (param.field === "BankId") {
                                 param.field = "H.BankId";
                             }
+                            if (param.field === "BankName") {
+                                param.field = "b.Name";
+                            }
 
                             if (param.field === "BranchName") {
                                 param.field = "H.BranchName";
@@ -271,7 +274,9 @@
                             if (param.field === "BankId") {
                                 param.field = "H.BankId";
                             }
-
+                            if (param.field === "BankName") {
+                                param.field = "b.Name";
+                            }
                             if (param.field === "BranchName") {
                                 param.field = "H.BranchName";
                             }
@@ -446,7 +451,8 @@
                 { field: "AccountName", title: "Account Name", sortable: true, width: 200 },
          
                 { field: "AccountNo", title: "Account No.", sortable: true, width: 200 },
-                { field: "BankId", title: "Bank", width: 150,  sortable: true },
+                { field: "BankId", title: "Bank", width: 150, hidden: true, sortable: true },
+                { field: "BankName", title: "Bank Name", width: 150,  sortable: true },
                 { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
               
                 { field: "Comments", title: "Comments", sortable: true, width: 200 },

@@ -11,42 +11,68 @@
     };
 
 
+    //function SelectData() {
+    //    var IDs = [];
+
+    //    var selectedRows = $("#GridDataList").data("kendoGrid").select();
+
+    //    if (selectedRows.length === 0) {
+    //        ShowNotification(3, "You are requested to Select checkbox!");
+    //        return;
+    //    }
+
+    //    selectedRows.each(function () {
+    //        var dataItem = $("#GridDataList").data("kendoGrid").dataItem(this);
+    //        IDs.push(dataItem.Id);
+    //    });
+
+    //    var model = {
+    //        IDs: IDs
+    //    };
+
+    //    var form = $('<form>').attr('method', 'post').attr('action', '/DMS/PurchaseReturn/GetFromPurchase');
+
+    //    $.each(model, function (key, value) {
+    //        if ($.isArray(value)) {
+    //            $.each(value, function (index, element) {
+    //                var input = $('<input>').attr('type', 'hidden').attr('name', key).val(element);
+    //                form.append(input);
+    //            });
+    //        } else {
+    //            var input = $('<input>').attr('type', 'hidden').attr('name', key).val(value);
+    //            form.append(input);
+    //        }
+    //    });
+
+    //    $('body').append(form);
+    //    form.submit();
+    //};
+
+
     function SelectData() {
-        var IDs = [];
-
-        var selectedRows = $("#GridDataList").data("kendoGrid").select();
-
-        if (selectedRows.length === 0) {
-            ShowNotification(3, "You are requested to Select checkbox!");
+        var selectedRadio = $("#GridDataList .row-radio:checked");
+        if (selectedRadio.length === 0) {
+            ShowNotification(3, "Please select a row!");
             return;
         }
 
-        selectedRows.each(function () {
-            var dataItem = $("#GridDataList").data("kendoGrid").dataItem(this);
-            IDs.push(dataItem.Id);
-        });
+        var selectedId = selectedRadio.val();
+        var model = { IDs: [selectedId] }; // single ID as array
 
-        var model = {
-            IDs: IDs
-        };
-
-        var form = $('<form>').attr('method', 'post').attr('action', '/DMS/PurchaseReturn/GetFromPurchase');
-
+        var form = $('<form>').attr('method', 'post').attr('action', '/DMS/SaleReturn/GetFromSale');
         $.each(model, function (key, value) {
             if ($.isArray(value)) {
-                $.each(value, function (index, element) {
-                    var input = $('<input>').attr('type', 'hidden').attr('name', key).val(element);
-                    form.append(input);
+                $.each(value, function (i, v) {
+                    form.append($('<input>').attr('type', 'hidden').attr('name', key).val(v));
                 });
             } else {
-                var input = $('<input>').attr('type', 'hidden').attr('name', key).val(value);
-                form.append(input);
+                form.append($('<input>').attr('type', 'hidden').attr('name', key).val(value));
             }
         });
 
         $('body').append(form);
         form.submit();
-    };
+    }
 
     var GetGridDataList = function () {
 
@@ -408,8 +434,14 @@
                 }, 1000);
             },
             columns: [
+                //{
+                //    selectable: true, width: 40
+                //},
                 {
-                    selectable: true, width: 40
+                    title: "Select",
+                    width: 50,
+                    template: '<input type="radio" name="rowSelect" value="#=Id#" class="row-radio" />',
+                    attributes: { style: "text-align:center;" }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", width: 180, sortable: true },
@@ -461,12 +493,26 @@
 
             ],
             editable: false,
-            selectable: "multiple row",
+            selectable: false,
             navigatable: true,
             columnMenu: true
         });
 
+        $("#GridDataList").on("change", ".row-radio", function () {
+            var grid = $("#GridDataList").data("kendoGrid");
+            var selectedId = $(this).val();
+
+            // Clear previous Kendo selection
+            grid.clearSelection();
+
+            // Highlight the selected row
+            var row = grid.tbody.find("tr").filter(function () {
+                return grid.dataItem(this).Id == selectedId;
+            });
+            grid.select(row);
+        });
     };
+
 
 
     return {

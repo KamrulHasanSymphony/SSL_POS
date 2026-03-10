@@ -10,42 +10,95 @@
         });
     };
 
-    function SelectData() {
-        var IDs = [];
+    //function SelectData() {
+    //    var IDs = [];
 
-        var selectedRows = $("#GridDataList").data("kendoGrid").select();
+    //    var selectedRows = $("#GridDataList").data("kendoGrid").select();
+
+    //    if (selectedRows.length === 0) {
+    //        ShowNotification(3, "You are requested to Select checkbox!");
+    //        return;
+    //    }
+
+    //    selectedRows.each(function () {
+    //        var dataItem = $("#GridDataList").data("kendoGrid").dataItem(this);
+    //        IDs.push(dataItem.Id);
+    //    });
+
+    //    var model = {
+    //        IDs: IDs
+    //    };
+
+    //    var form = $('<form>').attr('method', 'post').attr('action', '/DMS/Purchase/GetFromPurchaseOrder');
+
+    //    $.each(model, function (key, value) {
+    //        if ($.isArray(value)) {
+    //            $.each(value, function (index, element) {
+    //                var input = $('<input>').attr('type', 'hidden').attr('name', key).val(element);
+    //                form.append(input);
+    //            });
+    //        } else {
+    //            var input = $('<input>').attr('type', 'hidden').attr('name', key).val(value);
+    //            form.append(input);
+    //        }
+    //    });
+
+    //    $('body').append(form);
+    //    form.submit();
+    //};
+
+
+
+    function SelectData() {
+        debugger;
+
+        var IDs = [];
+        var supplierList = [];
+
+        var grid = $("#GridDataList").data("kendoGrid");
+        var selectedRows = grid.select();
 
         if (selectedRows.length === 0) {
-            ShowNotification(3, "You are requested to Select checkbox!");
+            ShowNotification(3, "You are requested to select at least one row!");
             return;
         }
 
+        // Collect selected row IDs and SupplierNames
         selectedRows.each(function () {
-            var dataItem = $("#GridDataList").data("kendoGrid").dataItem(this);
+            var dataItem = grid.dataItem(this);
             IDs.push(dataItem.Id);
+            supplierList.push(dataItem.SupplierName); // change this to CustomerName if needed
         });
 
-        var model = {
-            IDs: IDs
-        };
+        // Check if all selected rows have the same SupplierName
+        var firstSupplier = supplierList[0];
+        for (var i = 1; i < supplierList.length; i++) {
+            if (supplierList[i] !== firstSupplier) {
+                ShowNotification(3, "You cannot select orders from different suppliers!");
+                return;
+            }
+        }
 
+        // Prepare form data
+        var model = { IDs: IDs };
         var form = $('<form>').attr('method', 'post').attr('action', '/DMS/Purchase/GetFromPurchaseOrder');
 
         $.each(model, function (key, value) {
             if ($.isArray(value)) {
                 $.each(value, function (index, element) {
-                    var input = $('<input>').attr('type', 'hidden').attr('name', key).val(element);
-                    form.append(input);
+                    form.append($('<input>').attr('type', 'hidden').attr('name', key).val(element));
                 });
             } else {
-                var input = $('<input>').attr('type', 'hidden').attr('name', key).val(value);
-                form.append(input);
+                form.append($('<input>').attr('type', 'hidden').attr('name', key).val(value));
             }
         });
 
         $('body').append(form);
         form.submit();
-    };
+    }
+
+
+
 
     var GetGridDataList = function () {
         debugger;

@@ -11,8 +11,52 @@ var FromSaleOrderController = function () {
         });
     };
 
+    //function SelectData() {
+    //    var IDs = [];
+
+    //    var selectedRows = $("#GridDataList").data("kendoGrid").select();
+
+    //    if (selectedRows.length === 0) {
+    //        ShowNotification(3, "You are requested to Select checkbox!");
+    //        return;
+    //    }
+
+    //    selectedRows.each(function () {
+    //        var dataItem = $("#GridDataList").data("kendoGrid").dataItem(this);
+    //        IDs.push(dataItem.Id);
+    //    });
+
+    //    var model = {
+    //        IDs: IDs
+    //    };
+
+    //    var form = $('<form>').attr('method', 'post').attr('action', '/DMS/Sale/GetFromSaleOrder');
+
+    //    $.each(model, function (key, value) {
+    //        if ($.isArray(value)) {
+    //            $.each(value, function (index, element) {
+    //                var input = $('<input>').attr('type', 'hidden').attr('name', key).val(element);
+    //                form.append(input);
+    //            });
+    //        } else {
+    //            var input = $('<input>').attr('type', 'hidden').attr('name', key).val(value);
+    //            form.append(input);
+    //        }
+    //    });
+
+    //    $('body').append(form);
+    //    form.submit();
+    //};
+
+
+
     function SelectData() {
+        debugger;
         var IDs = [];
+        var customerList = [];
+
+
+        var grid = $("#GridDataList").data("kendoGrid");
 
         var selectedRows = $("#GridDataList").data("kendoGrid").select();
 
@@ -24,7 +68,20 @@ var FromSaleOrderController = function () {
         selectedRows.each(function () {
             var dataItem = $("#GridDataList").data("kendoGrid").dataItem(this);
             IDs.push(dataItem.Id);
+
+            customerList.push(dataItem.CustomerName); // collect customer
         });
+
+        var firstCustomer = customerList[0];
+
+        for (var i = 1; i < customerList.length; i++) {
+
+            if (customerList[i] !== firstCustomer) {
+                ShowNotification(3, "You cannot select Sale Orders from different customers!");
+                return;
+            }
+
+        }
 
         var model = {
             IDs: IDs
@@ -47,6 +104,9 @@ var FromSaleOrderController = function () {
         $('body').append(form);
         form.submit();
     };
+
+
+
 
     var GetGridDataList = function () {
         debugger;

@@ -20,6 +20,7 @@ namespace ShampanPOS.Models
             [StringLength(300, ErrorMessage = "Account Name cannot exceed 300 characters.")]
             [Display(Name = "Account Name")]
             public string? AccountName { get; set; }
+            public string? BankName { get; set; }
 
             public string? UserId { get; set; }
 

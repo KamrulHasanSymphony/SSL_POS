@@ -871,7 +871,7 @@
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
 
-                { field: "AccountName", title: "Account Name", sortable: true, width: 200 },
+                { field: "AccountName", title: "Account Name", sortable: true, hidden: true, width: 200 },
                 {
                     field: "TransactionDate", title: "Transaction Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(TransactionDate), "yyyy-MM-dd") #',
                   filterable:
@@ -884,7 +884,7 @@
 
                      },
 
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "Comments", title: "Comments", hidden: true, sortable: true, width: 200 },
                 {
                     field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
                     filterable: {
