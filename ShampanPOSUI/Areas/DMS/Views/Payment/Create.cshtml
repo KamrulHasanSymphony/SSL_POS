@@ -119,40 +119,6 @@
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
 
-
-
-                    @*<div class="col-sm-2">
-                            @Html.LabelFor(model => model.TotalPaymentAmount)
-                            <div class="input-group">
-                                @Html.TextBoxFor(
-                                    model => model.TotalPaymentAmount,
-                                    new
-                                    {
-                                        @placeholder = "Total Payment Amount",
-                                        @class = "form-control form-control-sm text-right NumberCheck priceLen",
-                                        @readonly = "readonly",  // Ensure the field is read-only
-                                        id = "TotalPaymentAmount" // Set an ID to access this field easily
-                                    }
-                                )
-                            </div>
-                        </div>*@
-
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.Reference)
-                        <div class="input-group">
-                            @Html.TextAreaFor(model => model.Reference, new { placeholder = "Enter Reference", @class = "form-control form-control-sm" })
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.Comments)
-                        <div class="input-group">
-                            @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comment", @class = "form-control form-control-sm" })
-                        </div>
-                    </div>
-
-                </div>
-                <div class="form-group row">
-
                     <div class="col-sm-2" style="flex-direction: column">
                         @Html.LabelFor(model => model.IsCash)
                         <div class="Onoffbtn">
@@ -165,9 +131,27 @@
                                        data-bootstrap-switch
                                        data-off-color="danger"
                                        data-on-color="success"
-                                       data-on-text="Cash"
-                                       data-off-text="Bank">
+                                       data-on-text="Bank"
+                                       data-off-text="Cash">
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Reference)
+                        <div class="input-group">
+                            @Html.TextAreaFor(model => model.Reference, new { placeholder = "Enter Reference", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.Comments)
+                        <div class="input-group">
+                            @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comment", @class = "form-control form-control-sm" })
                         </div>
                     </div>
 

@@ -14,27 +14,10 @@
         if (getOperation !== '') {
             
 
-            GetSupplierGroupComboBox(); 
+            //GetSupplierGroupComboBox(); 
             InitItemsGrid();             
             InitAddedItemGrid();         
         };
-
-
-        //$('.btnsave').off('click').on('click', function (e) {
-        //    e.preventDefault();
-
-        //    var btn = $(this);
-        //    btn.prop("disabled", true);
-
-        //    Confirmation("Are you sure?", function (result) {
-        //        if (result) {
-        //            save();
-        //        } else {
-        //            btn.prop("disabled", false);
-        //        }
-        //    });
-        //});
-
 
         $('.btnsave').off('click').on('click', function (e) {
             e.preventDefault();
@@ -51,12 +34,12 @@
             }
 
             // 🔥 MasterItemGroup Required Check
-            var masterSupplierGroupId = $("#MasterSupplierGroupId").data("kendoMultiColumnComboBox").value();
+            //var masterSupplierGroupId = $("#MasterSupplierGroupId").data("kendoMultiColumnComboBox").value();
 
-            if (!masterSupplierGroupId || parseInt(masterSupplierGroupId) === 0) {
-                ShowNotification(3, "Supplier Group is required.");
-                return;
-            }
+            //if (!masterSupplierGroupId || parseInt(masterSupplierGroupId) === 0) {
+            //    ShowNotification(3, "Supplier Group is required.");
+            //    return;
+            //}
 
             // 🔥 Detail Grid Check
             var grid = $("#AddedItemGrid").data("kendoGrid");
@@ -189,17 +172,17 @@
     function InitItemsGrid() {
         debugger;
         $("#departments").kendoGrid({
-            autoBind: false,
+            autoBind: true,
             dataSource: {
                 transport: {
                     read: {
                         url: "/Common/Common/GetSupplierListByGroup", 
                         dataType: "json",
-                        data: function () {
-                            return {
-                                value: currentMasterSupplierGroupId 
-                            };
-                        }
+                        //data: function () {
+                        //    return {
+                        //        value: currentMasterSupplierGroupId 
+                        //    };
+                        //}
                     }
                 },
                 schema: {
@@ -217,6 +200,7 @@
                 { field: "Id", hidden: true },
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
+                { field: "MasterSupplierGroupName", title: "Supplier Group", width: 130 },
                 { field: "BanglaName", title: "Bangla Name",hidden:true, width: 150 },
                 { field: "Address", title: "Address", hidden: true, width: 150 },
                 { field: "City", title: "City", hidden: true, width: 150 },
@@ -224,24 +208,48 @@
                 { field: "Email", title: "Email", width: 150 },
                 { field: "ContactPerson", title: "Contact Person", hidden: true, width: 150 },
                 { field: "Action", hidden: true },
+
+                // ✅ Status column
+                {
+                    field: "IsAlreadyAdded",
+                    title: "Status",
+                    width: 90,
+                    template: function (dataItem) {
+
+                        if (dataItem.IsAlreadyAdded) {
+                            return "<span style='color:green;font-weight:bold'>✔ Added</span>";
+                        }
+
+                        return "<span style='color:gray'>New</span>";
+                    }
+                },
                 {
                     title: "Action",
                     width: 90,
-                    template: `
-            <button type="button" 
-                    class="k-button k-primary addToDetails"
-                    data-id="#: Id #"
-                    data-code="#: Code #"
-                    data-name="#: Name #"
-                    data-bangla-name="#: BanglaName #"
-                    data-address="#: Address #"
-                    data-city="#: City #"
-                    data-telephone-no="#: TelephoneNo #"
-                    data-email="#: Email #"
-                    data-contact-person="#: ContactPerson #">
-                    
-                Add
-            </button>`
+                    template: function (dataItem) {
+
+                        if (dataItem.IsAlreadyAdded) {
+                            return "<button class='k-button' disabled>Added</button>";
+                        }
+
+                        // Use dataItem directly for all attributes
+                        return `
+                    <button type="button" 
+                        class="k-button k-primary addToDetails"
+                        data-id="${dataItem.Id}"
+                        data-code="${dataItem.Code}"
+                        data-name="${dataItem.Name}"
+                        data-group="${dataItem.MasterSupplierGroupName}"
+                        data-bangla-name="${dataItem.BanglaName}"
+                        data-address="${dataItem.Address}"
+                        data-city="${dataItem.City}"
+                        data-telephone-no="${dataItem.TelephoneNo}"
+                        data-email="${dataItem.Email}"
+                        data-contact-person="${dataItem.ContactPerson}">
+            
+                        Add
+                    </button>`;
+                    }
                 }
             ],
 
@@ -263,7 +271,8 @@
                             Email: $(this).data("email"),
                             ContactPerson: $(this).data("contactPerson"),
                             Description: $(this).data("description"),
-                            MasterSupplierGroupName: $("#MasterSupplierGroupName").val() || ''
+                            MasterSupplierGroupName: $(this).data("group")
+                            //MasterSupplierGroupName: $("#MasterSupplierGroupName").val() || ''
                         });
                     });
             }
@@ -380,70 +389,6 @@
         });
     }
 
-
-    //function save() {
-    //    debugger;
-    //    var validator = $("#frmEntry").validate();
-    //    var formData = new FormData();
-    //    var model = serializeInputs("frmEntry");
-
-    //    var result = validator.form();
-
-    //    if (!result) {
-    //        validator.focusInvalid();
-    //        return;
-    //    }
-
-    //    // Append form data to FormData object
-    //    for (var key in model) {
-    //        formData.append(key, model[key]);
-    //    }
-
-    //    var grid = $("#AddedItemGrid").data("kendoGrid");
-    //    var details = [];
-
-    //    if (grid) {
-    //        var dataItems = grid.dataSource.view();
-
-    //        // Loop through the grid items and push them to the details array
-    //        for (var i = 0; i < dataItems.length; i++) {
-    //            var item = dataItems[i];
-
-    //            details.push({
-    //                Id: item.Id,
-    //                Code: item.Code,
-    //                Name: item.Name,
-    //                BanglaName: item.BanglaName,
-    //                Address: item.Address,
-    //                City: item.City,
-    //                TelephoneNo: item.TelephoneNo,
-    //                Email: item.Email,
-    //                ContactPerson: item.ContactPerson,
-    //                Description: item.Description,
-    //                MasterSupplierGroupName: item.MasterSupplierGroupName,
-    //                MasterSupplierGroupId: item.MasterSupplierGroupId,
-    //                MasterSupplierGroupDescription: item.MasterSupplierGroupDescription,
-    //                MasterSupplierGroupCode: item.MasterSupplierGroupCode
-    //            });
-    //        }
-    //    }
-
-    //    if (details.length === 0) {
-    //        ShowNotification(3, "At least one detail entry is required.");
-    //        return;
-    //    }
-
-    //    model.MasterSupplierList = details;
-
-    //    debugger;
-
-    //    // Send the data to the server
-    //    var url = "/DMS/MasterSupplierProduct/CreateEdit";
-    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
-    //}
-
-
-
     function save() {
 
         var validator = $("#frmEntry").validate();
@@ -457,15 +402,15 @@
             return;
         }
 
-        var masterSupplierGroupId = $("#MasterSupplierGroupId")
-            .data("kendoMultiColumnComboBox")
-            .value();
+        //var masterSupplierGroupId = $("#MasterSupplierGroupId")
+        //    .data("kendoMultiColumnComboBox")
+        //    .value();
 
-        if (!masterSupplierGroupId || parseInt(masterSupplierGroupId) === 0) {
-            ShowNotification(3, "Supplier Group is required.");
-            $(".btnsave").prop("disabled", false);
-            return;
-        }
+        //if (!masterSupplierGroupId || parseInt(masterSupplierGroupId) === 0) {
+        //    ShowNotification(3, "Supplier Group is required.");
+        //    $(".btnsave").prop("disabled", false);
+        //    return;
+        //}
 
         var grid = $("#AddedItemGrid").data("kendoGrid");
         var details = [];
@@ -506,38 +451,6 @@
         var url = "/DMS/MasterSupplierProduct/CreateEdit";
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
-
-
-
-
-
-    //function saveDone(result) {
-    //    debugger;
-    //    var msg = result.Message || "";
-
-    //    var inserted = 0;
-    //    var skipped = 0;
-
-    //    var matchInsert = msg.match(/(\d+)\s*added/i);
-    //    var matchSkip = msg.match(/(\d+)\s*skipped/i);
-
-    //    if (matchInsert) inserted = parseInt(matchInsert[1]);
-    //    if (matchSkip) skipped = parseInt(matchSkip[1]);
-
-    //    if (inserted > 0) {
-    //        ShowNotification(1, msg);
-    //    }
-    //    else if (skipped >= 0) {
-    //        ShowNotification(3, msg);
-    //    }
-    //    else {
-    //        ShowNotification(2, msg);
-    //    }
-
-    //    $(".btnsave").prop("disabled", false);
-    //}
-
-
 
     function saveDone(result) {
 

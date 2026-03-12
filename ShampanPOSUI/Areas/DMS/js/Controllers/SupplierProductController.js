@@ -20,21 +20,6 @@
             InitAddedItemGrid();
         };
 
-        //$('.btnsave').off('click').on('click', function (e) {
-        //    e.preventDefault();
-
-        //    var btn = $(this);
-        //    btn.prop("disabled", true);
-
-        //    Confirmation("Are you sure?", function (result) {
-        //        if (result) {
-        //            save();
-        //        } else {
-        //            btn.prop("disabled", false);
-        //        }
-        //    });
-        //});
-
 
         $('.btnsave').click(function (e) {
             debugger;
@@ -153,13 +138,6 @@
                 SupplierComboBox.text("");
                 getSupplierId = 0;
             }
-
-
-        //SupplierComboBox.dataSource.read().then(function () {
-
-        //    if (getSupplierId && parseInt(getSupplierId) > 0) {
-        //        SupplierComboBox.value(parseInt(getSupplierId));
-        //    }
 
         });
     }

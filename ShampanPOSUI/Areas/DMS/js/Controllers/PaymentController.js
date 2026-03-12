@@ -44,29 +44,6 @@
         });
 
 
-        //$('.btnsave').click('click', function (e) {
-        //    e.preventDefault();
-
-        //    var form = $("#frmEntry");
-        //    var mvcValid = form.valid();
-        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
-        //    debugger;
-        //    if (!mvcValid || !customValid) {
-        //        return false;
-        //    }
-        //    var getId = $('#Id').val();
-        //    var status = "Save";
-        //    if (parseInt(getId) > 0) {
-        //        status = "Update";
-        //    }
-        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
-        //        function (result) {
-        //            if (result) {
-        //                save($table);
-        //            }
-        //        });
-        //});
-
 
         $('.btnsave').click(function (e) {
 
@@ -103,16 +80,6 @@
                 return false;
             }
 
-            //var getId = $('#Id').val();
-            //var status = parseInt(getId) > 0 ? "Update" : "Save";
-
-            //Confirmation("Are you sure? Do You Want to " + status + " Data?",
-            //    function (result) {
-            //        if (result) {
-            //            save($table);
-            //        }
-            //    });
-
             Confirmation("Are you sure? Do You Want to Save Data?",
                 function (result) {
                     if (result) {
@@ -121,43 +88,6 @@
                 });
 
         });
-
-
-
-        //$('.btnsave').click(function (e) {
-        //    debugger;
-
-        //    e.preventDefault();
-
-        //    var form = $("#frmEntry");
-        //    var $table = $('#details');
-
-        //    var details = serializeTable($table);
-
-        //    if (!details || details.length === 0) {
-        //        ShowNotification(3, "Please add at least one detail entry.");
-        //        return false;
-        //    }
-
-        //    var mvcValid = form.valid();
-        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
-
-        //    if (!mvcValid || !customValid) {
-        //        return false;
-        //    }
-
-        //    var getId = $('#Id').val();
-        //    var status = parseInt(getId) > 0 ? "Update" : "Save";
-
-        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
-        //        function (result) {
-        //            if (result) {
-        //                save($table);
-        //            }
-        //        });
-
-        //});
-
 
 
 
@@ -272,6 +202,39 @@
 
         });
 
+
+        // 🔥 Cash / Bank Toggle Logic
+        $("#IsCash").on("switchChange.bootstrapSwitch", function (event, state) {
+
+            var combo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+
+            if (!combo) {
+                GetBankAccountComboBox();
+                combo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+            }
+
+            if (state) {
+
+                // Bank selected
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Bank"
+                });
+
+            } else {
+
+                // Cash selected
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Cash"
+                });
+
+            }
+
+        });
+
         // Kendo Window Initialization
         var myWindow = $("#window");
 
@@ -288,6 +251,42 @@
                 close: onClose
             }).data("kendoWindow").center();
         };
+
+        // 🔥 Initial Load Handling
+        setTimeout(function () {
+
+            var isCash = $("#IsCash").bootstrapSwitch("state");
+            var combo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+
+            if (!combo) {
+                GetBankAccountComboBox();
+                combo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+            }
+
+            combo.enable(true);
+
+            if (isCash === true) {
+
+                // Bank selected → show Bank accounts
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Bank"
+                });
+
+            } else {
+
+                // Cash selected → show Cash accounts
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Cash"
+                });
+
+            }
+
+        }, 200);
+
 
 
         $(document).on('click', '.details-link', function () {
@@ -435,7 +434,7 @@
         debugger;
         var SupplierComboBox = $("#BankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
-            dataValueField: "BankId",
+            dataValueField: "Id",
             height: 400,
             columns: [               
                 { field: "AccountNo", title: "Account No", width: 150 },
@@ -848,70 +847,6 @@
 
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
-
-
-    //function save($table) {
-    //    debugger;
-    //    var validator = $("#frmEntry").validate();
-    //    var model = serializeInputs("frmEntry");
-    //    debugger;
-    //    var result = validator.form();
-
-    //    if (!result) {
-    //        validator.focusInvalid();
-    //        ShowNotification(3, "Complete Required Fields.");
-    //        return;
-    //    }
-
-    //    if (model.IsPost == 'True') {
-    //        ShowNotification(2, "Post operation is already done, Do not update this entry");
-    //        return;
-    //    }
-    //    if (parseInt(model.SupplierId) == 0 || model.SupplierId == "") {
-    //        ShowNotification(3, "Supplier Required.");
-    //        return;
-    //    }
-
-
-    //    var isDropdownValid1 = CommonService.validateDropdown("#SupplierId", "#titleError1", "Supplier is required");
-
-    //    var isDropdownValid = isDropdownValid1;
-    //    if (!result || !isDropdownValid) {
-    //        if (!result) {
-    //            validator.focusInvalid();
-    //        }
-    //        return;
-    //    }
-
-    //    //var details = serializeTable($table);
-
-    //    //var requiredFields = ['PurchaseCode', 'PurchaseAmount', 'PaymentAmount'];
-    //    //var fieldMappings = {
-    //    //    'PurchaseCode': 'Purchase Code',
-    //    //    'PurchaseAmount': 'Purchase Amount',
-    //    //    'PaymentAmount': 'PaymentAmount'
-    //    //};
-
-    //    //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-    //    //if (errorMessage) {
-    //    //    ShowNotification(3, errorMessage);
-    //    //    return;
-    //    //};
-
-    //    //if (item.ProductName === 0 || item.ProductName === undefined || item.ProductName === null || item.ProductName === "") {
-    //    //    ShowNotification(3, "Product Name is required.");
-    //    //    return;
-    //    //}
-
-
-    //    model.TotalPaymentAmount = model.TotalPaymentAmount.replace(/,/g, '');
-
-    //    model.paymentDetailList = details;
-
-    //    var url = "/DMS/Payment/CreateEdit";
-
-    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
-    //};
 
     function saveDone(result) {
 

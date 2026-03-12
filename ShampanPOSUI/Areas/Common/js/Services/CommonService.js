@@ -1150,12 +1150,19 @@
                 },
                 columns: [
                     { data: "Id", visible: false },
-                    { data: "Code", title: "Code", width: '15%', visible: true },  // Make Purchase Code visible here
+                    { data: "Code", title: "Code", width: '15%' },
+
                     { data: "CustomerId", visible: false },
                     { data: "SaleOrderId", visible: false },
-                    { data: "SaleOrderCode", title: "Sale Order Code", width: '30%' },
-                    { data: "CustomerName", title: "Customer Name", width: '30%' },
-                    { data: "Comments", title: "Comments", width: '30%' }
+
+                    { data: "SaleOrderCode", title: "Sale Order Code", width: '20%' },
+                    { data: "CustomerName", title: "Customer Name", width: '20%' },
+
+                    { data: "GrandTotal", title: "Sale Amount", width: '15%' },
+                    { data: "PaymentAmount", title: "Paid", width: '15%' },
+                    { data: "DueAmount", title: "Due", width: '15%' },
+
+                    { data: "Comments", title: "Comments", width: '20%' }
                 ],
                 columnDefs: [
                     { width: '10%', targets: 0 }

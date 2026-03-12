@@ -144,6 +144,25 @@
                                     <span id="titleError2" class="text-danger" style="display:none;"></span>
                                 </div>
 
+
+                                <div class="col-sm-2" style="flex-direction: column">
+                                    @Html.LabelFor(model => model.IsCash)
+                                    <div class="Onoffbtn">
+                                        <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                            <input id="IsCash"
+                                                   value="@Model.IsCash"
+                                                   type="checkbox"
+                                                   name="my-checkbox"
+                                                   @(Model.IsCash ? "checked" : "")
+                                                   data-bootstrap-switch
+                                                   data-off-color="danger"
+                                                   data-on-color="success"
+                                                   data-on-text="Cash"
+                                                   data-off-text="Bank">
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.ChequeNo)
                                     <div class="input-group">
@@ -169,6 +188,10 @@
                                     </div>
                                 </div>
 
+                            </div>
+
+                            <div class="form-group row">
+
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.TransactionDate)
                                     <div class="input-group date">
@@ -178,10 +201,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                            </div>
-
-                            <div class="form-group row">
 
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.TotalDepositAmount)
@@ -216,23 +235,23 @@
                                     @Html.ValidationMessageFor(model => model.Reference)
                                 </div>
 
-                                <div class="col-sm-2" style="flex-direction: column">
-                                    @Html.LabelFor(model => model.IsCash)
-                                    <div class="Onoffbtn">
-                                        <div class="input-group" style="margin-bottom: -26px; width: 78%;">
-                                            <input id="IsCash"
-                                                   value="@Model.IsCash"
-                                                   type="checkbox"
-                                                   name="my-checkbox"
-                                                   @(Model.IsCash ? "checked" : "")
-                                                   data-bootstrap-switch
-                                                   data-off-color="danger"
-                                                   data-on-color="success"
-                                                   data-on-text="Cash"
-                                                   data-off-text="Bank">
-                                        </div>
-                                    </div>
-                                </div>
+                                @*<div class="col-sm-2" style="flex-direction: column">
+            @Html.LabelFor(model => model.IsCash)
+            <div class="Onoffbtn">
+                <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                    <input id="IsCash"
+                           value="@Model.IsCash"
+                           type="checkbox"
+                           name="my-checkbox"
+                           @(Model.IsCash ? "checked" : "")
+                           data-bootstrap-switch
+                           data-off-color="danger"
+                           data-on-color="success"
+                           data-on-text="Cash"
+                           data-off-text="Bank">
+                </div>
+            </div>
+        </div>*@
 
 
                                 <div class="col-sm-2" style="flex-direction: column">

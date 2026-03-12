@@ -117,6 +117,7 @@ namespace ShampanPOS.Models
         // 🔥 VERY IMPORTANT (JS → Controller)
         public string? SelectedMasterItemsJson { get; set; }
 
+        public bool IsAlreadyAdded { get; set; }
 
         public PeramModel PeramModel { get; set; }
 

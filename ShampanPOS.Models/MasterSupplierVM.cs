@@ -112,6 +112,7 @@ namespace ShampanPOS.Models
 
         public string? SelectedMasterItemsJson { get; set; }
 
+        public bool IsAlreadyAdded { get; set; }
 
         public PeramModel PeramModel { get; set; }
 

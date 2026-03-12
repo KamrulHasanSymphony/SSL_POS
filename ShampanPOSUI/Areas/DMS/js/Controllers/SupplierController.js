@@ -1,6 +1,8 @@
 ﻿var SupplierController = function (CommonService, CommonAjaxService) {
     var getSupplierGroupId = 0;
     var init = function () {
+
+        //SupplierProductController.init();
         getSupplierGroupId = $("#SupplierGroupId").val() || 0;
         
         var getId = $("#Id").val() || 0;
@@ -9,6 +11,9 @@
             GetGridDataList();
         }
         GetSupplierGroupComboBox();
+        //GetProductGroupComboBox();
+        InitItemsGrid();
+        InitAddedItemGrid();
 
         $('.btnsave').on('click', function (e) {
             debugger;
@@ -24,7 +29,15 @@
             if (!mvcValid || !customValid) {
                 return false;
             }
-            
+            var grid = $("#AddedItemGrid").data("kendoGrid");
+            if (!grid || grid.dataSource.data().length === 0) {
+                ShowNotification(3, "Add at least one SupplierProduct detail.");
+                return;
+            }
+
+            var btn = $(this);
+            btn.prop("disabled", true);
+
             var getId = $('#Id').val();
             var status = "Save";
             if (parseInt(getId) > 0) {
@@ -33,9 +46,11 @@
             Confirmation("Are you sure? Do You Want to " + status + " Data?",
 
                 function (result) {
-                    
+
                     if (result) {
                         save();
+                    } else {
+                        btn.prop("disabled", false);
                     }
                 });
         });
@@ -101,43 +116,6 @@
             $("#imageUpload").prop("disabled", false);
         });
 
-        //// Handle file input change to preview image
-        //$("#imageUpload").on("change", function (event) {
-        //    $("#imageUpload").prop("disabled", true);
-        //    var file = event.target.files[0];
-
-        //    if (!file) {
-        //        console.error("No file selected!");
-        //        return;
-        //    }
-
-        //    var reader = new FileReader();
-
-        //    reader.onload = function (e) {
-        //        console.log("File loaded successfully!"); // Debugging
-
-        //        // Update the preview image and make it visible
-        //        $("#imagePreview").attr("src", e.target.result).show();
-        //        $("#deleteImageBtn").show();
-        //    };
-
-        //    reader.onerror = function (error) {
-        //        console.error("Error reading file:", error);
-        //    };
-
-        //    reader.readAsDataURL(file);
-        //});
-
-        //$("#deleteImageBtn").on("click", function () {
-        //    $(this).addClass("clicked");
-        //    $("#imagePreview").attr("src", "").hide(); // Hide preview
-        //    $("#ImagePath").val(""); // Clear hidden field
-        //    $("#deleteImageBtn").hide();
-        //    $("#imageUpload").val("");// Hide delete button
-        //    $("#imageUpload").prop("disabled", false);
-
-        //});
-
         var operation = $("#Operation").val();
         var imagePath = $("#ImagePath").val();
         if (operation == "update" && imagePath !== null) {
@@ -174,7 +152,254 @@
                 
             }
         }).data("kendoMultiColumnComboBox");
-    };   
+    };  
+
+
+
+    function GetProductGroupComboBox() {
+        debugger;
+        var combo = $("#ProductGroupId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            autoBind: false,
+            filter: "contains",
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductGroupList",
+                        dataType: "json"
+                    }
+                }
+            },
+
+            change: function () {
+                var dataItem = this.dataItem();
+                var groupId = this.value();
+                var grid = $("#departments").data("kendoGrid");
+                debugger;
+                if (!groupId) {
+                    currentProductGroupId = 0;
+                    if (grid) grid.dataSource.data([]);
+                    return;
+                }
+
+                currentProductGroupId = groupId;
+
+                if (grid) {
+                    grid.dataSource.read();
+                }
+
+                if (dataItem) {
+
+                    $("#ProductGroupName").val(dataItem.Name);
+                    $("#Description").val(dataItem.Description);
+                    $("#Code").val(dataItem.Code);
+                }
+            }
+        });
+    }
+
+
+    function InitItemsGrid() {
+        debugger;
+        $("#departments").kendoGrid({
+            autoBind: true,
+            toolbar: ["search"],
+            search: {
+                fields: [
+                    { name: "Code", operator: "contains" },
+                    { name: "Name", operator: "contains" },
+                    { name: "HSCodeNo", operator: "contains" },
+                    { name: "VATRate", operator: "contains" },
+                    { name: "SDRate", operator: "contains" }
+                ]
+            },
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductList",
+                        dataType: "json",
+                        //data: function () {
+                        //    return {
+                        //        value: currentProductGroupId
+                        //    };
+                        //}
+                    }
+                },
+                schema: {
+                    data: function (res) { return res; },
+                    total: function (res) { return res.length; }
+                },
+                pageSize: 10
+            },
+            pageable: true,
+            sortable: true,
+            resizable: true,
+            reorderable: true,
+            groupable: true,
+            columns: [
+                { field: "Id", hidden: true },
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 110 },
+                { field: "ProductGroupName", title: "Product Group", width: 110 },
+                { field: "BanglaName", title: "Bangla Name", hidden: true, width: 150 },
+                { field: "Description", title: "Description", hidden: true, width: 150 },
+                { field: "UOMId", title: "UOM ID", hidden: true, width: 100 },
+                { field: "HSCodeNo", title: "HS Code No", width: 80 },
+                { field: "VATRate", title: "VAT Rate", width: 80 },
+                { field: "SDRate", title: "SD Rate", width: 80 },
+                {
+                    title: "Action",
+                    width: 90,
+                    template: `
+                    <button type="button" 
+                            class="k-button k-primary addToDetails"
+                            data-id="#: Id #"
+                            data-code="#: Code #"
+                            data-name="#: Name #"
+                            data-group="#: ProductGroupName #"
+                            data-bangla-name="#: BanglaName #"
+                            data-description="#: Description #"
+                            data-uom-id="#: UOMId #"
+                            data-hs-code="#: HSCodeNo #"
+                            data-vat-rate="#: VATRate #"
+                            data-sd-rate="#: SDRate #">
+                        Add
+                    </button>`
+                }
+            ],
+
+            dataBound: function () {
+                $("#departments")
+                    .off("click", ".addToDetails")
+                    .on("click", ".addToDetails", function (e) {
+
+                        e.preventDefault();
+
+                        Addtolist({
+                            Id: $(this).data("id"),
+                            Code: $(this).data("code"),
+                            Name: $(this).data("name"),
+                            BanglaName: $(this).data("bangla-name"),
+                            Description: $(this).data("description"),
+                            UOMId: $(this).data("uom-id"),
+                            HSCodeNo: $(this).data("hs-code"),
+                            VATRate: $(this).data("vat-rate"),
+                            SDRate: $(this).data("sd-rate"),
+                            ProductGroupName: $(this).data("group")
+                            //ProductGroupName: $("#ProductGroupName").val() || ''
+                        });
+                    });
+
+            }
+
+        });
+    }
+
+
+
+    function InitAddedItemGrid() {
+
+
+        var iteamDetailList = JSON.parse($("#iteamDetailList").val() || "[]");
+
+        $("#AddedItemGrid").kendoGrid({
+            dataSource: {
+                data: iteamDetailList,
+                pageSize: 20,
+                schema: {
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { type: "number" },
+                            Code: { type: "string" },
+                            Name: { type: "string" },
+                            ProductGroupName: { type: "string" },
+
+                        }
+                    }
+                }
+            },
+            columns: [
+                { field: "Id", hidden: true },
+                { field: "ProductId", hidden: true },
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 },
+                { field: "ProductGroupName", title: "Group", width: 150 },
+
+                {
+                    title: "Action",
+                    width: 70,
+                    template: `
+                <button type="button"
+                        class="k-button k-danger removeItem"
+                        title="Remove">
+                    <i class="k-icon k-i-trash"></i>
+                </button>`
+                }
+            ],
+            dataBound: function () {
+
+                $(".removeItem").off().on("click", function (e) {
+                    e.preventDefault();
+
+
+                    var grid = $("#AddedItemGrid").data("kendoGrid");
+
+
+                    var tr = $(this).closest("tr");
+
+
+                    grid.removeRow(tr);
+                });
+            }
+        });
+    }
+
+
+    function Addtolist(item) {
+        debugger;
+
+        var grid = $("#AddedItemGrid").data("kendoGrid");
+        if (!grid) {
+            kendo.alert("Added Item grid not initialized!");
+            return;
+        }
+
+        var ds = grid.dataSource;
+
+        // ✅ Correct duplicate check
+        var exists = ds.data().some(function (x) {
+            return x.Id === item.Id;
+        });
+
+        if (exists) {
+            ShowNotification(3, "This supplier is already added!");
+            return;
+        }
+
+        // Add the new item to the grid, including all necessary fields
+        ds.add({
+            Id: item.Id,
+            Code: item.Code,
+            Name: item.Name,
+            BanglaName: item.BanglaName,
+            UOMId: item.UOMId,
+            VATRate: item.VATRate,
+            HSCodeNo: item.HSCodeNo,
+            SDRate: item.SDRate,
+            Description: item.Description,
+            ProductGroupDescription: item.ProductGroupDescription,
+            ProductGroupCode: item.ProductGroupCode,
+            ProductGroupName: item.ProductGroupName,
+            ProductGroupId: item.ProductGroupId
+        });
+    }
+
+
+
+
+
     function SelectData() {
 
         var IDs = [];
@@ -458,7 +683,7 @@
                             <a href="/DMS/Supplier/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-            
+
                         <a href="/DMS/Supplier/getReport/${dataItem.Id}" 
                           class="btn btn-success btn-sm mr-2 getReport" 
                           title="Report">
@@ -529,6 +754,7 @@
             formData.append(key, model[key]);
         }
 
+
         formData.append("IsActive", $('#IsActive').prop('checked'));
 
         // Check if delete button was clicked to remove image
@@ -556,20 +782,118 @@
             }
         }
 
+        var grid = $("#AddedItemGrid").data("kendoGrid");
+        var details = [];
+        if (grid) {
+            var dataItems = grid.dataSource.view();
+            for (var i = 0; i < dataItems.length; i++) {
+                var item = dataItems[i];
+                details.push({
+                    Id: item.Id,
+                    ProductId: item.ProductId,
+                    Code: item.Code,
+                    Name: item.Name,
+                    BanglaName: item.BanglaName,
+                    UOMId: item.UOMId,
+                    VATRate: item.VATRate,
+                    HSCodeNo: item.HSCodeNo,
+                    SDRate: item.SDRate,
+                    Description: item.Description,
+                    ProductGroupDescription: item.ProductGroupDescription,
+                    ProductGroupCode: item.ProductGroupCode,
+                    ProductGroupName: item.ProductGroupName,
+                    ProductGroupId: item.ProductGroupId
+                });
+            }
+        }
+
+        if (details.length === 0) {
+            ShowNotification(3, "At least one product detail is required.");
+            $(".btnsave").prop("disabled", false);
+            return;
+        }
+
+        //model.MasterItemList = details;
+        debugger;
+        for (var i = 0; i < details.length; i++) {
+
+            formData.append("MasterItemList[" + i + "].Id", details[i].Id);
+            formData.append("MasterItemList[" + i + "].ProductId", details[i].ProductId);
+            formData.append("MasterItemList[" + i + "].Code", details[i].Code);
+            formData.append("MasterItemList[" + i + "].Name", details[i].Name);
+            formData.append("MasterItemList[" + i + "].BanglaName", details[i].BanglaName);
+            formData.append("MasterItemList[" + i + "].UOMId", details[i].UOMId);
+            formData.append("MasterItemList[" + i + "].VATRate", details[i].VATRate);
+            formData.append("MasterItemList[" + i + "].HSCodeNo", details[i].HSCodeNo);
+            formData.append("MasterItemList[" + i + "].SDRate", details[i].SDRate);
+            formData.append("MasterItemList[" + i + "].Description", details[i].Description);
+            formData.append("MasterItemList[" + i + "].ProductGroupDescription", details[i].ProductGroupDescription);
+            formData.append("MasterItemList[" + i + "].ProductGroupCode", details[i].ProductGroupCode);
+            formData.append("MasterItemList[" + i + "].ProductGroupName", details[i].ProductGroupName);
+            formData.append("MasterItemList[" + i + "].ProductGroupId", details[i].ProductGroupId);
+
+        }
+
         var url = "/DMS/Supplier/CreateEdit";
 
         CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
     };
 
+    //function saveDone(result) {
+
+    //    if (result.Status === 200) {
+    //        if (result.Data.Operation === "add") {
+    //            ShowNotification(1, result.Message);
+    //            $(".btnsave").html('Update');
+
+    //            $(".divSave").hide();
+
+    //            $(".divUpdate").show();
+    //            $("#Code").val(result.Data.Code);
+    //            $("#Id").val(result.Data.Id);
+    //            $("#Operation").val("update");
+    //            $("#CreatedBy").val(result.Data.CreatedBy);
+    //            $("#CreatedOn").val(result.Data.CreatedOn);
+    //        }
+    //        else {
+    //            ShowNotification(1, result.Message);
+    //            $("#LastModifiedBy").val(result.Data.LastModifiedBy);
+    //            $("#LastModifiedOn").val(result.Data.LastModifiedOn);
+    //            setTimeout(function () {
+    //                location.reload();
+    //            }, 700);
+
+    //            $("#imageUpload").prop("disabled", true);
+    //        }
+    //        if (result.Data.ImagePath) {
+    //            var imagePath = result.Data.ImagePath;
+    //            if (!imagePath.startsWith("http") && !imagePath.startsWith("/")) {
+    //                imagePath = "/" + imagePath; // Ensure it starts with "/"
+    //            }
+    //            $("#imagePreview").attr("src", imagePath + "?t=" + new Date().getTime()).show();
+    //            $("#deleteImageBtn").show();
+    //            $("#ImagePath").val(imagePath); // Update hidden field with new path
+    //        }
+    //        else {
+    //            $("#imagePreview").hide();
+    //            $("#deleteImageBtn").hide();
+    //        }
+    //    }
+    //    else if (result.Status == 400) {
+    //        ShowNotification(3, result.Message);
+    //    }
+    //    else {
+    //        ShowNotification(2, result.Message);
+    //    }
+    //}
+
+
     function saveDone(result) {
-        
-        if (result.Status === 200) {
-            if (result.Data.Operation === "add") {
+
+        if (result.Status == 200) {
+            if (result.Data.Operation == "add") {
                 ShowNotification(1, result.Message);
-                $(".btnsave").html('Update');
-             
                 $(".divSave").hide();
-             
                 $(".divUpdate").show();
                 $("#Code").val(result.Data.Code);
                 $("#Id").val(result.Data.Id);
@@ -581,24 +905,6 @@
                 ShowNotification(1, result.Message);
                 $("#LastModifiedBy").val(result.Data.LastModifiedBy);
                 $("#LastModifiedOn").val(result.Data.LastModifiedOn);
-                setTimeout(function () {
-                    location.reload();
-                }, 700);
-
-                $("#imageUpload").prop("disabled", true);
-            }
-            if (result.Data.ImagePath) {
-                var imagePath = result.Data.ImagePath;
-                if (!imagePath.startsWith("http") && !imagePath.startsWith("/")) {
-                    imagePath = "/" + imagePath; // Ensure it starts with "/"
-                }
-                $("#imagePreview").attr("src", imagePath + "?t=" + new Date().getTime()).show();
-                $("#deleteImageBtn").show();
-                $("#ImagePath").val(imagePath); // Update hidden field with new path
-            }
-            else {
-                $("#imagePreview").hide();
-                $("#deleteImageBtn").hide();
             }
         }
         else if (result.Status == 400) {
@@ -607,7 +913,7 @@
         else {
             ShowNotification(2, result.Message);
         }
-    }
+    };
 
     function saveFail(err) {
         

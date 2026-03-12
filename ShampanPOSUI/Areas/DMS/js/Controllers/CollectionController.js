@@ -3,6 +3,8 @@
     
     var decimalPlace = 0;
 
+    // 🔥 Add this line
+
     var init = function () {
 
         if ($("#IsPosted").length) {
@@ -16,7 +18,6 @@
             Visibility(true);
         };
 
-        //getCustomerId = $("#CustomerId").val() || 0;
         getBankAccountId = $("#BankAccountId").val();
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
@@ -31,42 +32,125 @@
             GetCustomerComboBox();
         
         };
+
         calculateTotalCollect();
 
 
-        var $table = $('#details');
-
-        var table = initEditTable($table, { searchHandleAfterEdit: false });
 
 
-        $('#addRows').on('click', function (e) {
+        var rxList = JSON.parse($("#detailsListJson").val() || "[]");
 
-            addRow($table);
+        gridDataSource = new kendo.data.DataSource({
+            data: rxList,
+            schema: {
+                model: {
+                    id: "SaleId",
+                    fields: {
+                        SLNo: { type: "number", editable: false },
+
+                        SaleId: { type: "number" },
+
+                        SaleCode: { type: "string" },
+
+                        SaleAmount: { type: "number" },
+
+                        PaidAmount: { type: "number" },
+
+                        DueAmount: { type: "number"},
+
+                        CollectionAmount: { type: "number" },
+
+                        //PaymentAfter: { type: "number" },
+
+                        DueAfter: { type: "number" }
+                    }
+                }
+            }
+        });
+        
+
+        var grid = $("#CollectionDetailsGrid").kendoGrid({
+            dataSource: gridDataSource,
+            toolbar: [{ name: "create", text: "Add" }],
+            editable: {
+                mode: "incell",
+                createAt: "bottom"
+            },
+
+            save: function (e) {
+
+                if (e.values.CollectionAmount != null) {
+
+                    var collection = parseFloat(e.values.CollectionAmount) || 0;
+                    var paid = parseFloat(e.model.PaidAmount) || 0;
+                    var due = parseFloat(e.model.DueAmount) || 0;
+
+                    if (collection > due) {
+                        ShowNotification(3, "Collection cannot exceed Due Amount");
+                        e.preventDefault();
+                        return;
+                    }
+
+                    //var paymentAfter = paid + collection;
+                    //var dueAfter = due - collection;
+
+                    //e.model.set("PaymentAfter", paymentAfter);
+                    //e.model.set("DueAfter", dueAfter);
+
+                    var newPaid = paid + collection;
+                    var dueAfter = due - collection;
+
+                    e.model.set("PaidAmount", newPaid);
+                    e.model.set("DueAfter", dueAfter);
+                }
+            },
+
+            remove: function () {
+                calculateTotalCollectGrid();
+            },
+
+            columns: [
+                {
+                    field: "SLNo",
+                    title: "SL",
+                    width: 50,
+                    editable: false,
+                    template: function (dataItem) {
+                        var grid = $("#CollectionDetailsGrid").data("kendoGrid");
+                        return grid.dataSource.indexOf(dataItem) + 1;
+                    }
+                },
+                {
+                    field: "SaleId",
+                    title: "Sale Code",
+                    editor: SelectorEditor,
+                    template: function (dataItem) {
+                        return dataItem.SaleCode || "";
+                    },
+                    width: 250
+                },
+
+                { field: "SaleAmount", title: "Sale Amount", width: 120, format: "{0:n2}", editable: false },
+                { field: "PaidAmount", title: "Paid", width: 120, format: "{0:n2}", editable: false },
+                { field: "DueAmount", title: "Due", width: 120, format: "{0:n2}", editable: false },
+
+                { field: "CollectionAmount", title: "Collection Amount", width: 150 },
+
+                //{ field: "PaymentAfter", title: "Payment After", width: 150, format: "{0:n2}", editable: false },
+                { field: "DueAfter", title: "Due After", width: 150, format: "{0:n2}", editable: false },
+
+                {
+                    command: [{ name: "destroy", text: "", iconClass: "k-icon k-i-trash" }],
+                    title: " ",
+                    width: 50
+                }
+            ]
+        }).data("kendoGrid");
+
+        gridDataSource.bind("change", function () {
+            calculateTotalCollectGrid();
         });
 
-
-        //$('.btnsave').click('click', function (e) {
-        //    e.preventDefault();
-
-        //    var form = $("#frmEntry");
-        //    var mvcValid = form.valid();
-        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
-        //    debugger;
-        //    if (!mvcValid || !customValid) {
-        //        return false;
-        //    }
-        //    var getId = $('#Id').val();
-        //    var status = "Save";
-        //    if (parseInt(getId) > 0) {
-        //        status = "Update";
-        //    }
-        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
-        //        function (result) {
-        //            if (result) {
-        //                save($table);
-        //            }
-        //        });
-        //});
 
         $('.btnsave').click(function (e) {
 
@@ -82,7 +166,12 @@
                 return false;
             }
 
-            var details = serializeTable($table);
+
+            var grid = $("#CollectionDetailsGrid").data("kendoGrid");
+
+            var details = grid.dataSource.data().toJSON();
+
+
 
             if (!details || details.length === 0) {
                 ShowNotification(3, "Complete Details Entry.");
@@ -111,66 +200,6 @@
                 });
 
         });
-
-
-        //$('.btnsave').click(function (e) {
-
-        //    e.preventDefault();
-
-        //    var form = $("#frmEntry");
-        //    var $table = $('#details');
-
-        //    var mvcValid = form.valid();
-        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
-
-        //    if (!mvcValid || !customValid) {
-        //        return false;
-        //    }
-
-        //    var details = serializeTable($table);
-
-        //    if (!details || details.length === 0) {
-        //        ShowNotification(3, "Complete Details Entry.");
-        //        return false;
-        //    }
-
-        //    //var errorMessage = getRequiredFieldsCheckObj(details,['SaleCode', 'SaleAmount', 'CollectionAmount'],
-        //    //    {
-        //    //        'SaleCode': 'Sale Code',
-        //    //        'SaleAmount': 'Sale Amount',
-        //    //        'CollectionAmount': 'Collection Amount'
-        //    //    });
-
-
-        //    var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
-        //    var fieldMappings = {
-        //            'SaleCode': 'Sale Code',
-        //            'SaleAmount': 'Sale Amount',
-        //            'CollectionAmount': 'Collection Amount'
-        //    };
-
-        //    var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-
-        //    if (errorMessage) {
-        //        ShowNotification(3, errorMessage);
-        //        return false;
-        //    }
-        //    debugger;
-        //    var getId = $('#Id').val();
-        //    var status = parseInt(getId) > 0 ? "Update" : "Save";
-
-        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
-        //        function (result) {
-        //            if (result) {
-        //                save();
-        //            }
-        //        });
-
-        //});
-
-
-
-
 
 
         $('#btnComplete').on('click', function () {
@@ -254,76 +283,39 @@
         });   
 
 
-        $('#details').on('click', 'input.txtSaleCode', function () {
-            var originalRow = $(this);
-            $('#FromDate').val($('#OrderDate').val());
-            debugger;
-            originalRow.closest("td").find("input").data('touched', true);
-            CommonService.saleModal(
-                function success(result) {
-                    console.log("Modal opened successfully.");
-                },
-                function fail(error) {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.log("Error opening modal:", error);
-                },
-                function dblClick(row) {
-                    saleModalDblClick(row, originalRow);
-                },
-                function closeCallback() {
-                    originalRow.closest("td").find("input").data("touched", false).focus();
-                    console.log("Modal closed.");
-                }
-            );
-        });
-
-
 
         // 🔥 Cash / Bank Toggle Logic
         $("#IsCash").on("switchChange.bootstrapSwitch", function (event, state) {
 
-            var bankCombo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+            var combo = $("#BankAccountId").data("kendoMultiColumnComboBox");
 
-            if (state === true) {
-                // Cash selected → ENABLE + LOAD Bank Account
-                if (!bankCombo) {
-                    GetBankAccountComboBox();
-                    bankCombo = $("#BankAccountId").data("kendoMultiColumnComboBox");
-                }
+            if (!combo) {
+                GetBankAccountComboBox();
+                combo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+            }
 
-                bankCombo.enable(true);
-                bankCombo.dataSource.read();
+            if (state) {
+
+                // Bank selected
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Bank"
+                });
+
+            } else {
+
+                // Cash selected
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Cash"
+                });
+
             }
-            else {
-                // Bank selected → DISABLE + CLEAR
-                if (bankCombo) {
-                    bankCombo.value("");
-                    bankCombo.enable(false);
-                }
-            }
+
         });
 
-
-
-
-
-
-        // Kendo Window Initialization
-        var myWindow = $("#window");
-
-        if (myWindow.length > 0) {
-            function onClose() {
-                myWindow.fadeIn();
-            };
-
-            myWindow.kendoWindow({
-                width: "1000px",
-                title: "Purchase Order Form",
-                visible: false,
-                actions: ["Pin", "Minimize", "Maximize", "Close"],
-                close: onClose
-            }).data("kendoWindow").center();
-        };
 
 
         $(document).on('click', '.details-link', function () {
@@ -357,17 +349,33 @@
         setTimeout(function () {
 
             var isCash = $("#IsCash").bootstrapSwitch("state");
-            var bankCombo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+            var combo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+
+            if (!combo) {
+                GetBankAccountComboBox();
+                combo = $("#BankAccountId").data("kendoMultiColumnComboBox");
+            }
+
+            combo.enable(true);
 
             if (isCash === true) {
-                if (!bankCombo) {
-                    GetBankAccountComboBox();
-                }
-                $("#BankAccountId").data("kendoMultiColumnComboBox").enable(true);
+
+                // Bank selected → show Bank accounts
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Bank"
+                });
+
             } else {
-                if (bankCombo) {
-                    bankCombo.enable(false);
-                }
+
+                // Cash selected → show Cash accounts
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Cash"
+                });
+
             }
 
         }, 200);
@@ -383,6 +391,103 @@
         pageSubmit('frmPurchaseImport'); 
     });
 
+
+    function SelectorEditor(container, options) {
+        var wrapper = $('<div class="input-group input-group-sm full-width">').appendTo(container);
+
+        // Create input (you can bind value if needed)
+        $('<input type="text" class="form-control" readonly />')
+            .attr("data-bind", "value:SaleCode")
+            .appendTo(wrapper);
+
+        // Create button inside an addon span
+        $('<div class="input-group-append">')
+            .append(
+                $('<button class="btn btn-outline-secondary" type="button">')
+                    .append('<i class="fa fa-search"></i>')
+                    .on("click", function () {
+                        openModal(options.model);
+                    })
+            )
+            .appendTo(wrapper);
+
+        kendo.bind(container, options.model);
+    }
+    var selectedGridModel = null;
+    function openModal(gridModel) {
+        selectedGridModel = gridModel;
+
+        $("#poWindow").kendoWindow({
+            title: "Select Order",
+            modal: true,
+            width: "900px",
+            height: "550px",
+            visible: false,
+            close: function () {
+                selectedGridModel = null;
+            }
+        }).data("kendoWindow").center().open();
+
+        $("#windowGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/SaleModal",
+                        dataType: "json"
+                    }
+                },
+                pageSize: 10
+            },
+            pageable: true,
+            filterable: true,
+            selectable: "row",
+            toolbar: ["search"],
+            searchable: true,
+            columns: [
+                { field: "Id", hidden: true },
+                { field: "Code", title: "Code" },
+                { field: "CustomerId", hidden: true },
+                { field: "CustomerName", title: "Customer Name" },
+                { field: "SaleOrderId", hidden: true },
+                { field: "SaleOrderCode", title: "SaleOrder Code" },
+                { field: "GrandTotal", title: "Grand Total" },
+                { field: "PaymentAmount", title: "Payment Amount" },
+                { field: "DueAmount", title: "Due Amount" },
+                { field: "Comments", title: "Comments" }
+            ],
+            dataBound: function () {
+                this.tbody.find("tr").on("dblclick", function () {
+                    var grid = $("#windowGrid").data("kendoGrid");
+                    var dataItem = grid.dataItem(this);
+                    if (dataItem && selectedGridModel) {
+                        selectedGridModel.set("SaleId", dataItem.Id);
+                        selectedGridModel.set("SaleCode", dataItem.Code);
+                        selectedGridModel.set("SaleAmount", dataItem.GrandTotal);
+                        selectedGridModel.set("PaidAmount", dataItem.PaymentAmount);
+                        selectedGridModel.set("DueAmount", dataItem.DueAmount);
+
+                        selectedGridModel.set("CollectionAmount", 0);
+                        selectedGridModel.set("PaymentAfter", dataItem.PaymentAmount);
+                        selectedGridModel.set("DueAfter", dataItem.DueAmount);
+
+                        var window = $("#poWindow").data("kendoWindow");
+                        if (window) window.close();
+                    }
+                });
+            }
+        });
+    }
+    function calculateTotalCollectGrid() {
+
+        var grid = $("#CollectionDetailsGrid").data("kendoGrid");
+        var total = 0;
+
+        grid.dataSource.data().forEach(function (item) {
+            total += parseFloat(item.CollectionAmount) || 0;
+        });
+
+        $("#TotalCollectAmount").val(total.toFixed(2));
+    }
 
     function calculateTotalCollect() {
         debugger;
@@ -448,57 +553,11 @@
 
 
 
-
-    function saleModalDblClick(row, originalRow) {
-        var dataTable = $("#modalData").DataTable();
-        var rowData = dataTable.row(row).data();
-        debugger;
-        var Code = rowData.Code;  // This is your Purchase Code
-        var Id = rowData.Id;
-        var CustomerId = rowData.CustomerId;
-        var CustomerName = rowData.CustomerName;
-        var SaleOrderCode = rowData.SaleOrderCode;
-        var Comments = rowData.Comments;
-        var SaleAmount = rowData.GrandTotal;  // Purchase Amount (Grand Total)
-
-        var Quantity = 1;
-
-        // ✅ Check for duplicates before setting data
-        var isDuplicate = false;
-        $("#details tbody tr").each(function () {
-            var existingProductId = $(this).find(".td-SaleId").text().trim();
-
-            if (existingProductId && existingProductId === Id.toString()) {
-                isDuplicate = true;
-                // Optional: highlight the existing row
-                $(this).addClass("duplicate-highlight");
-                setTimeout(() => $(this).removeClass("duplicate-highlight"), 2000);
-                return false; // stop loop
-            }
-        });
-
-        if (isDuplicate) {
-            ShowNotification(3, "This purchase has already been added!");
-            $("#partialModal").modal("hide");
-            return;
-        }
-
-        // ✅ No duplicate found → set values to current row
-        var $currentRow = originalRow.closest('tr');
-        $currentRow.find('.td-SaleCode').text(Code);  // Display Purchase Code in the row
-        $currentRow.find('.td-SaleId').text(Id);
-        $currentRow.find('.td-SaleAmount').text(SaleAmount);  // Autofill Purchase Amount (Grand Total)
-
-        $("#partialModal").modal("hide");
-        originalRow.closest("td").find("input").data("touched", false).focus();
-        $('#details').find(".td-Quantity").trigger('blur');
-    }
-
-
     function GetBankAccountComboBox() {
+
         $("#BankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
-            dataValueField: "BankId",
+            dataValueField: "Id",
             height: 400,
             columns: [
                 { field: "AccountNo", title: "Account No", width: 150 },
@@ -515,6 +574,7 @@
             placeholder: "Select Bank Account",
             value: ""
         });
+
     }
 
     var getCustomerId = $("#CustomerId").val() || "";
@@ -553,49 +613,6 @@
         if (!getCustomerId || getCustomerId === "0") {
             CustomerComboBox.value("");  
         }
-    }
-
-
-    function GetSupplierComboBox() {
-        var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetSupplierList"
-                }
-            },
-            placeholder: "Select Supplier",
-            value: "",
-            dataBound: function (e) {
-                if (getSupplierId) {
-                    this.value(parseInt(getSupplierId));  
-                }
-            },
-            change: function (e) {
-                var selectedItem = this.dataItem(); 
-                if (selectedItem) {
-                    var supplierId = selectedItem.Id;
-                    var supplierName = selectedItem.Name;
-
-                    console.log("Supplier ID:", supplierId);  
-                    console.log("Supplier Name:", supplierName);  
-
-                    $("#details tbody tr").each(function () {
-                        $(this).find("td[data-name='SupplierId']").val(supplierId); 
-
-                        $(this).find("td[data-name='SupplierName']").text(supplierName); 
-                    });
-                }
-            }
-        }).data("kendoMultiColumnComboBox");
     }
 
 
@@ -942,63 +959,6 @@
 
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
-    //function save() {
-    //    debugger;
-    //    var validator = $("#frmEntry").validate();
-    //    var model = serializeInputs("frmEntry");
-    //    debugger;
-    //    var result = validator.form();
-
-    //    if (!result) {
-    //        validator.focusInvalid();
-    //        ShowNotification(3, "Complete Required Fields.");
-    //        return;
-    //    }
-
-    //    if (model.IsPost == 'True') {
-    //        ShowNotification(2, "Post operation is already done, Do not update this entry");
-    //        return;
-    //    }
-    //    if (parseInt(model.CustomerId) == 0 || model.CustomerId == "") {
-    //        ShowNotification(3, "Customer Required.");
-    //        return;
-    //    }
-
-
-
-    //    var isDropdownValid1 = CommonService.validateDropdown("#CustomerId", "#titleError1", "Customer is required");
-
-    //    var isDropdownValid = isDropdownValid1;
-    //    if (!result || !isDropdownValid) {
-    //        if (!result) {
-    //            validator.focusInvalid();
-    //        }
-    //        return;
-    //    }
-
-    //    //var details = serializeTable($table);
-
-    //    //var requiredFields = ['SaleCode', 'SaleAmount', 'CollectionAmount'];
-    //    //var fieldMappings = {
-    //    //    'SaleCode': 'Sale Code',
-    //    //    'SaleAmount': 'Sale Amount',
-    //    //    'CollectionAmount': 'Collection Amount'
-    //    //};
-
-    //    //var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
-    //    //if (errorMessage) {
-    //    //    ShowNotification(3, errorMessage);
-    //    //    return;
-    //    //};
-
-
-
-    //    model.collectionDetailList = details;
-
-    //    var url = "/DMS/Collection/CreateEdit";
-
-    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
-    //};
 
     function saveDone(result) {
 
@@ -1142,47 +1102,6 @@
 
 
 }(CommonService, CommonAjaxService);
-document.addEventListener("DOMContentLoaded", function () {
-    var container = document.querySelector(".sslPrintC");
-    if (container) {
-        var id = container.getAttribute("data-id");
-        if (id) {
-            var btn = document.createElement("a");
-            btn.href = ".";
-            btn.style.backgroundColor = "skyblue";
-
-            btn.style.marginLeft = "10px";
-            btn.style.border = "none";
-            /*btn.style.borderRadius = "10px"; */
-            btn.className = "btn btn-success btn-sm mr-2 edit";
-            btn.title = "Report Preview";
-            btn.innerHTML = "<i class='fas fa-print'></i>";
-            btn.onclick = function (e) {
-                e.preventDefault();
-                ReportPreview(id);
-            };
-            container.appendChild(btn);
-        }
-    }
-});
 
 
-function ReportPreview(id) {
 
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '/DMS/Collection/ReportPreview';
-    form.target = '_blank';
-    const inputVal = document.createElement('input');
-    inputVal.type = 'hidden';
-    inputVal.name = 'Id';
-    inputVal.value = id;
-
-    form.appendChild(inputVal);
-
-    document.body.appendChild(form);
-
-    form.submit();
-    form.remove();
-
-};

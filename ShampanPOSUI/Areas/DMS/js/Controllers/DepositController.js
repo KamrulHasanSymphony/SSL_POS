@@ -19,6 +19,33 @@
 
         };
 
+
+        $("#IsCash").on("switchChange.bootstrapSwitch", function (event, state) {
+
+            var combo = $("#FromBankAccountId").data("kendoMultiColumnComboBox");
+
+            if (!combo) return;
+
+            if (state === false) {
+
+                // Bank selected → show only Bank accounts
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Bank"
+                });
+
+            } else {
+
+                // Cash selected → show all accounts
+                combo.dataSource.filter({});
+            }
+
+        });
+
+
+
+
         $('.btnsave').on('click', function (e) { 
             debugger;
 
@@ -92,6 +119,24 @@
 
     };
 
+    setTimeout(function () {
+
+        var isCash = $("#IsCash").bootstrapSwitch("state");
+        var combo = $("#FromBankAccountId").data("kendoMultiColumnComboBox");
+
+        if (!combo) return;
+
+        if (isCash === false) {
+
+            combo.dataSource.filter({
+                field: "AccountName",
+                operator: "contains",
+                value: "Bank"
+            });
+
+        }
+
+    }, 200);
     function GetFromBankAccountComboBox() {
         debugger;
         var BankAccountCombo = $("#FromBankAccountId").kendoMultiColumnComboBox({
@@ -124,11 +169,42 @@
 
 
 
+    //function GetToBankAccountComboBox() {
+    //    debugger;
+    //    var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
+    //        dataTextField: "AccountNo",
+    //        dataValueField: "BankId",
+    //        height: 400,
+    //        columns: [
+    //            { field: "AccountNo", title: "Account No", width: 150 },
+    //            { field: "AccountName", title: "Account Name", width: 150 },
+    //            { field: "BranchName", title: "Branch Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetBankAccountList"
+    //            }
+    //        },
+    //        placeholder: "Select BankAccount",
+    //        value: "",
+    //        dataBound: function (e) {
+    //            if (getToBankAccountId) {
+    //                this.value(parseInt(getToBankAccountId));
+    //            }
+    //        },
+    //        change: function (e) {
+    //        }
+    //    }).data("kendoMultiColumnComboBox");
+    //};
+
+
     function GetToBankAccountComboBox() {
-        debugger;
-        var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
+
+        $("#ToBankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
-            dataValueField: "BankId",
+            dataValueField: "Id",
             height: 400,
             columns: [
                 { field: "AccountNo", title: "Account No", width: 150 },
@@ -136,24 +212,30 @@
                 { field: "BranchName", title: "Branch Name", width: 150 }
             ],
             filter: "contains",
-            filterFields: ["Code", "Name"],
+            filterFields: ["AccountNo", "AccountName"],
             dataSource: {
                 transport: {
                     read: "/Common/Common/GetBankAccountList"
+                },
+                filter: {
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Cash"
                 }
             },
-            placeholder: "Select BankAccount",
-            value: "",
-            dataBound: function (e) {
-                if (getToBankAccountId) {
-                    this.value(parseInt(getToBankAccountId));
-                }
-            },
-            change: function (e) {
-            }
-        }).data("kendoMultiColumnComboBox");
-    };
+            placeholder: "Select Cash Account",
 
+            dataBound: function () {
+
+                if (getToBankAccountId) {
+                    combo.value(parseInt(getToBankAccountId));
+                }
+
+            }
+
+        });
+
+    }
 
 
     function postDone(result) {

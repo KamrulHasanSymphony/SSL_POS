@@ -2,7 +2,7 @@
 @using Newtonsoft.Json
 @model ShampanPOS.Models.MasterItemVM
 @{
-    ViewBag.Title = "Master Item Product Create";
+    ViewBag.Title = "Master Item Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     //var status = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Status));
     //var message = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Message));
@@ -124,7 +124,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0"> Master Item Product Create </h1>
+                    <h1 class="m-0"> Master Item Create </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -155,13 +155,13 @@
                                         <div class="card-header">
                                             <h3 class="card-title"> Master Item Product</h3>
                                         </div>
-                                        <div class="col-sm-6">
+                                        @*<div class="col-sm-6">
                                             @Html.LabelFor(model => model.MasterItemGroupId)
                                             <div class="input-group date">
                                                 @Html.TextBoxFor(model => model.MasterItemGroupId, new { placeholder = "Enter COA Group", @class = " form-control form-control-sm" })
                                             </div>
                                             @Html.ValidationMessageFor(model => model.MasterItemGroupId)
-                                        </div>
+                                        </div>*@
                                         @Html.HiddenFor(model => model.MasterItemGroupName)
                                         @Html.HiddenFor(model => model.MasterItemGroupDescription)
                                         @Html.HiddenFor(model => model.MasterItemGroupCode)

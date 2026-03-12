@@ -17,7 +17,28 @@
             GetGridDataList();
 
         };
+        $("#IsCash").on("switchChange.bootstrapSwitch", function (event, state) {
 
+            var combo = $("#ToBankAccountId").data("kendoMultiColumnComboBox");
+
+            if (!combo) return;
+
+            if (state) {
+
+                // Cash ON → only Cash account
+                combo.dataSource.filter({
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Cash"
+                });
+
+            } else {
+
+                // Cash OFF → show all
+                combo.dataSource.filter({});
+            }
+
+        });
 
         $('.btnsave').on('click', function (e) { 
             debugger;
@@ -94,11 +115,44 @@
 
     };
 
+    //function GetFromBankAccountComboBox() {
+    //    debugger;
+    //    var BankAccountCombo = $("#FromBankAccountId").kendoMultiColumnComboBox({
+    //        dataTextField: "AccountNo",
+    //        dataValueField: "BankId",
+    //        height: 400,
+    //        columns: [
+    //            { field: "AccountNo", title: "Account No", width: 150 },
+    //            { field: "AccountName", title: "Account Name", width: 150 },
+    //            { field: "BranchName", title: "Branch Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetBankAccountList"
+    //            }
+    //        },
+    //        placeholder: "Select BankAccount",
+    //        value: "",
+    //        dataBound: function (e) {
+    //            if (getFromBankAccountId) {
+    //                this.value(parseInt(getFromBankAccountId));
+    //            }
+    //        },
+    //        change: function (e) {
+    //            this.element.val(this.value());
+    //            this.element.trigger("blur");
+    //        }
+    //    }).data("kendoMultiColumnComboBox");
+    //};
+
+
     function GetFromBankAccountComboBox() {
-        debugger;
-        var BankAccountCombo = $("#FromBankAccountId").kendoMultiColumnComboBox({
+
+        $("#FromBankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
-            dataValueField: "BankId",
+            dataValueField: "Id",
             height: 400,
             columns: [
                 { field: "AccountNo", title: "Account No", width: 150 },
@@ -106,33 +160,73 @@
                 { field: "BranchName", title: "Branch Name", width: 150 }
             ],
             filter: "contains",
-            filterFields: ["Code", "Name"],
+            filterFields: ["AccountNo", "AccountName"],
             dataSource: {
                 transport: {
                     read: "/Common/Common/GetBankAccountList"
+                },
+                filter: {
+                    field: "AccountName",
+                    operator: "contains",
+                    value: "Bank"
                 }
             },
-            placeholder: "Select BankAccount",
-            value: "",
-            dataBound: function (e) {
+            placeholder: "Select Bank Account",
+
+            dataBound: function () {
+
                 if (getFromBankAccountId) {
                     this.value(parseInt(getFromBankAccountId));
                 }
+
             },
-            change: function (e) {
+
+            change: function () {
                 this.element.val(this.value());
                 this.element.trigger("blur");
             }
-        }).data("kendoMultiColumnComboBox");
-    };
 
+        });
 
+    }
+
+    //function GetToBankAccountComboBox() {
+    //    debugger;
+    //    var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
+    //        dataTextField: "AccountNo",
+    //        dataValueField: "BankId",
+    //        height: 400,
+    //        columns: [
+    //            { field: "AccountNo", title: "Account No", width: 150 },
+    //            { field: "AccountName", title: "Account Name", width: 150 },
+    //            { field: "BranchName", title: "Branch Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetBankAccountList"
+    //            }
+    //        },
+    //        placeholder: "Select BankAccount",
+    //        value: "",
+    //        dataBound: function (e) {
+    //            if (getToBankAccountId) {
+    //                this.value(parseInt(getToBankAccountId));
+    //            }
+    //        },
+    //        change: function (e) {
+    //            this.element.val(this.value());
+    //            this.element.trigger("blur");
+    //        }
+    //    }).data("kendoMultiColumnComboBox");
+    //};
 
     function GetToBankAccountComboBox() {
-        debugger;
+
         var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
-            dataValueField: "BankId",
+            dataValueField: "Id",
             height: 400,
             columns: [
                 { field: "AccountNo", title: "Account No", width: 150 },
@@ -140,27 +234,30 @@
                 { field: "BranchName", title: "Branch Name", width: 150 }
             ],
             filter: "contains",
-            filterFields: ["Code", "Name"],
+            filterFields: ["AccountNo", "AccountName"],
             dataSource: {
                 transport: {
                     read: "/Common/Common/GetBankAccountList"
                 }
             },
             placeholder: "Select BankAccount",
-            value: "",
-            dataBound: function (e) {
+
+            dataBound: function () {
+
                 if (getToBankAccountId) {
                     this.value(parseInt(getToBankAccountId));
                 }
+
             },
-            change: function (e) {
+
+            change: function () {
                 this.element.val(this.value());
                 this.element.trigger("blur");
             }
+
         }).data("kendoMultiColumnComboBox");
-    };
 
-
+    }
 
     function postDone(result) {
 

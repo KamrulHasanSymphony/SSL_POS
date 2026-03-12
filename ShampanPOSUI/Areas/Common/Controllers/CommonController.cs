@@ -1236,27 +1236,29 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 _repo = new CommonRepo();
 
                 SaleDataVM vm = new SaleDataVM();
-                var search = Request.Form["search[value]"].Trim();
+                vm.PeramModel = new PeramModel();
 
-                var startRec = Request.Form["start"].ToString();
-                var pageSize = Request.Form["length"].ToString();
-                var orderColumnIndex = Request.Form["order[0][column]"].ToString();
-                var orderDir = Request.Form["order[0][dir]"].ToString();
-                var orderName = Request.Form[$"columns[{orderColumnIndex}][name]"].ToString();
+                var search = Request.Form["search[value]"] != null ? Request.Form["search[value]"].Trim() : "";
+
+                var startRec = Request.Form["start"] != null ? Request.Form["start"].ToString() : "0";
+                var pageSize = Request.Form["length"] != null ? Request.Form["length"].ToString() : "10";
+                var orderColumnIndex = Request.Form["order[0][column]"] != null ? Request.Form["order[0][column]"].ToString() : "0";
+                var orderDir = Request.Form["order[0][dir]"] != null ? Request.Form["order[0][dir]"].ToString() : "asc";
+                var orderName = Request.Form[$"columns[{orderColumnIndex}][name]"] != null ? Request.Form[$"columns[{orderColumnIndex}][name]"].ToString() : "M.Id";
 
                 vm.PeramModel.SearchValue = search;
                 vm.PeramModel.OrderName = orderName == "" ? "M.Id" : orderName;
                 vm.PeramModel.orderDir = orderDir;
                 vm.PeramModel.startRec = Convert.ToInt32(startRec);
                 vm.PeramModel.pageSize = Convert.ToInt32(pageSize);
+
                 if (vm.PeramModel.pageSize == -1)
                 {
-                    vm.PeramModel.pageSize = int.MaxValue; // fetch all records
+                    vm.PeramModel.pageSize = int.MaxValue;
                 }
+
                 vm.PeramModel.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
                 vm.PeramModel.FromDate = Request.Form["FromDate"];
-
-
 
                 vm.Code = search;
                 vm.SaleOrderCode = search;
@@ -1302,7 +1304,6 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 }, JsonRequestBehavior.AllowGet);
             }
         }
-
 
         [HttpPost]
         public ActionResult _getPurchaseDatabySupplier()
@@ -1431,7 +1432,27 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult SaleModal(string value)
+        {
+            try
+            {
+                List<SaleDataVM> lst = new List<SaleDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.SaleModal(param);
 
-
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<SaleDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

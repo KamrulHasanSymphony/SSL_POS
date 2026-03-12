@@ -113,7 +113,24 @@ namespace ShampanPOS.Models
             [StringLength(50, ErrorMessage = "Transaction Type cannot exceed 50 characters.")]
             public string? TransactionType { get; set; }
 
-            public List<CollectionDetailVM> collectionDetailList { get; set; }
+
+
+            public int SaleId { get; set; } 
+
+            public decimal? SaleAmount { get; set; }
+
+            public decimal? PaidAmount { get; set; }
+
+            public decimal? DueAmount { get; set; }
+
+            public decimal? CollectionAmount { get; set; }
+
+            public decimal? PaymentAfter { get; set; }
+
+            public decimal? DueAfter { get; set; }
+
+
+        public List<CollectionDetailVM> collectionDetailList { get; set; }
 
             public CollectionVM()
             {

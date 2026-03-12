@@ -78,26 +78,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                     resultVM = _repo.InsertProductFromMasterItem(model);
 
-
-                    //if (resultVM.Status == ResultStatus.Success.ToString())
-                    //{
-                    //    TempData["Status"] = resultVM.Status;
-                    //    TempData["Message"] = resultVM.Message;
-
-                    //    return Json(new
-                    //    {
-                    //        RedirectUrl = Url.Action(
-                    //            "Create",
-                    //            "MasterItemProduct",
-                    //            new
-                    //            {
-                    //                area = "DMS",
-                    //                groupId = model.MasterItemGroupId
-                    //            })
-                    //    });
-                    //}
-
-
                     if (resultVM.Status == ResultStatus.Success.ToString())
                     {
                         model.Operation = "add";

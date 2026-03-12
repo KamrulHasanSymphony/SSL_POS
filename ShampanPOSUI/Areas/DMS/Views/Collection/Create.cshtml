@@ -1,4 +1,6 @@
-﻿@model ShampanPOS.Models.CollectionVM
+﻿@using Newtonsoft.Json
+
+@model ShampanPOS.Models.CollectionVM
 @{
     ViewBag.Title = "Collection Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -79,7 +81,7 @@
 
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.Operation)
-
+                @Html.Hidden("detailsListJson", JsonConvert.SerializeObject(Model.collectionDetailList ?? new List<ShampanPOS.Models.CollectionDetailVM>()))
 
                 <div class="form-group row">
 
@@ -154,15 +156,15 @@
                         <div class="Onoffbtn">
                             <div class="input-group" style="margin-bottom: -26px; width: 78%;">
                                 <input id="IsCash"
-                                       value="@Model.IsCash"
+                                       value="true"
                                        type="checkbox"
                                        name="my-checkbox"
-                                       @(Model.IsCash ? "checked" : "")
+                                       checked
                                        data-bootstrap-switch
                                        data-off-color="danger"
                                        data-on-color="success"
-                                       data-on-text="Cash"
-                                       data-off-text="Bank">
+                                       data-on-text="Bank"
+                                       data-off-text="Cash">
                             </div>
                         </div>
                     </div>
@@ -185,49 +187,13 @@
                 </div>
                 <div class="card-body">
 
-                    <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+                    @*<button id="addRows" class="k-button k-primary">
+                            <span class="k-icon k-i-plus"></span> Add
+                        </button>*@
 
                     <div style="overflow-x: auto; white-space: nowrap;">
-                        <table class="table table-bordered table-striped table-sm" id="details">
-                            <thead>
-                                <tr>
-                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="CustomerId">Customer Id</th>
-                                    <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="SaleCode">Sale Code</th>
-                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SaleId">Sale Id</th>
-                                    @*<th data-type="text" style="width:20%;" data-name="SupplierName">Supplier Name</th>
-                                        <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SupplierId">Supplier Id</th>*@
-                                    <th data-type="decimal" style="width: 20%;" data-required="true" data-computed="false" data-name="SaleAmount">Sale Amount</th>
-                                    <th data-type="decimal" style="width: 20%" data-required="true" data-computed="false" data-name="CollectionAmount">Collection Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lst">
-                                @if (Model != null)
-                                {
-                                    foreach (var item in Model.collectionDetailList)
-                                    {
-                                        <tr>
-                                            <td>@serial</td>
-                                            <td hidden>@item.CustomerId</td>
-                                            <td>@item.SaleCode</td>
-                                            <td hidden>@item.SaleId</td>
-                                            @*<td data-name="SupplierName">@item.SupplierName</td>
-                                                <td hidden data-name="SupplierId">@item.SupplierId</td>*@
-                                            <td class="dFormat">@item.SaleAmount</td>
-                                            <td class="dFormat">@item.CollectionAmount</td>
-                                            <td>
-                                                <button class="btn btn-danger btn-sm remove-row-btn">
-                                                    <i class='fa fa-trash'></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        { serial++; }
-                                    }
-                                }
-                            </tbody>
-                        </table>
 
-
+                        <div id="CollectionDetailsGrid"></div>
 
                     </div>
 
@@ -268,7 +234,7 @@
             </div>
 
 
-
+        </div>
     </form>
 
     <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">

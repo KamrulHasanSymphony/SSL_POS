@@ -1,11 +1,9 @@
 ﻿var MasterItemProductController = function (CommonService, CommonAjaxService) {
-    //var getProductGroupId = 0;
     var currentMasterItemGroupId = 0;
 
     var init = function () {
 
 
-       // getProductGroupId = $("#MasterItemGroupId").val() || 0;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
@@ -17,27 +15,10 @@
         // Create / Edit page
         if (getOperation !== '') {
             
-            GetProductGroupComboBox(); 
+            //GetProductGroupComboBox(); 
             InitItemsGrid();             
             InitAddedItemGrid();         
         };
-
-
-        //$('.btnsave').off('click').on('click', function (e) {
-        //    e.preventDefault();
-
-        //    var btn = $(this);
-        //    btn.prop("disabled", true);
-
-        //    Confirmation("Are you sure?", function (result) {
-        //        if (result) {
-        //            save();
-        //        } else {
-        //            btn.prop("disabled", false);
-        //        }
-        //    });
-        //});
-
 
         $('.btnsave').off('click').on('click', function (e) {
             e.preventDefault();
@@ -54,12 +35,12 @@
             }
 
             // 🔥 MasterItemGroup Required Check
-            var masterItemGroupId = $("#MasterItemGroupId").data("kendoMultiColumnComboBox").value();
+            //var masterItemGroupId = $("#MasterItemGroupId").data("kendoMultiColumnComboBox").value();
 
-            if (!masterItemGroupId || parseInt(masterItemGroupId) === 0) {
-                ShowNotification(3, "Product Group is required.");
-                return;
-            }
+            //if (!masterItemGroupId || parseInt(masterItemGroupId) === 0) {
+            //    ShowNotification(3, "Product Group is required.");
+            //    return;
+            //}
 
             // 🔥 Detail Grid Check
             var grid = $("#AddedItemGrid").data("kendoGrid");
@@ -190,17 +171,17 @@
 
     function InitItemsGrid() {
         $("#departments").kendoGrid({
-            autoBind: false,
+            autoBind: true,
             dataSource: {
                 transport: {
                     read: {
                         url: "/Common/Common/GetItemList",
                         dataType: "json",
-                        data: function () {
-                            return {
-                                value: currentMasterItemGroupId
-                            };
-                        }
+                        //data: function () {
+                        //    return {
+                        //        value: currentMasterItemGroupId
+                        //    };
+                        //}
                     }
                 },
                 schema: {
@@ -217,30 +198,54 @@
             columns: [
                 { field: "Id", hidden: true },  
                 { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
+                { field: "Name", title: "Name", width: 110 },
+                { field: "MasterItemGroupName", title: "Product Group", width: 130 },
                 { field: "BanglaName", title: "Bangla Name",hidden: true, width: 150 },  
                 { field: "Description", title: "Description",hidden:true, width: 150 },  
-                { field: "UOMId", title: "UOM ID",hidden:true, width: 100 },  
-                { field: "HSCodeNo", title: "HS Code No", width: 150 },  
-                { field: "VATRate", title: "VAT Rate", width: 100 },
-                { field: "SDRate", title: "SD Rate", width: 100 },
+                { field: "UOMId", title: "UOM ID",hidden:true, width: 80 },  
+                { field: "HSCodeNo", title: "HS Code No", width: 80 },  
+                { field: "VATRate", title: "VAT Rate", width: 70 },
+                { field: "SDRate", title: "SD Rate", width: 70 },
+                // ✅ Status column
+                {
+                    field: "IsAlreadyAdded",
+                    title: "Status",
+                    width: 90,
+                    template: function (dataItem) {
+
+                        if (dataItem.IsAlreadyAdded) {
+                            return "<span style='color:green;font-weight:bold'>✔ Added</span>";
+                        }
+
+                        return "<span style='color:gray'>New</span>";
+                    }
+                },
+
                 {
                     title: "Action",
                     width: 90,
-                    template: `
+                    template: function (dataItem) {
+
+                        if (dataItem.IsAlreadyAdded) {
+                            return "<button class='k-button' disabled>Added</button>";
+                        }
+
+                        return `
                     <button type="button" 
                             class="k-button k-primary addToDetails"
-                            data-id="#: Id #"
-                            data-code="#: Code #"
-                            data-name="#: Name #"
-                            data-bangla-name="#: BanglaName #"
-                            data-description="#: Description #"
-                            data-uom-id="#: UOMId #"
-                            data-hs-code="#: HSCodeNo #"
-                            data-vat-rate="#: VATRate #"
-                            data-sd-rate="#: SDRate #">
+                            data-id="${dataItem.Id}"
+                            data-code="${dataItem.Code}"
+                            data-name="${dataItem.Name}"
+                            data-group="${dataItem.MasterItemGroupName}"
+                            data-bangla-name="${dataItem.BanglaName}"
+                            data-description="${dataItem.Description}"
+                            data-uom-id="${dataItem.UOMId}"
+                            data-hs-code="${dataItem.HSCodeNo}"
+                            data-vat-rate="${dataItem.VATRate}"
+                            data-sd-rate="${dataItem.SDRate}">
                         Add
-                    </button>`
+                    </button>`;
+                    }
                 }
             ],
 
@@ -261,7 +266,8 @@
                             HSCodeNo: $(this).data("hs-code"),
                             VATRate: $(this).data("vat-rate"),
                             SDRate: $(this).data("sd-rate"),
-                            MasterItemGroupName: $("#MasterItemGroupName").val() || ''
+                            MasterItemGroupName: $(this).data("group")
+                            //MasterItemGroupName: $("#MasterItemGroupName").val() || ''
                         });
                     });
 
@@ -386,72 +392,6 @@
         });
     }
 
-
-
-    //function save() {
-    //    var validator = $("#frmEntry").validate();
-    //    var formData = new FormData();
-    //    var model = serializeInputs("frmEntry");
-
-    //    var result = validator.form();
-
-    //    if (!result) {
-    //        validator.focusInvalid();
-    //        return;
-    //    }
-
-    //    for (var key in model) {
-    //        formData.append(key, model[key]);
-    //    }
-
-    //    var department = model.DepartmentId;
-
-    //    var grid = $("#AddedItemGrid").data("kendoGrid");
-    //    var details = [];
-
-
-
-    //    if (grid) {
-    //        var dataItems = grid.dataSource.view();
-
-    //        for (var i = 0; i < dataItems.length; i++) {
-    //            var item = dataItems[i];
-
-    //            details.push({
-    //                Id: item.Id,
-    //                Code: item.Code,
-    //                Name: item.Name,
-    //                BanglaName: item.BanglaName,
-    //                UOMId: item.UOMId,
-    //                VATRate: item.VATRate,
-    //                HSCodeNo: item.HSCodeNo,
-    //                SDRate: item.SDRate,
-    //                Description: item.Description,
-    //                MasterItemGroupDescription: item.MasterItemGroupDescription,
-    //                MasterItemGroupCode: item.MasterItemGroupCode,
-    //                MasterItemGroupName: item.MasterItemGroupName,
-    //                MasterItemGroupId: item.MasterItemGroupId
-    //            });
-    //        }
-    //    }
-
-    //    if (details.length === 0) {
-    //        ShowNotification(3, "At least one detail entry is required.");
-    //        return;
-    //    }
-
-    //    model.MasterItemList = details;
-
-    //    debugger;
-
-
-    //    var url = "/DMS/MasterItemProduct/CreateEdit";
-    //    CommonAjaxService.finalSave(url, model, saveDone, saveFail);
-    //}
-
-
-
-
     function save() {
 
         var validator = $("#frmEntry").validate();
@@ -465,15 +405,15 @@
             return;
         }
 
-        var masterItemGroupId = $("#MasterItemGroupId")
-            .data("kendoMultiColumnComboBox")
-            .value();
+        //var masterItemGroupId = $("#MasterItemGroupId")
+        //    .data("kendoMultiColumnComboBox")
+        //    .value();
 
-        if (!masterItemGroupId || parseInt(masterItemGroupId) === 0) {
-            ShowNotification(3, "Product Group is required.");
-            $(".btnsave").prop("disabled", false);
-            return;
-        }
+        //if (!masterItemGroupId || parseInt(masterItemGroupId) === 0) {
+        //    ShowNotification(3, "Product Group is required.");
+        //    $(".btnsave").prop("disabled", false);
+        //    return;
+        //}
 
         var grid = $("#AddedItemGrid").data("kendoGrid");
         var details = [];
@@ -514,34 +454,6 @@
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     }
 
-
-
-
-    //function saveDone(result) {
-    //    debugger;
-    //    var msg = result.Message || "";
-
-    //    var inserted = 0;
-    //    var skipped = 0;
-
-    //    var matchInsert = msg.match(/(\d+)\s*added/i);
-    //    var matchSkip = msg.match(/(\d+)\s*skipped/i);
-
-    //    if (matchInsert) inserted = parseInt(matchInsert[1]);
-    //    if (matchSkip) skipped = parseInt(matchSkip[1]);
-
-    //    if (inserted > 0) {
-    //        ShowNotification(1, msg);
-    //    }
-    //    else if (skipped >= 0) {
-    //        ShowNotification(3, msg);
-    //    }
-    //    else {
-    //        ShowNotification(2, msg);
-    //    }
-
-    //    $(".btnsave").prop("disabled", false);
-    //}
 
     function saveDone(result) {
 

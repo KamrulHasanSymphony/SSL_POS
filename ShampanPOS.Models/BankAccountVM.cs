@@ -25,7 +25,7 @@ namespace ShampanPOS.Models
             public string? UserId { get; set; }
 
             [Required(ErrorMessage = "Bank Id is required.")]
-            [Display(Name = "Bank Id")]
+            [Display(Name = "Bank")]
             public int BankId { get; set; }
 
             [Required(ErrorMessage = "Branch Name is required.")]

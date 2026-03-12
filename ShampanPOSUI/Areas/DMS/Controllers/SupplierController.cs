@@ -50,10 +50,11 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new SupplierRepo();
 
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
+                   
+
                     // Handle Image Upload
                     if (file != null && file.ContentLength > 0)
                     {
@@ -124,8 +125,11 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                         model.LastModifiedBy = Session["UserId"].ToString();
                         model.LastModifiedOn = DateTime.Now.ToString();
                         model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
-
-                        resultVM = _repo.Update(model);
+                        model.CreatedBy = Session["UserId"].ToString();
+                        model.UserId = Session["UserHashId"]?.ToString();
+                        model.CreatedOn = DateTime.Now.ToString();
+                        model.CreatedFrom = Ordinary.GetLocalIpAddress();
+                    resultVM = _repo.Update(model);
 
                         if (resultVM.Status == ResultStatus.Success.ToString())
                         {
@@ -162,32 +166,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     Session["result"] = "Fail" + "~" + e.Message;
                     Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                     return View("Create", model);
-                }
-            }
-            else
-            {
-                string msg = string.Empty;
-                foreach (var entry in ModelState.Values)
-                {
-                    if (entry.Errors.Count > 0)
-                    {
-                        foreach (var error in entry.Errors)
-                        {
-                            msg += "," + error.ErrorMessage;
-                        }
-                    }
-                }
-
-                result = new ResultModel<SupplierVM>()
-                {
-                    Success = false,
-                    Status = Status.Fail,
-                    Message = msg,
-                    Data = model
-                };
-                return Json(result);
-            }
-            return View("Create", model);
+                }          
+            
 
         }
 

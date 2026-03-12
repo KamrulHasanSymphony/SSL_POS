@@ -117,6 +117,15 @@ namespace ShampanPOS.Models
         [Display(Name = "Status")]
         public string? Status { get; set; }
 
+
+        public int ProductGroupId { get; set; }
+
+        public string? ProductGroupName { get; set; }
+        public string? ProductGroupCode { get; set; }
+        public string? ProductGroupDescription { get; set; }
+
+
+
         public string? ByGroup { get; set; }
 
         public Dictionary<string, string>? ColunWidth { get; set; }
@@ -124,12 +133,16 @@ namespace ShampanPOS.Models
 
         public PeramModel PeramModel { get; set; }
 
+        public List<MasterItemVM> MasterItemList { get; set; }
+
         public List<SupplierVM> MasterSupplierList { get; set; }
 
         public SupplierVM()
         {
             PeramModel = new PeramModel();
             MasterSupplierList = new List<SupplierVM>();
+            MasterItemList = new List<MasterItemVM>();
+
         }
 
 
