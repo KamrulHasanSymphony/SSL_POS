@@ -15,6 +15,8 @@ namespace ShampanPOS.Models
             [StringLength(50)]
             [Display(Name = "Code")]
             public string? Code { get; set; }
+            public string? PurchaseCode { get; set; }
+            public int? PurchaseId { get; set; }
 
             [Display(Name = "Supplier")]
             [Required(ErrorMessage = "Supplier is required.")]
@@ -75,7 +77,17 @@ namespace ShampanPOS.Models
 
             public string?[] IDs { get; set; }
 
-            public List<PaymentDetailVM> paymentDetailList { get; set; }
+            public decimal? PaidAmount { get; set; }
+
+            public decimal? DueAmount { get; set; }
+
+            public decimal? PaymentAmount { get; set; }
+
+            public decimal? PaymentAfter { get; set; }
+
+            public decimal? DueAfter { get; set; }
+
+        public List<PaymentDetailVM> paymentDetailList { get; set; }
 
             public PaymentVM()
             {

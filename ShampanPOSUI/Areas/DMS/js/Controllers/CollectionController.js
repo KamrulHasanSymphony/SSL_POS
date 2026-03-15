@@ -91,12 +91,6 @@
                         return;
                     }
 
-                    //var paymentAfter = paid + collection;
-                    //var dueAfter = due - collection;
-
-                    //e.model.set("PaymentAfter", paymentAfter);
-                    //e.model.set("DueAfter", dueAfter);
-
                     var newPaid = paid + collection;
                     var dueAfter = due - collection;
 
@@ -150,7 +144,7 @@
         gridDataSource.bind("change", function () {
             calculateTotalCollectGrid();
         });
-
+        calculateTotalCollectGrid();
 
         $('.btnsave').click(function (e) {
 
@@ -445,15 +439,15 @@
             searchable: true,
             columns: [
                 { field: "Id", hidden: true },
-                { field: "Code", title: "Code" },
+                { field: "Code", title: "Code", width: 180 },
                 { field: "CustomerId", hidden: true },
-                { field: "CustomerName", title: "Customer Name" },
+                { field: "CustomerName", title: "Customer Name", width: 130 },
                 { field: "SaleOrderId", hidden: true },
-                { field: "SaleOrderCode", title: "SaleOrder Code" },
-                { field: "GrandTotal", title: "Grand Total" },
-                { field: "PaymentAmount", title: "Payment Amount" },
-                { field: "DueAmount", title: "Due Amount" },
-                { field: "Comments", title: "Comments" }
+                { field: "SaleOrderCode", title: "SaleOrder Code", width: 180 },
+                { field: "GrandTotal", title: "Grand Total", width: 100 },
+                { field: "PaymentAmount", title: "Payment Amount", width: 100 },
+                { field: "DueAmount", title: "Due Amount", width: 100 },
+                { field: "Comments", title: "Comments", width: 100 }
             ],
             dataBound: function () {
                 this.tbody.find("tr").on("dblclick", function () {
@@ -875,7 +869,7 @@
                 },
                 {
                     title: "Action",
-                    width: 170,
+                    width:50,
                     template: function (dataItem) {
 
                         return `
@@ -897,7 +891,7 @@
                          }
                      },
                    {
-                     field: "IsCash", title: "Is Cash", sortable: true, width: 100,
+                       field: "IsCash", title: "Cash", sortable: true, width: 100, hidden: true,
 
                      },
 
@@ -920,14 +914,14 @@
                 },
                             {
                                 field: "TotalCollectAmount",
-                                title: "Total Collect Amountt",
+                                title: "Total Collect Amount",
                                 sortable: true,
                                 width: 200,
                                 aggregates: ["sum"],
                                 format: "{0:n2}",
                                 footerTemplate: "#=kendo.toString(sum, 'n2')#",
                                 groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                                attributes: { style: "text-align: right;" }
+                                attributes: { style: "text-align: left;" }
                             }
                             ,
 

@@ -1,0 +1,133 @@
+﻿@model ShampanPOS.Models.UserProfileVM
+@{
+    ViewBag.Title = "User Profile Create";
+    Layout = "~/Views/Shared/_SignUpLayout.cshtml";
+}
+@{
+    var operation = @Model.Operation == "add" ? "Create" : "Update";
+    var mode = @Model.Mode == "passwordchange" ? "Password" : "Profile";
+}
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+
+        <div class="col-lg-10 col-xl-8">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">User Profile Info</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form id="frmEntry">
+
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.Operation)
+                        @Html.HiddenFor(model => model.Mode)
+
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+
+                                <div class="form-row">
+
+                                    <div class="col-md-4 mb-3">
+                                        @Html.LabelFor(model => model.UserName, new { @class = "font-weight-bold" })
+                                        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control form-control-sm", placeholder = "Enter User Name", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        @Html.LabelFor(model => model.FullName, new { @class = "font-weight-bold" })
+                                        @Html.TextBoxFor(model => model.FullName, new { @class = "form-control form-control-sm", placeholder = "Enter Full Name", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        @Html.LabelFor(model => model.Email, new { @class = "font-weight-bold" })
+                                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control form-control-sm", placeholder = "Enter Email Address" })
+                                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row">
+
+                                    <div class="col-md-4 mb-3">
+                                        @Html.LabelFor(model => model.Password, new { @class = "font-weight-bold" })
+                                        @Html.TextBoxFor(model => model.Password, new { type = "password", @class = "form-control form-control-sm", placeholder = "Enter Password" })
+                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        @Html.LabelFor(model => model.ConfirmPassword, new { @class = "font-weight-bold" })
+                                        @Html.TextBoxFor(model => model.ConfirmPassword, new { type = "password", @class = "form-control form-control-sm", placeholder = "Confirm Password" })
+                                        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        @Html.LabelFor(model => model.PhoneNumber, new { @class = "font-weight-bold" })
+                                        @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "form-control form-control-sm", placeholder = "Enter Phone Number" })
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="text-left">
+
+                            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <button type="button" class="btn btn-success btn-sm sslUpdate">
+                                    <i class="fa fa-save"></i> Update
+                                </button>
+
+                                <button type="button"
+                                        data-url="/SetUp/UserProfile/Create"
+                                        onclick="GoTo(this)"
+                                        class="btn btn-primary btn-sm ml-2">
+                                    New
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-success btn-sm btnsave sslSave">
+                                    <i class="fa fa-save"></i> Save
+                                </button>
+                            }
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script src="~/Areas/SetUp/js/Controller/UserProfileController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            //$("#IsHeadOffice").bootstrapSwitch();
+            //$("#IsSalePerson").bootstrapSwitch();
+
+            UserProfileController.init();
+        });
+
+
+    </script>
+
+
+}
+

@@ -26,6 +26,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
             return View();
         }
 
+
         public ActionResult Create()
         {
             UserProfileVM vm = new UserProfileVM();
@@ -293,6 +294,17 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return RedirectToAction("Index");
             }
+        }
+
+
+        [AllowAnonymous]
+        public ActionResult SignUpCreate()
+        {
+            UserProfileVM vm = new UserProfileVM();
+            vm.Operation = "add";
+            vm.Mode = "new";
+
+            return View("SignUpCreate", vm);
         }
 
 

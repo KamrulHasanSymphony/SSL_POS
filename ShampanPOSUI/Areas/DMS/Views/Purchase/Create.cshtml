@@ -64,9 +64,9 @@
                 New
             </button>
 
-            <button type="button" class="button secondary" id="btnFromPurchaseOrder">
+            @*<button type="button" class="button secondary" id="btnFromPurchaseOrder">
                 <span style="font-weight:bold; margin-right:5px;">+</span> Payment
-            </button>
+            </button>*@
 
         }
         else
@@ -212,7 +212,7 @@
                                 <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="ProductName"> Product Name </th>
                                 <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
                                 <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="Quantity"> Total Qty </th>
-                                <th data-type="decimal" style="width: 10%" data-required="true" data-computed="true" data-name="UnitPrice"> Unit Price </th>
+                                <th data-type="decimal" style="width: 10%" data-required="true" data-computed="false" data-name="UnitPrice"> Unit Price </th>
                                 <th data-type="decimal" style="width: 13%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="SD"> SD Rate </th>
                                 <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
@@ -279,7 +279,7 @@
 
                 <div class="card-body">
                     <div class="row grndBlock">
-                        <div class="col-md-2">
+                        @*<div class="col-md-2">
                             <div class="editor-label">
                                 <label>&nbsp;Paid Amount </label>
                             </div>
@@ -288,7 +288,7 @@
                                     @Html.TextBoxFor(model => model.PaidAmount, new { placeholder = "PaidAmount", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
                         <div class="col-md-2">
                             <div class="editor-label">
                                 <label>&nbsp;Sub-Total </label>
@@ -319,13 +319,53 @@
                                 </div>
                             </div>
                         </div>
+        @*<div class="col-md-2">
+            <div class="editor-label">
+                <label>&nbsp;Grand-Total </label>
+            </div>
+            <div class="editor-field">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.GrandTotal, new { placeholder = "Grand Total", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                </div>
+            </div>
+        </div>*@
+
                         <div class="col-md-2">
                             <div class="editor-label">
                                 <label>&nbsp;Grand-Total </label>
                             </div>
                             <div class="editor-field">
                                 <div class="input-group">
-                                    @Html.TextBoxFor(model => model.GrandTotal, new { placeholder = "Grand Total", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                    @Html.TextBoxFor(model => model.GrandTotal,
+                                    new
+                                         {
+                                        placeholder = "Grand Total",
+                                        @class = "dFormat form-control form-control-sm text-right",
+                                        @readonly = "readonly"
+                                    })
+                                </div>
+                            </div>
+                        </div>
+                                                <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Paid Amount </label>
+                            </div>
+                            <div class="editor-field">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.PaidAmount, new { placeholder = "PaidAmount", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>&nbsp;Due Amount </label>
+                            </div>
+                            <div class="editor-field">
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="DueAmount"
+                                           class="form-control form-control-sm text-right"
+                                           readonly />
                                 </div>
                             </div>
                         </div>

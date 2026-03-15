@@ -54,49 +54,7 @@
                     }
                 });
         });
-        // Handle file input change to preview image
-        $("#imageUpload").on("change", function (event) {
-
-            //$("#imageUpload").prop("disabled", false); 
-            var file = event.target.files[0];
-
-            if (!file) {
-                console.error("No file selected!");
-                return;
-            }
-
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                console.log("File loaded successfully!");
-
-                $("#imagePreview").attr("src", e.target.result).show();
-                $("#deleteImageBtn").show();
-                $("#ImagePath").val(e.target.result);
-            };
-
-            reader.onerror = function (error) {
-                console.error("Error reading file:", error);
-            };
-
-            reader.readAsDataURL(file);
-        });
-
-        $("#deleteImageBtn").on("click", function () {
-            $(this).addClass("clicked");
-            $("#imagePreview").attr("src", "").hide();
-            $("#ImagePath").val("");
-            $("#deleteImageBtn").hide();
-            $("#imageUpload").val("");
-            $("#imageUpload").prop("disabled", false);
-        });
-
-        var operation = $("#Operation").val();
-        var imagePath = $("#ImagePath").val();
-        if (operation == "update" && imagePath !== null) {
-
-            $("#imageUpload").prop("disabled", false);
-        }
+        
 
     };
     function SelectData() {
@@ -280,11 +238,13 @@
     };
 
     function save() {
-        
+
         var validator = $("#frmEntry").validate();
         var formData = new FormData();
         var model = serializeInputs("frmEntry");
+
         model.CurrentPassword = model.Password;
+
         var result = validator.form();
         if (!result) {
             validator.focusInvalid();
@@ -295,41 +255,10 @@
             formData.append(key, model[key]);
         }
 
-        // Handle checkbox value
-        formData.append("IsSalePerson", $('#IsSalePerson').prop('checked'));
-        formData.append("IsHeadOffice", $('#IsHeadOffice').prop('checked'));
-
-
-        // Check if delete button was clicked to remove image
-        var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-        if (deleteImageClicked) {
-            formData.append("ImagePath", "");
-            $("#imagePreview").remove();
-            $("#ImagePath").val("");
-        }
-
-        var fileInput = document.getElementById("imageUpload");
-        if (fileInput.files.length > 0) {
-            var file = fileInput.files[0];
-
-            if (file.size > 26214400) {
-                ShowNotification(3, "Image size cannot exceed 25MB.");
-                return;
-            }
-
-            formData.append("file", file);
-        } else if (!deleteImageClicked) {
-            var existingImagePath = $("#ImagePath").val();
-            if (existingImagePath) {
-                formData.append("ImagePath", existingImagePath);
-            }
-        }
-
         var url = "/SetUp/UserProfile/CreateEdit";
 
         CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
-    };   
-
+    }
     function saveDone(result) {
         
         if (result.Status == 200) {

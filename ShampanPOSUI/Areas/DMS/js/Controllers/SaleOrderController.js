@@ -37,35 +37,6 @@
             addRow($table);
         });
 
-
-        //$('.btnsave').click(function (e) {
-        //    debugger;
-        //    e.preventDefault();
-
-        //    var form = $("#frmEntry");
-        //    var $table = $('#details');
-
-        //    var mvcValid = form.valid();
-        //    var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
-
-        //    if (!mvcValid || !customValid) {
-        //        return false;
-        //    }
-        //    var getId = $('#Id').val();
-        //    var status = "Save";
-        //    if (parseInt(getId) > 0) {
-        //        status = "Update";
-        //    }
-        //    Confirmation("Are you sure? Do You Want to " + status + " Data?",
-        //        function (result) {
-        //            if (result) {
-        //                save($table);
-        //            }
-        //        });
-        //});
-
-
-
         $('.btnsave').click(function (e) {
             debugger;
             e.preventDefault();

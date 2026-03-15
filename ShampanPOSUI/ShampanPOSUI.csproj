@@ -2666,6 +2666,10 @@
     <Content Include="Areas\DMS\Views\MasterSupplierItem\Index.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplierItem\Create.cshtml" />
     <Content Include="Areas\DMS\Views\MasterSupplierItem\CreateSupplier.cshtml" />
+    <Content Include="Areas\SetUp\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\SetUp\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\SetUp\Views\UserProfile\SignUpCreate.cshtml" />
+    <Content Include="Areas\DMS\Views\Shared\_LoginLayout.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />
@@ -3919,6 +3923,9 @@
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\Shared\_rightNav.cshtml" />
     <Content Include="Views\Login\_leftSideBar.cshtml" />
+    <Content Include="Views\Login\SignUp.cshtml" />
+    <Content Include="Views\Login\SignUpCreate.cshtml" />
+    <Content Include="Views\Shared\_SignUpLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3929,7 +3936,6 @@
     <Folder Include="Areas\DMS\js\Services\" />
     <Folder Include="Areas\DMS\Views\Suppliers\" />
     <Folder Include="Areas\SetUp\Data\" />
-    <Folder Include="Areas\SetUp\Views\Shared\" />
     <Folder Include="Content\Products\" />
     <Folder Include="Content\UserProfile\" />
     <Folder Include="Models\" />

@@ -549,6 +549,12 @@ namespace ShampanPOSUI.Controllers
         }
 
 
+        public ActionResult SignUp()
+        {
+            return RedirectToAction("SignUpCreate", "UserProfile", new { area = "SetUp" });
+        }
+
+
     }
 
 }

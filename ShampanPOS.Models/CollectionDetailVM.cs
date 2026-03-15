@@ -26,8 +26,15 @@ namespace ShampanPOS.Models
         public string? Comments { get; set; }
 
         public decimal SaleAmount { get; set; }
-        public decimal CollectionAmount { get; set; }
+        public decimal? CollectionAmount { get; set; }
 
+        public decimal? PaidAmount { get; set; }
+
+        public decimal? DueAmount { get; set; }
+
+        public decimal? PaymentAfter { get; set; }
+
+        public decimal? DueAfter { get; set; }
 
     }
 }

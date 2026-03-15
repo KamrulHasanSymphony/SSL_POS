@@ -63,6 +63,18 @@
                             <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                         </div>
                     </div>
+
+                    <div class="row mt-2 justify-content-center">
+                        <div class="col-6">
+                            <a href="@Url.Action("SignUpCreate", "UserProfile", new { area = "SetUp" })" class="btn btn-success btn-block">
+                                Sign Up
+                            </a>
+                        </div>
+                    </div>
+
+                    @*<button type="button" title="Sign Up" data-url="/SetUp/UserProfile/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>*@
                 }
             </div>
         </div>

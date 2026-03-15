@@ -208,20 +208,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
                 vm.Operation = "update";
 
-                //#region DecimalPlace
-                //CommonVM commonVM = new CommonVM();
-                //commonVM.Group = "SaleDecimalPlace";
-                //commonVM.Name = "SaleDecimalPlace";
-                //var settingsValue = _commonRepo.GetSettingsValue(commonVM);
-
-                //if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
-                //{
-                //    var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
-
-                //    vm.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
-                //}
-
-                //#endregion
 
                 return View("Create", vm);
             }

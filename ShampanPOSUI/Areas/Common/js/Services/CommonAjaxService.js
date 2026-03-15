@@ -68,13 +68,28 @@
             .fail(fail);
     };
 
+    //function save(url, data, done, fail) {
 
+    //    $.ajax({
+    //        url: url,
+    //        type: "POST",
+    //        data: data,
+    //        success: function (result) {
+    //            done(result);
+    //        },
+    //        error: function (error) {
+    //            fail(error);
+    //        }
+    //    });
+
+    //}
     return {
         finalSave: finalSave,
         finalImageSave: finalImageSave,
         deleteData: deleteData,
         multiplePost: multiplePost,
         ImportExcel: ImportExcel,
+        //save: save,
     }
 
 

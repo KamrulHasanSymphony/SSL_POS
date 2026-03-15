@@ -499,7 +499,7 @@
                 },
                 {
                     title: "Action",
-                    width: 170,
+                    width: 80,
                     template: function (dataItem) {
 
                         return `

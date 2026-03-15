@@ -335,6 +335,25 @@
             }
         }
 
+
+
+        .form-wrapper {
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+            .form-wrapper .card {
+                box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            }
+
+            .form-wrapper .form-control-sm {
+                height: 30px;
+                font-size: 13px;
+            }
+
+        .content-wrapper {
+            background: #f4f6f9;
+        }
     </style>
 
 
@@ -377,54 +396,17 @@
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    
+@*<body class="hold-transition sidebar-mini layout-fixed">*@
+<body class="hold-transition layout-top-nav">
     <div class="wrapper">
         <div id="myModal" class="trkmodal"></div>
         <div class="preloader flex-column justify-content-center align-items-center">
         </div>
 
-        <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-            <!-- Left navbar links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-                <li class="nav-item">
-                    <a href="/Common/Home/Index?branchChange=true" class="nav-link"> Change Branch </a>
-                </li>
-            </ul>
-        </nav>
 
-        <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="#" class="brand-link mt-3 pb-3 mb-3 d-flex" style="margin-top: 0rem !important;margin-bottom: 0rem !important;">
-                <div style="text-align: center;">
-                    <img src="~/Content/AdminLte/dist/img/osaka-logo.jpg" alt="Logo" style="width: 100%; margin-left: -5px; opacity: 150;">
-                </div>
-            </a>
+        @*<div class="content-wrapper">*@
 
-            <div class="sidebar">
-                <!-- Main Sidebar Menu Binding -->
-                <nav class="mt-2" id="partialViewContainer">
-                </nav>
-
-                <!-- Main Sidebar Menu Binding -->
-                <div class="" style="text-align: center !important; padding: 4px 0;">
-                    <div class="">
-                        <a href="https://www.symphonysofttech.com/" target="_blank">
-                            <img src="~/Content/AdminLte/dist/img/logo.png" alt="Symphony Logo" class="logo" height="40">
-                        </a>
-                        <p>.</p>
-                    </div>
-                </div>
-            </div>
-
-        </aside>
-
-        <div class="content-wrapper">
+        <div class="content-wrapper" style="margin-left:0px;">
             <section class="content">
 
                 <div class="modal fade" id="partialModal" tabindex="-1" role="dialog" aria-labelledby="partialModal">
@@ -437,25 +419,6 @@
             </section>
 
         </div>
-
-        <footer class="main-footer">
-            <div class=" d-none d-sm-inline-block">
-                <strong>
-                    Copyright &copy; 2024 - @DateTimeOffset.Now.ToString("yyyy")
-                    Symphony Softtech Ltd.
-                </strong>
-                All rights reserved. &nbsp;&nbsp;
-            </div>
-
-
-            <div class=" ml-5 ml-5 float-center d-none d-sm-inline-block ">
-                <b> Branch Name : </b> <b><span style="color: red;"> @currentBranchName </span></b>
-            </div>
-            <div class="float-right d-none d-sm-inline-block">
-                <b> Version </b> 25.March.2025
-            </div>
-        </footer>
-
         <aside class="control-sidebar control-sidebar-dark">
         </aside>
     </div>
@@ -487,8 +450,7 @@
             ShowNotification(2, 'Please save data first.');
             return;
         }
-        else
-        {
+        else {
             $(".auditcard").toggleClass("active");
         }
     });

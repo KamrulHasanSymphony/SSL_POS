@@ -41,6 +41,9 @@
             addRow($table);
         });
 
+        $(document).on("keyup change", "#PaidAmount", function () {
+            DueCalculation();
+        });
 
         $('.btnsave').click(function (e) {
             debugger;
@@ -675,7 +678,6 @@
         }
     };
 
-
     function TotalCalculation() {
 
         let subTotal = 0;
@@ -701,8 +703,22 @@
         $("#TotalSD").val(totalSD.toLocaleString('en', { minimumFractionDigits: dp, maximumFractionDigits: dp }));
         $("#TotalVAT").val(totalVAT.toLocaleString('en', { minimumFractionDigits: dp, maximumFractionDigits: dp }));
         $("#GrandTotal").val(grandTotal.toLocaleString('en', { minimumFractionDigits: dp, maximumFractionDigits: dp }));
-    }
 
+        DueCalculation();
+    }
+    function DueCalculation() {
+
+        var grandTotal = parseFloat($("#GrandTotal").val().replace(/,/g, '')) || 0;
+        var paidAmount = parseFloat($("#PaidAmount").val().replace(/,/g, '')) || 0;
+
+        var due = grandTotal - paidAmount;
+
+        if (due < 0) due = 0;
+
+        $("#DueAmount").val(
+            due.toLocaleString('en', { minimumFractionDigits: decimalPlace })
+        );
+    }
     function productModalDblClick(row, originalRow) {
         debugger;
         var dataTable = $("#modalData").DataTable();

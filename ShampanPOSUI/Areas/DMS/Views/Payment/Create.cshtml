@@ -1,4 +1,5 @@
-﻿@model ShampanPOS.Models.PaymentVM
+﻿@using Newtonsoft.Json
+@model ShampanPOS.Models.PaymentVM
 @{
     ViewBag.Title = "Payment Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -79,7 +80,7 @@
 
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.Operation)
-
+                @Html.Hidden("detailsListJson", JsonConvert.SerializeObject(Model.paymentDetailList ?? new List<ShampanPOS.Models.PaymentDetailVM>()))
 
                 <div class="form-group row">
 
@@ -166,51 +167,52 @@
             </div>
             <div class="card-body">
 
-                <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
+                @*<button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>*@
+
+                @*<div style="overflow-x: auto; white-space: nowrap;">
+                        <table class="table table-bordered table-striped table-sm" id="details">
+                            <thead>
+                                <tr>
+                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="PaymentId">Payment Id</th>
+                                    <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="PurchaseCode">Purchase Code</th>
+                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="PurchaseId">Purchase Id</th>
+                                    <th data-type="decimal" style="width: 20%;" data-required="true" data-computed="false" data-name="PurchaseAmount">Purchase Amount</th>
+                                    <th data-type="decimal" style="width: 20%" data-required="true" data-computed="false" data-name="PaymentAmount">Payment Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lst">
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.paymentDetailList)
+                                    {
+                                        <tr>
+                                            <td>@serial</td>
+                                            <td hidden>@item.PaymentId</td>
+                                            <td>@item.PurchaseCode</td>
+                                            <td hidden>@item.PurchaseId</td>
+                                            <td class="dFormat">@item.PurchaseAmount</td>
+                                            <td class="dFormat">@item.PaymentAmount</td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm remove-row-btn">
+                                                    <i class='fa fa-trash'></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        { serial++; }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>*@
+
 
                 <div style="overflow-x: auto; white-space: nowrap;">
-                    <table class="table table-bordered table-striped table-sm" id="details">
-                        <thead>
-                            <tr>
-                                <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="PaymentId">Payment Id</th>
-                                <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="PurchaseCode">Purchase Code</th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="PurchaseId">Purchase Id</th>
-                                @*<th data-type="text" style="width:20%;" data-name="SupplierName">Supplier Name</th>
-                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="SupplierId">Supplier Id</th>*@
-                                <th data-type="decimal" style="width: 20%;" data-required="true" data-computed="false" data-name="PurchaseAmount">Purchase Amount</th>
-                                <th data-type="decimal" style="width: 20%" data-required="true" data-computed="false" data-name="PaymentAmount">Payment Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lst">
-                            @if (Model != null)
-                            {
-                                foreach (var item in Model.paymentDetailList)
-                                {
-                                    <tr>
-                                        <td>@serial</td>
-                                        <td hidden>@item.PaymentId</td>
-                                        <td>@item.PurchaseCode</td>
-                                        <td hidden>@item.PurchaseId</td>
-                                        @*<td data-name="SupplierName">@item.SupplierName</td>
-                                            <td hidden data-name="SupplierId">@item.SupplierId</td>*@
-                                        <td class="dFormat">@item.PurchaseAmount</td>
-                                        <td class="dFormat">@item.PaymentAmount</td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm remove-row-btn">
-                                                <i class='fa fa-trash'></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    { serial++; }
-                                }
-                            }
-                        </tbody>
-                    </table>
 
-
+                    <div id="PaymentDetailsGrid"></div>
 
                 </div>
+
 
             </div>
         </div>
@@ -220,13 +222,6 @@
             <div class="card-header p-2">
                 <div class="card-body">
                     <div class="form-group row">
-
-                        @*<div class="editor-label">
-                                <label>&nbsp;Total Payment Amount</label>
-                            </div>
-                            <div class="editor-field">
-                                <input type="text" class="form-control form-control-sm priceLen NumberCheck text-right" name="PurchaseOrderGrandTotalAmount" id="PurchaseOrderGrandTotalAmount"  />
-                            </div>*@
 
 
                         <div class="col-sm-2">
