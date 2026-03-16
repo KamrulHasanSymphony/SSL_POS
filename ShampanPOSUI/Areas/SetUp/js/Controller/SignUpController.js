@@ -1,4 +1,4 @@
-﻿var UserProfileController = function (CommonAjaxService) {
+﻿var SignUpController = function (CommonAjaxService) {
 
     var getSalePersonId = 0;
 
@@ -14,26 +14,27 @@
         else {
             GetSalePersonComboBox();
         }
+        $('.btnsave').click('click', function (e) {
+            debugger;
 
-        $("#IsSalePerson").on('switchChange.bootstrapSwitch', function (event, state) {
-            if (state) {
-                $('.salePerson').show();
+            e.preventDefault();
+
+            var form = $("#frmEntry");
+
+            var mvcValid = form.valid();
+
+            var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
+            debugger;
+            if (!mvcValid || !customValid) {
+                return false;
             }
-            else {
-                $('.salePerson').hide();
-            }
-        });
 
-
-
-        $('.btnsave').click('click', function () {
             var getId = $('#Id').val();
             var status = "Save";
-            if (getId != '') {
+            if (parseInt(getId) > 0) {
                 status = "Update";
             }
             Confirmation("Are you sure? Do You Want to " + status + " Data?",
-
                 function (result) {
                     if (result) {
                         save();
@@ -51,49 +52,7 @@
                     }
                 });
         });
-        // Handle file input change to preview image
-        $("#imageUpload").on("change", function (event) {
 
-            //$("#imageUpload").prop("disabled", false); 
-            var file = event.target.files[0];
-
-            if (!file) {
-                console.error("No file selected!");
-                return;
-            }
-
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                console.log("File loaded successfully!");
-
-                $("#imagePreview").attr("src", e.target.result).show();
-                $("#deleteImageBtn").show();
-                $("#ImagePath").val(e.target.result);
-            };
-
-            reader.onerror = function (error) {
-                console.error("Error reading file:", error);
-            };
-
-            reader.readAsDataURL(file);
-        });
-
-        $("#deleteImageBtn").on("click", function () {
-            $(this).addClass("clicked");
-            $("#imagePreview").attr("src", "").hide();
-            $("#ImagePath").val("");
-            $("#deleteImageBtn").hide();
-            $("#imageUpload").val("");
-            $("#imageUpload").prop("disabled", false);
-        });
-
-        var operation = $("#Operation").val();
-        var imagePath = $("#ImagePath").val();
-        if (operation == "update" && imagePath !== null) {
-
-            $("#imageUpload").prop("disabled", false);
-        }
 
     };
     function SelectData() {
@@ -276,83 +235,57 @@
 
     };
 
-    function save() {
 
+    function save() {
+        debugger;
         var validator = $("#frmEntry").validate();
-        var formData = new FormData();
-        var model = serializeInputs("frmEntry");
-        model.CurrentPassword = model.Password;
-        var result = validator.form();
-        if (!result) {
+        if (!validator.form()) {
             validator.focusInvalid();
             return;
         }
 
-        for (var key in model) {
-            formData.append(key, model[key]);
-        }
+        var model = serializeInputs("frmEntry");
+        var url = "/SetUp/SignUp/SignUpCreateEdit";
 
-        // Handle checkbox value
-        formData.append("IsSalePerson", $('#IsSalePerson').prop('checked'));
-        formData.append("IsHeadOffice", $('#IsHeadOffice').prop('checked'));
-
-
-        // Check if delete button was clicked to remove image
-        var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-        if (deleteImageClicked) {
-            formData.append("ImagePath", "");
-            $("#imagePreview").remove();
-            $("#ImagePath").val("");
-        }
-
-        var fileInput = document.getElementById("imageUpload");
-        if (fileInput.files.length > 0) {
-            var file = fileInput.files[0];
-
-            if (file.size > 26214400) {
-                ShowNotification(3, "Image size cannot exceed 25MB.");
-                return;
-            }
-
-            formData.append("file", file);
-        } else if (!deleteImageClicked) {
-            var existingImagePath = $("#ImagePath").val();
-            if (existingImagePath) {
-                formData.append("ImagePath", existingImagePath);
-            }
-        }
-
-        var url = "/SetUp/UserProfile/CreateEdit";
-
-        CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
+        CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     };
 
+
+    //function save() {
+
+    //    var validator = $("#frmEntry").validate();
+    //    if (!validator.form()) {
+    //        validator.focusInvalid();
+    //        return;
+    //    }
+
+    //    var model = serializeInputs("frmEntry");
+
+    //    // First Save (UserProfile)
+    //    var url1 = "/SetUp/SignUp/SignUpCreateEdit";
+
+    //    CommonAjaxService.finalSave(url1, model, function (result) {
+
+    //        if (result.Success === true) {
+
+    //            // Second Save (UserInformation)
+    //            var url2 = "/SetUp/SignUp/UserInfoCreateEdit";
+
+    //            CommonAjaxService.finalSave(url2, model, saveDone, saveFail);
+
+    //        } else {
+    //            ShowNotification(3, result.Message);
+    //        }
+
+    //    }, saveFail);
+    //}
     function saveDone(result) {
-
-        if (result.Status == 200) {
-            if (result.Data.Operation == "add") {
-                ShowNotification(1, result.Message);
-                $(".divSave").hide();
-                $(".divUpdate").show();
-                $("#Id").val(result.Data.Id);
-                $("#UserName").val(result.Data.UserName);
-                $("#Operation").val("update");
-                $("#Mode").val("profileupdate");
-                $('#UserName').prop('disabled', true);
-                setTimeout(function () {
-                    /*            window.location.href = "/SetUp/UserProfile/Edit?id=" + result.Data.Id +"&mode=profileupdate";*/
-
-                    window.location.href = "/SetUp/UserProfile/Index";
-                }, 700);
-            }
-            else {
-                ShowNotification(1, result.Message);
-                setTimeout(function () {
-                    /*            window.location.href = "/SetUp/UserProfile/Edit?id=" + result.Data.Id +"&mode=profileupdate";*/
-
-                    window.location.href = "/SetUp/UserProfile/Index";
-                }, 700);
-            }
+        alert(result.Message, " RR " + result.Success);
+        if (result.Status == 200 || result.Success === true) {
+            ShowNotification(1, result.Message);
+            setTimeout(function () {
+                window.location.href = "/Login/SignIn";
+            }, 700);
         }
         else if (result.Status == 400) {
             ShowNotification(3, result.Message);

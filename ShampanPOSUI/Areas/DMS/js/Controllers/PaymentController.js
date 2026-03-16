@@ -544,9 +544,42 @@
 
 
 
+    //function GetBankAccountComboBox() {
+    //    debugger;
+    //    var SupplierComboBox = $("#BankAccountId").kendoMultiColumnComboBox({
+    //        dataTextField: "AccountNo",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "AccountNo", title: "Account No", width: 150 },
+    //            { field: "AccountName", title: "Account Name", width: 150 },
+    //            { field: "BranchName", title: "Branch Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetBankAccountList"
+    //            }
+    //        },
+    //        placeholder: "Select BankAccount",
+    //        value: "",
+    //        dataBound: function (e) {
+    //            if (getBankAccountId) {
+    //                this.value(parseInt(getBankAccountId));
+    //            }
+    //        },
+    //        change: function (e) {
+    //        }
+    //    }).data("kendoMultiColumnComboBox");
+    //};
+
+
     function GetBankAccountComboBox() {
-        debugger;
-        var SupplierComboBox = $("#BankAccountId").kendoMultiColumnComboBox({
+
+        var bankId = $("#BankAccountId").val();
+
+        var combo = $("#BankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
             dataValueField: "Id",
             height: 400,
@@ -556,24 +589,23 @@
                 { field: "BranchName", title: "Branch Name", width: 150 }
             ],
             filter: "contains",
-            filterFields: ["Code", "Name"],
+            filterFields: ["AccountNo", "AccountName", "BranchName"],
             dataSource: {
                 transport: {
                     read: "/Common/Common/GetBankAccountList"
                 }
             },
-            placeholder: "Select BankAccount",
-            value: "",
-            dataBound: function (e) {
-                if (getBankAccountId) {
-                    this.value(parseInt(getBankAccountId));
-                }
-            },
-            change: function (e) {
-            }
+            placeholder: "Select Bank Account"
         }).data("kendoMultiColumnComboBox");
-    };
 
+        // set value after datasource load
+        combo.one("dataBound", function () {
+            if (bankId) {
+                combo.value(bankId);
+            }
+        });
+
+    }
 
 
     function GetSupplierComboBox() {
@@ -875,7 +907,7 @@
                 },
                 {
                     title: "Action",
-                    width: 170,
+                    width: 50,
                     template: function (dataItem) {
 
                         return `

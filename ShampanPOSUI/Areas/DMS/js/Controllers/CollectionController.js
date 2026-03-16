@@ -546,10 +546,11 @@
     };
 
 
-
     function GetBankAccountComboBox() {
 
-        $("#BankAccountId").kendoMultiColumnComboBox({
+        var bankId = $("#BankAccountId").val();
+
+        var combo = $("#BankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
             dataValueField: "Id",
             height: 400,
@@ -565,8 +566,14 @@
                     read: "/Common/Common/GetBankAccountList"
                 }
             },
-            placeholder: "Select Bank Account",
-            value: ""
+            placeholder: "Select Bank Account"
+        }).data("kendoMultiColumnComboBox");
+
+        // set value after datasource load
+        combo.one("dataBound", function () {
+            if (bankId) {
+                combo.value(bankId);
+            }
         });
 
     }

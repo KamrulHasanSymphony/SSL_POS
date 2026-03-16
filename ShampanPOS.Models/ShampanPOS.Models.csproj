@@ -140,6 +140,7 @@
     <Compile Include="MasterSupplierGroupVM.cs" />
     <Compile Include="SupplierProductVM.cs" />
     <Compile Include="UserBranchProfileVM.cs" />
+    <Compile Include="UserInfoVM.cs" />
     <Compile Include="UserProfileVM.cs" />
     <Compile Include="CompanyProfileVM.cs" />
     <Compile Include="AreaVM.cs" />

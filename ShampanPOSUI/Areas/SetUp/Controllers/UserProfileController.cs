@@ -26,7 +26,6 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
             return View();
         }
 
-
         public ActionResult Create()
         {
             UserProfileVM vm = new UserProfileVM();
@@ -34,7 +33,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
             vm.Mode = "new";
 
             return View("Create", vm);
-        }        
+        }
 
         [HttpPost]
         public ActionResult CreateEdit(UserProfileVM model, HttpPostedFileBase file)
@@ -73,15 +72,15 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                         model.ImagePath = "/Content/UserProfile/" + fileName;
                     }
                     if (model.Operation.ToLower() == "add")
-                    {                      
-						resultVM = _repo.Insert(model);
+                    {
+                        resultVM = _repo.Insert(model);
 
                         if (resultVM.Status == ResultStatus.Success.ToString())
                         {
                             model = JsonConvert.DeserializeObject<UserProfileVM>(resultVM.DataVM.ToString());
                             model.Operation = "add";
                             Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            result =  new ResultModel<UserProfileVM>()
+                            result = new ResultModel<UserProfileVM>()
                             {
                                 Success = true,
                                 Status = Status.Success,
@@ -91,7 +90,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                             return Json(result);
                         }
                         else
-                        {                            
+                        {
                             Session["result"] = "Fail" + "~" + resultVM.Message;
 
                             result = new ResultModel<UserProfileVM>()
@@ -188,7 +187,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(string id,string mode)
+        public ActionResult Edit(string id, string mode)
         {
             try
             {
@@ -220,7 +219,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                 return RedirectToAction("Index");
             }
         }
-       
+
 
         [HttpPost]
         public JsonResult GetGridData(GridOptions options)
@@ -231,7 +230,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
             try
             {
                 string userId = Session["UserId"] != null ? Session["UserId"].ToString() : "";
-                bool isAdmin = User.IsInRole("Admin");                
+                bool isAdmin = User.IsInRole("Admin");
 
                 result = _repo.GetGridData(options);
 
@@ -243,7 +242,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                     {
                         gridData.Items = gridData.Items.Where(user => user.UserName == userId).ToArray();
                     }
-                    
+
                     gridData.TotalCount = gridData.Items.Count();
 
                     return Json(new
@@ -295,18 +294,5 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                 return RedirectToAction("Index");
             }
         }
-
-
-        [AllowAnonymous]
-        public ActionResult SignUpCreate()
-        {
-            UserProfileVM vm = new UserProfileVM();
-            vm.Operation = "add";
-            vm.Mode = "new";
-
-            return View("SignUpCreate", vm);
-        }
-
-
     }
-}
+  }

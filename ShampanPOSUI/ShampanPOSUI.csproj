@@ -393,10 +393,12 @@
     <Compile Include="Areas\DMS\Controllers\BranchProfileController.cs" />
     <Compile Include="Areas\DMS\Controllers\ProductController.cs" />
     <Compile Include="Areas\DMS\DMSAreaRegistration.cs" />
+    <Compile Include="Areas\SetUp\Controllers\SignUpController.cs" />
     <Compile Include="Areas\SetUp\Controllers\UserBranchProfileController.cs" />
     <Compile Include="Areas\SetUp\Controllers\UserProfileController.cs" />
     <Compile Include="Areas\SetUp\Controllers\CompanyProfileController.cs" />
     <Compile Include="Areas\SetUp\Controllers\MenuAuthorizationController.cs" />
+    <Content Include="Areas\SetUp\js\Controller\SignUpController.js" />
     <Compile Include="Areas\SetUp\SetUpAreaRegistration.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="ExtensionMethods\Extensions.cs" />
@@ -2670,6 +2672,7 @@
     <Content Include="Areas\SetUp\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\SetUp\Views\UserProfile\SignUpCreate.cshtml" />
     <Content Include="Areas\DMS\Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Areas\SetUp\Views\SignUp\SignUpCreate.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />
@@ -3936,6 +3939,7 @@
     <Folder Include="Areas\DMS\js\Services\" />
     <Folder Include="Areas\DMS\Views\Suppliers\" />
     <Folder Include="Areas\SetUp\Data\" />
+    <Folder Include="Areas\SetUp\Views\SetUp\" />
     <Folder Include="Content\Products\" />
     <Folder Include="Content\UserProfile\" />
     <Folder Include="Models\" />

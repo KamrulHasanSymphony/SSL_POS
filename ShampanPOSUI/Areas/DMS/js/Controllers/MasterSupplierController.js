@@ -407,14 +407,7 @@
                         return `
                             <a href="/DMS/MasterSupplier/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                 <i class="fas fa-pencil-alt"></i>
-                            </a>    <a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-                        <i class='fas fa-print'></i>
-            </a>
-                        <a href="/DMS/MasterSupplier/getReport/${dataItem.Id}" 
-                          class="btn btn-success btn-sm mr-2 getReport" 
-                          title="Report">
-                           <i class="fas fa-file-alt"></i>
-                      </a>
+                            
 
 
             `;

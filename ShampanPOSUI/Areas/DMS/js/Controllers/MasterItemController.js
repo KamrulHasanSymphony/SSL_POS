@@ -451,11 +451,7 @@
                     <a href="/DMS/MasterItem/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
-                            <a href="/DMS/MasterItem/getReport/${dataItem.Id}" 
-                               class="btn btn-success btn-sm mr-2 getReport" 
-                               title="Report">
-                                <i class="fas fa-file-alt"></i>
-                            </a>
+                            
 
  `;
                     }
