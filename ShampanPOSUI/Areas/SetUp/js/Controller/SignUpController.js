@@ -280,11 +280,16 @@
     //    }, saveFail);
     //}
     function saveDone(result) {
+        debugger;
+        console.log(result);
         alert(result.Message, " RR " + result.Success);
         if (result.Status == 200 || result.Success === true) {
             ShowNotification(1, result.Message);
+
+            var id = result.Data?.Id || "";
+
             setTimeout(function () {
-                window.location.href = "/Login/SignIn";
+                window.location.href = "/SetUp/CompanyCreate/Create?id=" + id;
             }, 700);
         }
         else if (result.Status == 400) {
@@ -294,6 +299,7 @@
             ShowNotification(2, result.Message);
         }
     };
+
 
     function saveFail(result) {
 

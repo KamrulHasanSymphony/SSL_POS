@@ -64,6 +64,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                         // 3️⃣ Insert UserInformations
                         _userrepo.Insert(userInfo);
 
+
                         result = new ResultModel<UserProfileVM>()
                         {
                             Success = true,

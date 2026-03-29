@@ -1,7 +1,10 @@
 ﻿@model ShampanPOS.Models.CompanyProfileVM
 @{
     ViewBag.Title = "Company Profile Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = "~/Views/Shared/_CompanyCreateLayout.cshtml";
+    Layout = "~/Views/Shared/_SignUpLayout.cshtml";
+
+    ViewBag.HideMenu = true;
 }
 
 <div class="content-header">
@@ -29,7 +32,7 @@
 
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.Operation)
-
+                @Html.HiddenFor(model => model.UserId)
                 <div class="form-group row">
 
                     <div class="col-sm-2 codeWidth">
@@ -59,7 +62,7 @@
                         @Html.ValidationMessageFor(model => model.CompanyLegalName)
                     </div>
 
-                   
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.FYearStart)
                         <div class="input-group ">
@@ -185,11 +188,11 @@
                         </div>
                     </div>
 
-                    </div>
-
                 </div>
 
             </div>
+
+        </div>
     </form>
 
     <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
@@ -218,9 +221,9 @@
             }
         </div>
 
-                <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+        <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
 
-            </div>
+    </div>
 
     <div class="card card-secondary auditcard">
 
@@ -281,12 +284,13 @@
 @section scripts{
 
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
-    <script src="~/Areas/SetUp/js/Controller/CompanyProfileController.js"></script>
+    <script src="~/Areas/SetUp/js/Controller/CompanyCreateController.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonValidationHelper.js"></script>
 
     <script>
         $(document).ready(function () {
 
-            CompanyProfileController.init();
+            CompanyCreateController.init();
         });
 
 

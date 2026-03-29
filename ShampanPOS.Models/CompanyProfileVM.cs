@@ -11,6 +11,8 @@ namespace ShampanPOS.Models
         [DisplayName("Code")]
         public string? Code { get; set; }
 
+        public string? UserId { get; set; }
+
         [Required]
         [DisplayName("Company Name")]
         public string CompanyName { get; set; }

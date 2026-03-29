@@ -337,6 +337,7 @@
     <Content Include="Areas\Common\js\Services\CommonValidationHelper.js" />
     <Compile Include="Areas\DMS\Controllers\BankAccountController.cs" />
     <Compile Include="Areas\DMS\Controllers\BankInformationController.cs" />
+    <Compile Include="Areas\DMS\Controllers\BranchCreateController.cs" />
     <Compile Include="Areas\DMS\Controllers\CollectionController.cs" />
     <Compile Include="Areas\DMS\Controllers\DepositController.cs" />
     <Compile Include="Areas\DMS\Controllers\MasterItemController.cs" />
@@ -367,6 +368,7 @@
     <Compile Include="Areas\DMS\Controllers\SupplierProductController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMConversationController.cs" />
+    <Content Include="Areas\DMS\js\Controllers\BranchCreateController.js" />
     <Content Include="Areas\DMS\js\Controllers\DepositController.js" />
     <Content Include="Areas\DMS\js\Controllers\CollectionController.js" />
     <Content Include="Areas\DMS\js\Controllers\FromSaleController.js" />
@@ -387,6 +389,7 @@
     <Content Include="Areas\DMS\js\Controllers\OverHeadController.js" />
     <Content Include="Areas\DMS\js\Controllers\BankInformationController.js" />
     <Compile Include="Areas\DMS\Controllers\WithdrawalController.cs" />
+    <Compile Include="Areas\SetUp\Controllers\CompanyCreateController.cs" />
     <Compile Include="Areas\SetUp\Controllers\SettingsController.cs" />
     <Compile Include="Areas\DMS\Controllers\PaymentTypeController.cs" />
     <Compile Include="Areas\DMS\Controllers\CustomerAdvanceController.cs" />
@@ -398,6 +401,7 @@
     <Compile Include="Areas\SetUp\Controllers\UserProfileController.cs" />
     <Compile Include="Areas\SetUp\Controllers\CompanyProfileController.cs" />
     <Compile Include="Areas\SetUp\Controllers\MenuAuthorizationController.cs" />
+    <Content Include="Areas\SetUp\js\Controller\CompanyCreateController.js" />
     <Content Include="Areas\SetUp\js\Controller\SignUpController.js" />
     <Compile Include="Areas\SetUp\SetUpAreaRegistration.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -2673,6 +2677,9 @@
     <Content Include="Areas\SetUp\Views\UserProfile\SignUpCreate.cshtml" />
     <Content Include="Areas\DMS\Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Areas\SetUp\Views\SignUp\SignUpCreate.cshtml" />
+    <Content Include="Areas\SetUp\Views\CompanyCreate\CompanyCreate.cshtml" />
+    <Content Include="Areas\DMS\Views\BranchProfile\BranchCreate.cshtml" />
+    <Content Include="Areas\DMS\Views\BranchCreate\BranchCreate.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />
@@ -3929,6 +3936,7 @@
     <Content Include="Views\Login\SignUp.cshtml" />
     <Content Include="Views\Login\SignUpCreate.cshtml" />
     <Content Include="Views\Shared\_SignUpLayout.cshtml" />
+    <Content Include="Views\Shared\_CompanyCreateLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

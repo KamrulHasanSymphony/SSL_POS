@@ -11,12 +11,12 @@ using System.Web.Mvc;
 
 namespace ShampanPOSUI.Areas.Common.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CommonController : Controller
     {
         private readonly ApplicationDbContext _applicationDb;
         CommonRepo _repo = new CommonRepo();
-        // GET: Common/Common
+        // GET: C
         public ActionResult Index()
         {
             return View();
@@ -269,7 +269,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-    
+
         [HttpGet]
         public ActionResult GetAreaList()
         {
@@ -292,7 +292,10 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
- 
+
+
+
+
         public ActionResult GetCustomerCategoryList(string value)
         {
             try

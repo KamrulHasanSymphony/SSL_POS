@@ -35,7 +35,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.IsActive = true;
 
             return View("Create", vm);
-        }        
+        }
 
         [HttpPost]
         public ActionResult CreateEdit(BranchProfileVM model)
@@ -155,6 +155,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             // return View("Create", model);
 
         }
+
 
         [HttpGet]
         public ActionResult Edit(string id)
