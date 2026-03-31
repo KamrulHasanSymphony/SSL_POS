@@ -71,75 +71,6 @@ namespace ShampanPOSUI.Areas.Common.Controllers
 
 
 
-        //public ActionResult Index(bool branchChange)
-        //{
-        //    ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
-        //    CommonVM vm = new CommonVM();
-
-        //    try
-        //    {
-        //        if (User.Identity.IsAuthenticated || (Session["UserId"] != null && !string.IsNullOrEmpty(Session["UserId"].ToString())))
-        //        {
-        //            List<BranchProfile> branchProfiles = new List<BranchProfile>();
-        //            List<BranchProfileVM> lst = new List<BranchProfileVM>();
-
-        //            Session["BranchChanged"] = branchChange ? "1" : "0";
-
-        //            if (branchChange)
-        //            {
-        //                TempData["BranchChanged"] = true;
-        //                return View(branchProfiles);
-        //            }
-
-        //            if (Session["UserId"] != null)
-        //            {
-        //                if (Session["CurrentBranch"] == null)
-        //                {
-        //                    //branchProfiles = new List<BranchProfile>();
-        //                    BranchProfileRepo _branchRepo = new BranchProfileRepo();
-        //                    vm.UserId = Session["UserHashId"].ToString();
-        //                    //resultVM = userBranchProfileRepo.List(vm);
-
-        //                    resultVM = _branchRepo.UserWiseBranchList(vm);
-        //                    if (resultVM.Status == ResultStatus.Success.ToString())
-        //                    {
-        //                        branchProfiles = JsonConvert.DeserializeObject<List<BranchProfile>>(resultVM.DataVM.ToString());
-        //                        branchProfiles[0].BranchID = Convert.ToInt32(branchProfiles[0].Id);
-        //                        branchProfiles[0].BranchCode = branchProfiles[0].Code;
-        //                        branchProfiles[0].UserId = vm.UserId;
-
-
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    BranchProfile branch = new BranchProfile
-        //                    {
-        //                        BranchID = 0,
-        //                        BranchCode = "",
-        //                    };
-        //                    branchProfiles.Add(branch);
-        //                }
-        //            }
-
-        //            return View(branchProfiles);
-        //        }
-
-
-        //        else
-        //        {
-        //            return RedirectToAction("Index", "Login", new { area = (string)null });
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-        //        return RedirectToAction("Index", "Login", new { area = (string)null });
-        //    }
-        //}
-
-
-
         [HttpGet]
         public JsonResult LoadBranchProfiles()
         {
@@ -597,34 +528,169 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult GetTopProductsLast3MonthsTotalSale(string value)
+        {
+            try
+            {
+                List<SalesByMonthModelVM> lst = new List<SalesByMonthModelVM>();
+
+                CommonVM param = new CommonVM
+                {
+                    BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0",
+                    CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0",
+                    Value = value
+                };
+
+                ResultVM result = _repo.GetTopProductsLast3MonthsTotalSale(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<SalesByMonthModelVM>>(result.DataVM.ToString());
+                }
+
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
 
-        //[HttpGet]
-        //public ActionResult HasDayEndData(string branchId)
-        //{
-        //    try
-        //    {
-        //        if (string.IsNullOrEmpty(branchId))
-        //            return Json(new { Success = false, Message = "Branch ID is required." }, JsonRequestBehavior.AllowGet);
+        [HttpGet]
+        public ActionResult GetTop10ProductsCurrentMonthQty(string value = "10")
+        {
+            try
+            {
+                List<ProductSaleModelVM> lst = new List<ProductSaleModelVM>();
 
-        //        // Call async repo method
-        //        ResultVM result = _repo.HasDayEndData(branchId);
+                CommonVM param = new CommonVM
+                {
+                    BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0",
+                    //CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0",  // Add CompanyId from session
+                    Value = value
+                };
 
-        //        bool hasData = false;
-        //        if (result != null && result.Status == "Success" && result.DataVM != null)
-        //        {
-        //            hasData = ((List<dynamic>)result.DataVM).Any(d => !(bool)d.ExistsInDayEnd);
-        //        }
+                ResultVM result = _repo.GetTop10ProductsCurrentMonthQty(param);
 
-        //        return Json(new { Success = true, HasData = hasData }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-        //        return Json(new { Success = false, Message = e.Message }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<ProductSaleModelVM>>(result.DataVM.ToString());
+                }
+
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult GetLowSellingProductsCurrentMonthQty(string value = "10")
+        {
+            try
+            {
+                List<ProductSaleModelVM> lst = new List<ProductSaleModelVM>();
+
+                CommonVM param = new CommonVM
+                {
+                    BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0",
+                    //CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0",
+                    Value = value
+                };
+
+                ResultVM result = _repo.GetLowSellingProductsCurrentMonthQty(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<ProductSaleModelVM>>(result.DataVM.ToString());
+                }
+
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
+        [HttpGet]
+        public ActionResult GetTotalPurchasesLast3Months()
+        {
+            try
+            {
+                // Prepare the list to hold the results
+                List<PurchaseByMonthModelVM> lst = new List<PurchaseByMonthModelVM>();
+
+                // Prepare the parameter model with CompanyId and other values
+                CommonVM param = new CommonVM
+                {
+                    BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0",
+                    CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0"
+
+                    //Value = value,
+                    //CompanyId = companyId  // Make sure this is being passed correctly
+                };
+
+                // Call the repository to get data for the last 3 months of purchases
+                ResultVM result = _repo.GetTotalPurchasesLast3Months(param);
+
+                // If data retrieval is successful, deserialize the response into a list
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<PurchaseByMonthModelVM>>(result.DataVM.ToString());
+                }
+
+                // Return the data as JSON
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                // Handle errors and log them
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult GetSaleOrderStatusStats()
+        {
+            try
+            {
+                List<SaleOrderStatusModelVM> lst = new List<SaleOrderStatusModelVM>();
+
+                CommonVM param = new CommonVM
+                {
+                    BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0",
+                    CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0"
+                };
+
+                ResultVM result = _repo.GetSaleOrderStatusStats(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<SaleOrderStatusModelVM>>(result.DataVM.ToString());
+                }
+
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
     }
 }

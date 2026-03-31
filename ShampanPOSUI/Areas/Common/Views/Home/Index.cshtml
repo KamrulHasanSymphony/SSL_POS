@@ -58,11 +58,6 @@
         margin: 0 auto;
     }
 
-    /*#pendingSalesChartCanvas {
-        background-color: white;
-        border: 1px solid #ddd;*/ /* Optional: Adds a light border around the canvas */
-    /*}*/
-
     /* Set the background to white */
     .small-box.bg-info {
         background-color: white !important;
@@ -110,6 +105,61 @@
             .small-box table th, .small-box table td {
                 vertical-align: middle;
             }
+
+        .small-box.bg-info {
+            background-color: white !important;
+            color: #333;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Style the chart title */
+        .small-box .inner h4 {
+            margin-bottom: 20px;
+            font-size: 18px; /* Adjust font size for readability */
+            font-weight: bold; /* Make the title bold */
+            text-align: center; /* Center the title */
+        }
+
+    /* Center the canvas inside the small-box */
+    canvas {
+        width: 100% !important; /* Ensures it fills the container width */
+        height: 300px !important; /* Adjust height to fit better */
+        max-width: 400px; /* Max width for the chart */
+        max-height: 400px; /* Max height for the chart */
+        margin: 0 auto; /* Center horizontally */
+    }
+
+    /* Ensure the row with the charts has spacing */
+    .row {
+        margin-bottom: 20px;
+    }
+
+    /* Add padding to the container to make sure it has spacing around it */
+    .col-md-6 {
+        padding: 10px;
+    }
+    #topProductChart, #totalPurchasesChart {
+        width: 100% !important;
+        height: 500px !important; /* Adjust height as needed */
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: -20px; /* Move chart up */
+    }
+
+    .small-box .inner h4 {
+        margin-top: -20px; /* Move the title higher */
+        font-size: 16px; /* Adjust font size if needed */
+        font-weight: bold; /* Make title bold */
+        text-align: center; /* Center the title */
+    }
+
+
 </style>
 
 
@@ -117,10 +167,60 @@
 
 <div class="container-fluid">
 
-    
-
     <div class="clearfix"></div>
 
+    <!-- 🔥 NEW: Product Sales Chart -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h4>Top Product Sales (Last 30 Days)</h4>
+                    <canvas id="topProductChart" style="height:400px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h4>Total Purchases (Last 3 Months)</h4>
+                    <canvas id="totalPurchasesChart" style="height:400px;"></canvas> 
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h4>Top 10 Products by Quantity (Current Month)</h4>
+                    <canvas id="topProductQtyChart" style="height:300px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h4>Low Selling Products (Quantity - Current Month)</h4>
+                    <canvas id="lowProductQtyChart" style="height:300px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h4>Sale Order Status</h4>
+                    <canvas id="saleOrderStatusChart" style="height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!-- Existing Modal -->
     <div class="modal fade" id="branchProfiles" tabindex="-1" role="dialog" aria-labelledby="Branch Profiles" data-backdrop="static">
         <div class="modal-dialog draggable modal-lg" role="document">
             <div class="modal-content">
@@ -128,21 +228,19 @@
                     <h4 class="modal-title"> Select Branch </h4>
                     @if (branchChanged == true)
                     {
-                        <!-- Close icon -->
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     }
-
                 </div>
                 <div class="modal-body">
                     @Html.Hidden("md-branch", Model)
-                    <table class="table table-bordered  table-sm table-hover full-width" id="tBranchProfiles">
+                    <table class="table table-bordered table-sm table-hover full-width" id="tBranchProfiles">
                         <thead>
                             <tr>
                                 <th> Branch Code</th>
                                 <th> Branch Name</th>
-                                <th style="display: none;">User Id</th>  <!-- Hides the header for 'User Id' -->
+                                <th style="display: none;">User Id</th>
                             </tr>
                         </thead>
                         <tbody id="tbdBranchProfiles" class="cursorHand">
@@ -152,7 +250,6 @@
             </div>
         </div>
     </div>
-
 
 </div>
 
@@ -171,10 +268,21 @@
 
         $(document).ready(function () {
 
+
             // Dashboard Initialization
             //console.log(@Model);
             //alert(@Model);
             DashController.init(@Model.Count);
+            setTimeout(function () {
+                loadTopProductSales();
+                loadTop10ProductCurrentMonthQty();
+                loadLowSellingProductCurrentMonthQty();
+                loadTotalPurchasesLast3Months();
+                loadSaleOrderStatusChart();
+
+            }, 500);
+
+
             //DashController.init(window.branches);
 
             // TempData Message Handling
@@ -256,11 +364,432 @@
                     // Update the hidden field with the selected option's value
                     var selectedValue = this.value();
                     $("#OptionsId").val(selectedValue);
+                    loadTopProductSales();
+                    loadTop10ProductCurrentMonthQty();
+                    loadLowSellingProductCurrentMonthQty();
+                    loadTotalPurchasesLast3Months();
+                    loadSaleOrderStatusChart();
                 }
             });
 
             //------------Dashboard-------------//
             window.charts = {};
+
+
+            //function loadTopProductSales() {
+
+            //    var combo = $("#Options").data("kendoComboBox");
+            //    var top = combo ? combo.value() : 10;
+
+            //    $.ajax({
+            //        url: '/Home/GetTopProductsLast30Days',
+            //        type: 'GET',
+            //        data: { value: top },
+            //        success: function (data) {
+
+            //            if (!data || data.length === 0) {
+            //                console.warn("No data found");
+            //                return;
+            //            }
+
+            //            let labels = data.map(x => x.ProductName);
+            //            let values = data.map(x => x.TotalSaleValue);
+
+            //            const ctx = document.getElementById('topProductChart');
+            //            if (!ctx) return;
+
+            //            const chartCtx = ctx.getContext('2d');
+
+            //            if (window.topProductChart instanceof Chart) {
+            //                window.topProductChart.destroy();
+            //            }
+
+            //            window.topProductChart = new Chart(chartCtx, {
+            //                type: 'bar',
+            //                data: {
+            //                    labels: labels,
+            //                    datasets: [{
+            //                        label: 'Sales Amount',
+            //                        data: values
+            //                    }]
+            //                },
+            //                options: {
+            //                    responsive: true,
+            //                    plugins: {
+            //                        legend: { display: false },
+
+            //                        // ✅ ADD THIS TITLE
+            //                        title: {
+            //                            display: true,
+            //                            text: 'Product Sales (Last 30 Days)',
+            //                            font: {
+            //                                size: 16,
+            //                                weight: 'bold'
+            //                            },
+            //                            padding: {
+            //                                top: 10,
+            //                                bottom: 20
+            //                            }
+            //                        }
+
+            //                    },
+            //                    scales: {
+            //                        y: { beginAtZero: true }
+            //                    }
+            //                }
+            //            });
+            //        }
+            //    });
+            //}
+
+            function loadTopProductSales() {
+                debugger;
+                var combo = $("#Options").data("kendoComboBox");
+                var top = combo ? combo.value() : 10;
+
+                $.ajax({
+                    url: '/Home/GetTopProductsLast3MonthsTotalSale',  // Ensure this is the correct API URL
+                    type: 'GET',
+                    data: { value: top },
+                    success: function (data) {
+                        if (!data || data.length === 0) {
+                            console.warn("No data found");
+                            return;
+                        }
+
+                        let labels = data.map(x => x.MonthYear);  // Get Month and Year labels
+                        let values = data.map(x => Number(x.TotalSaleValue));  // Get total sale values for each month
+
+                        const ctx = document.getElementById('topProductChart');
+                        if (!ctx) return;
+
+                        const chartCtx = ctx.getContext('2d');
+
+                        if (window.topProductChart instanceof Chart) {
+                            window.topProductChart.destroy();
+                        }
+
+                        window.topProductChart = new Chart(chartCtx, {
+                            type: 'line',  // Change to line chart
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Total Sales (Last 3 Months)',
+                                    data: values,
+                                    borderColor: '#007bff',  // Line color
+                                    backgroundColor: 'rgba(0, 123, 255, 0.2)',  // Line background color
+                                    fill: true,  // Fill the area under the line
+                                    tension: 0.1  // Smoothness of the line
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { display: true },
+                                    title: {
+                                        display: true,
+                                        text: 'Total Sales for the Last 3 Months',
+                                        font: { size: 16, weight: 'bold' },
+                                        padding: { top: 10, bottom: 20 }
+                                    }
+                                },
+                                scales: {
+                                    y: { beginAtZero: true }
+                                }
+                            }
+                        });
+                    },
+                    error: function (err) {
+                        console.error("Error:", err);
+                    }
+                });
+            }
+
+            function loadTotalPurchasesLast3Months(companyId) {
+                $.ajax({
+                    url: '/Home/GetTotalPurchasesLast3Months',  // Ensure this is the correct API URL
+                    type: 'GET',
+                    data: {},  // Passing CompanyId as parameter
+                    success: function (data) {
+                        if (!data || data.length === 0) {
+                            console.warn("No data found");
+                            return;
+                        }
+
+                        let labels = data.map(x => x.MonthYear);  // Get Month and Year labels
+                        let values = data.map(x => Number(x.TotalPurchaseValue));  // Get total purchase values for each month
+
+                        const ctx = document.getElementById('totalPurchasesChart');
+                        if (!ctx) return;
+
+                        const chartCtx = ctx.getContext('2d');
+
+                        // Check if a chart instance already exists and destroy it before re-creating
+                        if (window.totalPurchasesChart instanceof Chart) {
+                            window.totalPurchasesChart.destroy();
+                        }
+
+                        window.totalPurchasesChart = new Chart(chartCtx, {
+                            type: 'line',  // Line chart
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Total Purchases (Last 3 Months)',
+                                    data: values,
+                                    borderColor: '#007bff',  // Line color
+                                    backgroundColor: 'rgba(0, 123, 255, 0.2)',  // Line background color
+                                    fill: true,  // Fill the area under the line
+                                    tension: 0.1  // Smoothness of the line
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { display: true },
+                                    title: {
+                                        display: true,
+                                        text: 'Total Purchases for the Last 3 Months',
+                                        font: { size: 16, weight: 'bold' },
+                                        padding: { top: 10, bottom: 20 }
+                                    }
+                                },
+                                scales: {
+                                    y: { beginAtZero: true }
+                                }
+                            }
+                        });
+                    },
+                    error: function (err) {
+                        console.error("Error:", err);
+                    }
+                });
+            }
+
+            function loadTop10ProductCurrentMonthQty(companyId) {
+                $.ajax({
+                    url: '/Home/GetTop10ProductsCurrentMonthQty',  // Ensure this is the correct API URL
+                    type: 'GET',
+                    data: { companyId: companyId, value: 10 },  // Passing CompanyId as parameter
+                    success: function (data) {
+                        if (!data || data.length === 0) {
+                            console.warn("No data found");
+                            return;
+                        }
+
+                        let labels = data.map(x => x.ProductName);  // Get Product Names
+                        let values = data.map(x => x.TotalQuantity);  // Get quantities for each product
+
+                        const ctx = document.getElementById('topProductQtyChart');
+                        if (!ctx) return;
+
+                        const chartCtx = ctx.getContext('2d');
+
+                        if (window.topProductQtyChart instanceof Chart) {
+                            window.topProductQtyChart.destroy();
+                        }
+
+                        // Create the new pie chart instance
+                        window.topProductQtyChart = new Chart(chartCtx, {
+                            type: 'pie',  // Pie chart
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Quantity Sold',
+                                    data: values,
+                                    backgroundColor: [
+                                        '#007bff', '#28a745', '#dc3545', '#ffc107',
+                                        '#17a2b8', '#6610f2', '#e83e8c', '#20c997',
+                                        '#6f42c1', '#fd7e14'  // Add more colors if needed
+                                    ],
+                                    hoverOffset: 4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    // Title for the Pie Chart
+                                    title: {
+                                        display: true,
+                                        text: 'Top 10 Products by Quantity (Current Month)',
+                                        font: {
+                                            size: 18,
+                                            weight: 'bold'
+                                        },
+                                        padding: {
+                                            top: 10,
+                                            bottom: 30
+                                        }
+                                    },
+                                    legend: { position: 'bottom' },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function (tooltipItem) {
+                                                const value = tooltipItem.raw || 0;
+                                                const total = values.reduce((a, b) => a + b, 0);
+                                                return `${tooltipItem.label}: ${value} (${((value / total) * 100).toFixed(2)}%)`;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    },
+                    error: function (err) {
+                        console.error("Error:", err);
+                    }
+                });
+            }
+
+            function loadLowSellingProductCurrentMonthQty() {
+                debugger;
+                $.ajax({
+                    url: '/Home/GetLowSellingProductsCurrentMonthQty',
+                    type: 'GET',
+                    data: { value: 10 },
+                    success: function (data) {
+
+                        if (!data || data.length === 0) {
+                            console.warn("No data found");
+                            return;
+                        }
+
+                        let labels = data.map(x => x.ProductName);  
+                        let values = data.map(x => Number(x.TotalQuantity));  
+
+                        const canvas = document.getElementById('lowProductQtyChart');
+                        if (!canvas) return;
+
+                        const ctx = canvas.getContext('2d');
+
+                     
+                        if (window.lowProductQtyChart instanceof Chart) {
+                            window.lowProductQtyChart.destroy();  
+                        }
+
+                        window.lowProductQtyChart = new Chart(ctx, {
+                            type: 'pie',  
+                            data: {
+                                labels: labels,  
+                                datasets: [{
+                                    label: 'Low Selling Products',
+                                    data: values,  
+                                    backgroundColor: [
+                                        '#28a745', '#ffc107', '#007bff', '#6610f2',
+                                        '#e83e8c', '#28a745', '#17a2b8', '#20c997',
+                                        '#6f42c1', '#fd7e14'  
+                                    ],
+                                    hoverOffset: 4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { position: 'bottom' },  
+                                    title: {
+                                        display: true,
+                                        text: 'Top 10 Low Selling Products (Quantity - Current Month)',
+                                        font: {
+                                            size: 16,  
+                                            weight: 'bold'  
+                                        },
+                                        padding: {
+                                            top: 10, 
+                                            bottom: 20  
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    },
+                    error: function (err) {
+                        console.error("Error:", err);
+                    }
+                });
+            }
+
+
+            function loadSaleOrderStatusChart(companyId) {
+                $.ajax({
+                    url: '/Home/GetSaleOrderStatusStats',  // Ensure this is the correct API URL
+                    type: 'GET',
+                    data: { companyId: companyId },  // Pass CompanyId in the request
+                    success: function (data) {
+                        if (!data || data.length === 0) {
+                            console.warn("No data found");
+                            return;
+                        }
+
+                        // Aggregating data for pie chart
+                        let completedQty = 0;
+                        let pendingQty = 0;
+
+                        // Summing up the values
+                        data.forEach(x => {
+                            completedQty += Number(x.CompletedQty);
+                            pendingQty += Number(x.PendingQty);
+                        });
+
+                        // Log the aggregated values to ensure data correctness
+                        console.log('Completed Quantity:', completedQty);
+                        console.log('Pending Quantity:', pendingQty);
+
+                        // Pie chart labels and data
+                        let labels = ['Completed Quantity', 'Pending Quantity'];
+                        let values = [completedQty, pendingQty];
+
+                        // Colors for the pie chart segments
+                        let backgroundColors = ['#28a745', '#dc3545'];  // Green, Red
+
+                        // If the values are zero, make sure they are still shown with colors
+                        values.forEach((value, index) => {
+                            if (value === 0) {
+                                backgroundColors[index] = '#d6d6d6';  // Gray color for zero values
+                            }
+                        });
+
+                        const canvas = document.getElementById('saleOrderStatusChart');
+                        if (!canvas) return;
+
+                        const ctx = canvas.getContext('2d');
+
+                        if (window.saleOrderStatusChart instanceof Chart) {
+                            window.saleOrderStatusChart.destroy();  // Destroy previous chart instance
+                        }
+
+                        // Create the new pie chart instance
+                        window.saleOrderStatusChart = new Chart(ctx, {
+                            type: 'pie',  // Pie chart
+                            data: {
+                                labels: labels,  // Labels for each segment
+                                datasets: [{
+                                    data: values,  // Values for each segment
+                                    backgroundColor: backgroundColors,  // Segment colors
+                                    borderColor: '#fff',  // White border for segments
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    title: {
+                                        display: true,
+                                        text: 'Sale Order Status',
+                                        font: { size: 16, weight: 'bold' },
+                                        padding: { top: 10, bottom: 20 }
+                                    },
+                                    legend: {
+                                        position: 'bottom',
+                                    }
+                                }
+                            }
+                        });
+                    },
+                    error: function (err) {
+                        console.error("Error:", err);
+                    }
+                });
+            }
+
 
             // Utility function to create a bar chart
             function createBarChart(ctx, labels, data, label, colors) {
@@ -288,6 +817,7 @@
                     }
                 });
             }
+
 
             // Utility function to create a pie chart
             function createPieChart(ctx, labels, data, colors) {
