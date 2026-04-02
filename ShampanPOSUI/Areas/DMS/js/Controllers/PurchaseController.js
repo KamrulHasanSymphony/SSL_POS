@@ -1251,6 +1251,18 @@
         model.TotalVAT = model.TotalVAT.replace(/,/g, '');
         model.GrandTotal = model.GrandTotal.replace(/,/g, '');
 
+        debugger;
+        var purchaseorder = $("#PurchaseOrderId").val();
+
+        if (purchaseorder > 0) {
+            model.TransactionType = 'PurchaseOrder';
+        }
+        else {
+            model.TransactionType = 'Purchase';
+        }
+
+
+
         model.purchaseDetailList = details;
         model.PurchaseOrderId = $("input[name='PurchaseOrderId']").val() || 0;
 

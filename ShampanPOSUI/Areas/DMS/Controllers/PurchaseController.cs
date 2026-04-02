@@ -71,6 +71,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             PurchaseVM vm = new PurchaseVM();
             vm.Operation = "add";
             vm.TransactionType = "Purchase";
+            vm.IsManualPurchase = true;
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
             vm.BranchId = Convert.ToInt32(currentBranchId);
             //var currencyId = Session["CurrencyId"] != null ? Session["CurrencyId"].ToString() : "1";

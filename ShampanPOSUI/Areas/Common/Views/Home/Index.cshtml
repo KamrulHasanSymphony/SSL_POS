@@ -145,9 +145,9 @@
         padding: 10px;
     }
     #topProductChart, #totalPurchasesChart {
-        width: 100% !important;
-        height: 500px !important; /* Adjust height as needed */
-        max-width: 100%;
+        width: 90% !important;
+        height: 450px !important; /* Adjust height as needed */
+        max-width: 90%;
         margin: 0 auto;
         margin-top: -20px; /* Move chart up */
     }
@@ -159,7 +159,12 @@
         text-align: center; /* Center the title */
     }
 
-
+    #topProductQtyChart,
+    #lowProductQtyChart,
+    #saleOrderStatusChart {
+        height: 350px !important;
+        width: 400% !important;
+    }
 </style>
 
 
@@ -275,8 +280,8 @@
             DashController.init(@Model.Count);
             setTimeout(function () {
                 loadTopProductSales();
-                loadTop10ProductCurrentMonthQty();
-                loadLowSellingProductCurrentMonthQty();
+                loadTop10ProductLastMonthQty();
+                loadLowSellingProductLastMonthQty();
                 loadTotalPurchasesLast3Months();
                 loadSaleOrderStatusChart();
 
@@ -365,8 +370,8 @@
                     var selectedValue = this.value();
                     $("#OptionsId").val(selectedValue);
                     loadTopProductSales();
-                    loadTop10ProductCurrentMonthQty();
-                    loadLowSellingProductCurrentMonthQty();
+                    loadTop10ProductLastMonthQty();
+                    loadLowSellingProductLastMonthQty();
                     loadTotalPurchasesLast3Months();
                     loadSaleOrderStatusChart();
                 }
@@ -565,62 +570,70 @@
                 });
             }
 
-            function loadTop10ProductCurrentMonthQty(companyId) {
+            function loadTop10ProductLastMonthQty(companyId) {
                 $.ajax({
-                    url: '/Home/GetTop10ProductsCurrentMonthQty',  // Ensure this is the correct API URL
+                    url: '/Home/GetTop10ProductsCurrentMonthQty',
                     type: 'GET',
-                    data: { companyId: companyId, value: 10 },  // Passing CompanyId as parameter
+                    data: { companyId: companyId, value: 10 },
                     success: function (data) {
+
                         if (!data || data.length === 0) {
                             console.warn("No data found");
                             return;
                         }
 
-                        let labels = data.map(x => x.ProductName);  // Get Product Names
-                        let values = data.map(x => x.TotalQuantity);  // Get quantities for each product
+                        // ✅ No filtering / grouping
+                        let labels = data.map(x => x.ProductName);
+                        let values = data.map(x => Number(x.TotalQuantity));
 
-                        const ctx = document.getElementById('topProductQtyChart');
-                        if (!ctx) return;
+                        // ✅ Dynamic unique colors for each slice
+                        let colors = labels.map((_, i) =>
+                            `hsl(${(i * 360 / labels.length)}, 70%, 55%)`
+                        );
 
-                        const chartCtx = ctx.getContext('2d');
+                        const canvas = document.getElementById('topProductQtyChart');
+                        if (!canvas) return;
+
+                        const ctx = canvas.getContext('2d');
+
+
+                        const now = new Date();
+                        const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+                        const lastMonthName = lastMonthDate.toLocaleString('default', {
+                            month: 'long',
+                            year: 'numeric'
+                        });
 
                         if (window.topProductQtyChart instanceof Chart) {
                             window.topProductQtyChart.destroy();
                         }
 
-                        // Create the new pie chart instance
-                        window.topProductQtyChart = new Chart(chartCtx, {
-                            type: 'pie',  // Pie chart
+                        window.topProductQtyChart = new Chart(ctx, {
+                            type: 'pie',
                             data: {
                                 labels: labels,
                                 datasets: [{
                                     label: 'Quantity Sold',
                                     data: values,
-                                    backgroundColor: [
-                                        '#007bff', '#28a745', '#dc3545', '#ffc107',
-                                        '#17a2b8', '#6610f2', '#e83e8c', '#20c997',
-                                        '#6f42c1', '#fd7e14'  // Add more colors if needed
-                                    ],
-                                    hoverOffset: 4
+                                    backgroundColor: colors,
+                                    borderColor: '#fff',
+                                    borderWidth: 2
                                 }]
                             },
                             options: {
                                 responsive: true,
+                                maintainAspectRatio: false,
                                 plugins: {
-                                    // Title for the Pie Chart
                                     title: {
                                         display: true,
-                                        text: 'Top 10 Products by Quantity (Current Month)',
-                                        font: {
-                                            size: 18,
-                                            weight: 'bold'
-                                        },
-                                        padding: {
-                                            top: 10,
-                                            bottom: 30
-                                        }
+                                        text: `Top 10 High Selling Products (${lastMonthName})`,
+                                        font: { size: 18, weight: 'bold' },
+                                        padding: { top: 10, bottom: 20 }
                                     },
-                                    legend: { position: 'bottom' },
+                                    legend: {
+                                        position: 'bottom'
+                                    },
                                     tooltip: {
                                         callbacks: {
                                             label: function (tooltipItem) {
@@ -640,12 +653,11 @@
                 });
             }
 
-            function loadLowSellingProductCurrentMonthQty() {
-                debugger;
+            function loadLowSellingProductLastMonthQty(companyId) {
                 $.ajax({
                     url: '/Home/GetLowSellingProductsCurrentMonthQty',
                     type: 'GET',
-                    data: { value: 10 },
+                    data: { companyId: companyId, value: 10 },  // ✅ pass companyId
                     success: function (data) {
 
                         if (!data || data.length === 0) {
@@ -653,48 +665,58 @@
                             return;
                         }
 
-                        let labels = data.map(x => x.ProductName);  
-                        let values = data.map(x => Number(x.TotalQuantity));  
+                        let labels = data.map(x => x.ProductName);
+                        let values = data.map(x => Number(x.TotalQuantity));
+
+                        // ✅ Dynamic colors (important)
+                        let colors = labels.map((_, i) =>
+                            `hsl(${(i * 360 / labels.length)}, 70%, 55%)`
+                        );
 
                         const canvas = document.getElementById('lowProductQtyChart');
                         if (!canvas) return;
 
                         const ctx = canvas.getContext('2d');
 
-                     
+                        const now = new Date();
+                        const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+                        const lastMonthName = lastMonthDate.toLocaleString('default', {
+                            month: 'long',
+                            year: 'numeric'
+                        });
+
                         if (window.lowProductQtyChart instanceof Chart) {
-                            window.lowProductQtyChart.destroy();  
+                            window.lowProductQtyChart.destroy();
                         }
 
                         window.lowProductQtyChart = new Chart(ctx, {
-                            type: 'pie',  
+                            type: 'pie',
                             data: {
-                                labels: labels,  
+                                labels: labels,
                                 datasets: [{
                                     label: 'Low Selling Products',
-                                    data: values,  
-                                    backgroundColor: [
-                                        '#28a745', '#ffc107', '#007bff', '#6610f2',
-                                        '#e83e8c', '#28a745', '#17a2b8', '#20c997',
-                                        '#6f42c1', '#fd7e14'  
-                                    ],
-                                    hoverOffset: 4
+                                    data: values,
+                                    backgroundColor: colors, // ✅ dynamic color
+                                    borderColor: '#fff',
+                                    borderWidth: 2
                                 }]
                             },
                             options: {
                                 responsive: true,
+                                maintainAspectRatio: false, // ✅ better UI
                                 plugins: {
-                                    legend: { position: 'bottom' },  
+                                    legend: { position: 'bottom' },
                                     title: {
                                         display: true,
-                                        text: 'Top 10 Low Selling Products (Quantity - Current Month)',
+                                        text: `Top 10 Low Selling Products (${lastMonthName})`, // ✅ fixed
                                         font: {
-                                            size: 16,  
-                                            weight: 'bold'  
+                                            size: 16,
+                                            weight: 'bold'
                                         },
                                         padding: {
-                                            top: 10, 
-                                            bottom: 20  
+                                            top: 10,
+                                            bottom: 20
                                         }
                                     }
                                 }
@@ -734,7 +756,7 @@
                         console.log('Pending Quantity:', pendingQty);
 
                         // Pie chart labels and data
-                        let labels = ['Completed Quantity', 'Pending Quantity'];
+                        let labels = ['Completed', 'Pending'];
                         let values = [completedQty, pendingQty];
 
                         // Colors for the pie chart segments
@@ -770,6 +792,7 @@
                             },
                             options: {
                                 responsive: true,
+                                maintainAspectRatio: false,
                                 plugins: {
                                     title: {
                                         display: true,

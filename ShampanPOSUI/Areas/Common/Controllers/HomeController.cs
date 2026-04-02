@@ -570,7 +570,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 CommonVM param = new CommonVM
                 {
                     BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0",
-                    //CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0",  // Add CompanyId from session
+                    CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0",  // Add CompanyId from session
                     Value = value
                 };
 
@@ -601,7 +601,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 CommonVM param = new CommonVM
                 {
                     BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0",
-                    //CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0",
+                    CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0",
                     Value = value
                 };
 

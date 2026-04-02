@@ -1911,7 +1911,15 @@
         model.TotalVAT = totalVAT;
         model.GrandTotal = grandTotal;
         model.PaidAmount = paidAmount;
+        debugger;
+        var saleorder = $("#SaleOrderId").val();
 
+        if (saleorder > 0) {
+            model.TransactionType = 'SaleOrder';
+        }
+        else {
+            model.TransactionType = 'Sale';
+        }
 
         var details = [];
 
