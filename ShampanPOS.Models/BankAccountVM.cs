@@ -83,5 +83,7 @@ namespace ShampanPOS.Models
 
             [Display(Name = "To Date")]
             public string? ToDate { get; set; }
+            public int? CompanyId { get; set; }
+
     }
 }
