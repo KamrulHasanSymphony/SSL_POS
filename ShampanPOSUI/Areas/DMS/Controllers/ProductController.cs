@@ -34,6 +34,14 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         // GET: DMS/Product
         public ActionResult Index()
         {
+            ProductVM vm = new ProductVM();
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
+            DateTime currentDate = DateTime.Now;
+            DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            firstDayOfMonth = firstDayOfMonth.AddMonths(-5);
+
             return View();
         }
 
@@ -44,6 +52,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.IsActive = true;
             var companyId = Session["CompanyId"];
             vm.CompanyId = Convert.ToInt32(companyId);
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
             return View("Create", vm);
         }
 
@@ -60,7 +70,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             //{
                 try
                 {
-                    if (file != null && file.ContentLength > 0)
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+                if (file != null && file.ContentLength > 0)
                     {
                         string uploadsFolder = Server.MapPath("~/Content/Products");
 

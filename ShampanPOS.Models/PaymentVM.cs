@@ -86,7 +86,8 @@ namespace ShampanPOS.Models
             public decimal? PaymentAfter { get; set; }
 
             public decimal? DueAfter { get; set; }
-
+            public int? BranchId { get; set; }
+            public int? CompanyId { get; set; }
         public List<PaymentDetailVM> paymentDetailList { get; set; }
 
             public PaymentVM()

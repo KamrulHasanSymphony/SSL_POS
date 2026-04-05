@@ -121,6 +121,7 @@ namespace ShampanPOS.Models
 
         public string? ByGroup { get; set; }
 
+        public int? BranchId { get; set; }
         public PeramModel PeramModel { get; set; }
 
         public List<ProductVM> MasterItemList { get; set; }

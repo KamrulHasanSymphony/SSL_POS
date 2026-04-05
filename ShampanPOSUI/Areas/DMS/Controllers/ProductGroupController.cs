@@ -30,7 +30,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ProductGroupVM vm = new ProductGroupVM();
             vm.Operation = "add";
             vm.IsActive = true;
-
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
             return View("Create", vm);
         }        
 
@@ -45,6 +46,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 try
                 {
+                    var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                    model.BranchId = Convert.ToInt32(currentBranchId);
+                    model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
                     if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();

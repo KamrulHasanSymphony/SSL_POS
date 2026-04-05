@@ -129,8 +129,9 @@ namespace ShampanPOS.Models
 
             public decimal? DueAfter { get; set; }
 
-
-        public List<CollectionDetailVM> collectionDetailList { get; set; }
+            public int? BranchId { get; set; }
+            public int? CompanyId { get; set; }
+            public List<CollectionDetailVM> collectionDetailList { get; set; }
 
             public CollectionVM()
             {

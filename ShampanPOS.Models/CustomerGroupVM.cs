@@ -50,6 +50,9 @@ namespace ShampanPOS.Models
         public string? CreatedFrom { get; set; }
 
         public string? Status { get; set; }
+
+        public int CompanyId { get; set; }
+        public int? BranchId { get; set; }
     }
 
 

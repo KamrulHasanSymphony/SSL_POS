@@ -37,7 +37,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.Operation = "add";
             var companyId = Session["CompanyId"];
             vm.CompanyId = Convert.ToInt32(companyId);
-
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
             vm.IsActive = true;
 
             return View("Create", vm);
@@ -53,10 +54,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             
                 try
                 {
-                   
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
 
-                    // Handle Image Upload
-                    if (file != null && file.ContentLength > 0)
+                // Handle Image Upload
+                if (file != null && file.ContentLength > 0)
                     {
                         string uploadsFolder = Server.MapPath("~/Content/Suppliers");
 

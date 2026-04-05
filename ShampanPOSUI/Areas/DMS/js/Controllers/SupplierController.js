@@ -29,11 +29,11 @@
             if (!mvcValid || !customValid) {
                 return false;
             }
-            var grid = $("#AddedItemGrid").data("kendoGrid");
-            if (!grid || grid.dataSource.data().length === 0) {
-                ShowNotification(3, "Add at least one SupplierProduct detail.");
-                return;
-            }
+            //var grid = $("#AddedItemGrid").data("kendoGrid");
+            //if (!grid || grid.dataSource.data().length === 0) {
+            //    ShowNotification(3, "Add at least one SupplierProduct detail.");
+            //    return;
+            //}
 
             var btn = $(this);
             btn.prop("disabled", true);
@@ -733,7 +733,7 @@
 
 
     function save() {
-        
+        debugger;
         var isDropdownValid = CommonService.validateDropdown("#SupplierGroupId", "#titleError1", "Supplier Group is required");
         var validator = $("#frmEntry").validate();
         var formData = new FormData();
@@ -807,11 +807,11 @@
             }
         }
 
-        if (details.length === 0) {
-            ShowNotification(3, "At least one product detail is required.");
-            $(".btnsave").prop("disabled", false);
-            return;
-        }
+        //if (details.length === 0) {
+        //    ShowNotification(3, "At least one product detail is required.");
+        //    $(".btnsave").prop("disabled", false);
+        //    return;
+        //}
 
         //model.MasterItemList = details;
         debugger;

@@ -28,6 +28,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             PaymentVM vm = new PaymentVM();
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
             DateTime currentDate = DateTime.Now;
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
@@ -61,7 +62,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.Operation = "add";
             //vm.TransactionType = "Purchase";
             var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-            //vm.BranchId = Convert.ToInt32(currentBranchId);
+            vm.BranchId = Convert.ToInt32(currentBranchId);
             //var currencyId = Session["CurrencyId"] != null ? Session["CurrencyId"].ToString() : "1";
             //vm.CurrencyId = Convert.ToInt32(currencyId);
 
@@ -96,8 +97,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
 
                 var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-                //model.BranchId = Convert.ToInt32(currentBranchId);
-                //model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+                model.BranchId = Convert.ToInt32(currentBranchId);
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
 
 
                 if (model.Operation.ToLower() == "add")
