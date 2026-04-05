@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Newtonsoft.Json;
 using ShampanPOS.Models;
 using ShampanPOS.Models.Helper;
 using ShampanPOS.Models.KendoCommon;
@@ -24,7 +25,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         // GET: DMS/Withdrawal
         public ActionResult Index()
         {
-            return View();
+            WithdrawalVM vm = new WithdrawalVM();
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+
+            return View(vm);
         }
 
         public ActionResult Create()
@@ -32,6 +36,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             WithdrawalVM vm = new WithdrawalVM();
             vm.Operation = "add";
             vm.IsActive = true;
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
 
             return View("Create", vm);
         }
@@ -45,6 +50,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
+
                 if (model.Operation.ToLower() == "add")
                 {
                     model.CreatedBy = Session["UserId"].ToString();

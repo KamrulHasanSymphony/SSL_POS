@@ -24,7 +24,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         // GET: DMS/OverHead
         public ActionResult Index()
         {
-            return View();
+            OverHeadVM vm = new OverHeadVM();
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
+            return View(vm);
         }
 
         public ActionResult Create()
@@ -49,6 +52,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 try
                 {
+                    var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                    model.BranchId = Convert.ToInt32(currentBranchId);
 
                     model.LastModifiedBy = Session["UserId"].ToString();
                     model.LastModifiedOn = DateTime.Now.ToString();
