@@ -25,7 +25,11 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         // GET: DMS/BankInformation
         public ActionResult Index()
         {
-            return View();
+            BankInformationVM vm = new BankInformationVM();
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
+
+            return View(vm);
         }
 
         public ActionResult Create()
@@ -46,114 +50,93 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new BankInformationRepo();
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {                    
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
 
-                    model.LastModifiedBy = Session["UserId"].ToString();
-                    model.LastModifiedOn = DateTime.Now.ToString();
-                    model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
+                model.LastModifiedBy = Session["UserId"].ToString();
+                model.LastModifiedOn = DateTime.Now.ToString();
+                model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
 
-                    if (model.Operation.ToLower() == "add")
+                if (model.Operation.ToLower() == "add")
+                {
+                    model.CreatedBy = Session["UserId"].ToString();
+                    model.UserId = Session["UserHashId"]?.ToString();
+
+                    model.CreatedOn = DateTime.Now.ToString();
+                    model.CreatedFrom = Ordinary.GetLocalIpAddress();
+
+                    resultVM = _repo.Insert(model);
+
+                    if (resultVM.Status == ResultStatus.Success.ToString())
                     {
-                        model.CreatedBy = Session["UserId"].ToString();
-                        model.UserId = Session["UserHashId"]?.ToString();
+                        model = JsonConvert.DeserializeObject<BankInformationVM>(resultVM.DataVM.ToString());
+                        model.Operation = "add";
 
-                        model.CreatedOn = DateTime.Now.ToString();
-                        model.CreatedFrom = Ordinary.GetLocalIpAddress();
+                        Session["result"] = resultVM.Status + "~" + resultVM.Message;
 
-                        resultVM = _repo.Insert(model);
-
-                        if (resultVM.Status == ResultStatus.Success.ToString())
+                        result = new ResultModel<BankInformationVM>()
                         {
-                            model = JsonConvert.DeserializeObject<BankInformationVM>(resultVM.DataVM.ToString());
-                            model.Operation = "add";
-                            //model.ImagePath = model.ImagePath;
-                            Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            //model.ImagePath = resultVM.ImagePath;
-                            result = new ResultModel<BankInformationVM>()
-                            {
-                                Success = true,
-                                Status = Status.Success,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                        }
-                        else
-                        {
-                            Session["result"] = "Fail" + "~" + resultVM.Message;
-                            result = new ResultModel<BankInformationVM>()
-                            {
-                                Status = Status.Fail,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                        }
-                    }
-                    else if (model.Operation.ToLower() == "update")
-                    {
-                        resultVM = _repo.Update(model);
-
-                        if (resultVM.Status == ResultStatus.Success.ToString())
-                        {
-                            Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            result = new ResultModel<BankInformationVM>()
-                            {
-                                Success = true,
-                                Status = Status.Success,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                        }
-                        else
-                        {
-                            Session["result"] = "Fail" + "~" + resultVM.Message;
-                            result = new ResultModel<BankInformationVM>()
-                            {
-                                Status = Status.Fail,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                        }
+                            Success = true,
+                            Status = Status.Success,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
                     }
                     else
                     {
-                        return RedirectToAction("Index");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Session["result"] = "Fail" + "~" + e.Message;
-                    Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                    return View("Create", model);
-                }
-            }
-            else
-            {
-                string msg = string.Empty;
-                foreach (var entry in ModelState.Values)
-                {
-                    if (entry.Errors.Count > 0)
-                    {
-                        foreach (var error in entry.Errors)
+                        Session["result"] = "Fail~" + resultVM.Message;
+
+                        result = new ResultModel<BankInformationVM>()
                         {
-                            msg += "," + error.ErrorMessage;
-                        }
+                            Status = Status.Fail,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
                     }
                 }
-
-                result = new ResultModel<BankInformationVM>()
+                else if (model.Operation.ToLower() == "update")
                 {
-                    Success = false,
-                    Status = Status.Fail,
-                    Message = msg + " Model State Error!",
-                    Data = model
-                };
-                return Json(result);
+                    resultVM = _repo.Update(model);
+
+                    if (resultVM.Status == ResultStatus.Success.ToString())
+                    {
+                        Session["result"] = resultVM.Status + "~" + resultVM.Message;
+
+                        result = new ResultModel<BankInformationVM>()
+                        {
+                            Success = true,
+                            Status = Status.Success,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                    }
+                    else
+                    {
+                        Session["result"] = "Fail~" + resultVM.Message;
+
+                        result = new ResultModel<BankInformationVM>()
+                        {
+                            Status = Status.Fail,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return View("Create", model);
             }
 
-            return Json(result);  // Return the result to the front-end
+            return Json(result);
         }
 
 
