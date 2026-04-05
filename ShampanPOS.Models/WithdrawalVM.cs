@@ -97,8 +97,7 @@ namespace ShampanPOS.Models
         [StringLength(50, ErrorMessage = "Operation cannot exceed 50 characters.")]
         [Display(Name = "Operation")]
         public string? Operation { get; set; }
-
-
+        public int? BranchId { get; set; }
 
     }
 }
