@@ -33,14 +33,6 @@
                 return;
             }
 
-            // 🔥 MasterItemGroup Required Check
-            //var masterSupplierGroupId = $("#MasterSupplierGroupId").data("kendoMultiColumnComboBox").value();
-
-            //if (!masterSupplierGroupId || parseInt(masterSupplierGroupId) === 0) {
-            //    ShowNotification(3, "Supplier Group is required.");
-            //    return;
-            //}
-
             // 🔥 Detail Grid Check
             var grid = $("#AddedItemGrid").data("kendoGrid");
             if (!grid || grid.dataSource.data().length === 0) {
@@ -56,10 +48,6 @@
                 }
             });
         });
-
-
-
-
 
 
         $('.btnDelete').on('click', function () {
@@ -90,7 +78,6 @@
 
     };
 
-
     function SelectData() {
         
         var IDs = [];
@@ -116,59 +103,6 @@
         CommonAjaxService.deleteData(url, model, deleteDone, saveFail);
     };
 
-
-
-    function GetSupplierGroupComboBox() {
-        debugger;
-        $("#MasterSupplierGroupId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "Description", title: "Description", width: 150 },
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetMasterSupplierGroupList"
-                }
-            },
-            placeholder: "Select Product Group",
-
-            change: function () {
-                var dataItem = this.dataItem();
-                var groupId = this.value();
-                var grid = $("#departments").data("kendoGrid");
-
-                if (!groupId || groupId < 1) {
-                    currentMasterSupplierGroupId = 0;
-                    if (grid) grid.dataSource.data([]);
-                    return;
-                }
-
-                currentMasterSupplierGroupId = groupId;
-
-                // 🔥 FORCE reload
-                if (grid) {
-                    grid.dataSource.read();
-                }
-
-                $("#MasterSupplierGroupName").val(dataItem.Name);
-                $("#Description").val(dataItem.Description);
-                $("#Code").val(dataItem.Code);
-            }
-
-
-
-        });
-    }
-
-
-
-
     function InitItemsGrid() {
         debugger;
         $("#departments").kendoGrid({
@@ -178,11 +112,7 @@
                     read: {
                         url: "/Common/Common/GetSupplierListByGroup", 
                         dataType: "json",
-                        //data: function () {
-                        //    return {
-                        //        value: currentMasterSupplierGroupId 
-                        //    };
-                        //}
+              
                     }
                 },
                 schema: {
@@ -199,14 +129,14 @@
             columns: [
                 { field: "Id", hidden: true },
                 { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "MasterSupplierGroupName", title: "Supplier Group", width: 130 },
+                { field: "Name", title: "Name", width: 100 },
+                { field: "MasterSupplierGroupName", title: "Supplier Group", width: 100 },
                 { field: "BanglaName", title: "Bangla Name",hidden:true, width: 150 },
-                { field: "Address", title: "Address", hidden: true, width: 150 },
-                { field: "City", title: "City", hidden: true, width: 150 },
-                { field: "TelephoneNo", title: "Telephone No", width: 150 },
-                { field: "Email", title: "Email", width: 150 },
-                { field: "ContactPerson", title: "Contact Person", hidden: true, width: 150 },
+                { field: "Address", title: "Address", hidden: true, width: 100 },
+                { field: "City", title: "City", hidden: true, width: 100 },
+                { field: "TelephoneNo", title: "Telephone No", width: 100 },
+                { field: "Email", title: "Email", width: 100 },
+                { field: "ContactPerson", title: "Contact Person", hidden: true, width: 100 },
                 { field: "Action", hidden: true },
 
                 // ✅ Status column
@@ -375,7 +305,7 @@
             Id: item.Id,
             Code: item.Code,
             Name: item.Name,
-            BanglaName: item.BanglaName, 
+            BanglaName: item.BanglaName,
             Address: item.Address, 
             City: item.City, 
             TelephoneNo: item.TelephoneNo, 
@@ -401,16 +331,6 @@
             $(".btnsave").prop("disabled", false);
             return;
         }
-
-        //var masterSupplierGroupId = $("#MasterSupplierGroupId")
-        //    .data("kendoMultiColumnComboBox")
-        //    .value();
-
-        //if (!masterSupplierGroupId || parseInt(masterSupplierGroupId) === 0) {
-        //    ShowNotification(3, "Supplier Group is required.");
-        //    $(".btnsave").prop("disabled", false);
-        //    return;
-        //}
 
         var grid = $("#AddedItemGrid").data("kendoGrid");
         var details = [];
@@ -516,47 +436,6 @@
 
 
 }(CommonService, CommonAjaxService);
-document.addEventListener("DOMContentLoaded", function () {
-    var container = document.querySelector(".sslPrintC");
-    if (container) {
-        var id = container.getAttribute("data-id");
-        if (id) {
-            var btn = document.createElement("a");
-            btn.href = ".";
-            btn.style.backgroundColor = "skyblue";
-
-            btn.style.marginLeft = "10px";
-            btn.style.border = "none";
-            /*btn.style.borderRadius = "10px"; */
-            btn.className = "btn btn-success btn-sm mr-2 edit";
-            btn.title = "Report Preview";
-            btn.innerHTML = "<i class='fas fa-print'></i>";
-            btn.onclick = function (e) {
-                e.preventDefault();
-                ReportPreview(id);
-            };
-            container.appendChild(btn);
-        }
-    }
-});
 
 
-function ReportPreview(id) {
-    
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '/DMS/MasterSupplierProduct/ReportPreview';
-    form.target = '_blank';
-    const inputVal = document.createElement('input');
-    inputVal.type = 'hidden';
-    inputVal.name = 'Id';
-    inputVal.value = id;
 
-    form.appendChild(inputVal);
-
-    document.body.appendChild(form);
-
-    form.submit();
-    form.remove();
-
-};

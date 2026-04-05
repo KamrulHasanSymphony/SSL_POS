@@ -72,8 +72,16 @@ namespace ShampanPOS.Models
 
             [Display(Name = "IsActive")]
             public bool IsActive { get; set; }
-        
 
+            public int? BranchId { get; set; }
 
+            [Display(Name = "Branch Name")]
+            public int? Branchs { get; set; }
+
+            [Display(Name = "From Date")]
+            public string? FromDate { get; set; }
+
+            [Display(Name = "To Date")]
+            public string? ToDate { get; set; }
     }
 }
