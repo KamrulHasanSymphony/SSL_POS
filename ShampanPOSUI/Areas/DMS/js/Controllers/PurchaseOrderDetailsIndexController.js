@@ -414,7 +414,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#=kendo.toString(sum, 'n2')#",
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
 
                 { field: "UnitPrice", title: "Unit Price", width: 140, format: "{0:n2}" },
@@ -427,7 +427,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#=kendo.toString(sum, 'n2')#",
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
                 {
                     field: "SD",
@@ -438,7 +438,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#=kendo.toString(sum, 'n2')#",
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
 
                 {
@@ -450,7 +450,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#=kendo.toString(sum, 'n2')#",
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
                 {
                     field: "VATRate",
@@ -461,7 +461,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#=kendo.toString(sum, 'n2')#",
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
                 {
                     field: "VATAmount",
@@ -472,7 +472,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#=kendo.toString(sum, 'n2')#",
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
                 {
                     field: "OthersAmount",
@@ -483,7 +483,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#=kendo.toString(sum, 'n2')#",
                     groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 }
 
                 

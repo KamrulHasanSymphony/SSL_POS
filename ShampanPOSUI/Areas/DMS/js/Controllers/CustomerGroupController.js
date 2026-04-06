@@ -288,12 +288,12 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 50
-                },
+                //{
+                //    selectable: true, width: 50
+                //},
                 {
                     title: "Action",
-                    width: 90,
+                    width: 20,
                     template: function (dataItem) {
                         return `
                             <a href="/DMS/CustomerGroup/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
@@ -304,24 +304,24 @@
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
-                { field: "Description", title: "Description", sortable: true, width: 200 },
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
-                {
-                    field: "Status", title: "Status", sortable: true, width: 100,
-                    filterable: {
-                        ui: function (element) {
-                            element.kendoDropDownList({
-                                dataSource: [
-                                    { text: "Active", value: "1" },
-                                    { text: "Inactive", value: "0" }
-                                ],
-                                dataTextField: "text",
-                                dataValueField: "value",
-                                optionLabel: "Select Option"
-                            });
-                        }
-                    }
-                }
+                { field: "Description", title: "Description", sortable: true, hidden: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
+                //{
+                //    field: "Status", title: "Status", sortable: true, width: 100,
+                //    filterable: {
+                //        ui: function (element) {
+                //            element.kendoDropDownList({
+                //                dataSource: [
+                //                    { text: "Active", value: "1" },
+                //                    { text: "Inactive", value: "0" }
+                //                ],
+                //                dataTextField: "text",
+                //                dataValueField: "value",
+                //                optionLabel: "Select Option"
+                //            });
+                //        }
+                //    }
+                //}
                
             ],
             editable: false,

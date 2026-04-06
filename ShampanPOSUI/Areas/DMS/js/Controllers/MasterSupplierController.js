@@ -397,12 +397,10 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 50
-                },
+                
                 {
                     title: "Action",
-                    width: 150,
+                    width: 50,
                     template: function (dataItem) {
                         return `
                             <a href="/DMS/MasterSupplier/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">

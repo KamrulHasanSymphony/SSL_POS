@@ -239,9 +239,9 @@
                 filterable: true
             },
             columns: [
-                {
-                    selectable: true, width: 10
-                },
+                //{
+                //    selectable: true, width: 10
+                //},
                 {
                     title: "Action",
                     width: 50,

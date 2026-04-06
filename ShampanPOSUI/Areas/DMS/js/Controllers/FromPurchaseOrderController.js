@@ -330,9 +330,9 @@
                     },
                     columns: [
                         { field: "Id", hidden: true, width: 50 },
-                        { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
-                        { field: "UOMName", title: "UOM Name", sortable: true, width: 100 },
-                        { field: "UOMConversion", title: "UOM Conversion", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "ProductName", title: "Product Name", sortable: true, width: 120, footerTemplate: "Total:" },
+                        { field: "UOMName", title: "UOM Name", sortable: true, hidden: true, width: 100 },
+                        { field: "UOMConversion", title: "UOM Conversion", sortable: true, hidden: true, width: 100, aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
                         { field: "UnitPrice", title: "Unit Price", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
                         { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
@@ -342,10 +342,10 @@
                         { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "OthersAmount", title: "Others Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "FixedVATAmount", title: "Fixed VAT Amnt", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "IsFixedVAT", hidden: true, title: "Is Fixed Vat", sortable: true, width: 100 },
-                        { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 },
-                        { field: "Comments", title: "Comments", sortable: true, width: 150 },
+                        { field: "FixedVATAmount", title: "Fixed VAT Amnt", sortable: true, hidden: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "IsFixedVAT", hidden: true, title: "Is Fixed Vat", sortable: true, width: 100, hidden: true},
+                        { field: "VatType", hidden: true, title: "Vat Type", sortable: true, hidden: true, width: 100 },
+                        { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 150 },
                     ],
                     footerTemplate: function (e) {
                         var aggregates = e.sender.dataSource.aggregates();
@@ -484,8 +484,8 @@
                 //{ field: "BENumber", title: "BE Number", sortable: true, width: 150 },
                 //{ field: "CurrencyName", title: "Currency Name", sortable: true, width: 150 },
                 //{ field: "FiscalYear", title: "Fiscal Year", sortable: true, width: 150 },
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
-                { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
+                { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
 
             ],
             editable: false,

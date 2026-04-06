@@ -11,44 +11,6 @@
     };
 
 
-    //function SelectData() {
-    //    var IDs = [];
-
-    //    var selectedRows = $("#GridDataList").data("kendoGrid").select();
-
-    //    if (selectedRows.length === 0) {
-    //        ShowNotification(3, "You are requested to Select checkbox!");
-    //        return;
-    //    }
-
-    //    selectedRows.each(function () {
-    //        var dataItem = $("#GridDataList").data("kendoGrid").dataItem(this);
-    //        IDs.push(dataItem.Id);
-    //    });
-
-    //    var model = {
-    //        IDs: IDs
-    //    };
-
-    //    var form = $('<form>').attr('method', 'post').attr('action', '/DMS/SaleReturn/GetFromSale');
-
-    //    $.each(model, function (key, value) {
-    //        if ($.isArray(value)) {
-    //            $.each(value, function (index, element) {
-    //                var input = $('<input>').attr('type', 'hidden').attr('name', key).val(element);
-    //                form.append(input);
-    //            });
-    //        } else {
-    //            var input = $('<input>').attr('type', 'hidden').attr('name', key).val(value);
-    //            form.append(input);
-    //        }
-    //    });
-
-    //    $('body').append(form);
-    //    form.submit();
-    //};
-
-
     function SelectData() {
         var selectedRadio = $("#GridDataList .row-radio:checked");
         if (selectedRadio.length === 0) {
@@ -257,7 +219,7 @@
                     columns: [
                         { field: "Id", hidden: true },
 
-                        { field: "ProductName", title: "Product Name", width: 120 },
+                        { field: "ProductName", title: "Product Name", width: 120, footerTemplate: "Total:" },
 
                         {
                             field: "Quantity",
@@ -457,7 +419,7 @@
                 //},               
 
 
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                 { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
 
             ],

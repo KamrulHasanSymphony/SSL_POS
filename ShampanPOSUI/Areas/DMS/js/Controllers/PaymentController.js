@@ -929,7 +929,7 @@
                     }
                 },
                 {
-                    field: "IsCash", title: "Is Cash", sortable: true, width: 100,
+                    field: "IsCash", title: "Cash", sortable: true, width: 100,
 
                 },
 

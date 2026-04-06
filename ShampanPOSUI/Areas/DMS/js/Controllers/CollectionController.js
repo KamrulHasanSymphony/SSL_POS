@@ -546,37 +546,101 @@
     };
 
 
+    //function GetBankAccountComboBox() {
+
+    //    var bankId = $("#BankAccountId").val();
+
+    //    var combo = $("#BankAccountId").kendoMultiColumnComboBox({
+    //        dataTextField: "AccountNo",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "AccountNo", title: "Account No", width: 150 },
+    //            { field: "AccountName", title: "Account Name", width: 150 },
+    //            { field: "BranchName", title: "Branch Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["AccountNo", "AccountName", "BranchName"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetBankAccountList"
+    //            }
+    //        },
+    //        placeholder: "Select Bank Account"
+    //    }).data("kendoMultiColumnComboBox");
+
+    //    // set value after datasource load
+    //    combo.one("dataBound", function () {
+    //        if (bankId) {
+    //            combo.value(bankId);
+    //        }
+    //    });
+
+    //}
+
+
+
     function GetBankAccountComboBox() {
 
+        // Get initial value
         var bankId = $("#BankAccountId").val();
 
+        // Initialize Kendo MultiColumnComboBox
         var combo = $("#BankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountNo",
             dataValueField: "Id",
             height: 400,
+
             columns: [
                 { field: "AccountNo", title: "Account No", width: 150 },
                 { field: "AccountName", title: "Account Name", width: 150 },
                 { field: "BranchName", title: "Branch Name", width: 150 }
             ],
+
             filter: "contains",
             filterFields: ["AccountNo", "AccountName", "BranchName"],
+
             dataSource: {
                 transport: {
-                    read: "/Common/Common/GetBankAccountList"
+                    read: {
+                        url: "/Common/Common/GetBankAccountList",
+                        dataType: "json"
+                    }
+                },
+                schema: {
+                    data: function (response) {
+
+                        // 🔥 Remove default 0 item if exists
+                        if (Array.isArray(response)) {
+                            return response.filter(x => x.Id !== 0);
+                        }
+
+                        return response;
+                    }
                 }
             },
-            placeholder: "Select Bank Account"
+
+            placeholder: "Select Bank Account",
+
+            // 🔥 Ensure no auto-selection
+            autoBind: true,
+            suggest: true
         }).data("kendoMultiColumnComboBox");
 
-        // set value after datasource load
-        combo.one("dataBound", function () {
-            if (bankId) {
-                combo.value(bankId);
-            }
-        });
 
+        // ✅ Set value AFTER data load (ignore 0)
+        combo.one("dataBound", function () {
+
+            if (bankId && bankId !== "0") {
+                combo.value(bankId);
+            } else {
+                combo.value(""); // clear selection
+            }
+
+        });
     }
+
+
 
     var getCustomerId = $("#CustomerId").val() || "";
 

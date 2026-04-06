@@ -1716,7 +1716,7 @@
                     },
                     columns: [
                         { field: "Id", hidden: true, width: 50 },
-                        { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
+                        { field: "ProductName", title: "Product Name", sortable: true, width: 120, footerTemplate: "Total:" },
                         { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
                         { field: "UnitRate", title: "Unit Rate", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
                         { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },

@@ -394,9 +394,9 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 40
-                },
+                //{
+                //    selectable: true, width: 40
+                //},
                 {
                     title: "Action",
                     width: 100,
@@ -432,10 +432,10 @@
                 { field: "TelephoneNo", title: "Telephon No.", sortable: true, width: 140 },
                 { field: "FaxNo", title: "Fax No.", width: 140, sortable: true },
                 { field: "Email", title: "Email", width: 200, sortable: true },
-                { field: "VatRegistrationNo", title: "VAT Registration No.", sortable: true, width: 200 },
+                { field: "VatRegistrationNo", title: "VAT Registration No.", sortable: true, hidden: true, width: 200 },
                 { field: "BIN", title: "BIN", sortable: true, width: 140 },
-                { field: "TINNo", title: "TIN No.", width: 140, sortable: true },
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "TINNo", title: "TIN No.", width: 140, hidden: true, sortable: true },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,

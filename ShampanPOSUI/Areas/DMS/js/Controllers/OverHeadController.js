@@ -351,12 +351,10 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 35
-                },
+              
                 {
                     title: "Action",
-                    width: 170,
+                    width: 40,
                     template: function (dataItem) {
 
                         return `

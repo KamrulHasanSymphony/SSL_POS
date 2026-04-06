@@ -1188,7 +1188,7 @@
                     },
                     columns: [
                         { field: "Id", hidden: true, width: 50 },
-                        { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
+                        { field: "ProductName", title: "Product Name", sortable: true, width: 120, footerTemplate: "Total:" },
                         {
                             field: "Quantity",
                             title: "Quantity",
@@ -1352,7 +1352,7 @@
          
 
                 { field: "DeliveryAddress", title: "DeliveryAddress", sortable: true, width: 200 },
-                { field: "Comments", title: "Comments", sortable: true, width: 250 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 250 },
                 { field: "BranchName", title: "Branch Name", sortable: true, hidden: true },
 
             ],

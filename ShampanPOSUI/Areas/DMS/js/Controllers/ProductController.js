@@ -599,9 +599,7 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 40
-                },
+                
                 {
                     title: "Action",
                     width: 100,

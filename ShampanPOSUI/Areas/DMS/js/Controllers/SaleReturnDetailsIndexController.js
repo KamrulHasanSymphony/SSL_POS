@@ -317,11 +317,11 @@
 
                 e.sender.options.pdf = {
                     paperSize: [totalWidth, 2800],
-                    margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
+                    margin: { top: "4cm", left: "1cm", left: "1cm", bottom: "4cm" },
                     landscape: true,
                     allPages: true,
                     template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+                            <div style="position: absolute; top: 1cm; left: 1cm; left: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
                                 <div>Branch Name :- ${branchName}</div>
                             </div> `
                 };
@@ -362,7 +362,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#= kendo.toString(data.Quantity.sum, 'n2') #",
                     groupFooterTemplate: " #= kendo.toString(data.Quantity.sum, 'n2') #",
-                    attributes: { style: "text-align:right" }
+                    attributes: { style: "text-align:left" }
                 },
 
                 { field: "UnitRate", title: "Unit Rate", width: 140, format: "{0:n2}" },
@@ -374,7 +374,7 @@
                     aggregates: ["sum"],
                     footerTemplate: "#= kendo.toString(data.SubTotal.sum, 'n2') #",
                     groupFooterTemplate: " #= kendo.toString(data.SubTotal.sum, 'n2') #",
-                    attributes: { style: "text-align:right" }
+                    attributes: { style: "text-align:left" }
                 },
                 {
                     field: "SD",
@@ -382,7 +382,7 @@
                     sortable: true,
                     width: 200,
                     format: "{0:n2}",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
                 {
                     field: "SDAmount",
@@ -393,14 +393,14 @@
                     format: "{0:n2}",
                     footerTemplate: "#= kendo.toString(data.SDAmount.sum, 'n2') #",
                     groupFooterTemplate: " #= kendo.toString(data.SDAmount.sum, 'n2') #",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
                 {
                     field: "VATRate",
                     title: "VAT Rate",
                     width: 200,
                     format: "{0:n2}",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
 
                 {
@@ -412,7 +412,7 @@
                     format: "{0:n2}",
                     footerTemplate: "#= kendo.toString(data.VATAmount.sum, 'n2') #",
                     groupFooterTemplate: " #= kendo.toString(data.VATAmount.sum, 'n2') #",
-                    attributes: { style: "text-align: right;" }
+                    attributes: { style: "text-align: left;" }
                 },
                 {
                     field: "LineTotal",
@@ -421,7 +421,7 @@
                     aggregates: ["sum"],
                     footerTemplate: "#= kendo.toString(data.LineTotal.sum, 'n2') #",
                     groupFooterTemplate: " #= kendo.toString(data.LineTotal.sum, 'n2') #",
-                    attributes: { style: "text-align:right" }
+                    attributes: { style: "text-align:left" }
                 }
                 
             ],

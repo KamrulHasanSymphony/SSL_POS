@@ -151,7 +151,7 @@
     function GetFromBankAccountComboBox() {
 
         $("#FromBankAccountId").kendoMultiColumnComboBox({
-            dataTextField: "AccountNo",
+            dataTextField: "AccountName",
             dataValueField: "Id",
             height: 400,
             columns: [
@@ -225,7 +225,7 @@
     function GetToBankAccountComboBox() {
 
         var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
-            dataTextField: "AccountNo",
+            dataTextField: "AccountName",
             dataValueField: "Id",
             height: 400,
             columns: [
@@ -532,10 +532,9 @@
                 }, 1000);
             },
             columns: [
-                { selectable: true, width: 35 },
                 {
                     title: "Action",
-                    width: 170,
+                    width: 60,
                     template: function (dataItem) {
                         return `
                         <a href="/DMS/Withdrawal/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Withdrawal">
@@ -550,11 +549,11 @@
                 { field: "ChequeBankName", title: "Cheque Bank Name", width: 200, sortable: true },
                 { field: "ChequeNo", title: "Cheque No", sortable: true, width: 200 },
                 { field: "TotalDepositAmount", title: "Total Deposit Amount", sortable: true, width: 200 },
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
-                { field: "Reference", title: "Reference", sortable: true, width: 200 },
-                { field: "IsCash", title: "Is Cash", sortable: true, width: 100 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
+                { field: "Reference", title: "Reference", sortable: true, hidden: true, width: 200 },
+                { field: "IsCash", title: "Cash Status", sortable: true, width: 100 },
                 {
-                    field: "Status", title: "Status", sortable: true, width: 100,
+                    field: "Status", title: "Status", sortable: true, hidden: true, width: 100,
                     filterable: {
                         ui: function (element) {
                             element.kendoDropDownList({

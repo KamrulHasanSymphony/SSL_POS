@@ -140,7 +140,7 @@
     function GetFromBankAccountComboBox() {
         debugger;
         var BankAccountCombo = $("#FromBankAccountId").kendoMultiColumnComboBox({
-            dataTextField: "AccountNo",
+            dataTextField: "AccountName",
             dataValueField: "BankId",
             height: 400,
             columns: [
@@ -168,42 +168,10 @@
     };
 
 
-
-    //function GetToBankAccountComboBox() {
-    //    debugger;
-    //    var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
-    //        dataTextField: "AccountNo",
-    //        dataValueField: "BankId",
-    //        height: 400,
-    //        columns: [
-    //            { field: "AccountNo", title: "Account No", width: 150 },
-    //            { field: "AccountName", title: "Account Name", width: 150 },
-    //            { field: "BranchName", title: "Branch Name", width: 150 }
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetBankAccountList"
-    //            }
-    //        },
-    //        placeholder: "Select BankAccount",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getToBankAccountId) {
-    //                this.value(parseInt(getToBankAccountId));
-    //            }
-    //        },
-    //        change: function (e) {
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-
-
     function GetToBankAccountComboBox() {
 
         $("#ToBankAccountId").kendoMultiColumnComboBox({
-            dataTextField: "AccountNo",
+            dataTextField: "AccountName",
             dataValueField: "Id",
             height: 400,
             columns: [
@@ -228,7 +196,7 @@
             dataBound: function () {
 
                 if (getToBankAccountId) {
-                    combo.value(parseInt(getToBankAccountId));
+                    this.value(parseInt(getToBankAccountId));
                 }
 
             }
@@ -512,10 +480,9 @@
                 }, 1000);
             },
             columns: [
-                { selectable: true, width: 35 },
                 {
                     title: "Action",
-                    width: 170,
+                    width: 60,
                     template: function (dataItem) {
                         return `
                         <a href="/DMS/Deposit/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Withdrawal">
@@ -526,13 +493,13 @@
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", sortable: true, width: 200 },
                 { field: "AccountName", title: "Account Name", sortable: true, width: 200 },
-                { field: "AccountNo", title: "Account No.", sortable: true, width: 200 },
+                { field: "AccountNo", title: "Account No.", sortable: true, hidden: true, width: 200 },
                 { field: "ChequeBankName", title: "Cheque Bank Name", width: 200, sortable: true },
                 { field: "ChequeNo", title: "Cheque No", sortable: true, width: 200 },
                 { field: "TotalDepositAmount", title: "Total Deposit Amount", sortable: true, width: 200 },
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                 { field: "Reference", title: "Reference", sortable: true, hidden: true, width: 200 },
-                { field: "IsCash", title: "Is Cash", sortable: true, width: 100 },
+                { field: "IsCash", title: "Cash Status", sortable: true, width: 100 },
                 {
                     field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
                     filterable: {
@@ -674,68 +641,5 @@
 
     debagger;
 }(CommonService, CommonAjaxService);
-document.addEventListener("DOMContentLoaded", function () {
-    var container = document.querySelector(".sslPrintC");
-    if (container) {
-        var id = container.getAttribute("data-id");
-        if (id) {
-            var btn = document.createElement("a");
-            btn.href = ".";
-            btn.style.backgroundColor = "skyblue";
 
-            btn.style.marginLeft = "10px";
-            btn.style.border = "none";
-            /*btn.style.borderRadius = "10px"; */
-            btn.className = "btn btn-success btn-sm mr-2 edit";
-            btn.title = "Report Preview";
-            btn.innerHTML = "<i class='fas fa-print'></i>";
-            btn.onclick = function (e) {
-                e.preventDefault();
-                ReportPreview(id);
-            };
-            container.appendChild(btn);
-        }
-    }
-});
-
-
-function ReportPreview(id) {
-
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '/DMS/Deposit/ReportPreview';
-    form.target = '_blank';
-    const inputVal = document.createElement('input');
-    inputVal.type = 'hidden';
-    inputVal.name = 'Id';
-    inputVal.value = id;
-
-    form.appendChild(inputVal);
-
-    document.body.appendChild(form);
-
-    form.submit();
-    form.remove();
-
-};
-
-function DevitCredit(branchId, FromDate, ToDate) {
-
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '/DMS/BankAccount/DevitCredit';
-    form.target = '_blank';
-    const inputVal = document.createElement('input');
-    inputVal.type = 'hidden';
-    inputVal.name = 'Id';
-    inputVal.value = id;
-
-    form.appendChild(inputVal);
-
-    document.body.appendChild(form);
-
-    form.submit();
-    form.remove();
-
-};
 

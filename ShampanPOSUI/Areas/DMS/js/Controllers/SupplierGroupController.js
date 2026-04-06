@@ -295,12 +295,12 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 30
-                },
+                //{
+                //    selectable: true, width: 30
+                //},
                 {
                     title: "Action",
-                    width: 60,
+                    width: 20,
                     template: function (dataItem) {
                         
                         return `
@@ -312,8 +312,8 @@
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
-                { field: "Description", title: "Description", sortable: true, width: 200 },
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "Description", title: "Description", sortable: true, hidden: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,
                     filterable: {

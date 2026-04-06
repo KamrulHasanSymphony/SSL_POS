@@ -338,7 +338,7 @@ var FromSaleOrderController = function () {
                     },
                     columns: [
                         { field: "Id", hidden: true, width: 50 },
-                        { field: "ProductName", title: "Product Name", sortable: true, width: 120 },
+                        { field: "ProductName", title: "Product Name", sortable: true, width: 120, footerTemplate: "Total:" },
                         //{ field: "UOMName", title: "UOM Name", sortable: true, width: 100 },
                         /*{ field: "UOMConversion", title: "UOM Conversion", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },*/
                         { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
@@ -463,7 +463,7 @@ var FromSaleOrderController = function () {
                     }
                 },
                 {
-                    field: "Status", title: "Status", sortable: true, width: 100,
+                    field: "Status", title: "Status", sortable: true, hidden: true, width: 100,
                     filterable: {
                         ui: function (element) {
                             element.kendoDropDownList({
@@ -478,22 +478,9 @@ var FromSaleOrderController = function () {
                         }
                     }
                 },
-                //{
-                //    field: "TotalQuantity",
-                //    title: "Total Quantity",
-                //    sortable: true,
-                //    width: 180,
-                //    aggregates: ["sum"],
-                //    format: "{0:n2}",
-                //    footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                //    groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                //    attributes: { style: "text-align: right;" }
-                //}, 
-                //{ field: "BENumber", title: "BE Number", sortable: true, width: 150 },
-                //{ field: "CurrencyName", title: "Currency Name", sortable: true, width: 150 },
-                //{ field: "FiscalYear", title: "Fiscal Year", sortable: true, width: 150 },
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
-                { field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
+  
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
+                { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
 
             ],
             editable: false,

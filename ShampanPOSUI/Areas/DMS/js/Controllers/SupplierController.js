@@ -672,9 +672,7 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 50
-                },
+                
                 {
                     title: "Action",
                     width: 100,

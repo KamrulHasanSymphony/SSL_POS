@@ -422,9 +422,9 @@
                 filterable: true
             },
             columns: [
-                {
-                    selectable: true, width: 40
-                },
+                //{
+                //    selectable: true, width: 40
+                //},
                 {
                     title: "Action",
                     width: 170,
@@ -455,7 +455,7 @@
                 { field: "BIN", title: "BIN", sortable: true, width: 130 },
                 { field: "TINNO", title: "TIN No.", width: 130, sortable: true },
                 { field: "Email", title: "Email", width: 250, sortable: true },
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
 
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,

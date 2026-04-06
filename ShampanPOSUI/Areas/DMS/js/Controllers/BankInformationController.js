@@ -494,9 +494,7 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 35
-                },
+               
                 {
                     title: "Action",
                     width: 80,
@@ -515,7 +513,7 @@
                 { field: "TelephoneNo", title: "Telephone No.", sortable: true, width: 200 },
                 { field: "Email", title: "Email", sortable: true, width: 200 },
               
-                { field: "Comments", title: "Comments", sortable: true, width: 200 },
+                { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                 //{ field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,
