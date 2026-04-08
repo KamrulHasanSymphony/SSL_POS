@@ -31,8 +31,8 @@
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 20px;
         font-size: 13px;
+        margin-bottom: 20px;
     }
 
         table th, table td {
@@ -45,14 +45,35 @@
             font-weight: bold;
         }
 
+    .text-right {
+        text-align: right;
+    }
+
+    /* 🔥 PRINT LIKE SALES REPORT */
     @@media print {
-        .sslPrint {
-            display: none
+
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
         }
 
         .report-box {
-            border: none !important;
-            box-shadow: none !important;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            border: none;
+        }
+
+        .sslPrint {
+            display: none !important;
         }
     }
 </style>
@@ -87,35 +108,24 @@
     </h2>
 
     <!-- PURCHASE MASTER INFO -->
-    <h3>Purchase Information</h3>
     <table>
         <tr>
-            <th>Purchase Code</th>
+            <th>Purchase No.</th>
             <td>@Model.Code</td>
             <th>Invoice Date</th>
-            <td>@Model.InvoiceDateTime</td>
+            <td style="width:20%!important">@Model.InvoiceDateTime</td>
         </tr>
         <tr>
-            <th>Purchase Date</th>
-            <td>@Model.PurchaseDate</td>
             <th>Supplier</th>
             <td>@Model.SupplierName</td>
+            <th>Purchase Date</th>
+            <td style="width:20%!important">@Model.PurchaseDate</td>
         </tr>
         <tr>
             <th>Purchase Order</th>
             <td>@Model.PurchaseOrderCode</td>
             <th>B/E Number</th>
-            <td>@Model.BENumber</td>
-        </tr>
-        <tr>
-            <th>Fiscal Year</th>
-            <td>@Model.FiscalYear</td>
-            <th>Period</th>
-            <td>@Model.PeriodId</td>
-        </tr>
-        <tr>
-            <th>Comments</th>
-            <td colspan="3">@Model.Comments</td>
+            <td style="width:20%!important">@Model.BENumber</td>
         </tr>
     </table>
 
@@ -124,14 +134,14 @@
     <table>
         <thead>
             <tr>
-                <th style="width:40px;">SL</th>
+                <th style="width:5%!important;">SL</th>
                 <th>Product</th>
                 <th>Code</th>
-                <th>Qty</th>
-                <th>Unit Price</th>
-                <th>SD Amt</th>
-                <th>VAT Amt</th>
-                <th>Line Total</th>
+                <th class="text-right" style="width:10%!important;">Qty</th>
+                <th class="text-right" style="width:12%!important;">Unit Price</th>
+                <th class="text-right" style="width:12%!important;">SD Amt</th>
+                <th class="text-right" style="width:12%!important;">VAT Amt</th>
+                <th class="text-right" style="width:12%!important;">Line Total</th>
             </tr>
         </thead>
         <tbody>
@@ -145,12 +155,11 @@
                     <td class="text-right">@item.UnitPrice</td>
                     <td class="text-right">@item.SDAmount</td>
                     <td class="text-right">@item.VATAmount</td>
-                    <td class="text-right">@item.LineTotal</td>
+                    <td class="text-right"><b>@item.LineTotal</b></td>
                 </tr>
             }
         </tbody>
     </table>
-
     <!-- SUMMARY -->
     <h3>Summary</h3>
     <table>
@@ -176,23 +185,13 @@
         </tr>
     </table>
 
-    <!-- POST -->
-    @*<h3>Posting Information</h3>
-        <table>
-            <tr>
-                <th>Posted</th>
-                <td>@(Model.IsPost ? "Yes" : "No")</td>
-                <th>Posted By</th>
-                <td>@Model.PostedBy</td>
-            </tr>
-            <tr>
-                <th>Posted On</th>
-                <td>@Model.PostedOn</td>
-                <th>Transaction Type</th>
-                <td>@Model.TransactionType</td>
-            </tr>
-        </table>*@
-
+    <!-- COMMENTS (Label Style, like Sales Order sample) -->
+    <div style="margin-top:20px;">
+        <h5 class="section-title">Comments</h5>
+        <div style="margin-top:5px;">
+            @Model.Comments
+        </div>
+    </div>
 </div>
 
 
