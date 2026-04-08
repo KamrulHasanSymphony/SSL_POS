@@ -29,8 +29,8 @@
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 20px;
         font-size: 13px;
+        margin-bottom: 20px;
     }
 
         table th, table td {
@@ -43,26 +43,40 @@
             font-weight: bold;
         }
 
+    .text-right {
+        text-align: right;
+    }
+
+    /* 🔥 PRINT LIKE SALES REPORT */
     @@media print {
-        .sslPrint {
-            display: none
+
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
         }
 
         .report-box {
-            border: none !important;
-            box-shadow: none !important;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            border: none;
         }
 
-        .report-table th {
-            width: 180px;
-        }
-
-        .report-table td {
-            width: 220px;
+        .sslPrint {
+            display: none !important;
         }
     }
 </style>
-<button onclick="window.print()" class="sslPrint" style="float:right;margin:20px 40px 0 0;">
+
+<button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
     Print
 </button>
 
@@ -85,50 +99,55 @@
         </tr>
     </table>
 
-    <h2 class="text-center"
-        style="margin-top:5px;border-top:1px solid #000;border-bottom:1px solid #000;padding:5px 0;">
-        PRODUCT INFORMATION
+    <h2 style="text-align:center;border-bottom:1px solid #000;">
+        PRODUCT REPORT
     </h2>
 
-    <!-- PRODUCT INFORMATION -->
-    <h3>Product Information</h3>
+    <!-- PRODUCT INFO -->
     <table>
         <tr>
             <th>Name</th>
             <td>@Model.Name</td>
-            <th>Code</th>
-            <td>@Model.Code</td>
+            <th>Product No.</th>
+            <td style="width: 20%!important">@Model.Code</tdstyle="width:>
         </tr>
         <tr>
             <th>Bangla Name</th>
             <td>@Model.BanglaName</td>
             <th>Group</th>
-            <td>@Model.ProductGroupName</td>
+            <td style="width: 20%!important">@Model.ProductGroupName</td>
         </tr>
         <tr>
-            <th>HS Code</th>
+            <th>HS No.</th>
             <td>@Model.HSCodeNo</td>
             <th>UOM</th>
-            <td>@Model.UOMName</td>
+            <td style="width: 20%!important">@Model.UOMName</td>
         </tr>
     </table>
-    <!-- PRICE INFORMATION -->
-    <h3>Pricing</h3>
+
+    <!-- PRICING -->
+    <h3>Pricing Information</h3>
     <table>
         <tr>
-            
             <th>Sale Price</th>
             <td>@Model.SalePrice</td>
             <th>VAT Rate (%)</th>
-            <td>@Model.VATRate</td>
+            <td style="width: 20%!important">@Model.VATRate</td>
         </tr>
         <tr>
             <th>Purchase Price</th>
             <td>@Model.PurchasePrice</td>
             <th>SD Rate (%)</th>
-            <td>@Model.SDRate</td>
+            <td style="width: 20%!important">@Model.SDRate</td>
         </tr>
-
     </table>
+
+    <!-- COMMENTS -->
+    <!--<div style="margin-top:20px;">
+        <h5>Comments</h5>
+        <div style="margin-top:5px;">
+            Product information report.
+        </div>
+    </div>-->
 
 </div>
