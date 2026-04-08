@@ -32,6 +32,8 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
             vm.Operation = "add";
             vm.IsActive = true;
             vm.UserId = id;
+            vm.FYearStart = null;
+            vm.FYearEnd = null;
             DateTime currentDate = DateTime.Now;
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);

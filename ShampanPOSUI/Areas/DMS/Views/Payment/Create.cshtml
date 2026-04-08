@@ -167,46 +167,6 @@
             </div>
             <div class="card-body">
 
-                @*<button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>*@
-
-                @*<div style="overflow-x: auto; white-space: nowrap;">
-                        <table class="table table-bordered table-striped table-sm" id="details">
-                            <thead>
-                                <tr>
-                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="PaymentId">Payment Id</th>
-                                    <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="PurchaseCode">Purchase Code</th>
-                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="PurchaseId">Purchase Id</th>
-                                    <th data-type="decimal" style="width: 20%;" data-required="true" data-computed="false" data-name="PurchaseAmount">Purchase Amount</th>
-                                    <th data-type="decimal" style="width: 20%" data-required="true" data-computed="false" data-name="PaymentAmount">Payment Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lst">
-                                @if (Model != null)
-                                {
-                                    foreach (var item in Model.paymentDetailList)
-                                    {
-                                        <tr>
-                                            <td>@serial</td>
-                                            <td hidden>@item.PaymentId</td>
-                                            <td>@item.PurchaseCode</td>
-                                            <td hidden>@item.PurchaseId</td>
-                                            <td class="dFormat">@item.PurchaseAmount</td>
-                                            <td class="dFormat">@item.PaymentAmount</td>
-                                            <td>
-                                                <button class="btn btn-danger btn-sm remove-row-btn">
-                                                    <i class='fa fa-trash'></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        { serial++; }
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>*@
-
-
                 <div style="overflow-x: auto; white-space: nowrap;">
 
                     <div id="PaymentDetailsGrid"></div>
@@ -262,7 +222,7 @@
                     <button type="button" class="button btnsave sslUpdate">Update</button>
 
                     <button type="button" class="button btnPost sslPost">Post</button>
-                    <button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>
+                    @*<button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>*@
 
                     <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
                 </div>

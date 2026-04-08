@@ -84,11 +84,22 @@
                 <div class="form-group row">
 
 
-                    <div class="col-sm-2">
+                    @*<div class="col-sm-2">
                         @Html.LabelFor(model => model.BusinessNature)
                         @Html.TextAreaFor(model => model.BusinessNature, new { placeholder = " Enter Business Nature", @class = "form-control form-control-sm" })
                         @Html.ValidationMessageFor(model => model.BusinessNature)
+                    </div>*@
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.BusinessNature)
+                        @Html.TextBoxFor(model => model.BusinessNature, new
+                        {
+                            placeholder = "Enter Business Nature",
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(model => model.BusinessNature)
                     </div>
+
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.City)
@@ -154,14 +165,24 @@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.BIN)
-                        @Html.TextAreaFor(model => model.BIN, new { placeholder = "Enter BIN", @class = "form-control form-control-sm" })
+                        @Html.TextBoxFor(model => model.BIN, new
+                        {
+                            type = "number",
+                            placeholder = "Enter BIN",
+                            @class = "form-control form-control-sm"
+                        })
                         @Html.ValidationMessageFor(model => model.BIN)
                     </div>
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.TIN)
-                        @Html.TextAreaFor(model => model.TIN, new { placeholder = "Enter BIN", @class = "form-control form-control-sm" })
-                        @Html.ValidationMessageFor(model => model.BIN)
+                        @Html.TextBoxFor(model => model.TIN, new
+                        {
+                            type = "number",
+                            placeholder = "Enter TIN",
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(model => model.TIN)
                     </div>
                 </div>
 
@@ -172,7 +193,7 @@
                         @Html.ValidationMessageFor(model => model.Comments)
                     </div>
 
-                    <div class="Onoffbtn" style="flex-direction: column">
+                    @*<div class="Onoffbtn" style="flex-direction: column">
                         @Html.LabelFor(model => model.IsActive)
                         <div class="input-group" style="margin-bottom: -26px; width: 78%;">
                             <input id="IsActive"
@@ -186,7 +207,7 @@
                                    data-on-text="ON"
                                    data-off-text="OFF">
                         </div>
-                    </div>
+                    </div>*@
 
                 </div>
 
@@ -221,7 +242,7 @@
             }
         </div>
 
-        <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+        @*<div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>*@
 
     </div>
 

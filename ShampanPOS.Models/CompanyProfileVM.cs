@@ -58,13 +58,11 @@ namespace ShampanPOS.Models
 
         [Required]
         [DisplayName("Fiscal Year Start")]
-        [DataType(DataType.Date)]
-        public DateTime FYearStart { get; set; }
+        public DateTime? FYearStart { get; set; }
 
         [Required]
         [DisplayName("Fiscal Year End")]
-        [DataType(DataType.Date)]
-        public DateTime FYearEnd { get; set; }
+        public DateTime? FYearEnd { get; set; }
 
         [DisplayName("Business Nature")]
         public string? BusinessNature { get; set; }

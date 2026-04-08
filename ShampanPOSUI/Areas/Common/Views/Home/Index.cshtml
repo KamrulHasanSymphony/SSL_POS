@@ -638,8 +638,7 @@
                                         callbacks: {
                                             label: function (tooltipItem) {
                                                 const value = tooltipItem.raw || 0;
-                                                const total = values.reduce((a, b) => a + b, 0);
-                                                return `${tooltipItem.label}: ${value} (${((value / total) * 100).toFixed(2)}%)`;
+                                                return `High Selling Products: ${value}`;
                                             }
                                         }
                                     }

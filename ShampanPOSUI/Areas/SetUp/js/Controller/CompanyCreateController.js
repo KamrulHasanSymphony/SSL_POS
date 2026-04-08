@@ -5,13 +5,34 @@
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
-        $("#FYearStart").kendoDatePicker({
-
-        });
-
         $("#FYearEnd").kendoDatePicker({
-
+            format: "yyyy-MM-dd"
         });
+
+        $("#FYearStart").kendoDatePicker({
+            format: "yyyy-MM-dd",
+            change: function () {
+
+                var startDate = this.value();
+                if (!startDate) return;
+
+                // 🔥 EXACT LOGIC (March 31 → April 1 next year)
+                var endDate = new Date(
+                    startDate.getFullYear() + 1,
+                    startDate.getMonth(),
+                    startDate.getDate()
+                );
+
+                // +1 day
+                endDate.setDate(endDate.getDate() + 1);
+
+                // Set value
+                $("#FYearEnd").data("kendoDatePicker").value(endDate);
+            }
+        });
+
+    
+
 
         if (parseInt(getId) == 0 && getOperation == '') {
             GetGridDataList();

@@ -28,8 +28,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             MasterSupplierVM vm = new MasterSupplierVM();
             var companyId = Session["CompanyId"];
-            //var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-            //vm.BranchId = Convert.ToInt32(currentBranchId);
+            var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+            vm.BranchId = Convert.ToInt32(currentBranchId);
             vm.CompanyId = Convert.ToInt32(companyId);
             vm.Operation = "add";
             vm.IsActive = true;
@@ -48,6 +48,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                model.BranchId = Convert.ToInt32(currentBranchId);
                 model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
 
                 if (model.Operation.ToLower() == "add")

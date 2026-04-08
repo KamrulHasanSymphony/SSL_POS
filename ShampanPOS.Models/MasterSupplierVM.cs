@@ -109,6 +109,7 @@ namespace ShampanPOS.Models
         public Dictionary<string, string>? ColunWidth { get; set; }
         public Dictionary<string, string>? PageSize { get; set; }
 
+        public int? BranchId { get; set; }
 
         public string? SelectedMasterItemsJson { get; set; }
 

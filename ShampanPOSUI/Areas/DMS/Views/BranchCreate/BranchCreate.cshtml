@@ -94,7 +94,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0"> Distributor Entry </h1>
+                <h1 class="m-0"> Branch Entry </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -113,7 +113,7 @@
             <form id="frmEntry">
                 <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title"> Distributor Info</h3>
+                        <h3 class="card-title"> Branch Info</h3>
                     </div>
                     <div class="card-body">
 
@@ -175,13 +175,13 @@
 
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-2">
-                                @Html.LabelFor(model => model.AreaId)
-                                <div class="input-group ">
-                                    @Html.TextBoxFor(model => model.AreaId, new { placeholder = "Enter AreaId", @class = "  form-control form-control-sm " })
-                                </div>
-                                <span id="titleError3" class="text-danger" style="display:none;"></span>
-                            </div>
+                            @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.AreaId)
+            <div class="input-group ">
+                @Html.TextBoxFor(model => model.AreaId, new { placeholder = "Enter AreaId", @class = "  form-control form-control-sm " })
+            </div>
+            <span id="titleError3" class="text-danger" style="display:none;"></span>
+        </div>*@
 
                             <div class="col-sm-2">
                                 @Html.LabelFor(model => model.Email)
@@ -226,9 +226,7 @@
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="form-group row">
-                            <div class="Onoffbtn" style="flex-direction:column">
+                            @*<div class="Onoffbtn" style="flex-direction:column">
                                 @Html.LabelFor(model => model.IsActive)
                                 <div class="input-group" style="margin-bottom: -26px; width: 78%;">
 
@@ -243,7 +241,8 @@
                                            data-on-text="ON"
                                            data-off-text="OFF">
                                 </div>
-                            </div>
+                            </div>*@
+
                         </div>
 
                     </div>
@@ -276,7 +275,7 @@
                     }
                 </div>
 
-                <div class="auditshow"><img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+
 
             </div>
 

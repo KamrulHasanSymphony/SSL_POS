@@ -250,39 +250,10 @@
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     };
 
-
-    //function save() {
-
-    //    var validator = $("#frmEntry").validate();
-    //    if (!validator.form()) {
-    //        validator.focusInvalid();
-    //        return;
-    //    }
-
-    //    var model = serializeInputs("frmEntry");
-
-    //    // First Save (UserProfile)
-    //    var url1 = "/SetUp/SignUp/SignUpCreateEdit";
-
-    //    CommonAjaxService.finalSave(url1, model, function (result) {
-
-    //        if (result.Success === true) {
-
-    //            // Second Save (UserInformation)
-    //            var url2 = "/SetUp/SignUp/UserInfoCreateEdit";
-
-    //            CommonAjaxService.finalSave(url2, model, saveDone, saveFail);
-
-    //        } else {
-    //            ShowNotification(3, result.Message);
-    //        }
-
-    //    }, saveFail);
-    //}
     function saveDone(result) {
         debugger;
         console.log(result);
-        alert(result.Message, " RR " + result.Success);
+        //alert(result.Message, " RR " + result.Success);
         if (result.Status == 200 || result.Success === true) {
             ShowNotification(1, result.Message);
 
