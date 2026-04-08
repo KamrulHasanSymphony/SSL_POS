@@ -49,15 +49,33 @@
     }
 
     @@media print {
-        .sslPrint {
-            display: none
+
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
         }
 
         .report-box {
-            border: none !important;
-            box-shadow: none !important;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%); /* 🔥 center fix */
+            width: 900px; /* same as screen width */
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            border: none;
+        }
+
+        .sslPrint {
+            display: none !important;
         }
     }
+
+
 </style>
 
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
@@ -89,49 +107,40 @@
     </h2>
 
     <!-- SALES MASTER INFO -->
-    <h3>Sales Information</h3>
+    @*<h3>Sales Information</h3>*@
     <table>
         <tr>
             <th>Sales Code</th>
             <td>@Model.Code</td>
             <th>Invoice Date</th>
-            <td>@Model.InvoiceDateTime</td>
+            <td style="width: 25%!important">@Model.InvoiceDateTime</td>
         </tr>
         <tr>
             <th>Customer</th>
             <td>@Model.CustomerName</td>
             <th>Sales Order</th>
-            <td>@Model.SaleOrderCode</td>
+            <td style="width: 25%!important">@Model.SaleOrderCode</td>
         </tr>
         <tr>
             <th>Delivery Address</th>
             <td colspan="3">@Model.DeliveryAddress</td>
         </tr>
-        <tr>
-            <th>Period</th>
-            <td>@Model.PeriodId</td>
-            <th>Transaction Type</th>
-            <td>@Model.TransactionType</td>
-        </tr>
-        <tr>
-            <th>Comments</th>
-            <td colspan="3">@Model.Comments</td>
-        </tr>
+
     </table>
 
     <!-- SALES DETAILS -->
-    <h3>Sales Items</h3>
+    <h3>Items</h3>
     <table>
         <thead>
             <tr>
-                <th style="width:40px;">SL</th>
+                <th style="width:5%!important;">SL</th>
                 <th>Product</th>
                 <th>Code</th>
-                <th>Qty</th>
-                <th>Unit Rate</th>
-                <th>SD Amt</th>
-                <th>VAT Amt</th>
-                <th>Line Total</th>
+                <th style="width:8%!important;">Qty</th>
+                <th style="width:10%!important;">Unit Rate</th>
+                <th style="width:10%!important;">SD Amt</th>
+                <th style="width:10%!important;">VAT Amt</th>
+                <th style="width:15%!important;">Line Total</th>
             </tr>
         </thead>
         <tbody>
@@ -141,11 +150,11 @@
                     <td>@item.Line</td>
                     <td>@item.ProductName</td>
                     <td>@item.ProductCode</td>
-                    <td class="text-right">@item.Quantity</td>
-                    <td class="text-right">@item.UnitRate</td>
-                    <td class="text-right">@item.SDAmount</td>
-                    <td class="text-right">@item.VATAmount</td>
-                    <td class="text-right">@item.LineTotal</td>
+                    <td class="text-left">@item.Quantity</td>
+                    <td class="text-left">@item.UnitRate</td>
+                    <td class="text-left">@item.SDAmount</td>
+                    <td class="text-left">@item.VATAmount</td>
+                    <td class="text-left">@item.LineTotal</td>
                 </tr>
             }
         </tbody>
@@ -153,27 +162,38 @@
 
     <!-- SUMMARY -->
     <h3>Summary</h3>
-    <table>
+
+    <table class="summary-table">
         <tr>
-            <th>Sub Total</th>
+            <td>Sub Total</td>
             <td class="text-right">@Model.SubTotal</td>
         </tr>
         <tr>
-            <th>Total SD</th>
+            <td>Total SD</td>
             <td class="text-right">@Model.TotalSD</td>
         </tr>
         <tr>
-            <th>Total VAT</th>
+            <td>Total VAT</td>
             <td class="text-right">@Model.TotalVAT</td>
         </tr>
-        <tr>
-            <th>Grand Total</th>
+        <tr class="grand-total">
+            <td>Grand Total</td>
             <td class="text-right">@Model.GrandTotal</td>
         </tr>
         <tr>
-            <th>Paid Amount</th>
+            <td>Paid Amount</td>
             <td class="text-right">@Model.PaidAmount</td>
         </tr>
     </table>
+
+    <!-- COMMENTS (Label Style) -->
+    <div style="margin-top:20px;">
+        @*<strong>Comments:</strong>*@
+        <h5 class="section-title">Comments</h5>
+        <div style="margin-top:5px;">
+            This is my sale order.
+        </div>
+    </div>
+
 
 </div>
