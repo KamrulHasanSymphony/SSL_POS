@@ -139,6 +139,7 @@
                 <th>Code</th>
                 <th class="text-right" style="width:10%!important;">Qty</th>
                 <th class="text-right" style="width:12%!important;">Unit Price</th>
+                <th style="width:10%!important;" class="text-right">Sub Total</th>
                 <th class="text-right" style="width:12%!important;">SD Amt</th>
                 <th class="text-right" style="width:12%!important;">VAT Amt</th>
                 <th class="text-right" style="width:12%!important;">Line Total</th>
@@ -153,6 +154,7 @@
                     <td>@item.ProductCode</td>
                     <td class="text-right">@item.Quantity</td>
                     <td class="text-right">@item.UnitPrice</td>
+                    <td class="text-right">@item.SubTotal</td>
                     <td class="text-right">@item.SDAmount</td>
                     <td class="text-right">@item.VATAmount</td>
                     <td class="text-right"><b>@item.LineTotal</b></td>
@@ -161,29 +163,30 @@
         </tbody>
     </table>
     <!-- SUMMARY -->
-    <h3>Summary</h3>
-    <table>
-        <tr>
-            <th>Sub Total</th>
-            <td class="text-right">@Model.SubTotal</td>
-        </tr>
-        <tr>
-            <th>Total SD</th>
-            <td class="text-right">@Model.TotalSD</td>
-        </tr>
-        <tr>
-            <th>Total VAT</th>
-            <td class="text-right">@Model.TotalVAT</td>
-        </tr>
-        <tr>
-            <th>Grand Total</th>
-            <td class="text-right">@Model.GrandTotal</td>
-        </tr>
-        <tr>
-            <th>Paid Amount</th>
-            <td class="text-right">@Model.PaidAmount</td>
-        </tr>
-    </table>
+    @*<h3>Summary</h3>*@
+
+    <div style="margin-top:10px; width:300px; margin-left:auto;">
+
+        <div style="display:flex; justify-content:space-between;">
+            <span>Grand Total</span>
+            <span>@Model.GrandTotal</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between;">
+            <span>Paid Amount</span>
+            <span>@Model.PaidAmount</span>
+        </div>
+
+        <!-- LINE -->
+        <div style="border-top:1px solid #000; margin:8px 0;"></div>
+
+        <!-- DUE AMOUNT -->
+        @*<div style="display:flex; justify-content:space-between; font-weight:bold;">
+            <span>Due Amount</span>
+            <span>@Model.DueAmount</span>
+        </div>*@
+
+    </div>
 
     <!-- COMMENTS (Label Style, like Sales Order sample) -->
     <div style="margin-top:20px;">
