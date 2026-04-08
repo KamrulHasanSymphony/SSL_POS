@@ -46,13 +46,29 @@
         }
 
     @@media print {
-        .sslPrint {
-            display: none
+
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
         }
 
         .report-box {
-            border: none !important;
-            box-shadow: none !important;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%); /* 🔥 center fix */
+            width: 900px; /* same as screen width */
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            border: none;
+        }
+
+        .sslPrint {
+            display: none !important;
         }
     }
 </style>
@@ -92,13 +108,13 @@
             <th>Name</th>
             <td>@Model.Name</td>
             <th>Code</th>
-            <td>@Model.Code</td>
+            <td style="width: 20%!important">@Model.Code</td>
         </tr>
         <tr>
             <th>Bangla Name</th>
             <td>@Model.BanglaName</td>
             <th>Group</th>
-            <td>@Model.CustomerGroupName</td>
+            <td style="width: 20%!important">@Model.CustomerGroupName</td>
         </tr>
     </table>
 
@@ -109,7 +125,7 @@
             <th>Address</th>
             <td>@Model.Address</td>
             <th>Bangla Address</th>
-            <td>@Model.BanglaAddress</td>
+            <td style="width: 20%!important">@Model.BanglaAddress</td>
         </tr>
     </table>
 
@@ -120,7 +136,7 @@
             <th>Telephone</th>
             <td>@Model.TelephoneNo</td>
             <th>Fax</th>
-            <td>@Model.FaxNo</td>
+            <td style="width: 20%!important">@Model.FaxNo</td>
         </tr>
         <tr>
             <th>Email</th>
@@ -135,7 +151,7 @@
             <th>TIN No.</th>
             <td>@Model.TINNo</td>
             <th>BIN No.</th>
-            <td>@Model.BINNo</td>
+            <td style="width: 20%!important">@Model.BINNo</td>
         </tr>
         <tr>
             <th>NID</th>
@@ -143,6 +159,16 @@
         </tr>
     </table>
 
+
+
+    <!-- COMMENTS (Label Style) -->
+    <div style="margin-top:20px;">
+        @*<strong>Comments:</strong>*@
+        <h5 class="section-title">Comments</h5>
+        <div style="margin-top:5px;">
+            This is my sale order.
+        </div>
+    </div>
 
 </div>
 
