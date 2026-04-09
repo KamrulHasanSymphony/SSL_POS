@@ -124,6 +124,8 @@ namespace ShampanPOS.Models
         public string? ProductGroupCode { get; set; }
         public string? ProductGroupDescription { get; set; }
         public int? BranchId { get; set; }
+        public string? CompanyName { get; set; }
+        public string? BranchName { get; set; }
 
         public string? ByGroup { get; set; }
 
