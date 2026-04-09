@@ -97,6 +97,7 @@
             </td>
             <td style="text-align:right;border:none;">
                 <div style="font-size:16px;">@Model.CompanyName</div>
+                <div style="font-size:16px;">@Model.BranchName</div>
                 <div>@Model.BranchAddress 69/1 Trhidara Tower</div>
                 <div>📞 01612264439</div>
                 <div>✉️ symphonysorftech1999@gamil.com</div>
@@ -163,12 +164,12 @@
                 </tr>
             }
 
-            <!-- FOOTER ROW: TOTAL ONLY -->
+            <!-- FOOTER ROW -->
             <tr class="purchasetotalrow" style="font-weight:bold;">
-                <td colspan="2" style="text-align: center;">Total</td> <!-- Product column shows "Total" -->
-                <td></td> <!-- Code empty -->
+                <td colspan="2" style="text-align: center;">Total</td>
+                <td></td>
                 <td class="text-right">@Model.purchaseDetailList.Sum(x => x.Quantity)</td>
-                <td></td> <!-- Unit Price empty -->
+                <td></td> 
                 <td class="text-right">@Model.purchaseDetailList.Sum(x => x.SubTotal)</td>
                 <td class="text-right">@Model.purchaseDetailList.Sum(x => x.SDAmount)</td>
                 <td class="text-right">@Model.purchaseDetailList.Sum(x => x.VATAmount)</td>
@@ -178,7 +179,6 @@
     </table>
 
     <!-- SUMMARY -->
-    @*<h3>Summary</h3>*@
 
     <div style="width:300px; margin-left:auto;">
 
