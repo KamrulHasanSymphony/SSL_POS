@@ -6,7 +6,7 @@ namespace ShampanPOS.Models
 {
     public class ProductVM
     {
-        public int Id { get; set; }
+        public int Id { get; set; } 
 
         [Display(Name = "Code (Auto Generate)")]
         [StringLength(50, ErrorMessage = "Code cannot exceed 50 characters.")]
@@ -122,6 +122,10 @@ namespace ShampanPOS.Models
         public string? ByGroup { get; set; }
 
         public int? BranchId { get; set; }
+
+        public string? CompanyName { get; set; }
+        public string? BranchName { get; set; }
+
         public PeramModel PeramModel { get; set; }
 
         public List<ProductVM> MasterItemList { get; set; }

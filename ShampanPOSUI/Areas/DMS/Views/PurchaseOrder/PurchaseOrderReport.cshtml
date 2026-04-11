@@ -33,7 +33,6 @@
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
-        margin-bottom: 20px;
     }
 
         table th, table td {
@@ -77,6 +76,10 @@
             display: none !important;
         }
     }
+
+    .purchasetotalrow td {
+        border: 0 !important
+    }
 </style>
 
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
@@ -93,7 +96,7 @@
                      style="width:230px;height:120px;" />
             </td>
             <td style="text-align:right;border:none;">
-                <h3 style="margin:0;">@Model.CompanyName Symphony Softtech Limited</h3>
+                <h3 style="margin:0;">@Model.CompanyName</h3>
                 <div style="font-size:16px;">@Model.BranchName</div>
                 <div>@Model.BranchAddress 69/1 Trhidara Tower</div>
                 <div>📞 01612264439</div>
@@ -160,6 +163,19 @@
                     <td class="text-right"><b>@item.LineTotal</b></td>
                 </tr>
             }
+            <!-- FOOTER ROW: TOTAL ONLY -->
+
+        <tr class="purchasetotalrow" style="font-weight:bold;">
+            <td colspan="2" style="text-align: center;">Total :</td> <!-- Product column shows "Total" -->
+            <td></td> <!-- Code empty -->
+            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.Quantity)</td>
+            <td></td> <!-- Unit Price empty -->
+            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.SubTotal)</td>
+            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.SDAmount)</td>
+            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.VATAmount)</td>
+            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.OthersAmount)</td>
+            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.LineTotal)</td>
+        </tr>
         </tbody>
     </table>
     <!-- COMMENTS (Label Style, like Sales Order sample) -->

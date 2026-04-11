@@ -291,9 +291,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             try
             {
+                var companyId = Session["CompanyId"];
+
                 CustomerVM vm = new CustomerVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
+                param.CompanyId = companyId.ToString();
                 ResultVM result = _repo.GetCustomerReport(param);
 
                 if (result.Status == "Success" && result.DataVM != null)

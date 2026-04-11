@@ -32,7 +32,6 @@
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
-        margin-bottom: 20px;
     }
 
         table th, table td {
@@ -76,8 +75,11 @@
             display: none !important;
         }
     }
-</style>
 
+    .purchasetotalrow td {
+        border: 0 !important
+    }
+</style>
 
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
     Print
@@ -93,7 +95,7 @@
                      style="width:230px;height:120px;" />
             </td>
             <td style="text-align:right;border:none;">
-                <h3 style="margin:0;">@Model.CompanyName Symphony Softtech Limited</h3>
+                <h3 style="margin:0;">@Model.CompanyName</h3>
                 <div style="font-size:16px;">@Model.BranchName</div>
                 <div>@Model.BranchAddress 69/1 Trhidara Tower</div>
                 <div>📞 01612264439</div>
@@ -107,7 +109,7 @@
         PURCHASE RETURN REPORT
     </h2>
 
-    <!-- MASTER INFO (Same as Sample Style) -->
+    <!-- MASTER INFO -->
     <h3>Purchase Return Information</h3>
     <table>
         <tr>
@@ -157,10 +159,22 @@
                     <td class="text-right"><b>@item.LineTotal</b></td>
                 </tr>
             }
+            <!-- FOOTER -->
+        <tr class="purchasetotalrow" style="font-weight:bold;">
+            <td colspan="2" style="text-align: center;">Total :</td> 
+            <td></td> 
+            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.Quantity)</td>
+            <td></td>
+            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.SubTotal)</td>
+            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.SDAmount)</td>
+            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.VATAmount)</td>
+            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.OthersAmount)</td>
+            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.LineTotal)</td>
+        </tr>
         </tbody>
     </table>
 
-    <!-- COMMENTS (Same Style as Sample) -->
+    <!-- COMMENTS-->
     <div style="margin-top:20px;">
         <h5 class="section-title">Comments</h5>
         <div style="margin-top:5px;">
