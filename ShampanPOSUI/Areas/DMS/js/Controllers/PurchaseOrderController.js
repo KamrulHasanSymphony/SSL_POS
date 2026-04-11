@@ -29,22 +29,28 @@
             TotalCalculation();
         };
 
-        var $table = $('#details');
-        var table = initEditTable($table, { searchHandleAfterEdit: false });
+        //var $table = $('#details');
+        //var table = initEditTable($table, { searchHandleAfterEdit: false });
 
 
-        $('#addRows').on('click', function (e) {
+        //$('#addRows').on('click', function (e) {
 
-            addRow($table);
+        //    addRow($table);
+        //});
+
+
+        $("#saleOrderDetails").on("click", "td.product-cell", function () {
+            var grid = $("#saleOrderDetails").data("kendoGrid");
+            var dataItem = grid.dataItem($(this).closest("tr"));
+            OpenProductPopup(dataItem);
         });
-
 
         $('.btnsave').click(function (e) {
             debugger;
             e.preventDefault();
 
             var form = $("#frmEntry");
-            var $table = $('#details');
+            //var $table = $('#details');
 
             var mvcValid = form.valid();
             var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
@@ -60,18 +66,71 @@
                 return;
             }
 
-            if (!hasLine($table)) {
-                ShowNotification(3, "Complete Details Entry");
-                return;
+            //if (!hasLine($table)) {
+            //    ShowNotification(3, "Complete Details Entry");
+            //    return;
+            //}
+
+            var details = [];
+
+            var grid = $("#saleOrderDetails").data("kendoGrid");
+            if (grid) {
+                var dataItems = grid.dataSource.view(); // Get the items from the grid
+
+                // Iterate through grid data and validate the rows
+                for (var i = 0; i < dataItems.length; i++) {
+                    var item = dataItems[i];
+
+                    var finalProductId = 0;
+
+                    if (item.ProductId && item.ProductId > 0) {
+                        finalProductId = item.ProductId;
+                    } else if (item.ItemId && item.ItemId > 0) {
+                        finalProductId = item.ItemId;
+                    }
+
+                    // Validate ProductId
+                    if (finalProductId <= 0) {
+                        ShowNotification(3, "Item is required in sale details.");
+                        return;
+                    }
+
+                    // Validate Quantity
+                    if (!item.Quantity || item.Quantity < 0) {
+                        ShowNotification(3, "Quantity must be greater than zero.");
+                        return;
+                    }
+
+                    // Push the valid data to the details array
+                    details.push({
+                        Id: item.Id,
+                        ProductId: finalProductId,
+                        ProductName: item.ProductName || item.ItemName,
+                        UOMId: item.UOMId,
+                        UOMName: item.UOMName,
+                        Quantity: item.Quantity,
+                        UnitPrice: item.UnitPrice,
+                        SubTotal: item.SubTotal,
+                        VATAmount: item.VATAmount,
+                        SDAmount: item.SDAmount,
+                        VATRate: item.VATRate,
+                        SD: item.SD,
+                        LineTotal: item.LineTotal,
+                        OthersAmount: item.OthersAmount,
+                        Action: item.Action
+                    });
+                }
             }
 
-            var details = serializeTable($table);
+
+
+            //var details = serializeTable($table);
             debugger;
-            var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+            var requiredFields = ['ProductName', 'Quantity'];
             var fieldMappings = {
                 'ProductName': 'Product Name',
-                'Quantity': 'Quantity',
-                'UnitPrice': 'Unit Price'
+                'Quantity': 'Quantity'
+                
             };
 
             var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
@@ -88,7 +147,7 @@
             Confirmation("Are you sure? Do You Want to " + status + " Data?",
                 function (result) {
                     if (result) {
-                        save($table);
+                        save();
                     }
                 });
         });
@@ -163,20 +222,327 @@
 
 
 
-        //$('#details').on('blur', ".td-InputQuantity", function (event) {
-        //    var originalRow = $(this);
-        //    var currentRow = originalRow.closest('tr');
+        // =======================
+        // LOAD DETAILS FROM JSON
+        // =======================
+        var detailsList = JSON.parse($("#SaleOrderDetailsJson").val() || "[]");
 
-        //    var InputQuantity = currentRow.find('td:nth-child(8)').text().trim() || 0;
-        //    if (InputQuantity != 0) {
-        //        computeQuantity($(this), '');
-        //        computeSubTotal($(this), '');
-        //        var $currentRow = $(this).closest('tr');
-        //        CampaignMudularitycal($currentRow)
-        //    }
+        var detailsGridDataSource = new kendo.data.DataSource({
+            data: detailsList,
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        Id: { type: "number", defaultValue: 0 },
+                        ProductId: { type: "number", defaultValue: null },
+                        ProductName: { type: "string", defaultValue: "" },
+                        Quantity: { type: "number", defaultValue: 0 },
+                        UnitPrice: { type: "number", defaultValue: 0 },
+                        SubTotal: { type: "number", defaultValue: 0 },
+                        SDAmount: { type: "number", defaultValue: 0 },
+                        VATAmount: { type: "number", defaultValue: 0 },
+                        LineTotal: { type: "number", defaultValue: 0 },
+                        VATRate: { type: "number", defaultValue: 0 },
+                        SD: { type: "number", defaultValue: 0 },
+                        OthersAmount: { type: "number", defaultValue: 0 }
+                    }
+                }
+            },
+            aggregate: [
+                { field: "Quantity", aggregate: "sum" },
+                { field: "SubTotal", aggregate: "sum" },
+                { field: "SDAmount", aggregate: "sum" },
+                { field: "VATAmount", aggregate: "sum" },
+                { field: "LineTotal", aggregate: "sum" },
+                { field: "OthersAmount", aggregate: "sum" }
+            ]
+        });
+
+        // Initialize the grid
+        $("#saleOrderDetails").kendoGrid({
+            dataSource: detailsGridDataSource,
+            toolbar: [{ name: "create", text: "Add" }],
+            editable: {
+                mode: "incell",
+                createAt: "bottom"
+            },
+            columns: [
+                {
+                    title: "Sl No",
+                    width: 60,
+                    template: function (dataItem) {
+                        var grid = $("#saleOrderDetails").data("kendoGrid");
+                        return grid.dataSource.indexOf(dataItem) + 1;
+                    }
+                },
+                {
+                    field: "ProductName",
+                    title: "Product Name",
+                    editor: itemSelectorEditor,
+                    template: function (dataItem) {
+                        return dataItem.ProductName || "";
+                    },
+                    footerTemplate: "Total:",
+                    width: 160
+                },
+                {
+                    field: "Quantity",
+                    title: "Quantity",
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "#= kendo.toString(sum || 0, 'n2') #",
+                    aggregate: "sum",
+                    width: 120,
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            change: function () {
+                                var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                // Update the model value for Quantity
+                                options.model.set("Quantity", this.value());
+
+                                // Recalculate SubTotal, SDAmount, VATAmount, LineTotal for this row
+                                var subTotal = options.model.Quantity * options.model.UnitPrice;
+                                options.model.set("SubTotal", subTotal);
+
+                                var sdAmount = (subTotal * (options.model.SD || 0)) / 100;
+                                options.model.set("SDAmount", sdAmount);
+
+                                var vatAmount = ((subTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
+                                options.model.set("VATAmount", vatAmount);
+
+                                var lineTotal = subTotal + sdAmount + vatAmount;
+
+                                var withother = lineTotal + options.model.OthersAmount;
+
+                                options.model.set("LineTotal", withother);
+
+                                //options.model.set("LineTotal", lineTotal);
+
+                                // Refresh the grid to update footer aggregates
+                                grid.refresh();
+                            }
+                        });
+                    }
+                },
+                {
+                    field: "UnitPrice",
+                    title: "Unit Rate",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            readonly: true // Make UnitRate non-editable if you don't want users to change it
+                        });
+                    }
+                },
+                {
+                    field: "SubTotal",
+                    title: "Sub Total",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    field: "SD",
+                    title: "SD Rate",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            change: function () {
+                                var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                // Recalculate SDAmount and LineTotal when SD Rate changes
+                                var sdAmount = (options.model.SubTotal * (this.value() || 0)) / 100;
+                                options.model.set("SDAmount", sdAmount);
+
+                                // Recalculate VAT Amount
+                                var vatAmount = ((options.model.SubTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
+                                options.model.set("VATAmount", vatAmount);
+
+                                // Recalculate LineTotal
+                                var lineTotal = options.model.SubTotal + sdAmount + vatAmount;
+
+                                var withother = lineTotal + options.model.OthersAmount;
+
+                                options.model.set("LineTotal", withother);
+
+                                //options.model.set("LineTotal", lineTotal);
+
+                                // Refresh the grid to update footer aggregates
+                                grid.refresh();
+                            }
+                        });
+                    }
+                },
+                {
+                    field: "SDAmount",
+                    title: "SD Amount",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    field: "VATRate",
+                    title: "VAT Rate",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            change: function () {
+                                var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                // Recalculate VATAmount and LineTotal when VATRate changes
+                                var sdAmount = (options.model.SubTotal * (options.model.SD || 0)) / 100;
+                                var vatAmount = ((options.model.SubTotal + sdAmount) * (this.value() || 0)) / 100;
+                                options.model.set("VATAmount", vatAmount);
+
+                                // Recalculate LineTotal
+                                var lineTotal = options.model.SubTotal + sdAmount + vatAmount;
+
+                                var withother = lineTotal + options.model.OthersAmount;
+
+                                options.model.set("LineTotal", withother);
+
+                                //options.model.set("LineTotal", lineTotal);
+
+                                // Refresh the grid to update footer aggregates
+                                grid.refresh();
+                            }
+                        });
+                    }
+                },
+                {
+                    field: "VATAmount",
+                    title: "VAT Amount",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    field: "OthersAmount",
+                    title: "Others Amount",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            change: function () {
+                                var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                // Update the model value for Quantity
+                                options.model.set("OthersAmount", this.value());
+
+                                // Recalculate SubTotal, SDAmount, VATAmount, LineTotal for this row
+                                var subTotal = options.model.Quantity * options.model.UnitPrice;
+                                options.model.set("SubTotal", subTotal);
+
+                                var sdAmount = (subTotal * (options.model.SD || 0)) / 100;
+                                options.model.set("SDAmount", sdAmount);
+
+                                var vatAmount = ((subTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
+                                options.model.set("VATAmount", vatAmount);
+
+                                var lineTotal = subTotal + sdAmount + vatAmount;
+
+                                var withother = lineTotal + options.model.OthersAmount;
+
+                                options.model.set("LineTotal", withother);
+
+                                // Refresh the grid to update footer aggregates
+                                grid.refresh();
+                            }
+                        });
+                    },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    field: "LineTotal",
+                    title: "Line Total",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    command: [{
+                        name: "destroy",
+                        iconClass: "k-icon k-i-trash",
+                        text: ""
+                    }],
+                    title: "Action",
+                    width: 35
+                }
+
+            ],
+            change: function () {
+                var grid = this;
+                // Recalculate and update the footer aggregation after any change in the grid data
+                updateSaleSummary();
+            }
+        });
 
 
-        //});
+        function updateSaleSummary() {
+            // SaleDetails
+
+
+            var saleGrid = $("#saleDetails").data("kendoGrid");
+            var saleData = saleGrid ? saleGrid.dataSource.data() : [];
+
+            // CardDetails
+            var cardGrid = $("#cardDetails").data("kendoGrid");
+            var cardData = cardGrid ? cardGrid.dataSource.data() : [];
+
+            // Calculate SubTotals
+            var subTotal = 0;
+            var sdTotal = 0;
+            var vatTotal = 0;
+            var lineTotal = 0;
+
+            saleData.forEach(function (item) {
+                subTotal += item.SubTotal || 0;
+                sdTotal += item.SDAmount || 0;
+                vatTotal += item.VATAmount || 0;
+                lineTotal += item.LineTotal || 0;
+            });
+
+            $("#subTotalSubtotal").val(subTotal.toFixed(2));
+            $("#subTotalSD").val(sdTotal.toFixed(2));
+            $("#SDAmount").val(sdTotal.toFixed(2));
+            $("#subTotalVAT").val(vatTotal.toFixed(2));
+            $("#VATAmount").val(vatTotal.toFixed(2));
+            $("#SubTotal").val(lineTotal.toFixed(2));
+
+            var decimalPart = lineTotal - Math.floor(lineTotal);
+            $("#RoundUp").val(decimalPart.toFixed(2));
+            $("#FinalPayable").val(Math.floor(lineTotal));
+
+
+        }
+
+
+
+
         $('#details').on('blur', ".td-Quantity", function (event) {
             computeSubTotal($(this), '');
         });
@@ -261,180 +627,31 @@
 
     };
 
-    function computeCtnQuantity(row, param) {
 
-        // Get base values with proper parsing of formatted numbers
-        var Conversionfactor = parseFloat(row.closest("tr").find("td.td-UOMConversion").text().replace(/,/g, '')) || 1;
-        var CtnQuantity = parseFloat(row.closest("tr").find("td.td-CtnQuantity").text().replace(/,/g, '')) || 0;
-        var InputQuantity = 0;
+    function itemSelectorEditor(container, options) {
+        var wrapper = $('<div class="input-group input-group-sm full-width">').appendTo(container);
 
-        var loseQty = CtnQuantity * Conversionfactor;
-        var Totalqty = CtnQuantity * Conversionfactor;
-        row.closest("tr").find("td.td-InputQuantity").text(InputQuantity.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        // Create input (you can bind value if needed)
+        $('<input type="text" class="form-control" readonly />')
+            .attr("data-bind", "value:ProductName")
+            .appendTo(wrapper);
 
-        row.closest("tr").find("td.td-PcsQuantity").text(0);
-        row.closest("tr").find("td.td-Quantity").text(Totalqty.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        //TotalCalculation();
+        // Create button inside an addon span
+        $('<div class="input-group-append">')
+            .append(
+                $('<button class="btn btn-outline-secondary" type="button">')
+                    .append('<i class="fa fa-search"></i>')
+                    .on("click", function () {
+
+                        OpenProductPopup(options.model); //eta banate hobe
+                    })
+            )
+            .appendTo(wrapper);
+
+        kendo.bind(container, options.model);
     }
-    function CampaignMudularitycal(Row) {
-
-        var currentRow = Row;
-        var productId = currentRow.closest('tr').find('td:nth-child(4)').text().trim() || 0;
-        var deliveryDate = $("#DeliveryDate").val();
-
-        // Get quantity from input or text content
-        var quantity;
-        if (currentRow.find("td.td-Quantity input").length > 0) {
-            quantity = parseFloat(currentRow.find("td.td-Quantity input").val().replace(/,/g, '')) || 0;
-        } else {
-            quantity = parseFloat(currentRow.find("td.td-Quantity").text().replace(/,/g, '')) || 0;
-        }
-
-        // Prepare request data
-        const requestData = {
-            ProductId: productId,
-            Quantity: quantity,
-            Date: deliveryDate
-        };
-
-        // Call API and handle calculations
-        CommonService.CampaignMudularityCalculation(requestData,
-            function success(result) {
-                if (!result || !result.data) {
-                    ShowNotification(3, "Invalid response received");
-                    return;
-                }
-
-                const row = currentRow.closest('tr');
-                //updateRowWithAPIData(row, result.data);
-                calculateRowTotals(row);
-                TotalDCalculation();
-            },
-            function fail(error) {
-                console.error("Error fetching data:", error);
-                ShowNotification(3, "There was an error processing your request.");
-            }
-        );
-    }
-    function updateRowWithAPIData(row, data) {
-        // Update basic fields
-        row.find('.td-FreeProductName').text(data.FreeProductName?.trim() || '');
-        row.find('.td-FreeProductId').text(data.FreeProductId || '');
-        row.find('.td-FreeQuantity').text(formatNumber(data.FreeQuantity || 0));
-        row.find('.td-DiscountRate').text(formatNumber(data.DiscountRate || 0));
-        row.find('.td-DiscountAmount').text(formatNumber(data.DiscountAmount || 0));
-        row.find('.td-LineDiscountRate').text(formatNumber(data.LineDiscountRate || 0));
-        row.find('.td-LineDiscountAmount').text(formatNumber(data.LineDiscountAmount || 0));
-
-        // Update calculated totals
-        row.find('.td-SubTotalAfterDiscount').text(formatNumber(data.SubTotalAfterDiscount || 0));
-        row.find('.td-LineTotalAfterDiscount').text(formatNumber(data.LineTotalAfterDiscount || 0));
-    }
-    function calculateRowTotals(row) {
 
 
-        const quantity = parseFloat(row.find('.td-Quantity').text().replace(/,/g, '')) || 0;
-        const unitRate = parseFloat(row.find('.td-UnitPrice').text().replace(/,/g, '')) || 0;
-        const discountRate = parseFloat(row.find('.td-DiscountRate').text().replace(/,/g, '')) || 0;
-        const sdRate = parseFloat(row.find('.td-SD').text().replace(/,/g, '')) || 0;
-        const vatRate = parseFloat(row.find('.td-VATRate').text().replace(/,/g, '')) || 0;
-        const LineDiscountAmount = parseFloat(row.find('.td-LineDiscountAmount').text().replace(/,/g, '')) || 0;
-
-        // Calculate SubTotal
-        const subTotal = quantity * unitRate;
-        row.find('.td-SubTotal').text(formatNumber(subTotal));
-
-        // Calculate Discount Amount
-        const discountAmount = (subTotal * discountRate) / 100;
-        row.find('.td-DiscountAmount').text(formatNumber(discountAmount));
-
-        // Calculate SubTotal After Discount
-        const subTotalAfterDiscount = subTotal - discountAmount;
-
-        // Calculate SD Amount
-        const sdAmount = (subTotalAfterDiscount * sdRate) / 100;
-        row.find('.td-SDAmount').text(formatNumber(sdAmount));
-
-        // Calculate VAT Amount
-        const vatAmount = ((subTotalAfterDiscount + sdAmount) * vatRate) / 100;
-        row.find('.td-VATAmount').text(formatNumber(vatAmount));
-
-
-        // Calculate  orginal VAT Amount
-        const orginalvatAmount = ((subTotal + sdAmount) * vatRate) / 100;
-
-
-        // Calculate Line Total
-        const lineTotal = subTotal + sdAmount + orginalvatAmount;
-        row.find('.td-LineTotal').text(formatNumber(lineTotal));
-
-        // Calculate Line Total AfterDiscount
-        const AfterDiscountlineTotal = subTotalAfterDiscount + sdAmount + vatAmount - LineDiscountAmount;
-        row.find('.td-LineTotalAfterDiscount').text(formatNumber(AfterDiscountlineTotal));
-    }
-    function computeQuantity(row, param) {
-
-        // Get base values with proper parsing of formatted numbers
-        var Conversionfactor = parseFloat(row.closest("tr").find("td.td-UOMConversion").text().replace(/,/g, '')) || 1;
-        var InputQuantity = parseFloat(row.closest("tr").find("td.td-InputQuantity").text().replace(/,/g, '')) || 0;
-
-        var CtnQty = Math.floor(InputQuantity / Conversionfactor);
-        var loseQty = (InputQuantity - (CtnQty * Conversionfactor));
-        var Totalqty = (loseQty + (CtnQty * Conversionfactor));
-
-        row.closest("tr").find("td.td-CtnQuantity").text(CtnQty.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        row.closest("tr").find("td.td-PcsQuantity").text(loseQty.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        row.closest("tr").find("td.td-Quantity").text(Totalqty.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        //TotalCalculation();
-    }
-    function TotalDCalculation() {
-
-        // Initialize variables for totals
-        let totals = {
-            quantity: 0,
-            freeQuantity: 0,
-            subTotal: 0,
-            subTotalAfterDiscount: 0,
-            sdAmount: 0,
-            vatAmount: 0,
-            lineTotal: 0,
-            lineTotalAfterDiscount: 0
-        };
-
-        // Calculate totals from all rows
-        $('#details tbody tr').each(function () {
-            const row = $(this);
-            totals.quantity += parseFloat(row.find('.td-Quantity').text().replace(/,/g, '')) || 0;
-
-            totals.subTotal += parseFloat(row.find('.td-SubTotal').text().replace(/,/g, '')) || 0;
-            totals.subTotalAfterDiscount += parseFloat(row.find('.td-SubTotalAfterDiscount').text().replace(/,/g, '')) || 0;
-            totals.sdAmount += parseFloat(row.find('.td-SD').text().replace(/,/g, '')) || 0;
-            totals.vatAmount += parseFloat(row.find('.td-VATAmount').text().replace(/,/g, '')) || 0;
-            totals.lineTotal += parseFloat(row.find('.td-LineTotal').text().replace(/,/g, '')) || 0;
-            totals.lineTotalAfterDiscount += parseFloat(row.find('.td-LineTotalAfterDiscount').text().replace(/,/g, '')) || 0;
-        });
-
-        // Calculate FreeGrandTotalAmount (only free quantity)
-        const freeGrandTotalAmount = totals.freeQuantity;
-
-        // Update all total fields
-        $("#GrandTotalAmount").val(formatNumber(totals.quantity));
-        $("#GrandSubTotal").val(formatNumber(totals.subTotal));
-        $("#GrandSubTotalAD").val(formatNumber(totals.subTotalAfterDiscount));
-        $("#GrandTotalSDAmount").val(formatNumber(totals.sdAmount));
-        $("#GrandTotalVATAmount").val(formatNumber(totals.vatAmount));
-        $("#GrandTotal").val(formatNumber(totals.lineTotal));
-
-        // Get required data for invoice calculation
-        // Prepare request data for invoice calculation
-        const invoiceRequestData = {
-            Quantity: totals.lineTotalAfterDiscount, // Send the raw number, not formatted
-        };
-    }
-    function formatNumber(value) {
-        return Number(parseFloat(value).toFixed(parseInt(decimalPlace)))
-            .toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) });
-    }
     function GetBranchList() {
         var branch = new kendo.data.DataSource({
             transport: {
@@ -478,6 +695,97 @@
         });
     };
 
+
+    function OpenProductPopup(detailRow) {
+        debugger;
+        var wnd = $("#saleDetailsWindow").kendoWindow({
+            width: "650px",
+            height: "450px",
+            title: "Select Product",
+            modal: true,
+            visible: false
+        }).data("kendoWindow");
+
+        wnd.center().open();
+
+        $("#saleDetailsGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductModalPurchase" // API for Product list
+                    }
+                }
+            },
+            height: 380,
+            sortable: true,
+            filterable: true,
+            pageable: true,
+            selectable: "row",
+
+            columns: [
+                { field: "ProductId", title: "Product ID", hidden: true },
+                { field: "ProductName", title: "Product Name", width: 100 },
+                { field: "UOMId", hidden: true },
+                { field: "UOMName", title: "UOM", width: 100 },
+                //{ field: "HSCodeNo", title: "HS Code No", width: 80 },
+                { field: "ProductGroupId", title: "Product Group Id", width: 100 },
+                { field: "ProductGroupName", title: "Product Group Name", width: 100 },
+                { field: "PurchasePrice", title: "Purchase Price", width: 100 },
+                { field: "SalesPrice", title: "Sale Price", width: 100 },
+                { field: "VATRate", title: "VAT Rate", width: 100 },
+                { field: "SDRate", title: "SD Rate", width: 100 },
+            ]
+        });
+
+        // DOUBLE CLICK SELECT
+        $("#saleDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
+
+            var grid = $("#saleDetailsGrid").data("kendoGrid");
+            var selectedItem = grid.dataItem($(this));
+            ApplyProductSelection(detailRow, selectedItem);
+            wnd.close();
+        });
+    }
+
+
+    function ApplyProductSelection(detailRow, item) {
+        debugger;
+        console.log(item);
+
+        // Set Product details
+        detailRow.set("ProductId", item.ProductId);
+        detailRow.set("ProductName", item.ProductName);
+        detailRow.set("UOMId", item.UOMId);
+        detailRow.set("UOMName", item.UOMName);
+
+        // Set Cost Price → UnitRate (Sales Price)
+        detailRow.set("UnitPrice", item.PurchasePrice);
+
+        // Set Rates
+        detailRow.set("VATRate", item.VATRate);
+        detailRow.set("SD", item.SDRate);
+
+        // Default quantity if empty
+        if (!detailRow.Quantity || detailRow.Quantity <= 0) {
+            detailRow.set("Quantity", 1);
+        }
+
+        // Auto-calculate SubTotal
+        var subTotal = detailRow.Quantity * detailRow.UnitPrice;  // UnitRate = SalesPrice
+        detailRow.set("SubTotal", subTotal);
+
+        // SD Amount: (SubTotal * SDRate) / 100
+        var sdAmount = (subTotal * (detailRow.SD || 0)) / 100;
+        detailRow.set("SDAmount", sdAmount);
+
+        // VAT Amount: ((SubTotal + SDAmount) * VATRate) / 100
+        var vatAmount = ((subTotal + sdAmount) * (detailRow.VATRate || 0)) / 100;
+        detailRow.set("VATAmount", vatAmount);
+        debugger;
+        // Line Total = SubTotal + SDAmount + VATAmount
+        var lineTotal = subTotal + sdAmount + vatAmount;
+        detailRow.set("LineTotal", lineTotal);
+    }
     function GetSupplierComboBox() {
         var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
             dataTextField: "Name",
@@ -508,65 +816,65 @@
         }).data("kendoMultiColumnComboBox");
     }
 
-    function productModalDblClick(row, originalRow) {
-        var dataTable = $("#modalData").DataTable();
-        var rowData = dataTable.row(row).data();
-        debugger;
-        var ProductCode = rowData.ProductCode;
-        var ProductId = rowData.ProductId;
-        var ProductName = rowData.ProductName;
-        var UOMId = rowData.UOMId;
-        var UOMName = rowData.UOMName;
-        var CostPrice = rowData.CostPrice;
-        var PurchasePrice = rowData.PurchasePrice;
-        var SDRate = rowData.SDRate;
-        var VATRate = rowData.VATRate;
-        var Conversion = rowData.UOMConversion;
-        var Quantity = 1;
+    //function productModalDblClick(row, originalRow) {
+    //    var dataTable = $("#modalData").DataTable();
+    //    var rowData = dataTable.row(row).data();
+    //    debugger;
+    //    var ProductCode = rowData.ProductCode;
+    //    var ProductId = rowData.ProductId;
+    //    var ProductName = rowData.ProductName;
+    //    var UOMId = rowData.UOMId;
+    //    var UOMName = rowData.UOMName;
+    //    var CostPrice = rowData.CostPrice;
+    //    var PurchasePrice = rowData.PurchasePrice;
+    //    var SDRate = rowData.SDRate;
+    //    var VATRate = rowData.VATRate;
+    //    var Conversion = rowData.UOMConversion;
+    //    var Quantity = 1;
 
-        // ✅ Check for duplicates before setting data
-        var isDuplicate = false;
-        $("#details tbody tr").each(function () {
-            var existingProductId = $(this).find(".td-ProductId").text().trim();
+    //    // ✅ Check for duplicates before setting data
+    //    var isDuplicate = false;
+    //    $("#details tbody tr").each(function () {
+    //        var existingProductId = $(this).find(".td-ProductId").text().trim();
 
-            if (existingProductId && existingProductId === ProductId.toString()) {
-                isDuplicate = true;
-                // Optional: highlight the existing row
-                $(this).addClass("duplicate-highlight");
-                setTimeout(() => $(this).removeClass("duplicate-highlight"), 2000);
-                return false; // stop loop
-            }
-        });
+    //        if (existingProductId && existingProductId === ProductId.toString()) {
+    //            isDuplicate = true;
+    //            // Optional: highlight the existing row
+    //            $(this).addClass("duplicate-highlight");
+    //            setTimeout(() => $(this).removeClass("duplicate-highlight"), 2000);
+    //            return false; // stop loop
+    //        }
+    //    });
 
-        if (isDuplicate) {
-            ShowNotification(3, "This product has already been added!");
-            $("#partialModal").modal("hide");
-            return;
-        }
+    //    if (isDuplicate) {
+    //        ShowNotification(3, "This product has already been added!");
+    //        $("#partialModal").modal("hide");
+    //        return;
+    //    }
 
-        // ✅ No duplicate found → set values to current row
-        var $currentRow = originalRow.closest('tr');
-        $currentRow.find('.td-ProductCode').text(ProductCode);
-        $currentRow.find('.td-ProductName').text(ProductName);
-        $currentRow.find('.td-ProductId').text(ProductId);
-        $currentRow.find('.td-UnitPrice').text(PurchasePrice);
-        $currentRow.find('.td-UOMName').text(UOMName);
-        $currentRow.find('.td-UOMId').text(UOMId);
-        $currentRow.find('.td-Quantity').text(Quantity);
-        $currentRow.find('.td-InputQuantity').text(Quantity);
-        $currentRow.find('.td-PcsQuantity').text(Quantity);
-        $currentRow.find('.td-UnitRate').text(CostPrice);
-        $currentRow.find('.td-SD').text(SDRate);
-        $currentRow.find('.td-VATRate').text(VATRate);
-        $currentRow.find('.td-UOMConversion').text(Conversion);
-        $("#partialModal").modal("hide");
-        originalRow.closest("td").find("input").data("touched", false).focus();
-        $('#details').find(".td-Quantity").trigger('blur');
-    }
+    //    // ✅ No duplicate found → set values to current row
+    //    var $currentRow = originalRow.closest('tr');
+    //    $currentRow.find('.td-ProductCode').text(ProductCode);
+    //    $currentRow.find('.td-ProductName').text(ProductName);
+    //    $currentRow.find('.td-ProductId').text(ProductId);
+    //    $currentRow.find('.td-UnitPrice').text(PurchasePrice);
+    //    $currentRow.find('.td-UOMName').text(UOMName);
+    //    $currentRow.find('.td-UOMId').text(UOMId);
+    //    $currentRow.find('.td-Quantity').text(Quantity);
+    //    $currentRow.find('.td-InputQuantity').text(Quantity);
+    //    $currentRow.find('.td-PcsQuantity').text(Quantity);
+    //    $currentRow.find('.td-UnitRate').text(CostPrice);
+    //    $currentRow.find('.td-SD').text(SDRate);
+    //    $currentRow.find('.td-VATRate').text(VATRate);
+    //    $currentRow.find('.td-UOMConversion').text(Conversion);
+    //    $("#partialModal").modal("hide");
+    //    originalRow.closest("td").find("input").data("touched", false).focus();
+    //    $('#details').find(".td-Quantity").trigger('blur');
+    //}
 
 
     function computeSubTotal(row, param) {
-
+        debugger;
         var qty = parseFloat(row.closest("tr").find("td.td-Quantity").text().replace(/,/g, '')) || 0;
         var unitCost = parseFloat(row.closest("tr").find("td.td-UnitPrice").text().replace(/,/g, '')) || 0;
 
@@ -643,7 +951,7 @@
 
                 row.closest("tr").find("td.td-VATRate").text(VATRate.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
             }
-
+            debugger;
             var LineTotal = Number(parseFloat((qty * unitCost) + parseFloat(OthersAmount) + parseFloat(SDAmount) + parseFloat(VATAmount)).toFixed(parseInt(decimalPlace)));
             row.closest("tr").find("td.td-LineTotal").text(LineTotal.toLocaleString('en', { minimumFractionDigits: parseInt(decimalPlace) }));
 
@@ -653,6 +961,7 @@
 
 
     function TotalCalculation() {
+        debugger;
         var Quantity = 0;
         var SDAmount = 0;
         var SubTotal = 0;
@@ -1074,7 +1383,7 @@
 
 
 
-    function save($table) {
+    function save() {
         debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
@@ -1097,22 +1406,54 @@
             return;
         }
 
-        if (hasInputFieldInTableCells($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
-        if (!hasLine($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
+        //if (hasInputFieldInTableCells($table)) {
+        //    ShowNotification(3, "Complete Details Entry");
+        //    return;
+        //};
+        //if (!hasLine($table)) {
+        //    ShowNotification(3, "Complete Details Entry");
+        //    return;
+        //};
 
 
-        var details = serializeTable($table);
+        var details = [];
+
+        var grid = $("#saleOrderDetails").data("kendoGrid");
+        if (grid) {
+
+            var dataItems = grid.dataSource.view();
+
+            for (var i = 0; i < dataItems.length; i++) {
+
+                var item = dataItems[i];
+
+                details.push({
+
+                    Id: item.Id,
+
+                    ProductId: item.ProductId,
+                    ProductName: item.ProductName,
+                    UOMId: item.UOMId,
+                    UOMName: item.UOMName,
+                    Quantity: item.Quantity,
+                    UnitPrice: item.UnitPrice,
+                    SubTotal: item.SubTotal,
+                    VATAmount: item.VATAmount,
+                    SDAmount: item.SDAmount,
+                    VATRate: item.VATRate,
+                    SD: item.SD,
+                    LineTotal: item.LineTotal,
+                    OthersAmount: item.OthersAmount,
+                    Action: item.Action
+                });
+            }
+        }
+
+        //var details = serializeTable($table);
         debugger;
-        var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+        var requiredFields = ['ProductName', 'Quantity'];
         var fieldMappings = {
             'ProductName': 'Product Name',
-            'Quantity': 'Quantity',
             'UnitPrice': 'Unit Price'
         };
 
@@ -1266,48 +1607,8 @@
 
 
 }(CommonService, CommonAjaxService);
-document.addEventListener("DOMContentLoaded", function () {
-    var container = document.querySelector(".sslPrintC");
-    if (container) {
-        var id = container.getAttribute("data-id");
-        if (id) {
-            var btn = document.createElement("a");
-            btn.href = ".";
-            btn.style.backgroundColor = "skyblue";
-
-            btn.style.marginLeft = "10px";
-            btn.style.border = "none";
-            /*btn.style.borderRadius = "10px"; */
-            btn.className = "btn btn-success btn-sm mr-2 edit";
-            btn.title = "Report Preview";
-            btn.innerHTML = "<i class='fas fa-print'></i>";
-            btn.onclick = function (e) {
-                e.preventDefault();
-                ReportPreview(id);
-            };
-            container.appendChild(btn);
-        }
-    }
-});
 
 
-function ReportPreview(id) {
 
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '/DMS/PurchaseOrder/ReportPreview';
-    form.target = '_blank';
-    const inputVal = document.createElement('input');
-    inputVal.type = 'hidden';
-    inputVal.name = 'Id';
-    inputVal.value = id;
 
-    form.appendChild(inputVal);
-
-    document.body.appendChild(form);
-
-    form.submit();
-    form.remove();
-
-};
 

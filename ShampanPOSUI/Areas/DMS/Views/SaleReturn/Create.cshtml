@@ -1,4 +1,5 @@
-﻿@model ShampanPOS.Models.SaleReturnVM
+﻿@using Newtonsoft.Json
+@model ShampanPOS.Models.SaleReturnVM
 @{
     ViewBag.Title = "Sale Return Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -110,6 +111,9 @@
                 @*@Html.HiddenFor(model => model.FiscalYear)*@
                 @Html.HiddenFor(model => model.PeriodId)
 
+
+                @Html.Hidden("SaleReturnDetailsJson", JsonConvert.SerializeObject(Model.saleReturnDetailList ?? new List<ShampanPOS.Models.SaleReturnDetailVM>()))
+
                 <div class="form-group row">
 
                     <div class="col-sm-2 codeWidth">
@@ -167,85 +171,19 @@
 
         <div class="card card-secondary">
             <div class="card-header">
-                <h3 class="card-title"> Details </h3>
+                <h3 class="card-title"> Sale Order Details </h3>
             </div>
             <div class="card-body">
-
-                <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
-
-                <div class="clearfix">&nbsp;</div>
-
-                <div style="overflow-x: auto; white-space: nowrap;">
-                    <table class="table table-bordered table-striped table-sm" id="details">
-                        <thead>
-                            <tr>
-                                <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                <th data-type="text" data-search="true" data-required="true" style="width:12%;" data-name="ProductName"> Product Name </th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
-
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-name="Quantity"> Quantity </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-name="UnitRate"> Unit Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
-                                <th data-type="decimal" style="width: 8%;" data-name="SD"> SD Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-name="SDAmount"> SD Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-name="VATRate"> VAT Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-name="VATAmount"> VAT Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
-
-                                <th data-type="text" style="width: 10%;">Comments</th>
-
-                            </tr>
-                        </thead>
-                        <tbody id="lst">
-                            @if (Model != null)
-                            {
-                                foreach (var item in Model.saleReturnDetailList)
-                                {
-                                    <tr>
-                                        <td> @serial </td>
-
-                                        <td> @item.ProductName </td>
-                                        <td hidden> @item.ProductId </td>
-
-                                        @*<td hidden> @item.UOMId </td>
-                                            <td> @item.UOMName </td>
-
-                                            <td hidden> @item.UOMFromId </td>
-                                            <td> @item.UOMFromName </td>
-
-
-                                            <td class=" dFormat "> @item.UOMConversion</td>*@
-                                        <td class=" dFormat "> @item.Quantity</td>
-                                        <td class=" dFormat "> @item.UnitRate</td>
-                                        <td class=" dFormat "> @item.SubTotal</td>
-
-                                        <td class=" dFormat "> @item.SD</td>
-                                        <td class=" dFormat "> @item.SDAmount</td>
-                                        <td class=" dFormat "> @item.VATRate</td>
-                                        <td class=" dFormat "> @item.VATAmount</td>
-                                        <td class=" dFormat "> @item.LineTotal</td>
-
-                                        @*<td> @item.Comments</td>*@
-
-                                        <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
-
-                                    </tr>
-
-                                    { serial++; }
-                                }
-                            }
-
-
-                        </tbody>
-
-                    </table>
-                </div>
-
+                <div id="saleOrderDetails"></div>
             </div>
         </div>
 
 
     </form>
+
+    <div id="saleDetailsWindow" style="display:none;">
+        <div id="saleDetailsGrid"></div>
+    </div>
 
     <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
         <div class="card-header p-2">

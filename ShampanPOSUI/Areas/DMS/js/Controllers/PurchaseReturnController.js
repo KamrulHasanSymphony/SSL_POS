@@ -32,15 +32,21 @@
         };        
 
 
-        var $table = $('#details');
+        $("#saleOrderDetails").on("click", "td.product-cell", function () {
+            var grid = $("#saleOrderDetails").data("kendoGrid");
+            var dataItem = grid.dataItem($(this).closest("tr"));
+            OpenProductPopup(dataItem);
+        });
 
-        var table = initEditTable($table, { searchHandleAfterEdit: false });
+        //var $table = $('#details');
+
+        //var table = initEditTable($table, { searchHandleAfterEdit: false });
         
 
-        $('#addRows').on('click', function (e) {
+        //$('#addRows').on('click', function (e) {
 
-            addRow($table);
-        });
+        //    addRow($table);
+        //});
 
 
         $('.btnsave').click(function (e) {
@@ -48,7 +54,7 @@
             e.preventDefault();
 
             var form = $("#frmEntry");
-            var $table = $('#details');
+            //var $table = $('#details');
 
             var mvcValid = form.valid();
             var customValid = CommonValidationHelper.CheckValidation("#frmEntry");
@@ -64,18 +70,70 @@
                 return;
             }
 
-            if (!hasLine($table)) {
-                ShowNotification(3, "Complete Details Entry");
-                return;
+            //if (!hasLine($table)) {
+            //    ShowNotification(3, "Complete Details Entry");
+            //    return;
+            //}
+
+
+            var details = [];
+
+            var grid = $("#saleOrderDetails").data("kendoGrid");
+            if (grid) {
+                var dataItems = grid.dataSource.view(); // Get the items from the grid
+
+                // Iterate through grid data and validate the rows
+                for (var i = 0; i < dataItems.length; i++) {
+                    var item = dataItems[i];
+
+                    var finalProductId = 0;
+
+                    if (item.ProductId && item.ProductId > 0) {
+                        finalProductId = item.ProductId;
+                    } else if (item.ItemId && item.ItemId > 0) {
+                        finalProductId = item.ItemId;
+                    }
+
+                    // Validate ProductId
+                    if (finalProductId <= 0) {
+                        ShowNotification(3, "Item is required in sale details.");
+                        return;
+                    }
+
+                    // Validate Quantity
+                    if (!item.Quantity || item.Quantity < 0) {
+                        ShowNotification(3, "Quantity must be greater than zero.");
+                        return;
+                    }
+
+                    // Push the valid data to the details array
+                    details.push({
+                        Id: item.Id,
+                        ProductId: finalProductId,
+                        ProductName: item.ProductName || item.ItemName,
+                        UOMId: item.UOMId,
+                        UOMName: item.UOMName,
+                        Quantity: item.Quantity,
+                        UnitPrice: item.UnitPrice,
+                        SubTotal: item.SubTotal,
+                        VATAmount: item.VATAmount,
+                        SDAmount: item.SDAmount,
+                        VATRate: item.VATRate,
+                        SD: item.SD,
+                        LineTotal: item.LineTotal,
+                        OthersAmount: item.OthersAmount,
+                        Action: item.Action
+                    });
+                }
             }
 
-            var details = serializeTable($table);
 
-            var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+            //var details = serializeTable($table);
+
+            var requiredFields = ['ProductName', 'Quantity'];
             var fieldMappings = {
                 'ProductName': 'Product Name',
-                'Quantity': 'Quantity',
-                'UnitPrice': 'Unit Price'
+                'Quantity': 'Quantity'
             };
 
             var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
@@ -92,7 +150,7 @@
             Confirmation("Are you sure? Do You Want to " + status + " Data?",
                 function (result) {
                     if (result) {
-                        save($table);
+                        save();
                     }
                 });
         });
@@ -126,6 +184,326 @@
                     }
                 });
         });
+
+
+
+        // =======================
+        // LOAD DETAILS FROM JSON
+        // =======================
+        var detailsList = JSON.parse($("#SaleOrderDetailsJson").val() || "[]");
+
+        var detailsGridDataSource = new kendo.data.DataSource({
+            data: detailsList,
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        Id: { type: "number", defaultValue: 0 },
+                        ProductId: { type: "number", defaultValue: null },
+                        ProductName: { type: "string", defaultValue: "" },
+                        Quantity: { type: "number", defaultValue: 0 },
+                        UnitPrice: { type: "number", defaultValue: 0 },
+                        SubTotal: { type: "number", defaultValue: 0 },
+                        SDAmount: { type: "number", defaultValue: 0 },
+                        VATAmount: { type: "number", defaultValue: 0 },
+                        LineTotal: { type: "number", defaultValue: 0 },
+                        VATRate: { type: "number", defaultValue: 0 },
+                        SD: { type: "number", defaultValue: 0 },
+                        OthersAmount: { type: "number", defaultValue: 0 }
+                    }
+                }
+            },
+            aggregate: [
+                { field: "Quantity", aggregate: "sum" },
+                { field: "SubTotal", aggregate: "sum" },
+                { field: "SDAmount", aggregate: "sum" },
+                { field: "VATAmount", aggregate: "sum" },
+                { field: "LineTotal", aggregate: "sum" },
+                { field: "OthersAmount", aggregate: "sum" }
+            ]
+        });
+
+        // Initialize the grid
+        $("#saleOrderDetails").kendoGrid({
+            dataSource: detailsGridDataSource,
+            toolbar: [{ name: "create", text: "Add" }],
+            editable: {
+                mode: "incell",
+                createAt: "bottom"
+            },
+            columns: [
+                {
+                    title: "Sl No",
+                    width: 60,
+                    template: function (dataItem) {
+                        var grid = $("#saleOrderDetails").data("kendoGrid");
+                        return grid.dataSource.indexOf(dataItem) + 1;
+                    }
+                },
+                {
+                    field: "ProductName",
+                    title: "Product Name",
+                    editor: itemSelectorEditor,
+                    template: function (dataItem) {
+                        return dataItem.ProductName || "";
+                    },
+                    footerTemplate: "Total:",
+                    width: 160
+                },
+                {
+                    field: "Quantity",
+                    title: "Quantity",
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "#= kendo.toString(sum || 0, 'n2') #",
+                    aggregate: "sum",
+                    width: 120,
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            change: function () {
+                                var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                // Update the model value for Quantity
+                                options.model.set("Quantity", this.value());
+
+                                // Recalculate SubTotal, SDAmount, VATAmount, LineTotal for this row
+                                var subTotal = options.model.Quantity * options.model.UnitPrice;
+                                options.model.set("SubTotal", subTotal);
+
+                                var sdAmount = (subTotal * (options.model.SD || 0)) / 100;
+                                options.model.set("SDAmount", sdAmount);
+
+                                var vatAmount = ((subTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
+                                options.model.set("VATAmount", vatAmount);
+
+                                var lineTotal = subTotal + sdAmount + vatAmount;
+
+                                var withother = lineTotal + options.model.OthersAmount;
+
+                                options.model.set("LineTotal", withother);
+
+                                //options.model.set("LineTotal", lineTotal);
+
+                                // Refresh the grid to update footer aggregates
+                                grid.refresh();
+                            }
+                        });
+                    }
+                },
+                {
+                    field: "UnitPrice",
+                    title: "Unit Rate",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            readonly: true // Make UnitRate non-editable if you don't want users to change it
+                        });
+                    }
+                },
+                {
+                    field: "SubTotal",
+                    title: "Sub Total",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    field: "SD",
+                    title: "SD Rate",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            change: function () {
+                                var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                // Recalculate SDAmount and LineTotal when SD Rate changes
+                                var sdAmount = (options.model.SubTotal * (this.value() || 0)) / 100;
+                                options.model.set("SDAmount", sdAmount);
+
+                                // Recalculate VAT Amount
+                                var vatAmount = ((options.model.SubTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
+                                options.model.set("VATAmount", vatAmount);
+
+                                // Recalculate LineTotal
+                                var lineTotal = options.model.SubTotal + sdAmount + vatAmount;
+
+                                var withother = lineTotal + options.model.OthersAmount;
+
+                                options.model.set("LineTotal", withother);
+
+                                //options.model.set("LineTotal", lineTotal);
+
+                                // Refresh the grid to update footer aggregates
+                                grid.refresh();
+                            }
+                        });
+                    }
+                },
+                {
+                    field: "SDAmount",
+                    title: "SD Amount",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    field: "VATRate",
+                    title: "VAT Rate",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            change: function () {
+                                var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                // Recalculate VATAmount and LineTotal when VATRate changes
+                                var sdAmount = (options.model.SubTotal * (options.model.SD || 0)) / 100;
+                                var vatAmount = ((options.model.SubTotal + sdAmount) * (this.value() || 0)) / 100;
+                                options.model.set("VATAmount", vatAmount);
+
+                                // Recalculate LineTotal
+                                var lineTotal = options.model.SubTotal + sdAmount + vatAmount;
+
+                                var withother = lineTotal + options.model.OthersAmount;
+
+                                options.model.set("LineTotal", withother);
+
+                                //options.model.set("LineTotal", lineTotal);
+
+                                // Refresh the grid to update footer aggregates
+                                grid.refresh();
+                            }
+                        });
+                    }
+                },
+                {
+                    field: "VATAmount",
+                    title: "VAT Amount",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    field: "OthersAmount",
+                    title: "Others Amount",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input name="' + options.field + '"/>');
+                        input.appendTo(container).kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2,
+                            change: function () {
+                                var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                // Update the model value for Quantity
+                                options.model.set("OthersAmount", this.value());
+
+                                // Recalculate SubTotal, SDAmount, VATAmount, LineTotal for this row
+                                var subTotal = options.model.Quantity * options.model.UnitPrice;
+                                options.model.set("SubTotal", subTotal);
+
+                                var sdAmount = (subTotal * (options.model.SD || 0)) / 100;
+                                options.model.set("SDAmount", sdAmount);
+
+                                var vatAmount = ((subTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
+                                options.model.set("VATAmount", vatAmount);
+
+                                var lineTotal = subTotal + sdAmount + vatAmount;
+
+                                var withother = lineTotal + options.model.OthersAmount;
+
+                                options.model.set("LineTotal", withother);
+
+                                // Refresh the grid to update footer aggregates
+                                grid.refresh();
+                            }
+                        });
+                    },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    field: "LineTotal",
+                    title: "Line Total",
+                    width: 100,
+                    editable: false,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
+                },
+                {
+                    command: [{
+                        name: "destroy",
+                        iconClass: "k-icon k-i-trash",
+                        text: ""
+                    }],
+                    title: "Action",
+                    width: 35
+                }
+
+            ],
+            change: function () {
+                var grid = this;
+                // Recalculate and update the footer aggregation after any change in the grid data
+                updateSaleSummary();
+            }
+        });
+
+
+        function updateSaleSummary() {
+            // SaleDetails
+
+
+            var saleGrid = $("#saleDetails").data("kendoGrid");
+            var saleData = saleGrid ? saleGrid.dataSource.data() : [];
+
+            // CardDetails
+            var cardGrid = $("#cardDetails").data("kendoGrid");
+            var cardData = cardGrid ? cardGrid.dataSource.data() : [];
+
+            // Calculate SubTotals
+            var subTotal = 0;
+            var sdTotal = 0;
+            var vatTotal = 0;
+            var lineTotal = 0;
+
+            saleData.forEach(function (item) {
+                subTotal += item.SubTotal || 0;
+                sdTotal += item.SDAmount || 0;
+                vatTotal += item.VATAmount || 0;
+                lineTotal += item.LineTotal || 0;
+            });
+
+            $("#subTotalSubtotal").val(subTotal.toFixed(2));
+            $("#subTotalSD").val(sdTotal.toFixed(2));
+            $("#SDAmount").val(sdTotal.toFixed(2));
+            $("#subTotalVAT").val(vatTotal.toFixed(2));
+            $("#VATAmount").val(vatTotal.toFixed(2));
+            $("#SubTotal").val(lineTotal.toFixed(2));
+
+            var decimalPart = lineTotal - Math.floor(lineTotal);
+            $("#RoundUp").val(decimalPart.toFixed(2));
+            $("#FinalPayable").val(Math.floor(lineTotal));
+
+
+        }
 
 
         $('#details').on('blur', ".td-Quantity", function (event) {
@@ -304,6 +682,30 @@
         });
     };
 
+
+    function itemSelectorEditor(container, options) {
+        var wrapper = $('<div class="input-group input-group-sm full-width">').appendTo(container);
+
+        // Create input (you can bind value if needed)
+        $('<input type="text" class="form-control" readonly />')
+            .attr("data-bind", "value:ProductName")
+            .appendTo(wrapper);
+
+        // Create button inside an addon span
+        $('<div class="input-group-append">')
+            .append(
+                $('<button class="btn btn-outline-secondary" type="button">')
+                    .append('<i class="fa fa-search"></i>')
+                    .on("click", function () {
+
+                        OpenProductPopup(options.model); //eta banate hobe
+                    })
+            )
+            .appendTo(wrapper);
+
+        kendo.bind(container, options.model);
+    }
+
     function GetBranchList() {
         var branch = new kendo.data.DataSource({
             transport: {
@@ -347,6 +749,98 @@
             }
         });
     };
+
+
+    function OpenProductPopup(detailRow) {
+        debugger;
+        var wnd = $("#saleDetailsWindow").kendoWindow({
+            width: "650px",
+            height: "450px",
+            title: "Select Product",
+            modal: true,
+            visible: false
+        }).data("kendoWindow");
+
+        wnd.center().open();
+
+        $("#saleDetailsGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductModalPurchase" // API for Product list
+                    }
+                }
+            },
+            height: 380,
+            sortable: true,
+            filterable: true,
+            pageable: true,
+            selectable: "row",
+
+            columns: [
+                { field: "ProductId", title: "Product ID", hidden: true },
+                { field: "ProductName", title: "Product Name", width: 100 },
+                { field: "UOMId", hidden: true },
+                { field: "UOMName", title: "UOM", width: 100 },
+                //{ field: "HSCodeNo", title: "HS Code No", width: 80 },
+                { field: "ProductGroupId", title: "Product Group Id", width: 100 },
+                { field: "ProductGroupName", title: "Product Group Name", width: 100 },
+                { field: "PurchasePrice", title: "Purchase Price", width: 100 },
+                { field: "SalesPrice", title: "Sale Price", width: 100 },
+                { field: "VATRate", title: "VAT Rate", width: 100 },
+                { field: "SDRate", title: "SD Rate", width: 100 },
+            ]
+        });
+
+        // DOUBLE CLICK SELECT
+        $("#saleDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
+
+            var grid = $("#saleDetailsGrid").data("kendoGrid");
+            var selectedItem = grid.dataItem($(this));
+            ApplyProductSelection(detailRow, selectedItem);
+            wnd.close();
+        });
+    }
+
+
+    function ApplyProductSelection(detailRow, item) {
+        debugger;
+        console.log(item);
+
+        // Set Product details
+        detailRow.set("ProductId", item.ProductId);
+        detailRow.set("ProductName", item.ProductName);
+        detailRow.set("UOMId", item.UOMId);
+        detailRow.set("UOMName", item.UOMName);
+
+        // Set Cost Price → UnitRate (Sales Price)
+        detailRow.set("UnitPrice", item.PurchasePrice);
+
+        // Set Rates
+        detailRow.set("VATRate", item.VATRate);
+        detailRow.set("SD", item.SDRate);
+
+        // Default quantity if empty
+        if (!detailRow.Quantity || detailRow.Quantity <= 0) {
+            detailRow.set("Quantity", 1);
+        }
+
+        // Auto-calculate SubTotal
+        var subTotal = detailRow.Quantity * detailRow.UnitPrice;  // UnitRate = SalesPrice
+        detailRow.set("SubTotal", subTotal);
+
+        // SD Amount: (SubTotal * SDRate) / 100
+        var sdAmount = (subTotal * (detailRow.SD || 0)) / 100;
+        detailRow.set("SDAmount", sdAmount);
+
+        // VAT Amount: ((SubTotal + SDAmount) * VATRate) / 100
+        var vatAmount = ((subTotal + sdAmount) * (detailRow.VATRate || 0)) / 100;
+        detailRow.set("VATAmount", vatAmount);
+        debugger;
+        // Line Total = SubTotal + SDAmount + VATAmount
+        var lineTotal = subTotal + sdAmount + vatAmount;
+        detailRow.set("LineTotal", lineTotal);
+    }
 
     function GetSupplierComboBox() {
         var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
@@ -911,7 +1405,7 @@
 
     };
 
-    function save($table) {
+    function save() {
         
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
@@ -933,24 +1427,56 @@
             return;
         }
 
-        if (hasInputFieldInTableCells($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
-        if (!hasLine($table)) {
-            ShowNotification(3, "Complete Details Entry");
-            return;
-        };
+        //if (hasInputFieldInTableCells($table)) {
+        //    ShowNotification(3, "Complete Details Entry");
+        //    return;
+        //};
+        //if (!hasLine($table)) {
+        //    ShowNotification(3, "Complete Details Entry");
+        //    return;
+        //};
 
 
-        var details = serializeTable($table);
+        var details = [];
 
-        var requiredFields = ['ProductName', 'Quantity', 'UnitPrice'];
+        var grid = $("#saleOrderDetails").data("kendoGrid");
+        if (grid) {
+
+            var dataItems = grid.dataSource.view();
+
+            for (var i = 0; i < dataItems.length; i++) {
+
+                var item = dataItems[i];
+
+                details.push({
+
+                    Id: item.Id,
+
+                    ProductId: item.ProductId,
+                    ProductName: item.ProductName,
+                    UOMId: item.UOMId,
+                    UOMName: item.UOMName,
+                    Quantity: item.Quantity,
+                    UnitPrice: item.UnitPrice,
+                    SubTotal: item.SubTotal,
+                    VATAmount: item.VATAmount,
+                    SDAmount: item.SDAmount,
+                    VATRate: item.VATRate,
+                    SD: item.SD,
+                    LineTotal: item.LineTotal,
+                    OthersAmount: item.OthersAmount,
+                    Action: item.Action
+                });
+            }
+        }
+
+        //var details = serializeTable($table);
+
+        var requiredFields = ['ProductName', 'Quantity'];
         var fieldMappings = {
             'ProductName': 'Product Name',
             //'UOMName': 'UOM Name',
-            'Quantity': 'Quantity',
-            'UnitPrice': 'Unit Price'
+            'Quantity': 'Quantity'
         };
 
         var errorMessage = getRequiredFieldsCheckObj(details, requiredFields, fieldMappings);
