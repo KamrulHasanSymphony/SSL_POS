@@ -1435,6 +1435,32 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
 
+
+        [HttpGet]
+        public ActionResult GetProductModalPurchase(string value)
+        {
+            try
+            {
+                List<ProductDataVM> lst = new List<ProductDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetProductModalPurchase(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<ProductDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
         [HttpGet]
         public ActionResult SaleModal(string value)
         {
