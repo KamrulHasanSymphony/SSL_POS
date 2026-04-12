@@ -5,6 +5,7 @@
 }
 
 
+
 <style>
     body {
         font-family: Arial;
@@ -31,7 +32,6 @@
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 20px;
         font-size: 13px;
     }
 
@@ -49,6 +49,7 @@
         text-align: right;
     }
 
+    /* 🔥 PRINT LIKE SALES REPORT */
     @@media print {
 
         body * {
@@ -63,8 +64,8 @@
             position: absolute;
             top: 0;
             left: 50%;
-            transform: translateX(-50%); /* 🔥 center fix */
-            width: 900px; /* same as screen width */
+            transform: translateX(-50%);
+            width: 900px;
             margin: 0;
             padding: 20px;
             background: #fff;
@@ -74,6 +75,10 @@
         .sslPrint {
             display: none !important;
         }
+    }
+
+    .purchasetotalrow td {
+        border: 0 !important
     }
 </style>
 
@@ -92,7 +97,7 @@
                      style="width:230px;height:120px;" />
             </td>
             <td style="text-align:right;border:none;">
-                <h3 style="margin:0;">@Model.CompanyName Symphony Softtech Limited</h3>
+                <h3 style="margin:0;">@Model.CompanyName </h3>
                 <div style="font-size:16px;">@Model.BranchName</div>
                 <div>@Model.BranchAddress 69/1 Trhidara Tower</div>
                 <div>📞 01612264439</div>
@@ -122,9 +127,9 @@
             <td style="width: 25%!important">@Model.DeliveryAddress</td>
         </tr>
         @*<tr>
-            <th>Delivery Address</th>
-            <td colspan="3">@Model.DeliveryAddress</td>
-        </tr>*@
+                <th>Delivery Address</th>
+                <td colspan="3">@Model.DeliveryAddress</td>
+            </tr>*@
     </table>
 
     <!-- DETAILS -->
@@ -149,22 +154,45 @@
                     <td>@item.Line</td>
                     <td>@item.ProductName</td>
                     <td>@item.ProductCode</td>
-                    <td class="text-left">@item.Quantity</td>
-                    <td class="text-left">@item.UnitRate</td>
-                    <td class="text-left">@item.SDAmount</td>
-                    <td class="text-left">@item.VATAmount</td>
-                    <td class="text-left">@item.LineTotal</td>
+                    <td class="text-right">@item.Quantity</td>
+                    <td class="text-right">@item.UnitRate</td>
+                    <td class="text-right">@item.SDAmount</td>
+                    <td class="text-right">@item.VATAmount</td>
+                    <td class="text-right">@item.LineTotal</td>
                 </tr>
             }
+
+            <!-- 🔥 TOTAL ROW -->
+            <tr class="purchasetotalrow" style="font-weight:bold;">
+                <td colspan="3" style="text-align:center;">Total :</td>
+
+                <td class="text-right">
+                    @(Model.saleReturnDetailList?.Sum(x => x.Quantity) ?? 0)
+                </td>
+
+                <td></td>
+
+                <td class="text-right">
+                    @(Model.saleReturnDetailList?.Sum(x => x.SDAmount) ?? 0)
+                </td>
+
+                <td class="text-right">
+                    @(Model.saleReturnDetailList?.Sum(x => x.VATAmount) ?? 0)
+                </td>
+
+                <td class="text-right">
+                    @(Model.saleReturnDetailList?.Sum(x => x.LineTotal) ?? 0)
+                </td>
+            </tr>
+
         </tbody>
     </table>
 
-    <!-- COMMENTS (Label Style) -->
+    <!-- COMMENTS-->
     <div style="margin-top:20px;">
-        @*<strong>Comments:</strong>*@
         <h5 class="section-title">Comments</h5>
         <div style="margin-top:5px;">
-            .......
+            @Model.Comments
         </div>
     </div>
 </div>

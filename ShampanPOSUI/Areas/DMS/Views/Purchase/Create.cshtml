@@ -1,4 +1,6 @@
-﻿@model ShampanPOS.Models.PurchaseVM
+﻿
+@using Newtonsoft.Json
+@model ShampanPOS.Models.PurchaseVM
 @{
     ViewBag.Title = "Purchase Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -87,8 +89,8 @@
             </button>
 
             @*<button type="button" class="button secondary" id="btnFromPurchaseOrder">
-                <span style="font-weight:bold; margin-right:5px;">+</span> Payment
-            </button>*@
+                    <span style="font-weight:bold; margin-right:5px;">+</span> Payment
+                </button>*@
 
         }
         else
@@ -133,6 +135,9 @@
                 @Html.HiddenFor(model => model.TransactionType)
                 @Html.HiddenFor(model => model.PurchaseOrderId)
                 @Html.HiddenFor(model => model.FromDate)
+
+                @Html.Hidden("SaleOrderDetailsJson", JsonConvert.SerializeObject(Model.purchaseDetailList ?? new List<ShampanPOS.Models.PurchaseDetailVM>()))
+
 
                 <div class="form-group row">
 
@@ -219,99 +224,35 @@
             </div>
         </div>
 
+
         <div class="card card-secondary">
             <div class="card-header">
-                <h3 class="card-title"> Details </h3>
+                <h3 class="card-title"> Sale Order Details </h3>
             </div>
             <div class="card-body">
-
-                <button type="button" title="Add Details" id="addRows" class="btn btn-lg btn-success mb-2"><i class="fa fa-plus"></i></button>
-
-                <div style="overflow-x: auto; white-space: nowrap;">
-                    <table class="table table-bordered table-striped table-sm" id="details">
-                        <thead>
-                            <tr>
-                                <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                <th hidden data-type="text" data-search="false" data-required="false" data-computed="true" style="width:20%;" data-name="ProductCode"> Product Code </th>
-                                <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="ProductName"> Product Name </th>
-                                <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
-                                <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="Quantity"> Total Qty </th>
-                                <th data-type="decimal" style="width: 10%" data-required="true" data-computed="false" data-name="UnitPrice"> Unit Price </th>
-                                <th data-type="decimal" style="width: 13%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="SD"> SD Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="VATRate"> VAT Rate </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="OthersAmount"> Others Amount </th>
-                                <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="LineTotal"> Line Total </th>
-
-                   
-
-                                <th hidden data-type="text" style="width: 5%;" data-name="PurchaseOrderId">PurchaseOrderId</th>
-                                <th hidden data-type="text" style="width: 5%;" data-name="PurchaseOrderDetailId">PurchaseOrderDetailId</th>
-
-                            </tr>
-                        </thead>
-                        <tbody id="lst">
-                            @if (Model != null)
-                            {
-                                foreach (var item in Model.purchaseDetailList)
-                                {
-                                    <tr>
-                                        <td> @serial </td>
-                                        <td hidden> @item.ProductCode </td>
-                                        <td> @item.ProductName </td>
-                                        <td hidden> @item.ProductId </td>
-                                        <td class="dFormat"> @item.Quantity </td>
-                                        <td class="dFormat"> @item.UnitPrice </td>
-                                        <td class="dFormat"> @item.SubTotal </td>
-                                        <td class="dFormat"> @item.SD </td>
-                                        <td class="dFormat"> @item.SDAmount </td>
-                                        <td class="dFormat"> @item.VATRate </td>
-                                        <td class="dFormat"> @item.VATAmount </td>
-                                        <td class="dFormat"> @item.OthersAmount </td>
-                                        <td class="dFormat"> @item.LineTotal </td>
-
-
-                                        @if (item.PurchaseOrderId > 0)
-                                        {
-                                            
-                                        }
-                                        <td hidden> @item.PurchaseOrderId </td>
-                                        <td hidden> @item.PurchaseOrderDetailId </td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm remove-row-btn">
-                                                <i class='fa fa-trash'></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                    { serial++; }
-                                }
-                            }
-
-                        </tbody>
-
-                    </table>
-                </div>
-
+                <div id="saleOrderDetails"></div>
             </div>
         </div>
+
 
         <div class="card">
             <div class="card-header p-2">
 
                 <div class="card-body">
                     <div class="row grndBlock">
-                        
+
                         <div class="col-md-2">
                             <div class="editor-label">
                                 <label>&nbsp;Sub-Total </label>
                             </div>
                             <div class="editor-field">
                                 <div class="input-group">
-                                    @Html.TextBoxFor(model => model.SubTotal, new { placeholder = "Sub-Total",
-                                   @readonly = "readonly", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                    @Html.TextBoxFor(model => model.SubTotal, new
+                                    {
+                                        placeholder = "Sub-Total",
+                                   @readonly = "readonly",
+                                        @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right"
+                                    })
                                 </div>
                             </div>
                         </div>
@@ -321,8 +262,12 @@
                             </div>
                             <div class="editor-field">
                                 <div class="input-group">
-                                    @Html.TextBoxFor(model => model.TotalSD, new { placeholder = "Total SD",
-                                   @readonly = "readonly", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                    @Html.TextBoxFor(model => model.TotalSD, new
+                                    {
+                                        placeholder = "Total SD",
+                                   @readonly = "readonly",
+                                        @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right"
+                                    })
                                 </div>
                             </div>
                         </div>
@@ -332,8 +277,12 @@
                             </div>
                             <div class="editor-field">
                                 <div class="input-group">
-                                    @Html.TextBoxFor(model => model.TotalVAT, new { placeholder = "Total VAT",
-                                   @readonly = "readonly", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                                    @Html.TextBoxFor(model => model.TotalVAT, new
+                                    {
+                                        placeholder = "Total VAT",
+                                   @readonly = "readonly",
+                                        @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right"
+                                    })
                                 </div>
                             </div>
                         </div>
@@ -354,7 +303,7 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="col-md-2">
+                        <div class="col-md-2">
                             <div class="editor-label">
                                 <label>&nbsp;Paid Amount </label>
                             </div>
@@ -387,6 +336,11 @@
 
     </form>
 
+
+    <div id="saleDetailsWindow" style="display:none;">
+        <div id="saleDetailsGrid"></div>
+    </div>
+
     <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
         <div class="card-header p-2">
 
@@ -396,23 +350,23 @@
             }
             else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
             {
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <button type="button" class="button btnsave sslUpdate">Update</button>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
 
-            <button type="button" class="button btnPost sslPost">Post</button>
-            @*<button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>*@
+                    <button type="button" class="button btnPost sslPost">Post</button>
+                    @*<button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>*@
 
-            <button type="button" onclick="document.getElementById('reportLink').click();">
-                <i class="k-icon k-i-print"></i> Print
-            </button>
+                    <button type="button" onclick="document.getElementById('reportLink').click();">
+                        <i class="k-icon k-i-print"></i> Print
+                    </button>
 
-            <a id="reportLink"
-               href="/DMS/Purchase/getReport/@Model.Id"
-               style="display:none;">
-            </a>
+                    <a id="reportLink"
+                       href="/DMS/Purchase/getReport/@Model.Id"
+                       style="display:none;">
+                    </a>
 
-            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-        </div>
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                </div>
             }
             else
             {
