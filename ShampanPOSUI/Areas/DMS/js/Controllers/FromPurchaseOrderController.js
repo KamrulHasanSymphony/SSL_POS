@@ -10,44 +10,6 @@
         });
     };
 
-    //function SelectData() {
-    //    var IDs = [];
-
-    //    var selectedRows = $("#GridDataList").data("kendoGrid").select();
-
-    //    if (selectedRows.length === 0) {
-    //        ShowNotification(3, "You are requested to Select checkbox!");
-    //        return;
-    //    }
-
-    //    selectedRows.each(function () {
-    //        var dataItem = $("#GridDataList").data("kendoGrid").dataItem(this);
-    //        IDs.push(dataItem.Id);
-    //    });
-
-    //    var model = {
-    //        IDs: IDs
-    //    };
-
-    //    var form = $('<form>').attr('method', 'post').attr('action', '/DMS/Purchase/GetFromPurchaseOrder');
-
-    //    $.each(model, function (key, value) {
-    //        if ($.isArray(value)) {
-    //            $.each(value, function (index, element) {
-    //                var input = $('<input>').attr('type', 'hidden').attr('name', key).val(element);
-    //                form.append(input);
-    //            });
-    //        } else {
-    //            var input = $('<input>').attr('type', 'hidden').attr('name', key).val(value);
-    //            form.append(input);
-    //        }
-    //    });
-
-    //    $('body').append(form);
-    //    form.submit();
-    //};
-
-
 
     function SelectData() {
         debugger;
