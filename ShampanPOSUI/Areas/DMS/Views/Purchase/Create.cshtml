@@ -348,7 +348,18 @@
 
             @if (Model.IsPost)
             {
-                <button type="button" class="button sslPush">Already Posted</button>
+                <div style="display:flex; align-items:center;">
+                    <button type="button" class="button sslPush">Already Posted</button>
+
+                    <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
+                        <i class="k-icon k-i-print"></i> Print
+                    </button>
+
+                   <a id="reportLink"
+                      href="/DMS/Purchase/getReport/@Model.Id"
+                      style="display:none;">
+                   </a>
+                </div>
             }
             else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
             {
