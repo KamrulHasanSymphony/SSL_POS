@@ -56,11 +56,26 @@
 
         @if (Model.IsPost)
         {
-            <button type="button" class="button sslPush">Already Posted</button>
+            <div style="display:flex; align-items:center;">
+                <button type="button" class="button sslPush">Already Posted</button>
+                <button style="margin-left:5px;"
+                        type="button"
+                        title="Add New"
+                        data-url="/DMS/Sale/Create"
+                        onclick="GoTo(this)"
+                        class="button NewButton addNewButton">
+                    New
+                </button>
 
-            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>
+                <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
+                    <i class="k-icon k-i-print"></i> Print
+                </button>
+
+                <a id="reportLink"
+                   href="/DMS/SaleReturn/getReport/@Model.Id"
+                   style="display:none;">
+                </a>
+            </div>
         }
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
@@ -192,6 +207,14 @@
             {
                 <div style="display:flex; align-items:center;">
                     <button type="button" class="button sslPush">Already Posted</button>
+                    <button style="margin-left:5px;"
+                            type="button"
+                            title="Add New"
+                            data-url="/DMS/Sale/Create"
+                            onclick="GoTo(this)"
+                            class="button NewButton addNewButton">
+                        New
+                    </button>
 
                     <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
                         <i class="k-icon k-i-print"></i> Print
@@ -205,13 +228,17 @@
             }
             else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
             {
-                <button type="button" class="button btnsave sslUpdate">Update</button>
+                <div style="display:flex; align-items:center; gap:5px;">
 
-                <button type="button" class="button btnPost sslPost">Post</button>
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
 
-                <button type="button" onclick="document.getElementById('reportLink').click();">
-                    <i class="k-icon k-i-print"></i> Print
-                </button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+
+                    <button type="button" onclick="document.getElementById('reportLink').click();">
+                        <i class="k-icon k-i-print"></i> Print
+                    </button>
+
+                </div>
 
                 <a id="reportLink"
                    href="/DMS/SaleReturn/getReport/@Model.Id"
