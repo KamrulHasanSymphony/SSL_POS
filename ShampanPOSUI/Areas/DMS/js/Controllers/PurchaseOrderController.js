@@ -1577,8 +1577,9 @@
         }
         if (result.Status == 200) {
             ShowNotification(1, result.Message);
-            $(".btnsave").show();
-            $(".btnPost").show();
+            $(".btnsave").hide();
+            $(".btnPost").hide();
+            $(".sslPush").show();
         }
         else if (result.Status == 400) {
             ShowNotification(3, result.Message);

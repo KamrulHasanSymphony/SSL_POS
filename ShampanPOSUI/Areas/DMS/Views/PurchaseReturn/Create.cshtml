@@ -193,9 +193,16 @@
             {
                 <div style="display:flex; align-items:center;">
                     <button type="button" class="button sslPush">Already Posted</button>
+                    <button style="margin-left:5px;"
+                            type="button"
+                            title="Add New"
+                            data-url="/DMS/PurchaseReturn/Create"
+                            onclick="GoTo(this)"
+                            class="button NewButton addNewButton">
+                        New
+                    </button>
 
-
-                    <button type="button"  style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
+                    <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
                         <i class="k-icon k-i-print"></i> Print
                     </button>
 
@@ -203,6 +210,7 @@
                        href="/DMS/PurchaseReturn/getReport/@Model.Id"
                        style="display:none;">
                     </a>
+
                 </div>
             }
             else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
