@@ -78,7 +78,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Archived")]
         public bool IsArchive { get; set; }
 
-        [Display(Name = "Active Status")]
+        [Display(Name = "Status")]
         public bool IsActive { get; set; }
 
         [StringLength(120, ErrorMessage = "Created By cannot exceed 120 characters.")]

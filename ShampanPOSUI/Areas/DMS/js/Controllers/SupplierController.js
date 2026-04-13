@@ -29,6 +29,8 @@
             }
       
             var btn = $(this);
+            saveButton = btn; // ✅ store button
+
             btn.prop("disabled", true);
 
             var getId = $('#Id').val();
@@ -776,6 +778,9 @@
 
     function saveDone(result) {
 
+        if (saveButton) {
+            saveButton.prop("disabled", false); // ✅ re-enable
+        }
         if (result.Status == 200) {
             if (result.Data.Operation == "add") {
                 ShowNotification(1, result.Message);

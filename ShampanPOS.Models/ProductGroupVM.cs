@@ -27,7 +27,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Archived")]
         public bool IsArchive { get; set; }
 
-        [Display(Name = "Active Status")]
+        [Display(Name = "Status")]
         public bool IsActive { get; set; }
 
         [Display(Name = "Created By")]
