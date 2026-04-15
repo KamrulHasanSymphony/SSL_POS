@@ -639,7 +639,7 @@
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
-                { field: "Code", title: "Code", width: 150, hidden: true, sortable: true },
+                { field: "Code", title: "Code", width: 150,sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
                 { field: "BanglaName", title: "Bangla Name", width: 150, hidden: true, sortable: true },
                 { field: "SupplierGroupName", title: "Supplier Group Name", width: 150, sortable: true },
