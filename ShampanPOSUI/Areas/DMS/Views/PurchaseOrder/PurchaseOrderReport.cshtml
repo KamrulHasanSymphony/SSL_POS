@@ -80,6 +80,19 @@
     .purchasetotalrow td {
         border: 0 !important
     }
+    .purchasetotalrow td span{
+        border-bottom: 1px solid #000!important;
+        position: relative
+    }
+        .purchasetotalrow td span::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 100%;
+            height: 1px;
+            background: #000;
+        }
 </style>
 
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
@@ -144,7 +157,7 @@
                 <th style="width:10%!important;" class="text-center">SD Amt</th>
                 <th style="width:10%!important;" class="text-center">VAT Amt</th>
                 <th style="width:10%!important;" class="text-center">Others</th>
-                <th style="width:12%!important;" class="text-center">Line Total</th>
+                <th style="width:12%!important;" class="text-center">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -168,13 +181,13 @@
         <tr class="purchasetotalrow" style="font-weight:bold;">
             <td colspan="2" style="text-align: center;">Total :</td> <!-- Product column shows "Total" -->
             <td></td> <!-- Code empty -->
-            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.Quantity)</td>
+            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.Quantity)</span></td>
             <td></td> <!-- Unit Price empty -->
-            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.SubTotal)</td>
-            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.SDAmount)</td>
-            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.VATAmount)</td>
-            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.OthersAmount)</td>
-            <td class="text-right">@Model.purchaseOrderDetailsList.Sum(x => x.LineTotal)</td>
+            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.SubTotal)</span></td>
+            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.SDAmount)</span></td>
+            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.VATAmount)</span></td>
+            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.OthersAmount)</span></td>
+            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.LineTotal)</span></td>
         </tr>
         </tbody>
     </table>

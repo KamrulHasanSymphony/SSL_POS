@@ -79,6 +79,21 @@
     .purchasetotalrow td{
         border: 0!important
     }
+        .purchasetotalrow td span, .double-line {
+            border-bottom: 1px solid #000 !important;
+            position: relative
+        }
+
+            .purchasetotalrow td span::after, .double-line::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -3px;
+                width: 100%;
+                height: 1px;
+                background: #000;
+            }
+
 </style>
 
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
@@ -96,7 +111,7 @@
                      style="width:230px;height:120px;" />
             </td>
             <td style="text-align:right;border:none;">
-                <div style="font-size:16px;">@Model.CompanyName</div>
+                <h3 style="margin:0;">@Model.CompanyName</h3>
                 <div style="font-size:16px;">@Model.BranchName</div>
                 <div>@Model.BranchAddress 69/1 Trhidara Tower</div>
                 <div>📞 01612264439</div>
@@ -107,7 +122,7 @@
     </table>
 
     <h2 style="text-align:center;border-bottom:1px solid #000;">
-        PURCHASE REPORT
+        PURCHASE
     </h2>
 
     <!-- PURCHASE MASTER INFO -->
@@ -145,7 +160,7 @@
                 <th style="width:10%!important;" class="text-center">Sub Total</th>
                 <th class="text-center" style="width:12%!important;">SD Amt</th>
                 <th class="text-center" style="width:12%!important;">VAT Amt</th>
-                <th class="text-center" style="width:12%!important;">Line Total</th>
+                <th class="text-center" style="width:12%!important;">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -165,16 +180,16 @@
             }
 
             <!-- FOOTER ROW -->
-            <tr class="purchasetotalrow" style="font-weight:bold;">
-                <td colspan="2" style="text-align: center;">Total</td>
-                <td></td>
-                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.Quantity)</td>
-                <td></td> 
-                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.SubTotal)</td>
-                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.SDAmount)</td>
-                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.VATAmount)</td>
-                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.LineTotal)</td>
-            </tr>
+        <tr class="purchasetotalrow" style="font-weight:bold;">
+            <td colspan="2" style="text-align: center;">Total :</td>
+            <td></td>
+            <td class="text-right"><span>@Model.purchaseDetailList.Sum(x => x.Quantity)</span></td>
+            <td></td>
+            <td class="text-right"><span>@Model.purchaseDetailList.Sum(x => x.SubTotal)</span></td>
+            <td class="text-right"><span>@Model.purchaseDetailList.Sum(x => x.SDAmount)</span></td>
+            <td class="text-right"><span>@Model.purchaseDetailList.Sum(x => x.VATAmount)</span></td>
+            <td class="text-right">@Model.purchaseDetailList.Sum(x => x.LineTotal)</td>
+        </tr>
         </tbody>
     </table>
 
@@ -190,10 +205,9 @@
         <!-- LINE -->
         <div style="border-top:1px solid #000; margin:8px 0;"></div>
 
-        @*DUE AMOUNT*@
         <div style="display:flex; justify-content:space-between; font-weight:bold;">
             <span>Due Amount</span>
-            <span>@Model.DueAmount</span>
+            <span class="double-line">@Model.DueAmount</span>
         </div>
 
     </div>
