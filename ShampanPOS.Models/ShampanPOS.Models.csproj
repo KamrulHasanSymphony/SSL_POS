@@ -111,6 +111,7 @@
     <Compile Include="PaymentVM.cs" />
     <Compile Include="ProductDataVM.cs" />
     <Compile Include="ProductGroupSalesVM.cs" />
+    <Compile Include="ProductNewVM.cs" />
     <Compile Include="ProductSaleModelVM.cs" />
     <Compile Include="PurchaseByMonthModelVM.cs" />
     <Compile Include="PurchaseDataVM.cs" />

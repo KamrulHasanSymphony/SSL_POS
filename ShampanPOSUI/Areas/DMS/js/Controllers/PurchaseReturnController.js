@@ -128,6 +128,12 @@
             }
 
 
+
+            if (details.length === 0) {
+                ShowNotification(3, "Complete Details first!");
+                return;
+            }
+
             //var details = serializeTable($table);
 
             var requiredFields = ['ProductName', 'Quantity'];
@@ -318,34 +324,45 @@
                 {
                     field: "SD",
                     title: "SD Rate",
-                    width: 100,
+                    width: 60,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input name="' + options.field + '"/>');
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            max: 100,
                             change: function () {
+
+                                var value = this.value() || 0;
+
+                                // ✅ limit control
+                                if (value > 100) {
+                                    value = 100;
+                                    this.value(100);
+                                }
+
+                                // ✅ model update
+                                options.model.set("SD", value);
+
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
 
-                                // Recalculate SDAmount and LineTotal when SD Rate changes
-                                var sdAmount = (options.model.SubTotal * (this.value() || 0)) / 100;
+                                var subTotal = options.model.SubTotal || 0;
+                                var other = options.model.OthersAmount || 0;
+
+                                var sdAmount = (subTotal * value) / 100;
                                 options.model.set("SDAmount", sdAmount);
 
-                                // Recalculate VAT Amount
-                                var vatAmount = ((options.model.SubTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
+                                var vatAmount = ((subTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
                                 options.model.set("VATAmount", vatAmount);
 
-                                // Recalculate LineTotal
-                                var lineTotal = options.model.SubTotal + sdAmount + vatAmount;
+                                var lineTotal = subTotal + sdAmount + vatAmount;
 
-                                var withother = lineTotal + options.model.OthersAmount;
+                                var withother = lineTotal + other;
 
                                 options.model.set("LineTotal", withother);
 
-                                //options.model.set("LineTotal", lineTotal);
-
-                                // Refresh the grid to update footer aggregates
                                 grid.refresh();
                             }
                         });
@@ -362,31 +379,44 @@
                 {
                     field: "VATRate",
                     title: "VAT Rate",
-                    width: 100,
+                    width: 60,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input name="' + options.field + '"/>');
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            max: 100,
                             change: function () {
+
+                                var value = this.value() || 0;
+
+                                // ✅ limit control
+                                if (value > 100) {
+                                    value = 100;
+                                    this.value(100);
+                                }
+
+                                // ✅ model update
+                                options.model.set("VATRate", value);
+
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
 
-                                // Recalculate VATAmount and LineTotal when VATRate changes
-                                var sdAmount = (options.model.SubTotal * (options.model.SD || 0)) / 100;
-                                var vatAmount = ((options.model.SubTotal + sdAmount) * (this.value() || 0)) / 100;
+                                var subTotal = options.model.SubTotal || 0;
+                                var other = options.model.OthersAmount || 0;
+
+                                var sdAmount = (subTotal * (options.model.SD || 0)) / 100;
+
+                                var vatAmount = ((subTotal + sdAmount) * value) / 100;
                                 options.model.set("VATAmount", vatAmount);
 
-                                // Recalculate LineTotal
-                                var lineTotal = options.model.SubTotal + sdAmount + vatAmount;
+                                var lineTotal = subTotal + sdAmount + vatAmount;
 
-                                var withother = lineTotal + options.model.OthersAmount;
+                                var withother = lineTotal + other;
 
                                 options.model.set("LineTotal", withother);
 
-                                //options.model.set("LineTotal", lineTotal);
-
-                                // Refresh the grid to update footer aggregates
                                 grid.refresh();
                             }
                         });
@@ -442,7 +472,7 @@
                 },
                 {
                     field: "LineTotal",
-                    title: "Line Total",
+                    title: "Total",
                     width: 100,
                     editable: false,
                     attributes: { style: "text-align:right;" },
@@ -1299,11 +1329,11 @@
                         { field: "Id", hidden: true, width: 50 },
                         { field: "ProductName", title: "Product Name", sortable: true, width: 120, footerTemplate: "Total:" },
                         { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "UnitPrice", title: "Unit Price", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
+                        { field: "UnitPrice", title: "Unit Price", sortable: true, width: 100,  attributes: { style: "text-align: right;" } },
                         { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "SD", title: "SD Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "SD", title: "SD Rate", sortable: true, width: 100,  format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "SDAmount", title: "SD Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, attributes: { style: "text-align: right;" } },
                         { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "OthersAmount", title: "Others Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
@@ -1469,6 +1499,12 @@
                 });
             }
         }
+
+        if (!details || details.length === 0) {
+            ShowNotification(3, "Complete Details first!");
+            return;
+        }
+
 
         //var details = serializeTable($table);
 

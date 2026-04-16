@@ -126,6 +126,11 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                 }
             }
 
+
+            if (details.length === 0) {
+                ShowNotification(3, "Complete Details first!");
+                return;
+            }
             // Validate required fields (e.g., ProductName, Quantity, UnitRate)
             var requiredFields = ['ProductName', 'Quantity', 'UnitRate'];
             var fieldMappings = {
@@ -242,8 +247,9 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                         SDAmount: { type: "number", defaultValue: 0 },
                         VATAmount: { type: "number", defaultValue: 0 },
                         LineTotal: { type: "number", defaultValue: 0 },
-                        VATRate: { type: "number", defaultValue: 0 },
-                        SD: { type: "number", defaultValue: 0 },
+                        VATRate: { type: "number", validation: { min: 0, max: 100 } },
+                        SD: { type: "number", validation: { min: 0, max: 100 } },
+                        //SD: { type: "number", defaultValue: 0 },
                         RemainQty: { type: "number", defaultValue: 0 },
                         CompletedQty: { type: "number", defaultValue: 0 }
                     }
@@ -348,29 +354,40 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                 {
                     field: "SD",
                     title: "SD Rate",
-                    width: 100,
+                    width: 60,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input name="' + options.field + '"/>');
+
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            max: 100,
                             change: function () {
+
+                                var value = this.value() || 0;
+
+                                if (value > 100) {
+                                    value = 100;
+                                    this.value(100);
+                                    alert("SD Rate cannot be greater than 100%");
+                                }
+
+                                // ✅ MUST update model
+                                options.model.set("SD", value);
+
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
 
-                                // Recalculate SDAmount and LineTotal when SD Rate changes
-                                var sdAmount = (options.model.SubTotal * (this.value() || 0)) / 100;
+                                var sdAmount = (options.model.SubTotal * value) / 100;
                                 options.model.set("SDAmount", sdAmount);
 
-                                // Recalculate VAT Amount
                                 var vatAmount = ((options.model.SubTotal + sdAmount) * (options.model.VATRate || 0)) / 100;
                                 options.model.set("VATAmount", vatAmount);
 
-                                // Recalculate LineTotal
                                 var lineTotal = options.model.SubTotal + sdAmount + vatAmount;
                                 options.model.set("LineTotal", lineTotal);
 
-                                // Refresh the grid to update footer aggregates
                                 grid.refresh();
                             }
                         });
@@ -387,26 +404,38 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                 {
                     field: "VATRate",
                     title: "VAT Rate",
-                    width: 100,
+                    width: 60,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input name="' + options.field + '"/>');
+
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            max: 100,
                             change: function () {
+
+                                var value = this.value() || 0;
+
+                                if (value > 100) {
+                                    value = 100;
+                                    this.value(100);
+                                    alert("VAT Rate cannot be greater than 100%");
+                                }
+
+                                // ✅ MUST update model
+                                options.model.set("VATRate", value);
+
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
 
-                                // Recalculate VATAmount and LineTotal when VATRate changes
                                 var sdAmount = (options.model.SubTotal * (options.model.SD || 0)) / 100;
-                                var vatAmount = ((options.model.SubTotal + sdAmount) * (this.value() || 0)) / 100;
+                                var vatAmount = ((options.model.SubTotal + sdAmount) * value) / 100;
                                 options.model.set("VATAmount", vatAmount);
 
-                                // Recalculate LineTotal
                                 var lineTotal = options.model.SubTotal + sdAmount + vatAmount;
                                 options.model.set("LineTotal", lineTotal);
 
-                                // Refresh the grid to update footer aggregates
                                 grid.refresh();
                             }
                         });
@@ -422,7 +451,7 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                 },
                 {
                     field: "LineTotal",
-                    title: "Line Total",
+                    title: "Total",
                     width: 100,
                     editable: false,
                     attributes: { style: "text-align:right;" },
@@ -1557,9 +1586,7 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                             sortable: true,
                             width: 100,
                             aggregates: ["average"], // ✅ Fixed to "average"
-                            format: "{0:n2}",
-                            attributes: { style: "text-align: right;" },
-                            footerTemplate: "#= kendo.toString(average, 'n2') #" // ✅ Corrected
+                            format: "{0:n2}"
                         },
                         {
                             field: "SubTotal",
@@ -1577,9 +1604,7 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                             sortable: true,
                             width: 100,
                             aggregates: ["average"], // ✅ Fixed to "average"
-                            format: "{0:n2}",
-                            attributes: { style: "text-align: right;" },
-                            footerTemplate: "#= kendo.toString(average, 'n2') #" // ✅ Corrected
+                            format: "{0:n2}"
                         },
                         {
                             field: "SDAmount",
@@ -1597,9 +1622,7 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                             sortable: true,
                             width: 100,
                             aggregates: ["average"], // ✅ Fixed to "average"
-                            format: "{0:n2}",
-                            attributes: { style: "text-align: right;" },
-                            footerTemplate: "#= kendo.toString(average, 'n2') #" // ✅ Corrected
+                            format: "{0:n2}"
                         },
                         {
                             field: "VATAmount",
@@ -1790,6 +1813,10 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
             }
         }
 
+        if (!details || details.length === 0) {
+            ShowNotification(3, "Complete Details first!");
+            return;
+        }
         var requiredFields = ['ProductName', 'Quantity', 'UnitRate'];
         var fieldMappings = {
             'ProductName': 'Product Name',

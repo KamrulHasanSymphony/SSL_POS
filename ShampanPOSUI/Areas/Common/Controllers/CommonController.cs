@@ -202,7 +202,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
 
             try
             {
-                List<ProductVM> lst = new List<ProductVM>();
+                List<ProductNewVM> lst = new List<ProductNewVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
 
@@ -210,7 +210,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    lst = JsonConvert.DeserializeObject<List<ProductVM>>(result.DataVM.ToString());
+                    lst = JsonConvert.DeserializeObject<List<ProductNewVM>>(result.DataVM.ToString());
                 }
                 return Json(lst, JsonRequestBehavior.AllowGet);
             }
