@@ -602,7 +602,7 @@
                 { 
                     field: "SD",
                     title: "SD Rate",
-                    width: 100,
+                    width: 60,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input data-bind="value:' + options.field + '"/>')
@@ -671,7 +671,7 @@
                 {
                     field: "VATRate",
                     title: "VAT Rate",
-                    width: 100,
+                    width: 60,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input data-bind="value:' + options.field + '"/>')
@@ -740,7 +740,7 @@
 
                 {
                     field: "LineTotal",
-                    title: "Line Total",
+                    title: "Total",
                     width: 100,
                     editable: false,
                     attributes: { style: "text-align:right;" },
@@ -1712,11 +1712,11 @@
                         { field: "Id", hidden: true, width: 50 },
                         { field: "ProductName", title: "Product Name", sortable: true, width: 120, footerTemplate: "Total:" },
                         { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "UnitRate", title: "Unit Rate", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
+                        { field: "UnitRate", title: "Unit Rate", sortable: true, width: 100, attributes: { style: "text-align: right;" } },
                         { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "SD", title: "SD Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "SD", title: "SD Rate", sortable: true, width: 100,format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "SDAmount", title: "SD Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "VATRate", title: "VAT Rate", sortable: true, width: 100,  attributes: { style: "text-align: right;" } },
                         { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
 
                         { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },

@@ -234,8 +234,6 @@
                             field: "UnitRate",
                             title: "Unit Price",
                             width: 100,
-                            aggregates: ["sum"],
-                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
                             format: "{0:n2}",
                             attributes: { style: "text-align:right;" }
                         },
@@ -252,8 +250,6 @@
                             field: "SD",
                             title: "SD Rate",
                             width: 100,
-                            aggregates: ["sum"],
-                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
                             format: "{0:n2}",
                             attributes: { style: "text-align:right;" }
                         },
@@ -270,8 +266,6 @@
                             field: "VATRate",
                             title: "VAT Rate",
                             width: 100,
-                            aggregates: ["sum"],
-                            footerTemplate: "#= kendo.toString(sum, 'n2') #",
                             format: "{0:n2}",
                             attributes: { style: "text-align:right;" }
                         },
@@ -286,7 +280,7 @@
                         },
                         {
                             field: "LineTotal",
-                            title: "Line Total",
+                            title: "Total",
                             width: 100,
                             aggregates: ["sum"],
                             footerTemplate: "#= kendo.toString(sum, 'n2') #",
