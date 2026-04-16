@@ -80,19 +80,20 @@
     .purchasetotalrow td {
         border: 0 !important
     }
-    .purchasetotalrow td span{
-        border-bottom: 1px solid #000!important;
-        position: relative
-    }
-        .purchasetotalrow td span::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: -3px;
-            width: 100%;
-            height: 1px;
-            background: #000;
+        .purchasetotalrow td span {
+            border-bottom: 1px solid #000 !important;
+            position: relative
         }
+
+            .purchasetotalrow td span::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -3px;
+                width: 100%;
+                height: 1px;
+                background: #000;
+            }
 </style>
 
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
@@ -143,7 +144,6 @@
         </tr>
     </table>
 
-    <!-- DETAILS -->
     <h3>Purchase Items</h3>
     <table>
         <thead>
@@ -176,13 +176,12 @@
                     <td class="text-right"><b>@item.LineTotal</b></td>
                 </tr>
             }
-            <!-- FOOTER ROW: TOTAL ONLY -->
 
         <tr class="purchasetotalrow" style="font-weight:bold;">
-            <td colspan="2" style="text-align: center;">Total :</td> <!-- Product column shows "Total" -->
-            <td></td> <!-- Code empty -->
+            <td colspan="2" style="text-align: center;">Total :</td> 
+            <td></td> 
             <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.Quantity)</span></td>
-            <td></td> <!-- Unit Price empty -->
+            <td></td> 
             <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.SubTotal)</span></td>
             <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.SDAmount)</span></td>
             <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.VATAmount)</span></td>
@@ -191,7 +190,7 @@
         </tr>
         </tbody>
     </table>
-    <!-- COMMENTS (Label Style, like Sales Order sample) -->
+
     <div style="margin-top:20px;">
         <h5 class="section-title">Comments</h5>
         <div style="margin-top:5px;">

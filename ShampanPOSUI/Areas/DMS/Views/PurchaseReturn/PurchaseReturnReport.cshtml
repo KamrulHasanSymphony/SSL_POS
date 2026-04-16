@@ -79,6 +79,21 @@
     .purchasetotalrow td {
         border: 0 !important
     }
+        .purchasetotalrow td span {
+            border-bottom: 1px solid #000 !important;
+            position: relative
+        }
+
+            .purchasetotalrow td span::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -3px;
+                width: 100%;
+                height: 1px;
+                background: #000;
+            }
+
 </style>
 
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
@@ -161,15 +176,15 @@
             }
             <!-- FOOTER -->
         <tr class="purchasetotalrow" style="font-weight:bold;">
-            <td colspan="2" style="text-align: center;">Total :</td> 
-            <td></td> 
-            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.Quantity)</td>
+            <td colspan="2" style="text-align: center;">Total :</td>
             <td></td>
-            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.SubTotal)</td>
-            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.SDAmount)</td>
-            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.VATAmount)</td>
-            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.OthersAmount)</td>
-            <td class="text-right">@Model.purchaseReturnDetailList.Sum(x => x.LineTotal)</td>
+            <td class="text-right"><span>@Model.purchaseReturnDetailList.Sum(x => x.Quantity)</span></td>
+            <td></td>
+            <td class="text-right"><span>@Model.purchaseReturnDetailList.Sum(x => x.SubTotal)</span></td>
+            <td class="text-right"><span>@Model.purchaseReturnDetailList.Sum(x => x.SDAmount)</span></td>
+            <td class="text-right"><span>@Model.purchaseReturnDetailList.Sum(x => x.VATAmount)</span></td>
+            <td class="text-right"><span>@Model.purchaseReturnDetailList.Sum(x => x.OthersAmount)</span></td>
+            <td class="text-right"><span>@Model.purchaseReturnDetailList.Sum(x => x.LineTotal)</span></td>
         </tr>
         </tbody>
     </table>

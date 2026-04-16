@@ -80,6 +80,21 @@
     .purchasetotalrow td {
         border: 0 !important
     }
+
+        .purchasetotalrow td span {
+            border-bottom: 1px solid #000 !important;
+            position: relative
+        }
+
+            .purchasetotalrow td span::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -3px;
+                width: 100%;
+                height: 1px;
+                background: #000;
+            }
 </style>
 
 
@@ -108,7 +123,7 @@
     </table>
 
     <h2 style="text-align:center;border-bottom:1px solid #000;">
-        SALES RETURN REPORT
+        SALES RETURN
     </h2>
 
     <!-- MASTER INFO -->
@@ -140,7 +155,7 @@
                 <th style="width:10%!important;" class="text-center">Unit Rate</th>
                 <th style="width:10%!important;" class="text-center">SD Amt</th>
                 <th style="width:10%!important;" class="text-center">VAT Amt</th>
-                <th style="width:10%!important;" class="text-center">Line Total</th>
+                <th style="width:10%!important;" class="text-center">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -159,27 +174,27 @@
             }
 
             <!-- 🔥 TOTAL ROW -->
-            <tr class="purchasetotalrow" style="font-weight:bold;">
-                <td colspan="3" style="text-align:center;">Total :</td>
+        <tr class="purchasetotalrow" style="font-weight:bold;">
+            <td colspan="3" style="text-align:center;">Total :</td>
 
-                <td class="text-right">
-                    @(Model.saleReturnDetailList?.Sum(x => x.Quantity) ?? 0)
-                </td>
+            <td class="text-right">
+                <span>@(Model.saleReturnDetailList?.Sum(x => x.Quantity) ?? 0)</span>
+            </td>
 
-                <td></td>
+            <td></td>
 
-                <td class="text-right">
-                    @(Model.saleReturnDetailList?.Sum(x => x.SDAmount) ?? 0)
-                </td>
+            <td class="text-right">
+                <span>@(Model.saleReturnDetailList?.Sum(x => x.SDAmount) ?? 0)</span>
+            </td>
 
-                <td class="text-right">
-                    @(Model.saleReturnDetailList?.Sum(x => x.VATAmount) ?? 0)
-                </td>
+            <td class="text-right">
+                <span>@(Model.saleReturnDetailList?.Sum(x => x.VATAmount) ?? 0)</span>
+            </td>
 
-                <td class="text-right">
-                    @(Model.saleReturnDetailList?.Sum(x => x.LineTotal) ?? 0)
-                </td>
-            </tr>
+            <td class="text-right">
+                <span>@(Model.saleReturnDetailList?.Sum(x => x.LineTotal) ?? 0)</span>
+            </td>
+        </tr>
 
         </tbody>
     </table>

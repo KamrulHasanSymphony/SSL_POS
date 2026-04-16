@@ -45,6 +45,9 @@
         button[onclick*="reportLink"]:focus {
             outline: none;
         }
+    .button {
+        float: none !important;
+    }
 </style>
 <div class="content-header">
     <div class="container-fluid">
@@ -66,27 +69,30 @@
 
         @if (Model.IsPost)
         {
-            <div style="display:flex; align-items:center;">
-                <button type="button" class="button sslPush">Already Posted</button>
-                <button style="margin-left:5px;"
-                        type="button"
-                        title="Add New"
-                        data-url="/DMS/Sale/Create"
-                        onclick="GoTo(this)"
-                        class="button NewButton addNewButton">
-                    New
-                </button>
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
 
-                <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
-                    <i class="k-icon k-i-print"></i> Print
-                </button>
+                <!-- Left side -->
+                <div style="display:flex; gap:5px; align-items:center;">
 
-                <a id="reportLink"
-                   href="/DMS/Sale/getReport/@Model.Id"
-                   style="display:none;">
-                </a>
+                    <button type="button" class="button sslPush">
+                        Already Posted
+                    </button>
+
+                    <button type="button" onclick="document.getElementById('reportLink').click();">
+                        <i class="k-icon k-i-print"></i>
+                        <span style="margin-left:4px;">Print</span>
+                    </button>
+
+                </div>
+
             </div>
+
+            <a id="reportLink"
+               href="/DMS/Sale/getReport/@Model.Id"
+               style="display:none;">
+            </a>
         }
+
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
             <div style="display:flex; align-items:center; gap:5px;">
@@ -395,14 +401,7 @@
             {
                 <div style="display:flex; align-items:center;">
                     <button type="button" class="button sslPush">Already Posted</button>
-                    <button style="margin-left:5px;"
-                            type="button"
-                            title="Add New"
-                            data-url="/DMS/Sale/Create"
-                            onclick="GoTo(this)"
-                            class="button NewButton addNewButton">
-                        New
-                    </button>
+
 
                     <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
                         <i class="k-icon k-i-print"></i> Print

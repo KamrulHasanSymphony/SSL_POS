@@ -61,25 +61,75 @@
 
         @if (Model.IsPost)
         {
-            <button type="button" class="button sslPush">Already Posted</button>
-            <button type="button" class="button secondary" id="btnFromPurchaseOrder">
-                <span style="font-weight:bold; margin-right:5px;">+</span> Sale
-            </button>
-            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+
+                <!-- LEFT SIDE -->
+                <div style="display:flex; align-items:center; gap:5px;">
+
+                    <button type="button" class="button sslPush">Already Posted</button>
+
+                    <button type="button" onclick="document.getElementById('reportLink').click();">
+                        <i class="k-icon k-i-print"></i> Print
+                    </button>
+
+                    <a id="reportLink"
+                       href="/DMS/SaleOrder/getReport/@Model.Id"
+                       style="display:none;">
+                    </a>
+
+                    <button type="button" class="button secondary" id="btnFromPurchaseOrder">
+                        <span style="font-weight:bold; margin-right:5px;">+</span> Sale
+                    </button>
+
+                </div>
+
+                <!-- RIGHT SIDE -->
+                <button type="button"
+                        title="Add New"
+                        data-url="/DMS/SaleOrder/Create"
+                        onclick="GoTo(this)"
+                        class="button NewButton addNewButton">
+                    New
+                </button>
+
+            </div>
         }
+
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
+            <div style="display:flex; align-items:center; justify-content:space-between;">
 
-            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>
+                <!-- LEFT SIDE -->
+                <div style="display:flex; align-items:center; gap:5px;">
 
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
 
-            <button type="button" class="button btnsave sslUpdate">Update</button>
-            <button type="button" class="button btnPost sslPost">Post</button>
-            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                    <button type="button" class="button btnPost sslPost">Post</button>
+
+                    <button type="button" onclick="document.getElementById('reportLink').click();">
+                        <i class="k-icon k-i-print"></i> Print
+                    </button>
+
+                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                    <a id="reportLink"
+                       href="/DMS/SaleOrder/getReport/@Model.Id"
+                       style="display:none;">
+                    </a>
+
+                </div>
+
+                <!-- RIGHT SIDE -->
+                <button type="button"
+                        title="Add New"
+                        data-url="/DMS/SaleOrder/Create"
+                        onclick="GoTo(this)"
+                        class="button NewButton addNewButton">
+                    New
+                </button>
+
+            </div>
+
 
 
         }
@@ -193,87 +243,6 @@
 
             </div>
         </div>
-        @*<div class="card card-secondary">
-
-                <div class="card-header">
-                    <h3 class="card-title">Details</h3>
-                </div>
-
-                <div class="card-body">
-
-                    <button type="button" title="Add SO Details" id="addRows" class="btn btn-lg btn-success mb-2"> <i class="fa fa-plus"></i> </button>
-                    <div class="clearfix">&nbsp;</div>
-                    <div style="overflow-x: auto; white-space: nowrap;">
-
-                        <table class="table table-bordered table-striped table-sm" id="details">
-                            <thead>
-                                <tr>
-                                    <th data-type="text" data-computed="true" data-required="false" style="width:5%;" data-name="SLNo">SL. No.</th>
-                                    <th hidden data-type="text" data-search="false" data-required="false" data-computed="true" style="width:20%;" data-name="ProductCode"> Product Code </th>
-                                    <th data-type="text" data-search="true" data-required="true" style="width:20%;" data-name="ProductName"> Product </th>
-                                    <th hidden data-type="text" data-search="false" style="width:5%;" data-name="ProductId"> ProductId </th>
-
-                                    <th data-type="decimal" style="width: 10%;" data-required="true" data-computed="false" data-name="Quantity"> Total Qty </th>
-
-                                    <th data-type="decimal" style="width: 10%;" data-required="true" data-name="UnitRate"> Unit Rate </th>
-
-
-                                    <th data-type="decimal" style="width: 14%;" data-required="true" data-computed="true" data-name="SubTotal"> SubTotal </th>
-
-
-                                    <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="SD"> SD Rate </th>
-                                    <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="SDAmount"> SD Amount </th>
-                                    <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="VATRate"> VAT Rate </th>
-                                    <th data-type="decimal" style="width: 8%;" data-computed="true" data-name="VATAmount"> VAT Amount </th>
-
-                                    <th data-type="decimal" style="width: 8%;" data-computed="false" data-name="LineTotal"> Line Total </th>
-
-
-                                    <th data-type="decimal" style="width: 5%;" data-computed="false" data-name="CompletedQty"> Completed Qty </th>
-                                    <th data-type="decimal" style="width: 5%;" data-computed="false" data-name="RemainQty"> Remain Qty </th>
-
-
-                                </tr>
-                            </thead>
-                            <tbody id="SODBody">
-                                @if (Model != null)
-                                {
-                                    foreach (var item in Model.saleOrderDetailsList)
-                                    {
-                                        <tr>
-                                            <td> @serial </td>
-                                            <td hidden>  @item.ProductCode </td>
-                                            <td> @item.ProductName </td>
-
-                                            <td hidden> @item.ProductId </td>
-                                            <td class=" dFormat "> @item.Quantity </td>
-
-                                            <td class=" dFormat "> @item.UnitRate </td>
-
-                                            <td class=" dFormat "> @item.SubTotal</td>
-
-                                            <td class=" dFormat "> @item.SD</td>
-                                            <td class=" dFormat "> @item.SDAmount</td>
-                                            <td class=" dFormat "> @item.VATRate</td>
-                                            <td class=" dFormat "> @item.VATAmount</td>
-
-                                            <td class=" dFormat ">@item.LineTotal</td>
-                                            <td class=" dFormat ">@item.CompletedQty</td>
-                                            <td class=" dFormat ">@item.RemainQty</td>
-                                            <td> <button class="btn btn-danger btn-sm remove-row-btn"><i class='fa fa-trash'></i></button> </td>
-
-                                        </tr>
-                                        { serial++; }
-                                    }
-                                }
-
-                            </tbody>
-
-                        </table>
-                    </div>
-
-                </div>
-            </div>*@
 
         <div class="card card-secondary">
             <div class="card-header">
@@ -298,15 +267,6 @@
             {
                 <div style="display:flex; align-items:center;">
                     <button type="button" class="button sslPush">Already Posted</button>
-                    <button style="margin-left:5px;"
-                            type="button"
-                            title="Add New"
-                            data-url="/DMS/SaleOrder/Create"
-                            onclick="GoTo(this)"
-                            class="button NewButton addNewButton">
-                        New
-                    </button>
-
 
                     <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
                         <i class="k-icon k-i-print"></i> Print
