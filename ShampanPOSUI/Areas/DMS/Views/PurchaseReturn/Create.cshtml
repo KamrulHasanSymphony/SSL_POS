@@ -53,23 +53,63 @@
 
         @if (Model.IsPost)
         {
-            <button type="button" class="button sslPush">Already Posted</button>
+            <div style="display:flex; align-items:center;">
 
-            <button style="float:right;" type="button" title="Add New" data-url="/DMS/PurchaseReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>
+                <button type="button" class="button sslPush">Already Posted</button>
+
+                <button type="button" style="margin-left:5px;"
+                        onclick="document.getElementById('reportLink').click();">
+                    <i class="k-icon k-i-print"></i> Print
+                </button>
+
+                <a id="reportLink"
+                   href="/DMS/PurchaseReturn/getReport/@Model.Id"
+                   style="display:none;">
+                </a>
+
+                <button style="margin-left:auto;"
+                        type="button"
+                        title="Add New"
+                        data-url="/DMS/PurchaseReturn/Create"
+                        onclick="GoTo(this)"
+                        class="button NewButton addNewButton">
+                    New
+                </button>
+
+            </div>
         }
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
-            <button type="button" class="button btnsave sslUpdate">Update</button>
+            <div style="display:flex; align-items:center;">
 
-            <button type="button" class="button btnPost sslPost">Post</button>
+                <button type="button" class="button btnsave sslUpdate">Update</button>
 
-            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                <button type="button" class="button btnPost sslPost" style="margin-left:5px;">Post</button>
 
-            <button style="float:right;" type="button" title="Add New" data-url="/DMS/PurchaseReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>
+                <button type="button" style="margin-left:5px;"
+                        onclick="document.getElementById('reportLink').click();">
+                    <i class="k-icon k-i-print"></i> Print
+                </button>
+
+                <a id="reportLink"
+                   href="/DMS/PurchaseReturn/getReport/@Model.Id"
+                   style="display:none;">
+                </a>
+
+                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                <!-- ✅ Only this goes right -->
+                <button style="margin-left:auto;"
+                        type="button"
+                        title="Add New"
+                        data-url="/DMS/PurchaseReturn/Create"
+                        onclick="GoTo(this)"
+                        class="button NewButton addNewButton">
+                    New
+                </button>
+
+            </div>
+
         }
         else
         {
@@ -193,14 +233,14 @@
             {
                 <div style="display:flex; align-items:center;">
                     <button type="button" class="button sslPush">Already Posted</button>
-                    <button style="margin-left:5px;"
+                    @*<button style="margin-left:5px;"
                             type="button"
                             title="Add New"
                             data-url="/DMS/PurchaseReturn/Create"
                             onclick="GoTo(this)"
                             class="button NewButton addNewButton">
                         New
-                    </button>
+                    </button>*@
 
                     <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
                         <i class="k-icon k-i-print"></i> Print
