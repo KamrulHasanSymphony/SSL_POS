@@ -17,6 +17,17 @@
 
         $(document).ready(function () {
 
+
+            $("#FromDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
+
+            $("#ToDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
+
             $(".kendoInvoiceDateTime").kendoDateTimePicker({
                 format: "yyyy-MM-dd HH:mm"
             });

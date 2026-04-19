@@ -19,6 +19,17 @@
 
         $(document).ready(function () {
 
+
+            $("#FromDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
+
+            $("#ToDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
+
             function normalize(date) {
                 if (!date) return null;
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -46,7 +57,7 @@
                 var invoiceDate = normalize(invoiceRaw);
                 var purchaseDate = normalize(purchaseRaw);
 
-                // ✅ set min/max relation
+            
                 if (invoiceRaw) {
                     purchasePicker.min(invoiceRaw);
                 }
@@ -55,7 +66,7 @@
                     invoicePicker.max(purchaseRaw);
                 }
 
-                // ❌ Purchase আগে হলে
+               
                 if (invoiceDate && purchaseDate && purchaseDate < invoiceDate) {
 
                     purchasePicker.value(invoiceRaw);
@@ -64,7 +75,7 @@
                     return;
                 }
 
-                // ❌ Invoice পরে হলে
+              
                 if (invoiceDate && purchaseDate && invoiceDate > purchaseDate) {
 
                     invoicePicker.value(purchaseRaw);

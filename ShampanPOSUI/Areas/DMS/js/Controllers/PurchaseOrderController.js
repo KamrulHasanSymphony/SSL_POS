@@ -16,6 +16,20 @@
             Visibility(true);
         };
 
+        $(document).ready(function () {
+
+            $("#FromDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
+
+            $("#ToDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
+
+        });
+
         getSupplierId = $("#SupplierId").val() || 0;
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;

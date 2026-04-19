@@ -895,6 +895,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 purchase.Operation = "add";
                 purchase.IsPost = false;
 
+                purchase.PurchaseDate = purchase.DeliveryDateTime;
                 #region DecimalPlace
                 CommonVM commonVM = new CommonVM();
                 commonVM.Group = "SaleDecimalPlace";

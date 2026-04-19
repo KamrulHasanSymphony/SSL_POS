@@ -358,15 +358,15 @@
                             if (param.field === "Name") {
                                 param.field = "H.Name";
                             }
-                            if (param.field === "RouteName") {
-                                param.field = "R.Name";
-                            }
-                            if (param.field === "AreaName") {
-                                param.field = "A.Name";
-                            }
-                            if (param.field === "BranchName") {
-                                param.field = "B.Name";
-                            }
+                            //if (param.field === "RouteName") {
+                            //    param.field = "R.Name";
+                            //}
+                            //if (param.field === "AreaName") {
+                            //    param.field = "A.Name";
+                            //}
+                            //if (param.field === "BranchName") {
+                            //    param.field = "B.Name";
+                            //}
                             if (param.field === "CustomerGroupName") {
                                 param.field = "C.Name";
                             }
@@ -379,9 +379,9 @@
                             if (param.field === "BanglaAddress") {
                                 param.field = "H.BanglaAddress";
                             }
-                            if (param.field === "City") {
-                                param.field = "H.City";
-                            }
+                            //if (param.field === "City") {
+                            //    param.field = "H.City";
+                            //}
                             if (param.field === "TelephoneNo") {
                                 param.field = "H.TelephoneNo";
                             }
@@ -428,15 +428,15 @@
                             if (param.field === "Name") {
                                 param.field = "H.Name";
                             }
-                            if (param.field === "RouteName") {
-                                param.field = "R.Name";
-                            }
-                            if (param.field === "AreaName") {
-                                param.field = "A.Name";
-                            }
-                            if (param.field === "BranchName") {
-                                param.field = "B.Name";
-                            }
+                            //if (param.field === "RouteName") {
+                            //    param.field = "R.Name";
+                            //}
+                            //if (param.field === "AreaName") {
+                            //    param.field = "A.Name";
+                            //}
+                            //if (param.field === "BranchName") {
+                            //    param.field = "B.Name";
+                            //}
                             if (param.field === "CustomerGroupName") {
                                 param.field = "C.Name";
                             }
@@ -449,9 +449,9 @@
                             if (param.field === "BanglaAddress") {
                                 param.field = "H.BanglaAddress";
                             }
-                            if (param.field === "City") {
-                                param.field = "H.City";
-                            }
+                            //if (param.field === "City") {
+                            //    param.field = "H.City";
+                            //}
                             if (param.field === "TelephoneNo") {
                                 param.field = "H.TelephoneNo";
                             }
@@ -541,7 +541,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "RouteName", "AreaName", "BranchName", "CustomerGroupName", "BanglaName", "Address", "BanglaAddress", "City", "TelephoneNo", "FaxNo", "Email", "TINNo", "BINNo", "NIDNo","Comments","Status"]
+                fields: ["Code", "Name", "CustomerGroupName", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "TINNo", "BINNo", "NIDNo","Comments","Status"]
             },
             excel: {
                 fileName: "Customers.xlsx",
@@ -638,15 +638,14 @@
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
                 { field: "CustomerGroupName", title: "Customer Group Name", sortable: true, width: 200 },
-                //{ field: "RouteName", title: "Route Name", sortable: true, width: 200 },
-                //{ field: "AreaName", title: "Area Name", sortable: true, width: 200 },
+                
                 { field: "TelephoneNo", title: "Telephone No.", sortable: true, width: 200 },
                 { field: "Email", title: "Email", sortable: true, width: 200 },
                 { field: "TINNo", title: "TIN No.", sortable: true, width: 200 },
                 { field: "BINNo", title: "BIN No.", sortable: true, width: 200 },
                 { field: "NIDNo", title: "NID No.", sortable: true, width: 200 },
                 { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
-                //{ field: "BranchName", title: "Branch Name", sortable: true, width: 200 },
+                
                 {
                     field: "Status", title: "Status", sortable: true, width: 100,
                     filterable: {

@@ -41,6 +41,7 @@
         }
 </style>
 
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -93,34 +94,6 @@
                 </button>
 
             </div>
-            <div style="display:flex; align-items:center; gap:5px;">
-                <button type="button" class="button sslPush">Already Posted</button>
-                <button type="button" style="margin-left:5px;" onclick="document.getElementById('reportLink').click();">
-                    <i class="k-icon k-i-print"></i> Print
-                </button>
-
-                <a id="reportLink"
-                   href="/DMS/SaleOrder/getReport/@Model.Id"
-                   style="display:none;">
-                </a>
-                <button type="button" class="button secondary" id="btnFromPurchaseOrder">
-                    <span style="font-weight:bold; margin-right:5px;">+</span> Sale
-                </button>
-                @*<button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                    New
-                </button>*@
-
-                <!-- ✅ Right side -->
-                <button type="button"
-                        style="margin-left:auto;"
-                        title="Add New"
-                        data-url="/DMS/SaleOrder/Create"
-                        onclick="GoTo(this)"
-                        class="button NewButton addNewButton">
-                    New
-                </button>
-            </div>
-
         }
 
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
@@ -155,46 +128,35 @@
                         class="button NewButton addNewButton">
                     New
                 </button>
-            <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>
-            <div style="display:flex; align-items:center; gap:5px;">
 
             </div>
+
+
+
+        }
+        else
+        {
+
+            <div style="display:none;" class="divUpdate">
 
                 <button type="button" class="button btnsave sslUpdate">Update</button>
-                <button type="button" class="button btnPost sslPost">Post</button>
-                <button type="button" onclick="document.getElementById('reportLink').click();">
-                    <i class="k-icon k-i-print"></i> Print
-                </button>
 
+                <button type="button" class="button btnPost sslPost">Post</button>
                 <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
 
-            </div>
-                }
-                else
-                {
-
-                <div style="display:none;" class="divUpdate">
-
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
-
-                    <button type="button" class="button btnPost sslPost">Post</button>
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-
-                    <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                        New
-                    </button>
-
-                </div>
-
-                <div class="divSave">
-                    <button class="button btnsave sslSave" type="button" id="">Save</button>
-                </div>
-                }
+                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                    New
+                </button>
 
             </div>
-        </div>
+
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
+        }
+
+    </div>
+</div>
 <div class="container-fluid">
     <form id="frmEntry">
         <div class="card card-secondary">
@@ -227,24 +189,24 @@
                     </div>
 
                     @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.OrderDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.OrderDate, new { @class = "  form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>
+                            @Html.LabelFor(model => model.OrderDate)
+                            <div class="input-group date">
+                                @Html.TextBoxFor(model => model.OrderDate, new { @class = "  form-control form-control-sm dateRange" })
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="col-sm-2">
-            @Html.LabelFor(model => model.DeliveryDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>*@
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.DeliveryDate)
+                            <div class="input-group date">
+                                @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange" })
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>*@
 
 
 
@@ -322,6 +284,8 @@
     <div id="saleDetailsWindow" style="display:none;">
         <div id="saleDetailsGrid"></div>
     </div>
+
+
     <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center;">
         <div class="card-header p-2">
 

@@ -723,6 +723,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 purchase.IsPost = false;
                 purchase.IsManualSale = false;
 
+                purchase.InvoiceDateTime = purchase.InvoiceDateTime = Convert.ToDateTime(purchase.OrderDate)
+                                 .ToString("yyyy-MM-dd HH:mm:ss");
                 #region DecimalPlace
                 CommonVM commonVM = new CommonVM();
                  commonVM.Group = "SaleDecimalPlace";

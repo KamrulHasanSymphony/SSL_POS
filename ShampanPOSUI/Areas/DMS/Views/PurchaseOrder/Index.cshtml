@@ -54,23 +54,38 @@
                             @Html.ValidationMessageFor(model => model.IsPosted)
                         </div>
 
+                        @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.FromDate)
+            <div class="input-group date">
+                @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm dateRange" })
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            @Html.LabelFor(model => model.ToDate)
+            <div class="input-group date">
+                @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm dateRange" })
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>*@
+
+
                         <div class="col-sm-2">
                             @Html.LabelFor(model => model.FromDate)
-                            <div class="input-group date">
-                                @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm dateRange" })
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
+                            <div>
+                                @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "FromDate" })
                             </div>
                         </div>
 
                         <div class="col-sm-2">
                             @Html.LabelFor(model => model.ToDate)
-                            <div class="input-group date">
-                                @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm dateRange" })
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
+                            <div>
+                                @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "ToDate" })
                             </div>
                         </div>
 

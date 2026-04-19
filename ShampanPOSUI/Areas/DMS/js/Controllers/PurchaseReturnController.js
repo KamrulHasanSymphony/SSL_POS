@@ -19,6 +19,15 @@
 
         $(document).ready(function () {
 
+            $("#FromDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
+
+            $("#ToDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
             function normalize(date) {
                 if (!date) return null;
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate());

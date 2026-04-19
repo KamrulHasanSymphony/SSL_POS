@@ -17,6 +17,13 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
+
+        if ($("#IsPosted").length) {
+            LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
+            $("#IsPosted").val('');
+            GetBranchList();
+        };
+
         if (parseInt(getId) == 0 && getOperation == '') {
             GetBranchList();
             GetGridDataList();
@@ -24,6 +31,15 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
 
         $(document).ready(function () {
 
+            $("#FromDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
+
+            $("#ToDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                value: new Date()
+            });
             function normalize(date) {
                 if (!date) return null;
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -1336,6 +1352,7 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
 
     var GetGridDataList = function () {
         var branchId = $("#Branchs").data("kendoComboBox").value();
+        var IsPosted = $('#IsPosted').val();
         var FromDate = $('#FromDate').val();
         var ToDate = $('#ToDate').val();
         var gridDataSource = new kendo.data.DataSource({
@@ -1352,7 +1369,7 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                     type: "POST",
                     dataType: "json",
                     cache: false,
-                    data: { branchId: branchId, fromDate: FromDate, toDate: ToDate }
+                    data: { branchId: branchId, isPost: IsPosted, fromDate: FromDate, toDate: ToDate }
                 },
                 parameterMap: function (options) {
                     if (options.sort) {

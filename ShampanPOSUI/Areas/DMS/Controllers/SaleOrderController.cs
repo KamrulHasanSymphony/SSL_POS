@@ -360,7 +360,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
         [HttpPost]
-        public JsonResult GetGridData(GridOptions options, string branchId, string fromDate, string toDate)
+        public JsonResult GetGridData(GridOptions options, string branchId, string isPost, string fromDate, string toDate)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new SaleOrderRepo();
@@ -368,6 +368,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 options.vm.BranchId = branchId == "0" ? "" : branchId;
                 options.vm.FromDate = fromDate;
+                options.vm.IsPost = isPost;
                 options.vm.ToDate = toDate;
                 result = _repo.GetGridData(options);
 
