@@ -18,6 +18,18 @@
             Visibility(true);
         };
 
+        $(document).ready(function () {
+
+            $(".kendoTransactionDate").kendoDatePicker({
+                format: "yyyy-MM-dd"
+            });
+
+            $(".kendoChequeDate").kendoDatePicker({
+                format: "yyyy-MM-dd"
+            });
+
+        });
+
         getBankAccountId = $("#BankAccountId").val();
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
@@ -34,9 +46,6 @@
         };
 
         calculateTotalCollect();
-
-
-
 
         var rxList = JSON.parse($("#detailsListJson").val() || "[]");
 

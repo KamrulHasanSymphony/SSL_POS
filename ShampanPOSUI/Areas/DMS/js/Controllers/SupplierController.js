@@ -155,14 +155,11 @@
         $("#departments").kendoGrid({
             autoBind: true,
             toolbar: ["search"],
+
+            filterable: true,
+
             search: {
-                fields: [
-                    { name: "Code", operator: "contains" },
-                    { name: "Name", operator: "contains" },
-                    { name: "HSCodeNo", operator: "contains" },
-                    { name: "VATRate", operator: "contains" },
-                    { name: "SDRate", operator: "contains" }
-                ]
+                fields: ["Code", "Name", "ProductGroupName"]
             },
             dataSource: {
                 transport: {
@@ -171,18 +168,14 @@
                         dataType: "json",
                    
                     }
-                },
+                },                
+                pageSize: 10,
                 schema: {
                     data: function (res) { return res; },
                     total: function (res) { return res.length; }
-                },
-                pageSize: 10
+                }
             },
-            pageable: true,
-            sortable: true,
-            resizable: true,
-            reorderable: true,
-            groupable: true,
+            
             columns: [
                 { field: "Id", hidden: true },
                 { field: "Code", title: "Code", width: 100 },

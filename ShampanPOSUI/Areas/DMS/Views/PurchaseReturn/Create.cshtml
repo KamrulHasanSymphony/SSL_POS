@@ -29,6 +29,10 @@
         button[onclick*="reportLink"]:focus {
             outline: none;
         }
+
+    .k-picker-wrap.k-state-default {
+        width: 89% !important
+    }
 </style>
 <div class="content-header">
     <div class="container-fluid">
@@ -162,24 +166,45 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.PurchaseDate)
+            <div class="input-group date">
+                @Html.TextBoxFor(model => model.PurchaseDate, new { @class = "  form-control form-control-sm dateRange" })
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            @Html.LabelFor(model => model.InvoiceDateTime)
+            <div class="input-group date">
+                @Html.TextBoxFor(model => model.InvoiceDateTime, new { @class = "  form-control form-control-sm dateRange" })
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>*@
+
+
+                    <div class="col-sm-2 pr-3">
                         @Html.LabelFor(model => model.PurchaseDate)
-                        <div class="input-group date">
-                            @Html.TextBoxFor(model => model.PurchaseDate, new { @class = "  form-control form-control-sm dateRange" })
-                            <div class="input-group-append">
-                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                            </div>
-                        </div>
+
+                        @Html.TextBoxFor(model => model.PurchaseDate, new
+                        {
+                            @class = "form-control form-control-sm kendoPurchaseDate",
+                            style = "width:100%"
+                        })
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 mr-4">
                         @Html.LabelFor(model => model.InvoiceDateTime)
-                        <div class="input-group date">
-                            @Html.TextBoxFor(model => model.InvoiceDateTime, new { @class = "  form-control form-control-sm dateRange" })
-                            <div class="input-group-append">
-                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                            </div>
-                        </div>
+
+                        @Html.TextBoxFor(model => model.InvoiceDateTime, new
+                        {
+                            @class = "form-control form-control-sm kendoInvoiceDateTime",
+                            style = "width:100%"
+                        })
                     </div>
 
                     <div class="col-sm-2">

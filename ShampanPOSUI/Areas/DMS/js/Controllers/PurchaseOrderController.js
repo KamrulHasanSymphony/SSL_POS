@@ -39,6 +39,60 @@
         //});
 
 
+        $(document).ready(function () {
+
+            function normalize(date) {
+                if (!date) return null;
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            }
+
+            var orderPicker = $(".kendoDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                change: validateDates,
+                close: validateDates   // 🔥 important
+            }).data("kendoDatePicker");
+
+            var deliveryPicker = $(".kendoDateTime").kendoDateTimePicker({
+                format: "yyyy-MM-dd HH:mm",
+                change: validateDates,
+                close: validateDates   // 🔥 important
+            }).data("kendoDateTimePicker");
+
+
+            function validateDates() {
+
+                var orderDateRaw = orderPicker.value();
+                var deliveryDateRaw = deliveryPicker.value();
+
+                var orderDate = normalize(orderDateRaw);
+                var deliveryDate = normalize(deliveryDateRaw);
+
+                // ✅ set min always
+                if (orderDateRaw) {
+                    deliveryPicker.min(orderDateRaw);
+                }
+
+                // ❌ Delivery < Order
+                if (orderDate && deliveryDate && deliveryDate < orderDate) {
+
+                    deliveryPicker.value(orderDateRaw);
+
+                    ShowNotification(3, "Delivery date cannot be before Order date");
+                    return;
+                }
+
+                // ❌ Order > Delivery
+                if (orderDate && deliveryDate && orderDate > deliveryDate) {
+
+                    orderPicker.value(deliveryDateRaw);
+
+                    ShowNotification(3, "Order date cannot be after Delivery date");
+                    return;
+                }
+            }
+
+        });
+
         $("#saleOrderDetails").on("click", "td.product-cell", function () {
             var grid = $("#saleOrderDetails").data("kendoGrid");
             var dataItem = grid.dataItem($(this).closest("tr"));
@@ -1305,7 +1359,7 @@
 
                         { field: "OthersAmount", title: "Others Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
 
-                        { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "LineTotal", title: "Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
 
                     ],
                     footerTemplate: function (e) {

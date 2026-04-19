@@ -10,6 +10,18 @@
         GetToBankAccountComboBox();
 
 
+        $(document).ready(function () {
+
+            $(".kendoTransactionDate").kendoDatePicker({
+                format: "yyyy-MM-dd"
+            });
+
+            $(".kendoChequeDate").kendoDatePicker({
+                format: "yyyy-MM-dd"
+            });
+
+        });
+
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
         debugger;

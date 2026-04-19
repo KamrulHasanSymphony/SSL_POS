@@ -40,6 +40,9 @@
         button[onclick*="reportLink"]:focus {
             outline: none;
         }
+    .k-picker-wrap.k-state-default{
+        width:89% !important
+    }
 </style>
 
 <div class="content-header">
@@ -185,26 +188,46 @@
                     </div>
 
 
+                    @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.OrderDate)
+            <div class="input-group date">
+                @Html.TextBoxFor(model => model.OrderDate, new { @class = "  form-control form-control-sm dateRange" })
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            @Html.LabelFor(model => model.DeliveryDateTime)
+            <div class="input-group date">
+                @Html.TextBoxFor(model => model.DeliveryDateTime, new { @class = "  form-control form-control-sm dateRange" })
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>*@
+
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.OrderDate)
-                        <div class="input-group date">
-                            @Html.TextBoxFor(model => model.OrderDate, new { @class = "  form-control form-control-sm dateRange" })
-                            <div class="input-group-append">
-                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.DeliveryDateTime)
-                        <div class="input-group date">
-                            @Html.TextBoxFor(model => model.DeliveryDateTime, new { @class = "  form-control form-control-sm dateRange" })
-                            <div class="input-group-append">
-                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                            </div>
-                        </div>
+
+                        @Html.TextBoxFor(model => model.OrderDate, new
+                        {
+                            @class = "form-control form-control-sm kendoDate"
+                        })
                     </div>
 
                     <div class="col-sm-2">
+                        @Html.LabelFor(model => model.DeliveryDateTime)
+
+                        @Html.TextBoxFor(model => model.DeliveryDateTime, new
+                        {
+                            @class = "form-control form-control-sm kendoDateTime"
+                        })
+                    </div>
+                    <div class="col-md-1"></div>
+
+                    <div class="col-sm-2" style="margin-left: -47px;">
                         @Html.LabelFor(model => model.Comments)
                         <div class="input-group">
                             @Html.TextAreaFor(model => model.Comments, new { placeholder = "Enter Comment Here", @class = "form-control form-control-sm" })

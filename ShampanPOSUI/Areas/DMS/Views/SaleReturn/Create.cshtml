@@ -152,17 +152,27 @@
 
 
 
+                    @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.InvoiceDateTime)
+            <div class="input-group date">
+                @Html.TextBoxFor(model => model.InvoiceDateTime, new { @class = "  form-control form-control-sm dateRange" })
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>*@
+
+
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.InvoiceDateTime)
-                        <div class="input-group date">
-                            @Html.TextBoxFor(model => model.InvoiceDateTime, new { @class = "  form-control form-control-sm dateRange" })
-                            <div class="input-group-append">
-                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                            </div>
-                        </div>
+
+                        @Html.TextBoxFor(model => model.InvoiceDateTime, new
+                   {
+                       @class = "kendoInvoiceDate",
+                       style = "width:100%; height:2em;"
+                   })
                     </div>
-
-
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.DeliveryAddress)

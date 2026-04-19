@@ -14,6 +14,15 @@
             GetBranchList();
         };
 
+
+        $(document).ready(function () {
+
+            $(".kendoInvoiceDateTime").kendoDateTimePicker({
+                format: "yyyy-MM-dd HH:mm"
+            });
+
+        });
+
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
@@ -1719,7 +1728,7 @@
                         { field: "VATRate", title: "VAT Rate", sortable: true, width: 100,  attributes: { style: "text-align: right;" } },
                         { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
 
-                        { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "LineTotal", title: "Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "CompanyId", hidden: true, title: "Vat Type", sortable: true, width: 100 }
                     ],
                     footerTemplate: function (e) {

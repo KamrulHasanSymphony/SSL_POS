@@ -16,6 +16,14 @@
             Visibility(true);
         };
 
+        $(document).ready(function () {
+
+            $(".kendoTransactionDate").kendoDatePicker({
+                format: "yyyy-MM-dd"
+            });
+
+        });
+
         getSupplierId = $("#SupplierId").val() || 0;
         getBankAccountId = $("#BankAccountId").val() || 0;
         decimalPlace = $("#DecimalPlace").val() || 2;

@@ -22,6 +22,50 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
             GetGridDataList();
         };
 
+        $(document).ready(function () {
+
+            function normalize(date) {
+                if (!date) return null;
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            }
+
+            var orderPicker = $(".kendoOrderDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                change: validateDates,
+                close: validateDates
+            }).data("kendoDatePicker");
+
+
+            var deliveryPicker = $(".kendoDeliveryDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                change: validateDates,
+                close: validateDates
+            }).data("kendoDatePicker");
+
+
+            function validateDates() {
+
+                var orderDate = normalize(orderPicker.value());
+                var deliveryDate = normalize(deliveryPicker.value());
+
+                // ❌ Delivery < Order
+                if (orderDate && deliveryDate && deliveryDate < orderDate) {
+
+                    deliveryPicker.value(orderPicker.value());
+
+                    ShowNotification(3, "Delivery date cannot be before Order date");
+                    return;
+                }
+
+                // ✅ restrict UI
+                if (orderPicker.value()) {
+                    deliveryPicker.min(orderPicker.value());
+                }
+            }
+
+        });
+
+
         GetCustomerComboBox();
 
 
@@ -1636,7 +1680,7 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                         },
                         {
                             field: "LineTotal",
-                            title: "Line Total",
+                            title: "Total",
                             sortable: true,
                             width: 100,
                             aggregates: ["sum"],

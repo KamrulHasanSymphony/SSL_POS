@@ -16,6 +16,69 @@
             Visibility(true);
         };
 
+
+        $(document).ready(function () {
+
+            function normalize(date) {
+                if (!date) return null;
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            }
+
+            var invoicePicker = $(".kendoInvoiceDateTime").kendoDateTimePicker({
+                format: "yyyy-MM-dd HH:mm",
+                change: validateDates,
+                close: validateDates
+            }).data("kendoDateTimePicker");
+
+
+            var purchasePicker = $(".kendoPurchaseDate").kendoDatePicker({
+                format: "yyyy-MM-dd",
+                change: validateDates,
+                close: validateDates
+            }).data("kendoDatePicker");
+
+
+            function validateDates() {
+
+                var invoiceRaw = invoicePicker.value();
+                var purchaseRaw = purchasePicker.value();
+
+                var invoiceDate = normalize(invoiceRaw);
+                var purchaseDate = normalize(purchaseRaw);
+
+                // ✅ set min/max relation
+                if (invoiceRaw) {
+                    purchasePicker.min(invoiceRaw);
+                }
+
+                if (purchaseRaw) {
+                    invoicePicker.max(purchaseRaw);
+                }
+
+                // ❌ Purchase আগে হলে
+                if (invoiceDate && purchaseDate && purchaseDate < invoiceDate) {
+
+                    purchasePicker.value(invoiceRaw);
+
+                    ShowNotification(3, "Purchase date cannot be before Invoice date");
+                    return;
+                }
+
+                // ❌ Invoice পরে হলে
+                if (invoiceDate && purchaseDate && invoiceDate > purchaseDate) {
+
+                    invoicePicker.value(purchaseRaw);
+
+                    ShowNotification(3, "Invoice date cannot be after Purchase date");
+                    return;
+                }
+            }
+
+        });
+
+
+
+
         getSupplierId = $("#SupplierId").val() || 0;
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
@@ -1592,7 +1655,7 @@
                         { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, attributes: { style: "text-align: right;" } },
                         { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "OthersAmount", title: "Others Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "LineTotal", title: "Line Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
+                        { field: "LineTotal", title: "Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
                         { field: "IsFixedVAT", hidden: true, title: "Is Fixed Vat", sortable: true, width: 100 },
                         { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 },
                         { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 150 },
