@@ -80,6 +80,46 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
+
+        public ActionResult ProductCardCreate()
+        {
+            try
+            {
+                SaleVM vm = new SaleVM();
+                vm.Operation = "add";
+                vm.TransactionType = "Sale";
+                vm.IsManualSale = true;
+
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                vm.BranchId = Convert.ToInt32(currentBranchId);
+
+                #region DecimalPlace
+                CommonVM commonVM = new CommonVM();
+                commonVM.Group = "SaleDecimalPlace";
+                commonVM.Name = "SaleDecimalPlace";
+                var settingsValue = _common.GetSettingsValue(commonVM);
+
+                if (settingsValue.Status == "Success" && settingsValue.DataVM != null)
+                {
+                    var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
+
+                    vm.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
+                }
+
+                #endregion
+
+                return View("ProductCardCreate", vm);
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return RedirectToAction("Index");
+            }
+        }
+
+
+
         public ActionResult DetailsIndex()
         {
             SaleDetailVM vm = new SaleDetailVM();

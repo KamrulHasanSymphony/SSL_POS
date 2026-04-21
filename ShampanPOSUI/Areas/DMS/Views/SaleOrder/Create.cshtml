@@ -172,7 +172,7 @@
                 @Html.HiddenFor(model => model.IsPost)
                 @Html.HiddenFor(model => model.BranchId)
                 @Html.HiddenFor(model => model.TransactionType)
-                @Html.HiddenFor(model => model.FromDate)
+                @*@Html.HiddenFor(model => model.FromDate)*@
 
 
                 @Html.Hidden("SaleOrderDetailsJson", JsonConvert.SerializeObject(Model.saleOrderDetailsList ?? new List<ShampanPOS.Models.SaleOrderDetailVM>()))

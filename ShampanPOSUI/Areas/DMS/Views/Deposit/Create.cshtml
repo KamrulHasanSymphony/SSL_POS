@@ -108,7 +108,48 @@
         </div>
     </div>
 
+    <div class="card" style="display:flex; flex-direction: row; align-items: center;">
+        <div class="card-header p-2" style="width:100%;">
 
+            @if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
+            {
+                <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+
+                    <!-- Left side -->
+                    <div style="display:flex; align-items:center; gap:5px;">
+                        <button type="button" class="button btnsave sslUpdate">Update</button>
+                    </div>
+
+                    <!-- Right side -->
+                    <button type="button"
+                            title="Add New"
+                            data-url="/DMS/Deposit/Create"
+                            onclick="GoTo(this)"
+                            class="button NewButton addNewButton">
+                        New
+                    </button>
+
+                </div>
+            }
+            else
+            {
+                <div style="display:none;" class="divUpdate">
+                    <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                    <button style="float:right;" type="button" title="Add New" data-url="/DMS/Deposit/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                        New
+                    </button>
+
+
+
+                </div>
+                <div class="divSave">
+                    <button class="button btnsave sslSave" type="button">Save</button>
+                </div>
+            }
+
+        </div>
+    </div>
 
 
     <div class="container-fluid">
@@ -176,14 +217,14 @@
                                     </div>
                                 </div>
                                 @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.ChequeDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.ChequeDate, new { @class = " form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>*@
+                                        @Html.LabelFor(model => model.ChequeDate)
+                                        <div class="input-group date">
+                                            @Html.TextBoxFor(model => model.ChequeDate, new { @class = " form-control form-control-sm dateRange" })
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>*@
 
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.ChequeDate)
@@ -201,14 +242,14 @@
                             <div class="form-group row">
 
                                 @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.TransactionDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.TransactionDate, new { @class = " required form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>*@
+                                        @Html.LabelFor(model => model.TransactionDate)
+                                        <div class="input-group date">
+                                            @Html.TextBoxFor(model => model.TransactionDate, new { @class = " required form-control form-control-sm dateRange" })
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>*@
 
                                 <div class="col-sm-2 pr-3">
                                     @Html.LabelFor(model => model.TransactionDate)
@@ -254,22 +295,22 @@
                                 </div>
 
                                 @*<div class="col-sm-2" style="flex-direction: column">
-            @Html.LabelFor(model => model.IsCash)
-            <div class="Onoffbtn">
-                <div class="input-group" style="margin-bottom: -26px; width: 78%;">
-                    <input id="IsCash"
-                           value="@Model.IsCash"
-                           type="checkbox"
-                           name="my-checkbox"
-                           @(Model.IsCash ? "checked" : "")
-                           data-bootstrap-switch
-                           data-off-color="danger"
-                           data-on-color="success"
-                           data-on-text="Cash"
-                           data-off-text="Bank">
-                </div>
-            </div>
-        </div>*@
+                                        @Html.LabelFor(model => model.IsCash)
+                                        <div class="Onoffbtn">
+                                            <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                                <input id="IsCash"
+                                                       value="@Model.IsCash"
+                                                       type="checkbox"
+                                                       name="my-checkbox"
+                                                       @(Model.IsCash ? "checked" : "")
+                                                       data-bootstrap-switch
+                                                       data-off-color="danger"
+                                                       data-on-color="success"
+                                                       data-on-text="Cash"
+                                                       data-off-text="Bank">
+                                            </div>
+                                        </div>
+                                    </div>*@
 
 
                                 <div class="col-sm-2" style="flex-direction: column">
@@ -308,9 +349,9 @@
                         {
                             <div style="display: flex; align-items: center; gap: 5px;">
                                 <button type="button" class="button btnsave sslUpdate">Update</button>
-                                <button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/Deposit/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                                @*<button style="margin-left: 0px;" type="button" title="Add New" data-url="/DMS/Deposit/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
-                                </button>
+                                </button>*@
                                 @*<button class="button sslPrintC" data-id="@Model.Id">Print</button>*@
                             </div>
 
@@ -319,9 +360,9 @@
                         {
                             <div style="display:none;" class="divUpdate">
                                 <button type="button" class="button btnsave sslUpdate">Update</button>
-                                <button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/Deposit/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
+                                @*<button style="float: right; margin-left: 5px;" type="button" title="Add New" data-url="/DMS/Deposit/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                                     New
-                                </button>
+                                </button>*@
                             </div>
                             <div class="divSave">
                                 <button class="button btnsave sslSave" type="button" id="">Save</button>

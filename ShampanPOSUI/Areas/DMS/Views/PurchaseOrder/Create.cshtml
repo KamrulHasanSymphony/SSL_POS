@@ -136,22 +136,53 @@
         }
         else
         {
-            <div style="display:none;" class="divUpdate">
+    <div style="display:none;" class="divUpdate">
+
+        <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+
+            <!-- LEFT SIDE -->
+            <div style="display:flex; align-items:center; gap:5px;">
+
                 <button type="button" class="button btnsave sslUpdate">Update</button>
+
                 <button type="button" class="button btnPost sslPost">Post</button>
-                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-                <button style="float:right;" type="button" title="Add New" data-url="/DMS/PurchaseOrder/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                    New
+
+                <button type="button" onclick="document.getElementById('reportLink').click();">
+                    <i class="k-icon k-i-print"></i> Print
                 </button>
+
+
+
+                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
             </div>
-            <div class="divSave">
-                <button class="button btnsave sslSave" type="button" id="">Save</button>
-            </div>
+
+            <!-- RIGHT SIDE -->
+            <button type="button"
+                    title="Add New"
+                    data-url="/DMS/PurchaseOrder/Create"
+                    onclick="GoTo(this)"
+                    class="button NewButton addNewButton">
+                New
+            </button>
+
+        </div>
+        <a id="reportLink"
+           href="/DMS/PurchaseOrder/getReport/@Model.Id"
+           style="display:none;">
+        </a>
+    </div>
+
+      
+
+        <div class="divSave">
+            <button class="button btnsave sslSave" type="button" id="">Save</button>
+        </div>
         }
 
     </div>
 
-</div>
+       </div>
 <div class="container-fluid">
     <form id="frmEntry">
         <div class="card card-secondary">
@@ -166,7 +197,7 @@
                 @Html.HiddenFor(model => model.IsPost)
                 @Html.HiddenFor(model => model.BranchId)
                 @Html.HiddenFor(model => model.TransactionType)
-                @Html.HiddenFor(model => model.FromDate)
+                @*@Html.HiddenFor(model => model.FromDate)*@
 
                 @Html.Hidden("SaleOrderDetailsJson", JsonConvert.SerializeObject(Model.purchaseOrderDetailsList ?? new List<ShampanPOS.Models.PurchaseOrderDetailVM>()))
                 <div class="form-group row">
@@ -296,9 +327,22 @@
             else
             {
                 <div style="display:none;" class="divUpdate">
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
-                    <button type="button" class="button btnPost sslPost">Post</button>
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+                    <div style="display:flex; align-items:center; gap:5px;">
+
+                        <button type="button" class="button btnsave sslUpdate">Update</button>
+                        <button type="button" class="button btnPost sslPost">Post</button>
+
+                        <button type="button" onclick="document.getElementById('reportLink').click();">
+                            <i class="k-icon k-i-print"></i> Print
+                        </button>
+
+                        <a id="reportLink"
+                           href="/DMS/PurchaseOrder/getReport/@Model.Id"
+                           style="display:none;">
+                        </a>
+                        <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                    </div>
                 </div>
                 <div class="divSave">
                     <button class="button btnsave sslSave" type="button" id="">Save</button>
@@ -306,8 +350,8 @@
             }
 
         </div>
-        <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
-    </div>
+                <div class="auditshow"> <img src="~/Content/Images/audit.png" title="Click for Audit" /> </div>
+       </div>
     <div class="card card-secondary auditcard">
 
         <div class="card-header">
