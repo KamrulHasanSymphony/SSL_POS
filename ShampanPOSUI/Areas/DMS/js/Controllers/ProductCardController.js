@@ -454,7 +454,7 @@
 
         $("#saleDetails").kendoGrid({
             dataSource: saleDetails,
-            toolbar: [{ name: "create", text: "Add" }],
+            //toolbar: [{ name: "create", text: "Add" }],
             editable: { mode: "incell", createAt: "bottom" },
             save: function () {
                 var grid = this;
@@ -1402,42 +1402,64 @@
     }
 
 
-//    function renderProductCardsInModal(products) {
+    //function renderProductCardsInModal(products) {
 
-//        var html = '<div class="row">';
+    //    var html = '<div class="row">';
 
-//        products.forEach(function (item) {
+    //    products.forEach(function (item) {
 
-//            html += `
-//<div class="col-md-3 mb-3">
-//    <div class="card shadow-sm p-2" style="border-radius:10px;">
+    //        html += `
+    //        <div class="col-md-3 mb-3">
+    //            <div class="card shadow-sm p-2" style="border-radius:10px;">
 
-//        <h6>${item.ProductName}</h6>
-//        <p><b>Code:</b> ${item.ProductId}</p>
-//        <p><b>Price:</b> ${item.SalesPrice}</p>
+    //                <h6>${item.ProductName}</h6>
+    //                <p><b>Code:</b> ${item.ProductId}</p>
+    //                <p><b>Price:</b> ${item.SalesPrice}</p>
 
-//        <div style="display:flex; gap:5px; margin-top:8px;">
+    //                <div style="display:flex; gap:5px; margin-top:8px; align-items:center;">
 
-//            <input type="number" min="1" value="1"
-//                class="form-control form-control-sm"
-//                id="qty_${item.ProductId}" style="width:60px;" />
+    //                    <!-- MINUS -->
+    //                    <button class="btn btn-danger btn-sm qty-minus"
+    //                        data-id="${item.ProductId}">
+    //                        -
+    //                    </button>
 
-//            <button class="btn btn-success btn-sm add-product-btn"
-//                data-id="${item.ProductId}">
-//                +
-//            </button>
+    //                    <!-- INPUT -->
+    //                    <input type="number" min="1" value="1"
+    //                        class="form-control form-control-sm"
+    //                        id="qty_${item.ProductId}"
+    //                        style="width:35px; text-align:center;" />
 
-//        </div>
+    //                    <!-- PLUS (increase only) -->
+    //                    <button class="btn btn-primary btn-sm qty-plus"
+    //                        data-id="${item.ProductId}">
+    //                        +
+    //                    </button>
 
-//    </div>
-//</div>
-//`;
-//        });
 
-//        html += '</div>';
+    //                </div>
+    //                 <div style="display:flex; gap:5px; margin-top:8px; align-items:center;">
 
-//        $("#productCardContainer").html(html);
-//    }
+
+
+    //                    <!-- ADD BUTTON -->
+    //                    <button class="btn btn-success btn-sm add-product-btn" style="margin-left: 31px;"
+    //                        data-id="${item.ProductId}">
+    //                        Add
+    //                    </button>
+
+    //                </div>
+
+    //            </div>
+    //        </div>
+    //        `;
+    //    });
+
+    //    html += '</div>';
+
+    //    $("#productCardContainer").html(html);
+    //}
+
 
 
     function renderProductCardsInModal(products) {
@@ -1446,51 +1468,55 @@
 
         products.forEach(function (item) {
 
+            // 🔥 IMAGE PATH FIX (IMPORTANT)
+            var imgPath = item.ImagePath
+                ? item.ImagePath   // 🔥 direct use
+                : "/images/no-image.png";
+
             html += `
-<div class="col-md-3 mb-3">
-    <div class="card shadow-sm p-2" style="border-radius:10px;">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-2 text-center" style="border-radius:10px;">
 
-        <h6>${item.ProductName}</h6>
-        <p><b>Code:</b> ${item.ProductId}</p>
-        <p><b>Price:</b> ${item.SalesPrice}</p>
+                <!-- ✅ IMAGE ADD -->
+                <div style="height:120px; margin-bottom:10px; background:#f5f5f5;">
+                    <img src="${imgPath}"
+                         onerror="this.src='/images/no-image.png'"
+                         style="max-height:100%; max-width:100%; object-fit:contain;" />
+                </div>
 
-        <div style="display:flex; gap:5px; margin-top:8px; align-items:center;">
+                <h6>${item.ProductName}</h6>
+                <p><b>Code:</b> ${item.ProductId}</p>
+                <p><b>Price:</b> ${item.SalesPrice}</p>
 
-            <!-- MINUS -->
-            <button class="btn btn-danger btn-sm qty-minus"
-                data-id="${item.ProductId}">
-                -
-            </button>
+                <div style="display:flex; gap:5px; margin-top:8px; align-items:center; justify-content:center;">
 
-            <!-- INPUT -->
-            <input type="number" min="1" value="1"
-                class="form-control form-control-sm"
-                id="qty_${item.ProductId}"
-                style="width:35px; text-align:center;" />
+                    <button class="btn btn-danger btn-sm qty-minus"
+                        data-id="${item.ProductId}">
+                        -
+                    </button>
 
-            <!-- PLUS (increase only) -->
-            <button class="btn btn-primary btn-sm qty-plus"
-                data-id="${item.ProductId}">
-                +
-            </button>
+                    <input type="number" min="1" value="1"
+                        class="form-control form-control-sm"
+                        id="qty_${item.ProductId}"
+                        style="width:40px; text-align:center;" />
 
+                    <button class="btn btn-primary btn-sm qty-plus"
+                        data-id="${item.ProductId}">
+                        +
+                    </button>
 
+                </div>
+
+                <div style="margin-top:8px;">
+                    <button class="btn btn-success btn-sm add-product-btn"
+                        data-id="${item.ProductId}">
+                        Add
+                    </button>
+                </div>
+
+            </div>
         </div>
-         <div style="display:flex; gap:5px; margin-top:8px; align-items:center;">
-
-            
-
-            <!-- ADD BUTTON -->
-            <button class="btn btn-success btn-sm add-product-btn" style="margin-left: 31px;"
-                data-id="${item.ProductId}">
-                Add
-            </button>
-
-        </div>
-
-    </div>
-</div>
-`;
+        `;
         });
 
         html += '</div>';
