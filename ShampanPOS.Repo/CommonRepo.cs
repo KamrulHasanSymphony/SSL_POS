@@ -1143,7 +1143,24 @@ namespace ShampanPOS.Repo
             }
         }
 
+        public ResultVM ProductModal(CommonVM param)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/ProductModal", authModel, JsonConvert.SerializeObject(param));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
 
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         public ResultVM GetProductModalPurchase(CommonVM param)
         {

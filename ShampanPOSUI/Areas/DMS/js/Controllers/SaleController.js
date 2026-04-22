@@ -112,20 +112,16 @@
 
             var isFormValid = true;
 
-            if (model.IsAutoCode?.toLowerCase() === "n" && isEmpty(model.Code)) {
-                markInvalid("#Code", "Code is required.");
-                isFormValid = false;
-            }
+            //if (model.IsAutoCode?.toLowerCase() === "n" && isEmpty(model.Code)) {
+            //    markInvalid("#Code", "Code is required.");
+            //    isFormValid = false;
+            //}
 
             if (isInvalid(model.CustomerId)) {
                 markInvalid("#CustomerId", "Customer is required.");
                 isFormValid = false;
             }
-
-            if (isEmpty(model.TransactionDateTime)) {
-                markInvalid("#TransactionDateTime", "Transaction Date is required.");
-                isFormValid = false;
-            }
+            
 
             var details = [];
             var grid = $("#saleDetails").data("kendoGrid");
@@ -234,9 +230,12 @@
             }
 
 
-            Confirmation("Are you sure? Do You Want to " + status + " Data?", result => {
-                if (result) save();
-                });
+            Confirmation("Are you sure?", function (result) {
+                if (result === true) {
+                    debugger;
+                    save();
+                }
+            });
         });
 
         $('#btnPost').on('click', function () {
@@ -1899,9 +1898,7 @@
 
     };
 
-    function save($table)
-
- {
+    function save() {
         debugger;
 
         var validator = $("#frmEntry").validate();

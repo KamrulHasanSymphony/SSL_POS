@@ -45,12 +45,11 @@
 
         GetCustomerComboBox();
         GetProductGroupComboBox();
-        LoadItemsGrid();
 
 
         $("#productCardModal").kendoWindow({
             width: "1000px",
-            height: "550px",
+            height: "700px",
             title: "Select Product",
             modal: true,
             visible: false,
@@ -71,12 +70,6 @@
             $('#addRows').prop('disabled', true).hide();
         }
 
-
-        $("#saleDetails").on("click", "td.product-cell", function () {
-            var grid = $("#saleDetails").data("kendoGrid");
-            var dataItem = grid.dataItem($(this).closest("tr"));
-            OpenProductPopup(dataItem);
-        });
 
 
         $('.btnsave').click(function (e) {
@@ -145,30 +138,26 @@
                 var dataItems = grid.dataSource.view();
 
                 for (var i = 0; i < dataItems.length; i++) {
+
                     var item = dataItems[i];
 
-                    var finalProductId = 0;
+                    var finalProductId = item.ProductId || item.ItemId;
 
-                    if (item.ProductId && item.ProductId > 0) {
-                        finalProductId = item.ProductId;
-                    } else if (item.ItemId && item.ItemId > 0) {
-                        finalProductId = item.ItemId;
-                    }
-
-                    if (finalProductId < 0) {
-                        ShowNotification(3, "Item is required in sale details.");
+                    // 🔥 FIX HERE
+                    if (!finalProductId || finalProductId <= 0) {
+                        ShowNotification(3, "Please select product in row " + (i + 1));
                         return;
                     }
 
-                    if (!item.Quantity || item.Quantity < 0) {
+                    if (!item.Quantity || item.Quantity <= 0) {
                         ShowNotification(3, "Quantity must be greater than zero.");
                         return;
                     }
 
                     details.push({
-                        Id: item.Id,
+                        Id: item.Id || 0,
                         ProductId: finalProductId,
-                        ProductName: item.ProductName || item.ItemName,
+                        ProductName: item.ProductName,
                         UOMId: item.UOMId,
                         UOMName: item.UOMName,
                         Quantity: item.Quantity,
@@ -179,7 +168,7 @@
                         VATRate: item.VATRate,
                         SD: item.SD,
                         LineTotal: item.LineTotal,
-                        Action: item.Action
+                        Action: item.Action || "Add"
                     });
                 }
             }
@@ -243,10 +232,12 @@
                 ShowNotification(3, "Your payment is more than your total bill. Please correct it.");
                 return;
             }
+            Confirmation("Are you sure?", function (result) {
+                debugger;
 
-
-            Confirmation("Are you sure? Do You Want to " + status + " Data?", result => {
-                if (result) save();
+                if (result === true) {
+                    save();
+                }
             });
         });
 
@@ -282,32 +273,6 @@
                 });
         });
 
-        $("#btnFromPurchaseOrder").on("click", function () {
-            debugger;
-            var id = $("#Id").val();
-
-            if (!id || id === "0") {
-                ShowNotification(3, "Invalid Id!");
-                return;
-            }
-
-            var form = $('<form>', {
-                method: 'POST',
-                action: '/DMS/Collection/GetFromSale'
-            });
-
-            // CommonVM.IDs
-            form.append(
-                $('<input>', {
-                    type: 'hidden',
-                    name: 'IDs',
-                    value: id
-                })
-            );
-
-            $('body').append(form);
-            form.submit();
-        });
 
 
         $(document).on('click', '.remove-row-btn', function () {
@@ -321,14 +286,6 @@
             TotalCalculation();
         });
 
-
-
-        $("#btnSearchPurchaseOrder").on("click", function () {
-            $('#FromDate').val($('#InvoiceDateTime').val());
-
-            poWindow.center().open();
-
-        });
 
 
         $("#windowGrid").on("dblclick", "tbody tr", function () {
@@ -349,18 +306,6 @@
             // Load detail table
             loadPurchaseOrderDetails(saleOrderId);
         });
-
-        var poWindow = $("#poWindow").kendoWindow({
-            title: "Sale Order",
-            modal: true,
-            width: "900px",
-            height: "600px",
-            visible: false,
-            actions: ["Close"],
-            close: function () {
-                selectedGridModel = null;
-            }
-        }).data("kendoWindow");
 
         $("#windowGrid").kendoGrid({
             dataSource: {
@@ -1131,12 +1076,6 @@
             ignore: "#details input, #details select, #details textarea"
         });
 
-        //$(document).on("click", ".add-product-btn", function () {
-
-        //    var productId = $(this).data("id");
-
-        //    addProductToGridWithQty(productId);
-        //});
 
         $(document).on("click", ".add-product-btn", function () {
             var productId = $(this).data("id");
@@ -1162,6 +1101,20 @@
             if (val > 1) {
                 input.val(val - 1);
             }
+        });
+
+        $("#btnSearch").click(function () {
+
+            var combo = $("#ProductGroupId").data("kendoMultiColumnComboBox");
+            var selectedId = combo.value();
+
+            if (!selectedId) {
+                openProductCardModal(null); // or 0
+            }
+            else {
+                openProductCardModal(selectedId);
+            }
+
         });
 
 
@@ -1363,33 +1316,30 @@
                     this.value(parseInt(getProductGroupId));
                 }
             },
-            change: function (e) {
-
-                var selectedId = this.value();
-
-                if (!selectedId) {
-                    $("#productDetails").html("");
-                    return;
-                }
-
-                openProductCardModal(selectedId);
-            }
+     
         }).data("kendoMultiColumnComboBox");
     };
 
 
     function openProductCardModal(groupId) {
-
+        debugger;
         var wnd = $("#productCardModal").data("kendoWindow");
 
         $.ajax({
-            url: "/Common/Common/GetProductModal",
+            url: "/Common/Common/ProductModal",
             type: "GET",
             success: function (data) {
 
                 allProducts = data;
 
-                var filtered = data.filter(x => x.ProductGroupId == groupId);
+                var filtered;
+
+                // ✅ FIX HERE
+                if (!groupId) {
+                    filtered = data; // 🔥 show ALL
+                } else {
+                    filtered = data.filter(x => x.ProductGroupId == groupId);
+                }
 
                 renderProductCardsInModal(filtered);
 
@@ -1402,68 +1352,8 @@
     }
 
 
-    //function renderProductCardsInModal(products) {
-
-    //    var html = '<div class="row">';
-
-    //    products.forEach(function (item) {
-
-    //        html += `
-    //        <div class="col-md-3 mb-3">
-    //            <div class="card shadow-sm p-2" style="border-radius:10px;">
-
-    //                <h6>${item.ProductName}</h6>
-    //                <p><b>Code:</b> ${item.ProductId}</p>
-    //                <p><b>Price:</b> ${item.SalesPrice}</p>
-
-    //                <div style="display:flex; gap:5px; margin-top:8px; align-items:center;">
-
-    //                    <!-- MINUS -->
-    //                    <button class="btn btn-danger btn-sm qty-minus"
-    //                        data-id="${item.ProductId}">
-    //                        -
-    //                    </button>
-
-    //                    <!-- INPUT -->
-    //                    <input type="number" min="1" value="1"
-    //                        class="form-control form-control-sm"
-    //                        id="qty_${item.ProductId}"
-    //                        style="width:35px; text-align:center;" />
-
-    //                    <!-- PLUS (increase only) -->
-    //                    <button class="btn btn-primary btn-sm qty-plus"
-    //                        data-id="${item.ProductId}">
-    //                        +
-    //                    </button>
-
-
-    //                </div>
-    //                 <div style="display:flex; gap:5px; margin-top:8px; align-items:center;">
-
-
-
-    //                    <!-- ADD BUTTON -->
-    //                    <button class="btn btn-success btn-sm add-product-btn" style="margin-left: 31px;"
-    //                        data-id="${item.ProductId}">
-    //                        Add
-    //                    </button>
-
-    //                </div>
-
-    //            </div>
-    //        </div>
-    //        `;
-    //    });
-
-    //    html += '</div>';
-
-    //    $("#productCardContainer").html(html);
-    //}
-
-
-
     function renderProductCardsInModal(products) {
-
+        debugger;
         var html = '<div class="row">';
 
         products.forEach(function (item) {
@@ -1554,8 +1444,6 @@
 
         grid.refresh();
 
-        // ✅ modal close
-      /*  $("#productCardModal").data("kendoWindow").close();*/
     }
     function TotalCalculation() {
 
@@ -1586,679 +1474,123 @@
     }
 
 
-    // ============================================================
-    // PRODUCT POPUP WINDOW (SEARCHABLE PRODUCT LIST)
-    // ============================================================
-
-    function OpenProductPopup(detailRow) {
-        debugger;
-        var wnd = $("#saleDetailsWindow").kendoWindow({
-            width: "650px",
-            height: "450px",
-            title: "Select Product",
-            modal: true,
-            visible: false
-        }).data("kendoWindow");
-
-        wnd.center().open();
-
-        $("#saleDetailsGrid").kendoGrid({
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "/Common/Common/GetProductModal" // API for Product list
-                    }
-                }
-            },
-            height: 380,
-            sortable: true,
-            filterable: true,
-            pageable: true,
-            selectable: "row",
-
-            columns: [
-                { field: "ProductId", title: "Product ID", hidden: true },
-                { field: "ProductName", title: "Product Name", width: 100 },
-                { field: "UOMId", hidden: true },
-                { field: "UOMName", title: "UOM", width: 100 },
-                //{ field: "HSCodeNo", title: "HS Code No", width: 80 },
-                { field: "ProductGroupId", title: "Product Group Id", width: 100 },
-                { field: "ProductGroupName", title: "Product Group Name", width: 100 },
-                { field: "PurchasePrice", title: "Purchase Price", width: 100 },
-                { field: "SalesPrice", title: "Sale Price", width: 100 },
-                { field: "VATRate", title: "VAT Rate", width: 100 },
-                { field: "SDRate", title: "SD Rate", width: 100 },
-            ]
-        });
-
-        // DOUBLE CLICK SELECT
-        $("#saleDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
-
-            var grid = $("#saleDetailsGrid").data("kendoGrid");
-            var selectedItem = grid.dataItem($(this));
-            ApplyProductSelection(detailRow, selectedItem);
-            wnd.close();
-        });
-    }
-
-    function LoadItemsGrid() {
-        $("#items").kendoListView({
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "/Common/Common/GetProductModal",
-                        dataType: "json"
-                    }
-                }
-            },
-
-            template: `
-        <div class="item-card">
-
-            <h5>#: Name #</h5>
-
-            <div class="item-image">
-                <img src="#: Image #" alt="#: Name #" />
-            </div>
-
-            <div class="item-info">
-                <div><b>UOM:</b> #: UomName #</div>
-                <div><b>Cost:</b> #: kendo.toString(PurchasePrice,'n2') #</div>
-                <div><b>VAT:</b> #: VATRate # %</div>
-                <div><b>SD:</b> #: SDRate # %</div>
-            </div>
-
-
-            <div class="card-actions">
-                <input type='number' class='qty' value='1' min='1' />
-                <button class='addToCart'
-                        data-id='#: Id #' 
-                        data-name='#: Name #'
-                        data-uom='#: UomName #'
-                        data-uomid='#: UomId #'
-                        data-price='#: PurchasePrice #'
-                        data-vat='#: VATRate #'
-                        data-sd='#: SDRate #'>
-                    Add
-                </button>
-            </div>
-
-        </div>
-        `,
-
-            dataBound: function () {
-                $(".addToCart").off("click").on("click", function () {
-
-                    var item = {
-                        Id: $(this).data("id"),
-                        Name: $(this).data("name"),
-                        UomId: $(this).data("uomid"),
-                        UomName: $(this).data("uom"),
-                        PurchasePrice: $(this).data("price"),
-                        VATRate: $(this).data("vat"),
-                        SDRate: $(this).data("sd"),
-                        Quantity: $(this).closest(".item-card").find(".qty").val()
-                    };
-
-                    AddItemToSaleDetails(item);
-                });
-            }
-        });
-    }
-
-
-    function AddItemToSaleDetails(item) {
-
-        var grid = $("#saleDetails").data("kendoGrid");
-
-        var detailRow = grid.dataSource.add({
-            ProductId: item.Id,
-            ProductName: item.Name,
-            UOMId: item.UomId,
-            UOMName: item.UomName,
-            Quantity: parseFloat(item.Quantity),
-            UnitRate: parseFloat(item.PurchasePrice),
-            VATRate: item.VATRate || 0,
-            SD: item.SD || 0
-        });
-
-        var qty = detailRow.Quantity || 0;
-        var unit = detailRow.UnitRate || 0;
-        var sdRate = detailRow.SD || 0;
-        var vatRate = detailRow.VATRate || 0;
-
-        var subTotal = qty * unit;
-        detailRow.set("SubTotal", subTotal);
-
-        var sdAmount = (subTotal * sdRate) / 100;
-        detailRow.set("SDAmount", sdAmount);
-
-        var vatAmount = ((subTotal + sdAmount) * vatRate) / 100;
-        detailRow.set("VATAmount", vatAmount);
-
-        var total = subTotal + sdAmount + vatAmount;
-        detailRow.set("LineTotal", total);
-
-        grid.refresh();
-    }
-
-
-
-    function ApplyProductSelection(detailRow, item) {
-        debugger;
-        console.log(item);
-        detailRow.set("ProductId", item.ProductId);
-        detailRow.set("ProductName", item.ProductName);
-
-        detailRow.set("UOMId", item.UOMId);
-        detailRow.set("UOMName", item.UOMName);
-
-        // Cost Price → UnitRate
-        detailRow.set("UnitRate", item.SalesPrice);
-
-        // Setting Rates
-        detailRow.set("VATRate", item.VATRate);
-        detailRow.set("SD", item.SDRate);
-
-        // Default quantity if empty
-        if (!detailRow.Quantity || detailRow.Quantity <= 0) {
-            detailRow.set("Quantity", 1);
-        }
-
-        // Auto-calc subtotal
-        detailRow.set("SubTotal", detailRow.Quantity * detailRow.SalesPrice);
-
-        // SD Amount
-        var sdAmt = (detailRow.SubTotal * (detailRow.SD || 0)) / 100;
-        detailRow.set("SDAmount", sdAmt);
-
-        // VAT Amount
-        var vatAmt = ((detailRow.SubTotal + sdAmt) * (detailRow.VATRate || 0)) / 100;
-        detailRow.set("VATAmount", vatAmt);
-
-        // Line Total
-        detailRow.set("LineTotal", detailRow.SubTotal + sdAmt + vatAmt);
-    }
-
-
-
-    var GetGridDataList = function () {
-        debugger;
-        var branchId = $("#Branchs").data("kendoComboBox").value();
-        var IsPosted = $('#IsPosted').val();
-        var FromDate = $('#FromDate').val();
-        var ToDate = $('#ToDate').val();
-
-        var gridDataSource = new kendo.data.DataSource({
-            type: "json",
-            serverPaging: true,
-            serverSorting: true,
-            serverFiltering: true,
-            allowUnsort: true,
-            autoSync: true,
-            pageSize: 10,
-            transport: {
-                read: {
-                    url: "/DMS/Sale/GetGridData",
-                    type: "POST",
-                    dataType: "json",
-                    cache: false,
-                    data: { branchId: branchId, isPost: IsPosted, fromDate: FromDate, toDate: ToDate }
-                },
-                parameterMap: function (options) {
-                    if (options.sort) {
-                        options.sort.forEach(function (param) {
-                            if (param.field === "Id") {
-                                param.field = "H.Id";
-                            }
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
-                            if (param.field === "CustomerName") {
-                                param.field = "s.Name";
-                            }
-                            if (param.field === "DeliveryAddress") {
-                                param.field = "H.DeliveryAddress";
-                            }
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                                if (statusValue.startsWith("p")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("n")) {
-                                    param.value = 0;
-                                } else {
-                                    param.value = null;
-                                }
-
-                                param.field = "H.IsPost";
-                                param.operator = "eq";
-                            }
-                            if (param.field === "InvoiceDateTime" && param.value) {
-                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "H.InvoiceDateTime";
-                            }
-                        });
-                    }
-
-                    if (options.filter && options.filter.filters) {
-                        options.filter.filters.forEach(function (param) {
-                            if (param.field === "Id") {
-                                param.field = "H.Id";
-                            }
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
-                            if (param.field === "CustomerName") {
-                                param.field = "s.Name";
-                            }
-                            if (param.field === "DeliveryAddress") {
-                                param.field = "H.DeliveryAddress";
-                            }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                                if (statusValue.startsWith("p")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("n")) {
-                                    param.value = 0;
-                                } else {
-                                    param.value = null;
-                                }
-
-                                param.field = "H.IsPost";
-                                param.operator = "eq";
-                            }
-                            if (param.field === "InvoiceDateTime" && param.value) {
-                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "H.InvoiceDateTime";
-                            }
-
-                        });
-                    }
-                    return options;
-                }
-            },
-            batch: true,
-            schema: {
-                data: "Items",
-                total: "TotalCount"
-            },
-            model: {
-
-                fields: {
-                    InvoiceDateTime: { type: "date" },
-                    DeliveryDate: { type: "date" },
-                    GrdTotalAmount: { type: "number" },
-                    GrdTotalSDAmount: { type: "number" },
-                    GrdTotalVATAmount: { type: "number" }
-                }
-            }
-            ,
-            //aggregate: [
-            //    { field: "GrdTotalAmount", aggregate: "sum" },
-            //    { field: "GrdTotalSDAmount", aggregate: "sum" },
-            //    { field: "GrdTotalVATAmount", aggregate: "sum" }
-            //]
-        });
-
-        $("#GridDataList").kendoGrid({
-            dataSource: gridDataSource,
-            pageable: {
-                refresh: true,
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true,
-                pageSizes: [10, 20, 50, "all"]
-            },
-            noRecords: true,
-            messages: {
-                noRecords: "No Record Found!"
-            },
-            scrollable: true,
-            filterable: {
-                extra: true,
-                operators: {
-                    string: {
-                        startswith: "Starts with",
-                        endswith: "Ends with",
-                        contains: "Contains",
-                        doesnotcontain: "Does not contain",
-                        eq: "Is equal to",
-                        neq: "Is not equal to",
-                        gt: "Is greater than",
-                        lt: "Is less than"
-                    }
-                }
-            },
-            sortable: true,
-            resizable: true,
-            reorderable: true,
-            groupable: true,
-            toolbar: ["excel", "pdf", "search"],
-            search: {
-                fields: ["Id", "Code", "Status", "CustomerName", "InvoiceDateTime"]
-            },
-
-            detailInit: function (e) {
-                debugger;
-                $("<div/>").appendTo(e.detailCell).kendoGrid({
-                    dataSource: {
-                        type: "json",
-                        serverPaging: true,
-                        serverSorting: true,
-                        serverFiltering: true,
-                        allowUnsort: true,
-                        pageSize: 10,
-                        transport: {
-                            read: {
-                                url: "/DMS/Sale/GetSaleDetailDataById",
-                                type: "GET",
-                                dataType: "json",
-                                cache: false,
-                                data: { masterId: e.data.Id }
-                            },
-
-                            parameterMap: function (options) {
-                                return options;
-                            }
-                        },
-                        batch: true,
-                        schema: {
-                            data: "Items",
-                            total: "TotalCount"
-                        },
-                        aggregate: [
-                            { field: "Quantity", aggregate: "sum" },
-                            { field: "UnitRate", aggregate: "sum" },
-                            { field: "SubTotal", aggregate: "sum" },
-                            { field: "SD", aggregate: "sum" },
-                            { field: "SDAmount", aggregate: "sum" },
-                            { field: "VATRate", aggregate: "sum" },
-                            { field: "VATAmount", aggregate: "sum" },
-                            { field: "LineTotal", aggregate: "sum" }
-                        ],
-                        requestEnd: function (e) {
-                            console.log("Response Data:", e.response); // Log server response
-                        }
-                    },
-                    scrollable: false,
-                    sortable: true,
-                    pageable: false,
-                    noRecords: true,
-                    messages: {
-                        noRecords: "No Record Found!"
-                    },
-                    columns: [
-                        { field: "Id", hidden: true, width: 50 },
-                        { field: "ProductName", title: "Product Name", sortable: true, width: 120, footerTemplate: "Total:" },
-                        { field: "Quantity", title: "Quantity", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "UnitRate", title: "Unit Rate", sortable: true, width: 100, attributes: { style: "text-align: right;" } },
-                        { field: "SubTotal", title: "Sub Total", sortable: true, width: 100, aggregates: ["sum"], format: "{0:n2}", footerTemplate: "#= kendo.toString(sum, 'n2') #", attributes: { style: "text-align: right;" } },
-                        { field: "SD", title: "SD Rate", sortable: true, width: 100, format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "SDAmount", title: "SD Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "VATRate", title: "VAT Rate", sortable: true, width: 100, attributes: { style: "text-align: right;" } },
-                        { field: "VATAmount", title: "VAT Amount", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-
-                        { field: "LineTotal", title: "Total", sortable: true, width: 100, footerTemplate: "#= kendo.toString(sum, 'n2') #", aggregates: ["sum"], format: "{0:n2}", attributes: { style: "text-align: right;" } },
-                        { field: "CompanyId", hidden: true, title: "Vat Type", sortable: true, width: 100 }
-                    ],
-                    footerTemplate: function (e) {
-                        var aggregates = e.sender.dataSource.aggregates();
-                        return `
-                            <div style="font-weight: bold; text-align: right;">
-                                Total:
-                                <span>${kendo.toString(aggregates.Quantity.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.UnitRate.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.SubTotal.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.SD.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.SDAmount.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.VATRate.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.VATAmount.sum, 'n2')}</span>
-                                <span>${kendo.toString(aggregates.LineTotal.sum, 'n2')}</span>
-                            </div>`;
-                    }
-                });
-            },
-
-
-
-
-
-
-            excel: {
-                fileName: "SaleList.xlsx",
-                filterable: true
-            },
-            pdf: {
-                fileName: `SaleList_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
-                allPages: true,
-                avoidLink: true,
-                filterable: true
-            },
-            pdfExport: function (e) {
-
-                $(".k-grid-toolbar").hide();
-                $(".k-grouping-header").hide();
-                $(".k-floatwrap").hide();
-
-
-
-                var branchName = "All Branch Name";
-                var companyName = "All Company Name";
-                var companyAddress = "All Company Address";
-
-                var grid = e.sender;
-
-                // Hide the "Action" and checkbox columns
-                var actionColumnIndex = grid.columns.findIndex(col => col.title === "Action");
-                var selectionColumnIndex = grid.columns.findIndex(col => col.selectable === true);
-
-                if (actionColumnIndex == 0 || actionColumnIndex > 0) {
-                    var actionVisibility = [
-                        grid.columns[actionColumnIndex].hidden,
-                    ];
-
-                    grid.hideColumn(actionColumnIndex);
-                }
-                if (selectionColumnIndex == 0 || selectionColumnIndex > 0) {
-                    var selectableVisibility = [
-                        grid.columns[selectionColumnIndex].hidden
-                    ];
-
-                    grid.hideColumn(selectionColumnIndex);
-                }
-
-
-                var fileName = `SaleList_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
-
-                var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
-                var columnWidth = 100;
-                var totalWidth = numberOfColumns * columnWidth;
-
-                e.sender.options.pdf = {
-                    //paperSize: [totalWidth, 2800],
-                    paperSize: "A2",
-                    margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
-                    landscape: true,
-                    allPages: true,
-                    template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                                <div>Company Name :- ${companyName}</div>
-                                <div>Company Address :- ${companyAddress}</div>
-                            </div> `
-                };
-
-                e.sender.options.pdf.fileName = fileName;
-
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            },
-            columns: [
-                {
-                    selectable: true, width: 40
-                },
-                {
-                    title: "Action",
-                    width: 90,
-                    template: function (dataItem) {
-
-                        return `
-                                <a href="/DMS/Sale/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                           <a href="/DMS/Sale/getReport/${dataItem.Id}" 
-                          class="btn btn-success btn-sm mr-2 getReport" 
-                          title="Report">
-                           <i class="fas fa-file-alt"></i>
-                      </a>  `
-
-                    }
-                },
-                { field: "Id", width: 50, hidden: true, sortable: true },
-                { field: "Code", title: "Code", width: 180, sortable: true },
-                { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
-                {
-                    field: "InvoiceDateTime", title: "Invoice DateTime", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
-                    filterable:
-                    {
-                        ui: "datepicker"
-                    }
-                },
-
-                {
-                    field: "Status", title: "Status", sortable: true, width: 100,
-                    filterable: {
-                        ui: function (element) {
-                            element.kendoDropDownList({
-                                dataSource: [
-                                    { text: "Posted", value: "1" },
-                                    { text: "Not-posted", value: "0" }
-                                ],
-                                dataTextField: "text",
-                                dataValueField: "value",
-                                optionLabel: "Select Option"
-                            });
-                        }
-                    }
-                }
-                ,
-                { field: "DeliveryAddress", title: "Delivery Address", sortable: true, hidden: true, width: 250 },
-                { field: "Comments", title: "Comments", sortable: true, width: 250, hidden: true },
-                { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },
-                { field: "CompanyName", title: "Company Name ", sortable: true, hidden: true, width: 200 }
-
-
-            ],
-            editable: false,
-            selectable: "multiple row",
-            navigatable: true,
-            columnMenu: true
-        });
-
-    };
 
     function save($table) {
         debugger;
-
-        var validator = $("#frmEntry").validate();
-        if (!validator.form()) {
-            validator.focusInvalid();
-            return;
-        }
         var model = serializeInputs("frmEntry");
 
-        var sdTotalAmount = parseFloat($("#subTotalSD").val()) || 0;
-        var vatTotalAmount = parseFloat($("#subTotalVAT").val()) || 0;
-        var totalSD = parseFloat($("#subTotalSD").val()) || 0;
-        var totalVAT = parseFloat($("#subTotalVAT").val()) || 0;
-        var grandTotal = parseFloat($("#SubTotal").val()) || 0;
-        var paidAmount = parseFloat($("#Payment").val()) || 0;
+        // 🔥 TOTAL CALCULATION
+        model.SDAmount = parseFloat($("#subTotalSD").val()) || 0;
+        model.VATAmount = parseFloat($("#subTotalVAT").val()) || 0;
+        model.TotalSD = model.SDAmount;
+        model.TotalVAT = model.VATAmount;
+        model.GrandTotal = parseFloat($("#SubTotal").val()) || 0;
+        model.PaidAmount = parseFloat($("#Payment").val()) || 0;
 
-        debugger;
-        model.SDAmount = sdTotalAmount;
-        model.VATAmount = vatTotalAmount;
-        model.TotalSD = totalSD;
-        model.TotalVAT = totalVAT;
-        model.GrandTotal = grandTotal;
-        model.PaidAmount = paidAmount;
-        debugger;
+        // 🔥 Transaction Type
         var saleorder = $("#SaleOrderId").val();
+        model.TransactionType = saleorder > 0 ? 'SaleOrder' : 'Sale';
 
-        if (saleorder > 0) {
-            model.TransactionType = 'SaleOrder';
-        }
-        else {
-            model.TransactionType = 'Sale';
-        }
-
+        // =========================
+        // 🔥 SALE DETAILS FIX
+        // =========================
         var details = [];
-
         var grid = $("#saleDetails").data("kendoGrid");
-        if (grid) {
 
+        if (grid) {
             var dataItems = grid.dataSource.view();
 
             for (var i = 0; i < dataItems.length; i++) {
 
                 var item = dataItems[i];
 
+                var finalProductId = item.ProductId || item.ItemId;
+
+                // ❌ FIX 1: Product validation
+                if (!finalProductId || finalProductId <= 0) {
+                    ShowNotification(3, "Please select product in row " + (i + 1));
+                    return;
+                }
+
+                // ❌ FIX 2: Quantity validation
+                if (!item.Quantity || item.Quantity <= 0) {
+                    ShowNotification(3, "Quantity must be greater than zero (Row " + (i + 1) + ")");
+                    return;
+                }
+
                 details.push({
-
-                    Id: item.Id,
-
-                    ProductId: item.ProductId,
-                    //ProductId: item.ItemId,
-                    ProductName: item.ProductName,
-                    //ProductName: item.ItemName,
-                    UOMId: item.UOMId,
-                    UOMName: item.UOMName,
-
+                    Id: item.Id || 0,
+                    ProductId: finalProductId,
+                    ProductName: item.ProductName || "",
+                    UOMId: item.UOMId || 0,
+                    UOMName: item.UOMName || "",
                     Quantity: item.Quantity,
-                    //UnitCostPrice: item.UnitCostPrice,
-                    UnitRate: item.UnitRate,
-                    SubTotal: item.SubTotal,
-                    VATAmount: item.VATAmount,
-                    SDAmount: item.SDAmount,
-                    VATRate: item.VATRate,
-                    SD: item.SD,
-                    LineTotal: item.LineTotal,
-                    Action: item.Action
-                });
-            }
-        }
-        var cardDetails = [];
-        var cardGrid = $("#cardDetails").data("kendoGrid");
-        if (cardGrid) {
-            var cardItems = cardGrid.dataSource.view();
-            for (var i = 0; i < cardItems.length; i++) {
-                var cardItem = cardItems[i];
-                cardDetails.push({
-                    Id: cardItem.Id,
-                    CreditCardId: cardItem.CreditCardId,
-                    CardTotal: cardItem.CardTotal,
-                    Remarks: cardItem.Remarks
+                    UnitRate: item.UnitRate || 0,
+                    SubTotal: item.SubTotal || 0,
+                    VATAmount: item.VATAmount || 0,
+                    SDAmount: item.SDAmount || 0,
+                    VATRate: item.VATRate || 0,
+                    SD: item.SD || 0,
+                    LineTotal: item.LineTotal || 0,
+                    Action: item.Action || "Add"
                 });
             }
         }
 
-        model.SaleOrderId = $("#SaleOrderId").val();
-        model.saleCreditCardList = cardDetails;
-
+        // ❌ FIX 3: No item check
         if (details.length === 0) {
             ShowNotification(3, "At least one Sale Detail entry is required.");
             return;
         }
 
+        // =========================
+        // 🔥 PAYMENT DETAILS FIX
+        // =========================
+        var cardDetails = [];
+        var cardGrid = $("#cardDetails").data("kendoGrid");
 
+        if (cardGrid) {
+            var cardItems = cardGrid.dataSource.view();
+
+            for (var i = 0; i < cardItems.length; i++) {
+
+                var cardItem = cardItems[i];
+
+                // ❌ FIX 4: Payment validation
+                if (!cardItem.CreditCardId || cardItem.CreditCardId <= 0) {
+                    ShowNotification(3, "Please select payment type (Row " + (i + 1) + ")");
+                    return;
+                }
+
+                if (!cardItem.CardTotal || cardItem.CardTotal <= 0) {
+                    ShowNotification(3, "Payment amount must be greater than zero (Row " + (i + 1) + ")");
+                    return;
+                }
+
+                cardDetails.push({
+                    Id: cardItem.Id || 0,
+                    CreditCardId: cardItem.CreditCardId,
+                    CardTotal: cardItem.CardTotal,
+                    Remarks: cardItem.Remarks || ""
+                });
+            }
+        }
+
+        if (cardDetails.length === 0) {
+            ShowNotification(3, "Please complete the payment.");
+            return;
+        }
+
+        // =========================
+        // 🔥 FINAL MODEL
+        // =========================
+        model.SaleOrderId = saleorder;
         model.saleDetailsList = details;
         model.saleCreditCardList = cardDetails;
 
+        // =========================
+        // 🔥 SAVE API CALL
+        // =========================
         CommonAjaxService.finalSave(
             "/DMS/Sale/CreateEdit",
             model,

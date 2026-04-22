@@ -1412,13 +1412,13 @@ namespace ShampanPOSUI.Areas.Common.Controllers
 
 
         [HttpGet]
-        public ActionResult GetProductModal(string value)
+        public ActionResult GetProductModal(string productGroupId)
         {
             try
             {
                 List<ProductDataVM> lst = new List<ProductDataVM>();
                 CommonVM param = new CommonVM();
-                param.Value = value;
+                param.Value = productGroupId;
                 ResultVM result = _repo.GetProductModal(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -1434,6 +1434,32 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
 
+
+        [HttpGet]
+        public ActionResult ProductModal(string productGroupId)
+        {
+            try
+            {
+                List<ProductDataVM> lst = new List<ProductDataVM>();
+
+                CommonVM param = new CommonVM();
+                param.Value = productGroupId; // 🔥 pass value
+
+                ResultVM result = _repo.ProductModal(param); // ✅ correct call
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<ProductDataVM>>(result.DataVM.ToString());
+                }
+
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
         [HttpGet]

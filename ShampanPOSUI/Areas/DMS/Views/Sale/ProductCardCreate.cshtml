@@ -62,7 +62,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0"> Product Card Select </h1>
+                <h1 class="m-0"> POS </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -293,11 +293,9 @@
 
             <div class="card-body">
 
-                <!-- ❌ REMOVE THIS -->
-                <!-- <div id="productDetails"></div> -->
+                <div class="row mt-3 align-items-end">
 
-                <div class="row mt-3">
-
+                    <!-- Product Group -->
                     <div class="col-sm-3">
                         @Html.LabelFor(model => model.ProductGroupId)
 
@@ -305,11 +303,30 @@
                             @Html.TextBoxFor(model => model.ProductGroupId, new
                             {
                                 placeholder = " Select Product Group",
-                                @class = "required form-control form-control-sm"
+                                @class = "required form-control form-control-sm",
+                                style = "height:32px;"
                             })
                         </div>
 
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <!-- 🔍 Search Button (FIXED) -->
+                    @*<div class="col-sm-auto">
+            <button type="button" id="btnSearch"
+                    class="btn btn-primary btn-sm"
+                    style="width:40px; height:32px; display:flex; align-items:center; justify-content:center;">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>*@
+
+                    <div class="col-sm-auto">
+                        <button type="button" id="btnSearch"
+                                class="btn btn-primary btn-sm d-flex align-items-center gap-1"
+                                style="height:32px; padding:0 10px;">
+                            <i class="fa fa-search"></i>
+                            <span>Search</span>
+                        </button>
                     </div>
 
                 </div>
