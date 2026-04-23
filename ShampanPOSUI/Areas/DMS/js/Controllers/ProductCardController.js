@@ -1180,7 +1180,7 @@
                     .append('<i class="fa fa-search"></i>')
                     .on("click", function () {
 
-                        openProductCardModal(options.model); 
+                        openProductCardModal(options.model);
                     })
             )
             .appendTo(wrapper);
@@ -1374,24 +1374,27 @@
             type: "GET",
             success: function (data) {
 
-                allProducts = data;
+                allProducts = data || [];
 
-                var filtered;
-
-                // 🔥 group থাকলে filter, না থাকলে সব
-                if (!groupId) {
-                    filtered = data;
-                } else {
-                    filtered = data.filter(x => x.ProductGroupId == groupId);
+                // ✅ যদি ভুল করে object আসে handle করো
+                if (typeof groupId === "object") {
+                    groupId = groupId?.ProductGroupId || null;
                 }
 
-                // 🔥 render প্রথমে
-                renderProductCardsInModal(filtered);
+                let filtered = (!groupId)
+                    ? allProducts
+                    : allProducts.filter(x => x.ProductGroupId == groupId);
 
-                // 🔥 modal open
+                // ✅ আগে modal open
                 wnd.center().open();
 
-                // 🔥 GROUP LOAD (IMPORTANT)
+                // ✅ তারপর render (VERY IMPORTANT)
+                setTimeout(function () {
+                    renderProductCardsInModal(filtered);
+                }, 50);
+
+
+                // ✅ GROUP LOAD
                 setTimeout(function () {
 
                     var groupDropdown = $("#modalProductGroup");
@@ -1419,17 +1422,16 @@
                         );
                     });
 
-                    // 🔥 যদি বাইরে থেকে group আসে → select করে দাও
                     if (groupId) {
                         groupDropdown.val(groupId);
                     }
 
-                }, 200);
+                }, 100);
 
-                // 🔥 search box focus
+                // ✅ focus
                 setTimeout(() => {
                     $("#productSearchInput").focus();
-                }, 300);
+                }, 150);
             },
 
             error: function () {
@@ -1540,6 +1542,8 @@
 
         $("#productCardContainer").html(html);
     }
+
+
 
     $(document).on("click", ".product-img img", function () {
         var src = $(this).attr("src");
