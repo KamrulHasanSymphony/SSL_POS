@@ -57,27 +57,22 @@
 
         @if (Model.IsPost)
         {
-            <div style="display:flex; align-items:center; justify-content:space-between;">
+            <!-- LEFT SIDE -->
+            <div style="display:flex; align-items:center; gap:5px;">
 
-                <!-- LEFT SIDE -->
-                <div style="display:flex; align-items:center; gap:5px;">
+                <button type="button" class="button sslPush">Already Posted</button>
 
-                    <button type="button" class="button sslPush">Already Posted</button>
+                <button type="button" onclick="document.getElementById('reportLink').click();">
+                    <i class="k-icon k-i-print"></i> Print
+                </button>
 
-                    <button type="button" onclick="document.getElementById('reportLink').click();">
-                        <i class="k-icon k-i-print"></i> Print
-                    </button>
-
-                    <a id="reportLink"
-                       href="/DMS/SaleReturn/getReport/@Model.Id"
-                       style="display:none;">
-                    </a>
-
-
-                </div>
-
+                <a id="reportLink"
+                   href="/DMS/SaleReturn/getReport/@Model.Id"
+                   style="display:none;">
+                </a>
                 <!-- RIGHT SIDE -->
                 <button type="button"
+                        style="margin-left:auto;"
                         title="Add New"
                         data-url="/DMS/SaleReturn/Create"
                         onclick="GoTo(this)"
@@ -86,69 +81,92 @@
                 </button>
 
             </div>
+
+
         }
 
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
             <div style="display:flex; align-items:center; justify-content:space-between;">
 
-                <!-- LEFT SIDE -->
+                <!-- Left buttons -->
                 <div style="display:flex; align-items:center; gap:5px;">
 
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
+            <button type="button" class="button btnsave sslUpdate">Update</button>
 
-                    <button type="button" class="button btnPost sslPost">Post</button>
+            <button type="button" class="button btnPost sslPost">Post</button>
 
-                    <button type="button" onclick="document.getElementById('reportLink').click();">
-                        <i class="k-icon k-i-print"></i> Print
-                    </button>
+            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
 
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-
-                    <a id="reportLink"
-                       href="/DMS/SaleReturn/getReport/@Model.Id"
-                       style="display:none;">
-                    </a>
-
-                </div>
-
-                <!-- RIGHT SIDE -->
-                <button type="button"
-                        title="Add New"
-                        data-url="/DMS/SaleReturn/Create"
-                        onclick="GoTo(this)"
-                        class="button NewButton addNewButton">
-                    New
-                </button>
-
-            </div>
+            <button type="button" onclick="document.getElementById('reportLink').click();">
+                <i class="k-icon k-i-print"></i> Print
+            </button>
 
 
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <button type="button"
+                title="Add New"
+                data-url="/DMS/SaleReturn/Create"
+                onclick="GoTo(this)"
+                class="button NewButton addNewButton">
+            New
+        </button>
+
+        </div>
+
+            <a id="reportLink"
+               href="/DMS/SaleReturn/getReport/@Model.Id"
+               style="display:none;">
+            </a>
 
         }
         else
         {
 
-            <div style="display:none;" class="divUpdate">
+    <div style="display:none;" class="divUpdate">
+
+        <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+
+            <!-- LEFT SIDE -->
+            <div style="display:flex; align-items:center; gap:5px;">
 
                 <button type="button" class="button btnsave sslUpdate">Update</button>
 
                 <button type="button" class="button btnPost sslPost">Post</button>
                 <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
 
-                <button style="float:right;" type="button" title="Add New" data-url="/DMS/SaleReturn/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                    New
+                <button type="button" onclick="document.getElementById('reportLink').click();">
+                    <i class="k-icon k-i-print"></i> Print
                 </button>
 
             </div>
 
-            <div class="divSave">
-                <button class="button btnsave sslSave" type="button" id="">Save</button>
-            </div>
+
+            <!-- RIGHT SIDE -->
+            <button type="button"
+                    title="Add New"
+                    data-url="/DMS/SaleReturn/Create"
+                    onclick="GoTo(this)"
+                    class="button NewButton addNewButton">
+                New
+            </button>
+
+        </div>
+
+        <a id="reportLink"
+           href="/DMS/SaleReturn/getReport/@Model.Id"
+           style="display:none;">
+        </a>
+    </div>
+        <div class="divSave">
+            <button class="button btnsave sslSave" type="button" id="">Save</button>
+        </div>
         }
 
     </div>
-</div>
+    </div>
 
 <div class="container-fluid">
     <form id="frmEntry">
@@ -272,36 +290,51 @@
             else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
             {
 
-                <div style="display: flex; align-items: center; gap: 5px;">
-                    <button style="float:left;" type="button" class="button btnsave sslUpdate">Update</button>
-                    <button type="button" class="button btnPost sslPost">Post</button>
-                    @*<button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>*@
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button style="float:left;" type="button" class="button btnsave sslUpdate">Update</button>
+            <button type="button" class="button btnPost sslPost">Post</button>
+            @*<button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>*@
 
-                    <button type="button" onclick="document.getElementById('reportLink').click();">
-                        <i class="k-icon k-i-print"></i> Print
-                    </button>
+            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
 
-                    <a id="reportLink"
-                       href="/DMS/SaleReturn/getReport/@Model.Id"
-                       style="display:none;">
-                    </a>
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-                </div>
+            <button type="button" onclick="document.getElementById('reportLink').click();">
+                <i class="k-icon k-i-print"></i> Print
+            </button>
+
+            <a id="reportLink"
+               href="/DMS/SaleReturn/getReport/@Model.Id"
+               style="display:none;">
+            </a>
+
+        </div>
 
 
             }
             else
             {
 
-                <div style="display:none;" class="divUpdate">
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
+        <div style="display:none;" class="divUpdate">
 
-                    <button type="button" class="button btnPost sslPost">Post</button>
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-                </div>
-                <div class="divSave">
-                    <button class="button btnsave sslSave" type="button" id="">Save</button>
-                </div>
+            <div style="display:flex; align-items:center; gap:5px;">
+
+                <button type="button" class="button btnsave sslUpdate">Update</button>
+
+                <button type="button" class="button btnPost sslPost">Post</button>
+                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+
+                <button type="button" onclick="document.getElementById('reportLink').click();">
+                    <i class="k-icon k-i-print"></i> Print
+                </button>
+
+                <a id="reportLink"
+                   href="/DMS/SaleReturn/getReport/@Model.Id"
+                   style="display:none;">
+                </a>
+            </div>
+        </div>
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
 
             }
 

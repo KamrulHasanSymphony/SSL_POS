@@ -32,8 +32,7 @@
 
         @if (Model.IsActive)
         {
-            <button type="button" class="button sslPush">Already Posted</button>
-
+           
             <button style="float:right;" type="button" title="Add New" data-url="/DMS/Payment/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                 New
             </button>
@@ -41,10 +40,6 @@
         else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
         {
             <button type="button" class="button btnsave sslUpdate">Update</button>
-
-            <button type="button" class="button btnPost sslPost">Post</button>
-
-            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
 
             <button style="float:right;" type="button" title="Add New" data-url="/DMS/Payment/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                 New
@@ -54,9 +49,7 @@
         {
             <div style="display:none;" class="divUpdate">
                 <button type="button" class="button btnsave sslUpdate">Update</button>
-                <button type="button" class="button btnPost sslPost">Post</button>
-                <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
-
+           
                 <button style="float:right;" type="button" title="Add New" data-url="/DMS/Payment/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                     New
                 </button>
@@ -234,18 +227,12 @@
                 <div style="display: flex; align-items: center; gap: 5px;">
                     <button type="button" class="button btnsave sslUpdate">Update</button>
 
-                    <button type="button" class="button btnPost sslPost">Post</button>
-                    @*<button class="button sslPrintC " data-id="@Model.Id" style="float:right;">Print</button>*@
-
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
                 </div>
             }
             else
             {
                 <div style="display:none;" class="divUpdate">
                     <button type="button" class="button btnsave sslUpdate">Update</button>
-                    <button type="button" class="button btnPost sslPost">Post</button>
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
                 </div>
                 <div class="divSave">
                     <button class="button btnsave sslSave" type="button" id="">Save</button>

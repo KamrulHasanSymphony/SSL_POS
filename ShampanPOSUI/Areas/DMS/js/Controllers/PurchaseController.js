@@ -1905,6 +1905,10 @@
                 $("#Operation").val("update");
                 $("#CreatedBy").val(result.Data.CreatedBy);
                 $("#CreatedOn").val(result.Data.CreatedOn);
+                var id = result.Data.Id;
+
+                // 🔥 Redirect with ID
+                window.location.href = "/DMS/Purchase/Edit/" + id;
             }
             else {
                 ShowNotification(1, result.Message);
@@ -1970,8 +1974,8 @@
         }
         if (result.Status == 200) {
             ShowNotification(1, result.Message);
-            $(".btnsave").show();
-            $(".btnPost").show();
+            $(".btnsave").hide();
+            $(".btnPost").hide();
             $(".sslPush").show();
         }
         else if (result.Status == 400) {

@@ -57,6 +57,236 @@
         #productCardContainer .card:hover {
             transform: scale(1.02);
         }
+    /*new style*/
+    #productCardModal {
+        background: #f2f4f8;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+
+    .product-card {
+        background: #fff;
+        border-radius: 5px;
+        padding: 12px;
+        transition: 0.3s;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        min-height: 260px;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+
+    .product-img {
+        height: 120px;
+        background: #f7f7f7;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        cursor: pointer
+    }
+
+        .product-img img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+
+    .product-info {
+        text-align: center;
+        flex-grow: 1;
+    }
+
+
+    .product-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden
+    }
+
+
+    .product-meta {
+        font-size: 14px;
+        color: #777;
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .product-meta .price {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+
+    .qty-modern {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+        overflow: hidden;
+        margin: 10px auto;
+        border: 1px solid #ddd;
+        width: 80%;
+    }
+
+
+    .qty-side {
+        width: 25px;
+        height: 25px;
+        border: none;
+        background: #fff;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+        border-right: 1px solid #ddd;
+    }
+
+    .qty-minus {
+        border-right: 1px solid #ddd;
+    }
+
+    .qty-plus {
+        border-left: 1px solid #ddd;
+    }
+
+    .qty-side:hover {
+        background: #d5d5d5;
+    }
+
+
+    .qty-center {
+        flex: 1;
+        text-align: center;
+        height: 25px;
+    }
+
+
+        .qty-center input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            outline: none;
+        }
+
+
+        .qty-center span {
+            display: block;
+            font-size: 11px;
+            color: #777;
+        }
+
+    .add-btn {
+        margin-top: auto;
+        border-radius: 3px !important;
+        transition: 0.3s;
+    }
+
+        .add-btn:hover {
+            transform: scale(1.05);
+        }
+
+    .tooltipMain {
+        position: relative;
+        cursor: pointer;
+    }
+
+
+    .tooltip-text {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        max-width: 100%;
+        white-space: normal;
+        text-align: center;
+        transition: 0.3s;
+        z-index: 999;
+        width: max-content;
+    }
+
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+
+    .tooltipMain:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+
+    .img-modal {
+        display: none;
+        position: fixed;
+        z-index: 999999999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        justify-content: center;
+        align-items: center;
+    }
+
+        .img-modal img {
+            max-width: 80%;
+            max-height: 80%;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            animation: zoomIn 0.2s ease forwards;
+        }
+
+    @@keyframes zoomIn {
+        to {
+            transform: scale(1);
+        }
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 35px;
+        color: white;
+        cursor: pointer;
+    }
 </style>
 <div class="content-header">
     <div class="container-fluid">
@@ -286,58 +516,50 @@
             </div>
         </div>
 
-        <div class="card card-secondary">
+        <!--<div class="card card-secondary">
             <div class="card-header">
                 <h3 class="card-title"> Product Details </h3>
             </div>
 
             <div class="card-body">
 
-                <div class="row mt-3 align-items-end">
+                <div class="row mt-3 align-items-end">-->
+        <!-- Product Group -->
+        <!--<div class="col-sm-3">
+            @Html.LabelFor(model => model.ProductGroupId)
 
-                    <!-- Product Group -->
-                    <div class="col-sm-3">
-                        @Html.LabelFor(model => model.ProductGroupId)
+            <div class="input-group">
+                @Html.TextBoxFor(model => model.ProductGroupId, new
+                {
+                    placeholder = " Select Product Group",
+                    @class = "required form-control form-control-sm",
+                    style = "height:32px;"
+                })
+            </div>
 
-                        <div class="input-group">
-                            @Html.TextBoxFor(model => model.ProductGroupId, new
-                            {
-                                placeholder = " Select Product Group",
-                                @class = "required form-control form-control-sm",
-                                style = "height:32px;"
-                            })
-                        </div>
-
-                        <span id="titleError1" class="text-danger" style="display:none;"></span>
-                    </div>
-
-                    <!-- 🔍 Search Button (FIXED) -->
-                    @*<div class="col-sm-auto">
+            <span id="titleError1" class="text-danger" style="display:none;"></span>
+        </div>-->
+        <!-- 🔍 Search Button (FIXED) -->
+        <!--<div class="col-sm-auto">
             <button type="button" id="btnSearch"
-                    class="btn btn-primary btn-sm"
-                    style="width:40px; height:32px; display:flex; align-items:center; justify-content:center;">
+                    class="btn btn-primary btn-sm d-flex align-items-center gap-1"
+                    style="height:32px; padding:0 10px;">
                 <i class="fa fa-search"></i>
+                <span>Search</span>
             </button>
-        </div>*@
-
-                    <div class="col-sm-auto">
-                        <button type="button" id="btnSearch"
-                                class="btn btn-primary btn-sm d-flex align-items-center gap-1"
-                                style="height:32px; padding:0 10px;">
-                            <i class="fa fa-search"></i>
-                            <span>Search</span>
-                        </button>
-                    </div>
-
-                </div>
+        </div>-->
+        <!--</div>
 
             </div>
-        </div>
+        </div>-->
 
         <div id="productCardModal" style="display:none;">
-            <div id="productCardContainer" style="padding:15px;"></div>
+            <div id="productCardContainer"></div>
         </div>
-
+        <div id="imageModal" class="img-modal">
+            <span class="close-modal">&times;</span>
+            <img id="modalImg" src="" alt="Preview Image">
+        </div>
 
         <div class="card card-secondary">
             <div class="card-header">

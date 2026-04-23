@@ -784,6 +784,10 @@
                 $("#Operation").val("update");
                 $("#CreatedBy").val(result.Data.CreatedBy);
                 $("#CreatedOn").val(result.Data.CreatedOn);
+                var id = result.Data.Id;
+
+                // 🔥 Redirect with ID
+                window.location.href = "/DMS/Supplier/Edit/" + id;
             }
             else {
                 ShowNotification(1, result.Message);

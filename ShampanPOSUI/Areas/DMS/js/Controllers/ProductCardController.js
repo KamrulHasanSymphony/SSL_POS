@@ -34,6 +34,52 @@
 
         });
 
+        let currentKeyword = "";
+        let currentGroupId = "";
+
+        $(document).on("keyup", "#productSearchInput", function () {
+            currentKeyword = $(this).val().toLowerCase().trim();
+            applyFilter();
+        });
+
+        $(document).on("change", "#modalProductGroup", function () {
+            currentGroupId = $(this).val();
+            applyFilter();
+        });
+
+        function applyFilter() {
+
+            var filtered = allProducts.filter(function (item) {
+
+                var matchText =
+                    (!currentKeyword ||
+                        (item.ProductName && item.ProductName.toLowerCase().includes(currentKeyword)) ||
+                        (item.ProductId && item.ProductId.toString().includes(currentKeyword)));
+
+                var matchGroup =
+                    (!currentGroupId || item.ProductGroupId == currentGroupId);
+
+                return matchText && matchGroup;
+            });
+
+            renderProductCardsInModal(filtered);
+
+            // 🔥 restore values properly
+            $("#productSearchInput").val(currentKeyword);
+            $("#modalProductGroup").val(currentGroupId);
+
+            // 🔥 cursor fix
+            setTimeout(function () {
+                let input = $("#productSearchInput")[0];
+                if (input) {
+                    input.focus();
+                    input.setSelectionRange(input.value.length, input.value.length);
+                }
+            }, 0);
+        }
+
+
+
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
@@ -399,6 +445,14 @@
 
         $("#saleDetails").kendoGrid({
             dataSource: saleDetails,
+            toolbar: [
+                {
+                    template: `<button id="btnAddProductGrid"
+                                class="btn btn-primary btn-sm">
+                            <i class="fa fa-search"></i> Add Product
+                       </button>`
+                }
+            ],
             //toolbar: [{ name: "create", text: "Add" }],
             editable: { mode: "incell", createAt: "bottom" },
             save: function () {
@@ -1103,18 +1157,9 @@
             }
         });
 
-        $("#btnSearch").click(function () {
 
-            var combo = $("#ProductGroupId").data("kendoMultiColumnComboBox");
-            var selectedId = combo.value();
-
-            if (!selectedId) {
-                openProductCardModal(null); // or 0
-            }
-            else {
-                openProductCardModal(selectedId);
-            }
-
+        $(document).on("click", "#btnAddProductGrid", function () {
+            openProductCardModal(null);
         });
 
 
@@ -1135,7 +1180,7 @@
                     .append('<i class="fa fa-search"></i>')
                     .on("click", function () {
 
-                        OpenProductPopup(options.model); //eta banate hobe
+                        openProductCardModal(options.model); 
                     })
             )
             .appendTo(wrapper);
@@ -1297,7 +1342,7 @@
             columns: [
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
-            //    { field: "Description", title: "Description", width: 200 },
+                //    { field: "Description", title: "Description", width: 200 },
             ],
             filter: "contains",
             filterFields: ["Code", "Name", "Description"],
@@ -1316,13 +1361,12 @@
                     this.value(parseInt(getProductGroupId));
                 }
             },
-     
+
         }).data("kendoMultiColumnComboBox");
     };
 
-
     function openProductCardModal(groupId) {
-        debugger;
+
         var wnd = $("#productCardModal").data("kendoWindow");
 
         $.ajax({
@@ -1334,17 +1378,60 @@
 
                 var filtered;
 
-                // ✅ FIX HERE
+                // 🔥 group থাকলে filter, না থাকলে সব
                 if (!groupId) {
-                    filtered = data; // 🔥 show ALL
+                    filtered = data;
                 } else {
                     filtered = data.filter(x => x.ProductGroupId == groupId);
                 }
 
+                // 🔥 render প্রথমে
                 renderProductCardsInModal(filtered);
 
+                // 🔥 modal open
                 wnd.center().open();
+
+                // 🔥 GROUP LOAD (IMPORTANT)
+                setTimeout(function () {
+
+                    var groupDropdown = $("#modalProductGroup");
+
+                    if (!groupDropdown.length) return;
+
+                    groupDropdown.empty().append('<option value="">All Group</option>');
+
+                    var groups = [];
+
+                    allProducts.forEach(function (item) {
+                        if (item.ProductGroupId &&
+                            !groups.find(x => x.id == item.ProductGroupId)) {
+
+                            groups.push({
+                                id: item.ProductGroupId,
+                                name: item.ProductGroupName
+                            });
+                        }
+                    });
+
+                    groups.forEach(function (g) {
+                        groupDropdown.append(
+                            `<option value="${g.id}">${g.name}</option>`
+                        );
+                    });
+
+                    // 🔥 যদি বাইরে থেকে group আসে → select করে দাও
+                    if (groupId) {
+                        groupDropdown.val(groupId);
+                    }
+
+                }, 200);
+
+                // 🔥 search box focus
+                setTimeout(() => {
+                    $("#productSearchInput").focus();
+                }, 300);
             },
+
             error: function () {
                 alert("Failed to load products");
             }
@@ -1352,59 +1439,99 @@
     }
 
 
+
     function renderProductCardsInModal(products) {
-        debugger;
-        var html = '<div class="row">';
+
+        var html = `
+
+    <!-- 🔍 SEARCH + 🏷️ GROUP -->
+    <div style="margin-bottom:12px; display:flex; gap:10px; align-items:center;">
+
+        <!-- 🏷️ PRODUCT GROUP -->
+        <select id="modalProductGroup"
+                class="form-control form-control-sm"
+                style="max-width:200px;">
+            <option value="">All Group</option>
+        </select>
+
+        <!-- 🔍 SEARCH -->
+        <input type="text" id="productSearchInput"
+               class="form-control form-control-sm"
+               placeholder="🔍 Search by Product Name or Code..."
+               style="max-width:250px;" />
+
+        <!-- TOTAL -->
+        <span style="font-size:12px; color:#777;">
+            Total: ${products.length} items
+        </span>
+
+    </div>
+
+    <div class="product-grid">
+    `;
+
+        // 🔥 যদি কোন product না থাকে
+        if (!products || products.length === 0) {
+            html += `
+            <div style="grid-column:1/-1; text-align:center; padding:30px; color:#999;">
+                No product found 😔
+            </div>
+        `;
+        }
 
         products.forEach(function (item) {
 
-            // 🔥 IMAGE PATH FIX (IMPORTANT)
             var imgPath = item.ImagePath
-                ? item.ImagePath   // 🔥 direct use
+                ? item.ImagePath
                 : "/images/no-image.png";
 
             html += `
-        <div class="col-md-3 mb-3">
-            <div class="card shadow-sm p-2 text-center" style="border-radius:10px;">
+        <div class="product-card">
 
-                <!-- ✅ IMAGE ADD -->
-                <div style="height:120px; margin-bottom:10px; background:#f5f5f5;">
-                    <img src="${imgPath}"
-                         onerror="this.src='/images/no-image.png'"
-                         style="max-height:100%; max-width:100%; object-fit:contain;" />
+            <div class="product-img">
+                <img src="${imgPath}"
+                     onerror="this.src='/images/no-image.png'" />
+            </div>
+
+            <div class="product-info">
+                <div class="tooltipMain">
+                    <h6 class="product-title">
+                        ${item.ProductName || ''}
+                    </h6>
+                    <span class="tooltip-text">${item.ProductName || ''}</span>
                 </div>
 
-                <h6>${item.ProductName}</h6>
-                <p><b>Code:</b> ${item.ProductId}</p>
-                <p><b>Price:</b> ${item.SalesPrice}</p>
+                <div class="product-meta">
+                    <span>Code: ${item.ProductId || ''}</span>
+                    <span class="price">৳ ${item.SalesPrice || 0}</span>
+                </div>
+            </div>
 
-                <div style="display:flex; gap:5px; margin-top:8px; align-items:center; justify-content:center;">
+            <!-- QTY -->
+            <div class="qty-modern">
 
-                    <button class="btn btn-danger btn-sm qty-minus"
+                <button class="qty-side qty-minus"
                         data-id="${item.ProductId}">
-                        -
-                    </button>
+                    −
+                </button>
 
+                <div class="qty-center">
                     <input type="number" min="1" value="1"
-                        class="form-control form-control-sm"
-                        id="qty_${item.ProductId}"
-                        style="width:40px; text-align:center;" />
-
-                    <button class="btn btn-primary btn-sm qty-plus"
-                        data-id="${item.ProductId}">
-                        +
-                    </button>
-
+                           id="qty_${item.ProductId}" />
                 </div>
 
-                <div style="margin-top:8px;">
-                    <button class="btn btn-success btn-sm add-product-btn"
+                <button class="qty-side qty-plus"
                         data-id="${item.ProductId}">
-                        Add
-                    </button>
-                </div>
+                    +
+                </button>
 
             </div>
+
+            <button class="btn btn-success btn-sm add-product-btn add-btn"
+                    data-id="${item.ProductId}">
+                Add
+            </button>
+
         </div>
         `;
         });
@@ -1413,6 +1540,25 @@
 
         $("#productCardContainer").html(html);
     }
+
+    $(document).on("click", ".product-img img", function () {
+        var src = $(this).attr("src");
+
+        $("#modalImg").attr("src", src);
+        $("#imageModal").fadeIn(200).css("display", "flex");
+    });
+
+
+    $(".close-modal").on("click", function () {
+        $("#imageModal").fadeOut(200);
+    });
+
+
+    $("#imageModal").on("click", function (e) {
+        if (e.target.id === "imageModal") {
+            $(this).fadeOut(200);
+        }
+    });
 
 
     function addProductToGridWithQty(productId) {
@@ -1445,6 +1591,7 @@
         grid.refresh();
 
     }
+
     function TotalCalculation() {
 
         let subTotal = 0;

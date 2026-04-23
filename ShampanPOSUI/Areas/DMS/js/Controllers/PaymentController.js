@@ -910,9 +910,9 @@
                 }, 1000);
             },
             columns: [
-                {
-                    selectable: true, width: 35
-                },
+                //{
+                //    selectable: true, width: 35
+                //},
                 {
                     title: "Action",
                     width: 50,

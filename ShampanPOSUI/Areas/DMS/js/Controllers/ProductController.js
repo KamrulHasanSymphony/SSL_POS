@@ -1282,33 +1282,6 @@
             }
         }
 
-
-        //// Check if delete button was clicked to remove image
-        //var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-        //if (deleteImageClicked) {
-        //    formData.append("ImagePath", "");  // Mark image for deletion
-        //    $("#imagePreview").remove();
-        //    $("#ImagePath").val("");
-        //}
-
-        //var fileInput = document.getElementById("imageUpload");
-        //if (fileInput.files.length > 0) {
-        //    var file = fileInput.files[0];
-
-        //    // ✅ Validate file size (Max 25MB)
-        //    if (file.size > 26214400) { // 25MB in bytes
-        //        ShowNotification(3, "Image size cannot exceed 25MB.");
-        //        return;
-        //    }
-
-        //    formData.append("file", file);
-        //} else if (!deleteImageClicked) {
-        //    var existingImagePath = $("#ImagePath").val();
-        //    if (existingImagePath) {
-        //        formData.append("ImagePath", existingImagePath);
-        //    }
-        //}
-
         var url = "/DMS/Product/CreateEdit";
 
         CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
@@ -1327,6 +1300,10 @@
                 $("#Operation").val("update");
                 $("#CreatedBy").val(result.Data.CreatedBy);
                 $("#CreatedOn").val(result.Data.CreatedOn);
+                var id = result.Data.Id;
+
+                // 🔥 Redirect with ID
+                window.location.href = "/DMS/Product/Edit/" + id;
             }
             else {
                 ShowNotification(1, result.Message);
