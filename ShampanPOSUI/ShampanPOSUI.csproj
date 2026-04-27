@@ -2682,6 +2682,8 @@
     <Content Include="Areas\DMS\Views\BranchProfile\BranchCreate.cshtml" />
     <Content Include="Areas\DMS\Views\BranchCreate\BranchCreate.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\ProductCardCreate.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\PurchaseIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\PurchaseListReport.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

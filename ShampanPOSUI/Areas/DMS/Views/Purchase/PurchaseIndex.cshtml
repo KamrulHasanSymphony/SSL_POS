@@ -1,0 +1,172 @@
+﻿
+@model ShampanPOS.Models.PurchaseVM
+@{
+    ViewBag.Title = "Purchase Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Purchase Report </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="accordion" id="reportFilterAccordion">
+        <div class="card">
+
+            <div class="card-body p-2">
+
+                <div class="form-group row">
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.SupplierId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.SupplierId, new { @class = " required form-control form-control-sm ", @style = "width: 100%;" })
+                        </div>
+                        <span id="titleError2" class="text-danger" style="display:none;"></span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.PurchaseFromDate)
+                        <div>
+                            @Html.TextBoxFor(model => model.PurchaseFromDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "PurchaseFromDate" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.PurchaseToDate)
+                        <div>
+                            @Html.TextBoxFor(model => model.PurchaseToDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "PurchaseToDate" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.InvoiceFromDate)
+                        <div>
+                            @Html.TextBoxFor(model => model.InvoiceFromDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "InvoiceFromDate" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.InvoiceToDate)
+                        <div>
+                            @Html.TextBoxFor(model => model.InvoiceToDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "InvoiceToDate" })
+                        </div>
+                    </div>
+
+                    <!-- Print Button -->
+                    <div class="col-sm-2" style="margin-top:26px;">
+                        <button type="button"
+                                class="btn btn-success btn-sm"
+                                onclick="PrintPurchaseReport()">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+}
+
+<script>
+
+    var getSupplierId = 0;
+
+    $(document).ready(function () {
+
+        getSupplierId = $("#SupplierId").val() || 0;
+
+        GetSupplierComboBox();
+
+        // Kendo DatePickers
+        $("#PurchaseFromDate").kendoDatePicker();
+        $("#PurchaseToDate").kendoDatePicker();
+        $("#InvoiceFromDate").kendoDatePicker();
+        $("#InvoiceToDate").kendoDatePicker();
+
+        var currentDate = new Date();
+
+        $("#PurchaseFromDate").data("kendoDatePicker").value(currentDate);
+        $("#PurchaseToDate").data("kendoDatePicker").value(currentDate);
+        $("#InvoiceFromDate").data("kendoDatePicker").value(currentDate);
+        $("#InvoiceToDate").data("kendoDatePicker").value(currentDate);
+    });
+
+
+    // ===============================
+    // Supplier ComboBox
+    // ===============================
+    function GetSupplierComboBox() {
+
+        $("#SupplierId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 }
+            ],
+            filter: "contains",
+            filterFields: ["Code", "Name"],
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetSupplierList"
+                }
+            },
+            placeholder: "Select Supplier",
+
+            dataBound: function () {
+                if (getSupplierId) {
+                    this.value(parseInt(getSupplierId));
+                }
+            }
+        });
+    }
+
+
+    // ===============================
+    // PRINT FUNCTION (FIXED)
+    // ===============================
+    function PrintPurchaseReport() {
+
+        var combo = $("#SupplierId").data("kendoMultiColumnComboBox");
+
+        var supplierName = combo ? combo.text() : "";
+
+        var fromDate = $("#PurchaseFromDate").val() || "";
+        var toDate = $("#PurchaseToDate").val() || "";
+
+        var invoiceFromDate = $("#InvoiceFromDate").val() || "";
+        var invoiceToDate = $("#InvoiceToDate").val() || "";
+
+        var url = `/DMS/Purchase/PurchaseReport
+        ?supplierName=${encodeURIComponent(supplierName)}
+        &fromDate=${fromDate}
+        &toDate=${toDate}
+        &invoiceFromDate=${invoiceFromDate}
+        &invoiceToDate=${invoiceToDate}`;
+
+        window.open(url, "_blank");
+    }
+
+</script>
+
