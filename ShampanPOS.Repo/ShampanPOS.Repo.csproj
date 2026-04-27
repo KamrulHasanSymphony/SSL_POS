@@ -71,6 +71,9 @@
     <Compile Include="MasterSupplierRepo.cs" />
     <Compile Include="MasterSupplierGroupRepo.cs" />
     <Compile Include="SupplierProductRepo.cs" />
+    <Compile Include="TableInfoRepo.cs" />
+    <Compile Include="TableReservationRepo.cs" />
+    <Compile Include="TableSectionRepo.cs" />
     <Compile Include="UserBranchProfileRepo.cs" />
     <Compile Include="UserInfoRepo.cs" />
     <Compile Include="UserProfileRepo.cs" />

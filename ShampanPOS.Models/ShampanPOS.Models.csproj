@@ -141,10 +141,14 @@
     <Compile Include="SaleReturnVM.cs" />
     <Compile Include="SalesByMonthModelVM.cs" />
     <Compile Include="SaleVM.cs" />
+    <Compile Include="SectionVM.cs" />
     <Compile Include="Status.cs" />
     <Compile Include="MasterSupplierVM.cs" />
     <Compile Include="MasterSupplierGroupVM.cs" />
     <Compile Include="SupplierProductVM.cs" />
+    <Compile Include="TableInfoVM.cs" />
+    <Compile Include="TableReservationVM.cs" />
+    <Compile Include="TableSectionVm.cs" />
     <Compile Include="UserBranchProfileVM.cs" />
     <Compile Include="UserInfoVM.cs" />
     <Compile Include="UserProfileVM.cs" />
