@@ -366,6 +366,9 @@
     <Compile Include="Areas\DMS\Controllers\MasterSupplierGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\SupplierGroupController.cs" />
     <Compile Include="Areas\DMS\Controllers\SupplierProductController.cs" />
+    <Compile Include="Areas\DMS\Controllers\TableInfoController.cs" />
+    <Compile Include="Areas\DMS\Controllers\TableReservationController.cs" />
+    <Compile Include="Areas\DMS\Controllers\TableSectionController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMController.cs" />
     <Compile Include="Areas\DMS\Controllers\UOMConversationController.cs" />
     <Content Include="Areas\DMS\js\Controllers\BranchCreateController.js" />
@@ -390,6 +393,9 @@
     <Content Include="Areas\DMS\js\Controllers\BankInformationController.js" />
     <Compile Include="Areas\DMS\Controllers\WithdrawalController.cs" />
     <Content Include="Areas\DMS\js\Controllers\ProductCardController.js" />
+    <Content Include="Areas\DMS\js\Controllers\TableInfoController.js" />
+    <Content Include="Areas\DMS\js\Controllers\TableSectionController.js" />
+    <Content Include="Areas\DMS\js\Controllers\TableReservationController.js" />
     <Compile Include="Areas\SetUp\Controllers\CompanyCreateController.cs" />
     <Compile Include="Areas\SetUp\Controllers\SettingsController.cs" />
     <Compile Include="Areas\DMS\Controllers\PaymentTypeController.cs" />
@@ -2682,6 +2688,12 @@
     <Content Include="Areas\DMS\Views\BranchProfile\BranchCreate.cshtml" />
     <Content Include="Areas\DMS\Views\BranchCreate\BranchCreate.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\ProductCardCreate.cshtml" />
+    <Content Include="Areas\DMS\Views\TableInfo\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\TableInfo\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\TableSection\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\TableSection\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\TableReservation\Index.cshtml" />
+    <Content Include="Areas\DMS\Views\TableReservation\Create.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

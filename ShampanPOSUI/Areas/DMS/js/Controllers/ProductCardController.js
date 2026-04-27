@@ -1,4 +1,4 @@
-﻿var SaleController = function (CommonService, CommonAjaxService) {
+﻿var ProductCardController = function (CommonService, CommonAjaxService) {
 
 
     var init = function () {
@@ -64,9 +64,35 @@
 
             renderProductCardsInModal(filtered);
 
-            // 🔥 restore values properly
+            // 🔥 dropdown আবার build করো (THIS IS THE REAL FIX)
+            var groupDropdown = $("#modalProductGroup");
+
+            groupDropdown.empty().append('<option value="">All Group</option>');
+
+            var groups = [];
+
+            allProducts.forEach(function (item) {
+                if (item.ProductGroupId &&
+                    !groups.find(x => x.id == item.ProductGroupId)) {
+
+                    groups.push({
+                        id: item.ProductGroupId,
+                        name: item.ProductGroupName
+                    });
+                }
+            });
+
+            groups.forEach(function (g) {
+                groupDropdown.append(
+                    `<option value="${g.id}">${g.name}</option>`
+                );
+            });
+
+            // 🔥 restore selected value
+            groupDropdown.val(currentGroupId);
+
+            // 🔥 restore search text
             $("#productSearchInput").val(currentKeyword);
-            $("#modalProductGroup").val(currentGroupId);
 
             // 🔥 cursor fix
             setTimeout(function () {
@@ -79,14 +105,13 @@
         }
 
 
-
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
         if (parseInt(getId) == 0 && getOperation == '') {
             debugger;
-            GetGridDataList();
+            //GetGridDataList();
         };
 
         GetCustomerComboBox();
@@ -1121,7 +1146,7 @@
                 gridElement.empty();
             }
 
-            GetGridDataList();
+            //GetGridDataList();
 
         });
 
@@ -1376,30 +1401,25 @@
 
                 allProducts = data || [];
 
-                // ✅ যদি ভুল করে object আসে handle করো
                 if (typeof groupId === "object") {
                     groupId = groupId?.ProductGroupId || null;
                 }
+
+                currentGroupId = groupId || "";
+                currentKeyword = "";
 
                 let filtered = (!groupId)
                     ? allProducts
                     : allProducts.filter(x => x.ProductGroupId == groupId);
 
-                // ✅ আগে modal open
                 wnd.center().open();
 
-                // ✅ তারপর render (VERY IMPORTANT)
                 setTimeout(function () {
+
                     renderProductCardsInModal(filtered);
-                }, 50);
 
-
-                // ✅ GROUP LOAD
-                setTimeout(function () {
-
+                    // 🔥 dropdown fill (initial load)
                     var groupDropdown = $("#modalProductGroup");
-
-                    if (!groupDropdown.length) return;
 
                     groupDropdown.empty().append('<option value="">All Group</option>');
 
@@ -1422,16 +1442,11 @@
                         );
                     });
 
-                    if (groupId) {
-                        groupDropdown.val(groupId);
-                    }
+                    groupDropdown.val(currentGroupId);
 
-                }, 100);
-
-                // ✅ focus
-                setTimeout(() => {
                     $("#productSearchInput").focus();
-                }, 150);
+
+                }, 50);
             },
 
             error: function () {
@@ -1446,23 +1461,19 @@
 
         var html = `
 
-    <!-- 🔍 SEARCH + 🏷️ GROUP -->
     <div style="margin-bottom:12px; display:flex; gap:10px; align-items:center;">
 
-        <!-- 🏷️ PRODUCT GROUP -->
         <select id="modalProductGroup"
-                class="form-control form-control-sm"
+                class="form-control form-control-sm"a
                 style="max-width:200px;">
             <option value="">All Group</option>
         </select>
 
-        <!-- 🔍 SEARCH -->
         <input type="text" id="productSearchInput"
                class="form-control form-control-sm"
                placeholder="🔍 Search by Product Name or Code..."
                style="max-width:250px;" />
 
-        <!-- TOTAL -->
         <span style="font-size:12px; color:#777;">
             Total: ${products.length} items
         </span>
@@ -1472,12 +1483,11 @@
     <div class="product-grid">
     `;
 
-        // 🔥 যদি কোন product না থাকে
         if (!products || products.length === 0) {
             html += `
-            <div style="grid-column:1/-1; text-align:center; padding:30px; color:#999;">
-                No product found 😔
-            </div>
+        <div style="grid-column:1/-1; text-align:center; padding:30px; color:#999;">
+            No product found 😔
+        </div>
         `;
         }
 
@@ -1509,23 +1519,16 @@
                 </div>
             </div>
 
-            <!-- QTY -->
             <div class="qty-modern">
 
-                <button class="qty-side qty-minus"
-                        data-id="${item.ProductId}">
-                    −
-                </button>
+                <button class="qty-side qty-minus" data-id="${item.ProductId}">−</button>
 
                 <div class="qty-center">
                     <input type="number" min="1" value="1"
                            id="qty_${item.ProductId}" />
                 </div>
 
-                <button class="qty-side qty-plus"
-                        data-id="${item.ProductId}">
-                    +
-                </button>
+                <button class="qty-side qty-plus" data-id="${item.ProductId}">+</button>
 
             </div>
 

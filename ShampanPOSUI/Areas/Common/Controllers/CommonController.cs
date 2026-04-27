@@ -1021,6 +1021,77 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
 
+
+        [HttpGet]
+        public ActionResult GetSectionList(string value)
+        {
+            try
+            {
+                List<SectionVM> lst = new List<SectionVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetSectionList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<SectionVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetStatusList(string value)
+        {
+            try
+            {
+                List<EnumTypeVM> lst = new List<EnumTypeVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetStatusList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<EnumTypeVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetTableList(string value)
+        {
+            try
+            {
+                List<TableInfoVM> lst = new List<TableInfoVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetTableList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<TableInfoVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         [HttpGet]
         public ActionResult GetPurchaseOrder()
         {
