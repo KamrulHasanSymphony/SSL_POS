@@ -64,6 +64,34 @@
                         </div>
                     </div>
 
+                    @*<div class="col-sm-1">
+                        @Html.LabelFor(model => model.IsSummery)
+                        <div class="Onoffbtn">
+                            <div class="input-group" style="margin-bottom: -26px; width: 78%;">
+                                <input id="IsSummery"
+                                       value="@Model.IsSummery"
+                                       type="checkbox"
+                                       name="IsSummery"
+                                       @(Model.IsSummery ? "checked" : "")
+                                       data-bootstrap-switch
+                                       data-off-color="danger"
+                                       data-on-color="success"
+                                       data-on-text="Yes"
+                                       data-off-text="No">
+                            </div>
+                        </div>
+                    </div>*@
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.ReportTypeID)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.ReportTypeID, new { @class = "required form-control form-control-sm", @style = "width: 100%;" })
+                        </div>
+                        <span class="field-validation-error text-danger" data-valmsg-for="ReportTypeID" data-valmsg-replace="true"></span>
+                    </div>
+
+
+
                     <!-- Print Button -->
                     <div class="col-sm-2" style="margin-top:26px;">
                         <button type="button"
@@ -94,6 +122,7 @@
     $(document).ready(function () {
 
         getSupplierId = $("#SupplierId").val() || 0;
+        $("[data-bootstrap-switch]").bootstrapSwitch();
 
         GetSupplierComboBox();
 

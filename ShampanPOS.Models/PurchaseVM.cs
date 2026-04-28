@@ -126,6 +126,13 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Invoice To Date")]
         public string? InvoiceToDate { get; set; }
+        [Display(Name = "Report Type")]
+        public string? ReportTypeID { get; set; }
+
+        [Display(Name = "Summery")]
+        public bool IsSummery { get; set; }
+
+
 
         public PeramModel PeramModel { get; set; }
         public List<PurchaseDetailVM> purchaseDetailList { get; set; }
