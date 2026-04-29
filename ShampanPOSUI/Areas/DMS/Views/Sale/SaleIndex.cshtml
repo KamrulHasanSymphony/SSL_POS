@@ -1,0 +1,396 @@
+﻿@model ShampanPOS.Models.SaleReportVM
+@{
+    ViewBag.Title = "Sale Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"> Sale Report </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack"><img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" /></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="accordion" id="reportFilterAccordion">
+        <div class="card">
+
+            <div class="card-body p-2">
+
+                <div class="form-group row">
+
+
+                    <!-- Category -->
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.CustomerId)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.CustomerId, new { placeholder = " Enter Customer Id", @class = " required form-control form-control-sm " })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.InvoiceFromDate)
+                        <div>
+                            @Html.TextBoxFor(model => model.InvoiceFromDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "FromDate" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.InvoiceToDate)
+                        <div>
+                            @Html.TextBoxFor(model => model.InvoiceToDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "ToDate" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.LabelFor(model => model.ReportType)
+                        <div class="input-group ">
+                            @Html.TextBoxFor(model => model.ReportType, new { placeholder = " Enter Report Type", @class = " required form-control form-control-sm " })
+                        </div>
+                        <span id="titleError1" class="text-danger" style="display:none;"></span>
+                    </div>
+
+
+                    <!--<div class="col-sm-2">
+
+        @Html.LabelFor(model => model.ReportType)
+
+        <div class="input-group">
+            <input id="ReportType"
+                   name="ReportType"
+                   class="form-control form-control-sm" />
+        </div>
+
+        <span id="titleError1" class="text-danger" style="display:none;"></span>
+
+    </div>
+
+    <div class="col-sm-2 d-flex flex-column">-->
+                    <!-- ✅ Custom Label -->
+                    <!--<label for="IsSummary">Summary</label>
+
+    <div class="Onoffbtn">
+        <div class="input-group" style="width: 78%;">-->
+                    <!-- Hidden field ensures false value is posted when unchecked -->
+                    <!--<input type="hidden" name="IsSummary" value="false" />-->
+                    <!-- Bootstrap Switch Checkbox -->
+                    <!--<input id="IsSummary"
+                       name="IsSummary"
+                       type="checkbox"
+                       value="true"
+                       @(Model != null && Model.IsSummary ? "checked=\"checked\"" : "")
+                       data-bootstrap-switch
+                       data-off-color="danger"
+                       data-on-color="success"
+                       data-on-text="True"
+                       data-off-text="False" />
+
+            </div>
+        </div>
+
+    </div>-->
+
+
+
+                    <div class="col-sm-2 d-flex flex-column">
+
+                        <!-- ✅ Custom Label -->
+                        <label for="IsSummary">Summary</label>
+
+                        <div class="Onoffbtn">
+                            <div class="input-group" style="width: 78%;">
+
+                                <!-- Hidden field ensures false value is posted when unchecked -->
+                                <input type="hidden" name="IsSummary" value="false" />
+
+                                <!-- Bootstrap Switch Checkbox -->
+                                <input id="IsSummary"
+                                       name="IsSummary"
+                                       type="checkbox"
+                                       value="true"
+                                       @(Model.IsSummary ? "checked=\"checked\"" : "")
+                                       data-bootstrap-switch
+                                       data-off-color="danger"
+                                       data-on-color="success"
+                                       data-on-text="True"
+                                       data-off-text="False" />
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <!-- Print Button -->
+                    <div class="col-sm-2" style="margin-top:26px;">
+                        <button type="button"
+                                class="btn btn-success btn-sm"
+                                onclick="PrintSaleReport()">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+
+}
+
+<script>
+
+
+    //function PrintSaleReport() {
+
+    //    debugger;
+    //    var customerId = $("#CustomerId").val() || "";
+
+    //    var fromDate = $("#FromDate").val() || "";
+    //    var toDate = $("#ToDate").val() || "";
+
+    //    getCustomerId = $("#CustomerId").val();
+    //    getReportTypeId = $("#ReportType").val();
+
+    //    var url = `/DMS/Sale/SaleReport?customerId=${customerId}&fromDate=${fromDate}&toDate=${toDate}`;
+
+    //    window.open(url, "_blank");
+    //}
+
+
+
+    function PrintSaleReport() {
+        var customerId = $("#CustomerId").data("kendoMultiColumnComboBox").value();
+        var fromDateObj = $("#FromDate").data("kendoDatePicker").value();
+        var toDateObj = $("#ToDate").data("kendoDatePicker").value();
+
+        var reportType = $("#ReportType").data("kendoMultiColumnComboBox").value();
+        var isSummary = $("#IsSummary").is(":checked");
+
+        // =========================
+        // SAFE DEFAULTS
+        // =========================
+        customerId = customerId || 0;
+        if (!reportType) reportType = 0;
+
+        var fromDate = fromDateObj ? kendo.toString(fromDateObj, "yyyy-MM-dd") : "";
+        var toDate = toDateObj ? kendo.toString(toDateObj, "yyyy-MM-dd") : "";
+
+        var url = `/DMS/Sale/SaleListReport` +
+            `?customerId=${encodeURIComponent(customerId)}` +
+            `&fromDate=${encodeURIComponent(fromDate)}` +
+            `&toDate=${encodeURIComponent(toDate)}` +
+            `&reportType=${encodeURIComponent(reportType)}` +
+            `&isSummary=${encodeURIComponent(isSummary)}`;
+
+        window.open(url, "_blank");
+    }
+
+
+
+    //function PrintSaleReport() {
+    //    var customerId = $("#CustomerId").data("kendoMultiColumnComboBox").value();
+    //    var fromDate = kendo.toString($("#FromDate").data("kendoDatePicker").value(), "dd-MM-yyyy");
+    //    var toDate = kendo.toString($("#ToDate").data("kendoDatePicker").value(), "dd-MM-yyyy");
+
+    //    var reportType = $("#ReportType").data("kendoMultiColumnComboBox").value();
+    //    var isSummary = $("#IsSummary").is(":checked");
+
+    //    if (!customerId) customerId = "";
+
+    //    var url = `/DMS/Sale/SaleListReport?customerId=${encodeURIComponent(customerId)}&fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}&reportType=${reportType}&isSummary=${isSummary}`;
+
+    //    window.open(url, "_blank");
+    //}
+
+    function GetCustomerComboBox() {
+        var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 },
+                { field: "BanglaName", title: "BanglaName", width: 200 },
+            ],
+            filter: "contains",
+            filterFields: ["Code", "Name", "BanglaName"],
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetCustomerList"
+                }
+            },
+            placeholder: "Select Customer",
+            value: "",
+            dataBound: function (e) {
+                if (getCustomerId) {
+                    this.value(parseInt(getCustomerId));
+                }
+            }
+        }).data("kendoMultiColumnComboBox");
+    };
+
+    function GetReportTypeComboBox() {
+
+        var ReportTypeComboBox = $("#ReportType").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+
+            columns: [
+                { field: "Id", title: "ID", width: 80 },
+                { field: "Name", title: "Report Type", width: 200 }
+            ],
+
+            filter: "contains",
+            filterFields: ["Name"],
+
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetReportTypeList"
+                }
+            },
+
+            placeholder: "Select Report Type",
+
+            value: "",
+
+            dataBound: function (e) {
+                if (getReportTypeId && getReportTypeId !== "0") {
+                    this.value(getReportTypeId);
+                } else {
+                    this.value("");
+                }
+            },
+
+            change: function (e) {
+                $("#ReportType").val(this.value());
+            }
+
+        }).data("kendoMultiColumnComboBox");
+    }
+
+    //$(function () {
+
+    //    $("#IsSummary").on("switchChange.bootstrapSwitch", function (e, state) {
+
+    //        var combo = $("#ReportType").data("kendoMultiColumnComboBox");
+
+    //        if (!combo) return;
+
+    //        if (state === false) {
+
+    //            // 🔴 Only Details show
+    //            combo.dataSource.filter({
+    //                field: "Name",
+    //                operator: "eq",
+    //                value: "Details"
+    //            });
+
+    //            combo.value(2040);
+    //        }
+    //        else {
+
+    //            // 🟢 Remove Details
+    //            combo.dataSource.filter({
+    //                field: "Name",
+    //                operator: "neq",
+    //                value: "Details"
+    //            });
+
+    //            combo.value("");
+    //        }
+    //    });
+
+    //});
+
+
+    //function applyReportTypeFilter(isSummary) {
+
+    //    var combo = $("#ReportType").data("kendoMultiColumnComboBox");
+
+    //    if (!combo) return;
+
+    //    if (isSummary === false) {
+
+    //        // 🔴 Only Details
+    //        combo.dataSource.filter({
+    //            field: "Name",
+    //            operator: "eq",
+    //            value: "Details"
+    //        });
+
+    //        // set value AFTER filter is applied
+    //        setTimeout(function () {
+
+    //            var data = combo.dataSource.data().find(x => x.Name === "Details");
+
+    //            if (data) {
+    //                combo.value(data.Id);
+    //                combo.text(data.Name);   // 🔥 IMPORTANT FIX
+    //            }
+
+    //        }, 100);
+    //    }
+    //    else {
+
+    //        // 🟢 Remove Details
+    //        combo.dataSource.filter({
+    //            field: "Name",
+    //            operator: "neq",
+    //            value: "Details"
+    //        });
+
+    //        setTimeout(function () {
+    //            combo.value("");
+    //            combo.text("");   // 🔥 clear display properly
+    //        }, 100);
+    //    }
+    //}
+
+    $(document).ready(function () {
+        // Initialize Kendo DatePicker for FromDate and ToDate fields
+        $("#FromDate").kendoDatePicker();
+        $("#ToDate").kendoDatePicker();
+
+        // Get the current date
+        var currentDate = new Date();
+
+        // Set the current date for both FromDate and ToDate fields
+        $("#FromDate").data("kendoDatePicker").value(currentDate);
+        $("#ToDate").data("kendoDatePicker").value(currentDate);
+
+        GetCustomerComboBox();
+        GetReportTypeComboBox();
+
+        $("input[data-bootstrap-switch]").bootstrapSwitch();
+
+        // 🔥 APPLY DEFAULT FILTER HERE
+        var isSummary = $("#IsSummary").is(":checked");
+        //applyReportTypeFilter(isSummary);
+    });
+
+
+
+</script>
+

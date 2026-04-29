@@ -119,7 +119,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
-
         public ActionResult DetailsIndex()
         {
             SaleDetailVM vm = new SaleDetailVM();
@@ -819,6 +818,74 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+
+
+
+        public ActionResult SaleIndex()
+        {
+            var vm = new SaleReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+
+        //public ActionResult SaleReport(string customerId, string fromDate, string toDate, bool isSummary)
+        //{
+        //    List<SaleReportVM> vmList = new List<SaleReportVM>();
+
+        //    SaleReportVM param = new SaleReportVM();
+
+        //    param.CustomerId = string.IsNullOrEmpty(customerId) ? 0 : Convert.ToInt32(customerId);
+        //    param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
+        //    param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
+
+        //    param.IsSummary = isSummary;
+
+        //    ResultVM result = _repo.GetSaleByList(param);
+
+
+        //    if (result.Status == "Success" && result.DataVM != null)
+        //    {
+        //        vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
+
+        //    }
+
+        //    return View("SaleListReport", vmList);
+        //}
+
+
+
+        public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,int? reportType,bool isSummary)
+        {
+            List<SaleReportVM> vmList = new List<SaleReportVM>();
+
+            SaleReportVM param = new SaleReportVM();
+
+            //param.CustomerId = string.IsNullOrEmpty(customerId) ? 0 : Convert.ToInt32(customerId);
+            param.CustomerId = customerId ?? 0;
+            param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
+            param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
+
+            param.IsSummary = isSummary;
+            param.ReportType = reportType ?? 0; // ✅ FIX
+
+            ResultVM result = _repo.GetSaleByList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
+            }
+
+            ViewBag.IsSummary = isSummary; // ✅ IMPORTANT
+
+            //return View("~/Views/Sale/SaleListReport.cshtml", vmList); // ✅ FORCE PATH
+
+            return View("SaleListReport", vmList);
+
+            //return View("~/Areas/DMS/Views/Sale/SaleListReport.cshtml", vmList);
         }
 
 

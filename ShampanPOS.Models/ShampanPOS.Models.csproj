@@ -123,6 +123,7 @@
     <Compile Include="SaleDataVM.cs" />
     <Compile Include="SaleDetailVM.cs" />
     <Compile Include="SaleOrderDetailVM.cs" />
+    <Compile Include="SaleOrderReportVM.cs" />
     <Compile Include="SaleOrderStatusModelVM.cs" />
     <Compile Include="SaleOrderVM.cs" />
     <Compile Include="PurchaseVM.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="ResultModel.cs" />
     <Compile Include="ResultStatus.cs" />
     <Compile Include="ResultVM.cs" />
+    <Compile Include="SaleReportVM.cs" />
     <Compile Include="SaleReturnDetailVM.cs" />
     <Compile Include="SaleReturnVM.cs" />
     <Compile Include="SalesByMonthModelVM.cs" />

@@ -2694,6 +2694,9 @@
     <Content Include="Areas\DMS\Views\TableSection\Create.cshtml" />
     <Content Include="Areas\DMS\Views\TableReservation\Index.cshtml" />
     <Content Include="Areas\DMS\Views\TableReservation\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\SaleIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\SaleListReport.cshtml" />
+    <Content Include="Areas\DMS\Views\SaleOrder\SaleOrderIndex.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

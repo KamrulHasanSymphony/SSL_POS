@@ -765,7 +765,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         #endregion
 
-
         public ActionResult InvoiceWiseSaleOrderIndex()
         {
             SaleOrderVM vm = new SaleOrderVM();
@@ -780,8 +779,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
             return View(vm);
         }
-
-
 
         //[HttpGet]
         //public JsonResult GetSaleOrderList(int saleOrderId)
@@ -807,7 +804,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         //        return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
         //    }
         //}
-
 
         [HttpGet]
         public JsonResult GetSaleOrderList(int saleOrderId)
@@ -882,6 +878,48 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return RedirectToAction("Index");
             }
+        }
+
+
+
+        public ActionResult SaleOrderIndex()
+        {
+            var vm = new SaleOrderReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+
+
+        public ActionResult SaleOrderListReport(int? customerId, string fromDate, string toDate, string deliveryFromDate, string deliveryToDate, int? reportType, bool isSummary)
+        {
+            List<SaleOrderReportVM> vmList = new List<SaleOrderReportVM>();
+
+            SaleOrderReportVM param = new SaleOrderReportVM();
+
+            //param.CustomerId = string.IsNullOrEmpty(customerId) ? 0 : Convert.ToInt32(customerId);
+            param.CustomerId = customerId ?? 0;
+            param.OrderFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
+            param.OrderToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
+
+            param.DeliveryFromDate = string.IsNullOrEmpty(deliveryFromDate) ? "01-01-2025" : deliveryFromDate;
+            param.DeliveryToDate = string.IsNullOrEmpty(deliveryToDate) ? DateTime.Now.ToString("dd-MM-yyyy") : deliveryToDate;
+
+            param.IsSummary = isSummary;
+            param.ReportType = reportType ?? 0; // ✅ FIX
+
+            ResultVM result = _repo.GetSaleOrderByList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SaleOrderReportVM>>(result.DataVM.ToString());
+            }
+
+            ViewBag.IsSummary = isSummary;
+
+            return View("SaleOrderListReport", vmList);
+
         }
 
 

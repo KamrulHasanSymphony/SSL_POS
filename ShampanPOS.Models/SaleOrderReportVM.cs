@@ -4,13 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ShampanPOS.Models
 {
-
-    public class SaleOrderVM
+    public class SaleOrderReportVM
     {
+
         public int Id { get; set; }
 
         [Display(Name = "Code(Auto Generate)")]
@@ -19,6 +18,20 @@ namespace ShampanPOS.Models
         [Display(Name = "Distributor")]
         public int? BranchId { get; set; }
         public string? UserId { get; set; }
+
+        [Display(Name = "Order From Date")]
+        public string? OrderFromDate { get; set; }
+
+        [Display(Name = "Order To Date")]
+        public string? OrderToDate { get; set; }
+
+
+        [Display(Name = "Delivery From Date")]
+        public string? DeliveryFromDate { get; set; }
+
+        [Display(Name = "Delivery To Date")]
+        public string? DeliveryToDate { get; set; }
+
 
         [Display(Name = "Customer")]
         [Required(ErrorMessage = "Customer is required.")]
@@ -35,9 +48,6 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Order Date")]
         public string? OrderDate { get; set; }
-
-        [Display(Name = "Comments")]
-        public string? Comments { get; set; }
 
         [Display(Name = "Transaction Type")]
         public string? TransactionType { get; set; }
@@ -63,8 +73,7 @@ namespace ShampanPOS.Models
         public string? LastUpdateFrom { get; set; }
 
         //public string?[] IDs { get; set; }
-        public string? Status { get; set; }
-        public string? PostStatus { get; set; }
+
 
         [Display(Name = "From Date")]
         public string? FromDate { get; set; }
@@ -72,24 +81,15 @@ namespace ShampanPOS.Models
         [Display(Name = "To Date")]
         public string? ToDate { get; set; }
 
-        [Display(Name = "Posted")]
-        public string? IsPosted { get; set; }
-
         public string? BranchName { get; set; }
         public int? CompanyId { get; set; }
         public string? BranchAddress { get; set; }
         public string? CompanyAddress { get; set; }
         public string? CompanyName { get; set; }
 
+        [Display(Name = "Report Type")]
+        public int ReportType { get; set; }
 
-        public List<SaleOrderDetailVM> saleOrderDetailsList { get; set; }
-
-        public SaleOrderVM()
-        {
-            saleOrderDetailsList = new List<SaleOrderDetailVM>();
-        }
-
+        public bool IsSummary { get; set; }
     }
-
-
 }

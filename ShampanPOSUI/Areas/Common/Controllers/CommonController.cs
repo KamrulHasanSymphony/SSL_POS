@@ -1068,6 +1068,34 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
 
+
+        [HttpGet]
+        public ActionResult GetReportTypeList(string value)
+        {
+            try
+            {
+                List<EnumTypeVM> lst = new List<EnumTypeVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetReportTypeList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<EnumTypeVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
+
+
         [HttpGet]
         public ActionResult GetTableList(string value)
         {
