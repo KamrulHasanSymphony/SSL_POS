@@ -2694,6 +2694,8 @@
     <Content Include="Areas\DMS\Views\TableSection\Create.cshtml" />
     <Content Include="Areas\DMS\Views\TableReservation\Index.cshtml" />
     <Content Include="Areas\DMS\Views\TableReservation\Create.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\PurchaseIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\PurchaseListReport.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\SaleIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\SaleListReport.cshtml" />
     <Content Include="Areas\DMS\Views\SaleOrder\SaleOrderIndex.cshtml" />

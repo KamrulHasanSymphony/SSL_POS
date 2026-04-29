@@ -114,6 +114,26 @@ namespace ShampanPOS.Models
         public string? CompanyName { get; set; }
         public string? CompanyAddress { get; set; }
         public bool IsManualPurchase { get; set; }
+
+        [Display(Name = "Purchase From Date")]
+        public string? PurchaseFromDate { get; set; }
+
+        [Display(Name = "Purchase To Date")]
+        public string? PurchaseToDate { get; set; }
+
+        [Display(Name = "Invoice From Date")]
+        public string? InvoiceFromDate { get; set; }
+
+        [Display(Name = "Invoice To Date")]
+        public string? InvoiceToDate { get; set; }
+        [Display(Name = "Report Type")]
+        public string? ReportTypeID { get; set; }
+
+        [Display(Name = "Summery")]
+        public bool IsSummery { get; set; }
+
+
+
         public PeramModel PeramModel { get; set; }
         public List<PurchaseDetailVM> purchaseDetailList { get; set; }
 

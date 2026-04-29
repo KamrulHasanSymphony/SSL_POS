@@ -1339,6 +1339,34 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         //#endregion
 
+        public ActionResult PurchaseIndex()
+        {
+            return View();
+        }
+        public ActionResult PurchaseReport( string supplierName, string fromDate, string toDate, string invoiceFromDate, string invoiceToDate)
+        {
+            //reportVM rVm=new reportVM();
+            List<PurchaseVM> vmList = new List<PurchaseVM>();
+
+            PurchaseVM param = new PurchaseVM();
+
+            param.SupplierName = string.IsNullOrEmpty(supplierName) ? "" : supplierName;
+            param.PurchaseFromDate = string.IsNullOrEmpty(fromDate) ? "" : fromDate;
+            param.PurchaseToDate = string.IsNullOrEmpty(toDate) ? "" : toDate;
+            param.InvoiceFromDate = string.IsNullOrEmpty(invoiceFromDate) ? "" : invoiceFromDate;
+            param.InvoiceToDate = string.IsNullOrEmpty(invoiceToDate) ? "" : invoiceToDate;
+
+            ResultVM result = _repo.GetPurchaseByList(param);
+
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<PurchaseVM>>(result.DataVM.ToString());
+
+            }
+
+            return View("PurchaseListReport", vmList);
+        }
 
 
     }

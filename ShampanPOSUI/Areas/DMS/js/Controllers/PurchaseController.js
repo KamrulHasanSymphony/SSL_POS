@@ -19,7 +19,6 @@
 
         $(document).ready(function () {
 
-
             $("#FromDate").kendoDatePicker({
                 format: "yyyy-MM-dd",
                 value: new Date()
