@@ -29,6 +29,7 @@ namespace ShampanPOS.Models
         public string? DeliveryAddress { get; set; }
         public int? DecimalPlace { get; set; }
 
+        [Display(Name = "Invoice Date Time")]
         public string? InvoiceDateTime { get; set; }
 
         [Display(Name = "Comments")]

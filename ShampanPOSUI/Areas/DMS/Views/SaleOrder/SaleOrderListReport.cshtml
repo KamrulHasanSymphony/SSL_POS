@@ -1,7 +1,7 @@
-﻿@model List<ShampanPOS.Models.PurchaseReportVM>
+﻿@model List<ShampanPOS.Models.SaleOrderReportVM>
 
 @{
-    ViewBag.Title = "Purchase Report";
+    ViewBag.Title = "Sale Order Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
@@ -23,7 +23,7 @@
     }
 
     .sslPrint {
-        background: #17a2b8;
+        background: #28a745;
         color: white;
         padding: 8px 20px;
         border-radius: 4px;
@@ -43,6 +43,7 @@
 
         table th {
             background: #e9e9e9;
+            font-weight: bold;
             text-align: center;
         }
 
@@ -75,31 +76,23 @@
 
     <!-- TITLE -->
     <h2 style="text-align:center;border-bottom:1px solid #000;">
-        PURCHASE REPORT (@(isSummary ? "SUMMARY" : "DETAILS"))
+        SALE ORDER REPORT (@(isSummary ? "SUMMARY" : "DETAILS"))
     </h2>
 
     <!-- TABLE -->
     <table>
         <thead>
             <tr>
-                <!-- 🔥 summary + details both এ show হবে -->
-                <th>Purchase Code</th>
-                <th>Supplier</th>
-
+                <th>Sale Code</th>
                 <th>Invoice Date</th>
-                <th>Purchase Date</th>
+                <th>Customer</th>
 
                 @if (!isSummary)
                 {
                     <th>Product</th>
-                    <th>Unit Price</th>
+                    <th>Unit Rate</th>
                     <th>SD</th>
                     <th>VAT Rate</th>
-                }
-                else
-                {
-                    <th>Product</th>
-                    <!-- 🔥 summary fix -->
                 }
 
                 <th>Quantity</th>
@@ -115,23 +108,16 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <!-- 🔥 summary + details both -->
                         <td>@item.Code</td>
-                        <td>@item.SupplierName</td>
-
                         <td>@item.InvoiceDateTime</td>
-                        <td>@item.PurchaseDate</td>
+                        <td>@item.CustomerName</td>
 
                         @if (!isSummary)
                         {
                             <td>@item.ProductName</td>
-                            <td class="text-right">@item.UnitPrice</td>
+                            <td class="text-right">@item.UnitRate</td>
                             <td class="text-right">@item.SD</td>
                             <td class="text-right">@item.VATRate</td>
-                        }
-                        else
-                        {
-                            <td>@item.ProductName</td>
                         }
 
                         <td class="text-right">@item.Quantity</td>
@@ -143,7 +129,15 @@
 
                 <!-- TOTAL -->
                 <tr style="font-weight:bold;background:#f1f1f1;">
-                    <td colspan="@(isSummary ?  5 : 8)">Total</td>
+                    <td colspan="3">Total</td>
+
+                    @if (!isSummary)
+                    {
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    }
 
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
                     <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
@@ -155,7 +149,7 @@
             {
                 <tr>
                     <td colspan="12" style="text-align:center;">
-                        No purchase data found
+                        No Sale Order data found
                     </td>
                 </tr>
             }

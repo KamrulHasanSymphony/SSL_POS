@@ -811,5 +811,49 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         #endregion
 
+
+        public ActionResult PurchaseReturnIndex()
+        {
+            var vm = new PurchaseReturnReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+
+        public ActionResult PurchaseReturnListReport(int? supplierId, string fromDate, string toDate, string invoiceFromDate, string invoiceToDate, int? reportType, bool isSummary)
+        {
+            List<PurchaseReturnReportVM> vmList = new List<PurchaseReturnReportVM>();
+
+            PurchaseReturnReportVM param = new PurchaseReturnReportVM();
+
+            param.SupplierId = supplierId ?? 0;
+
+            param.PurchaseFromDate = string.IsNullOrEmpty(fromDate) ? null : fromDate;
+            param.PurchaseToDate = string.IsNullOrEmpty(toDate) ? null : toDate;
+
+            param.InvoiceFromDate = string.IsNullOrEmpty(invoiceFromDate) ? null : invoiceFromDate;
+            param.InvoiceToDate = string.IsNullOrEmpty(invoiceToDate) ? null : invoiceToDate;
+
+
+
+            param.IsSummary = isSummary;
+            param.ReportType = reportType ?? 0;
+
+            ResultVM result = _repo.GetPurchaseReturnByList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<PurchaseReturnReportVM>>(result.DataVM.ToString());
+            }
+
+            ViewBag.IsSummary = isSummary;
+
+            return View("PurchaseReturnListReport", vmList);
+
+
+        }
+
+
     }
 }

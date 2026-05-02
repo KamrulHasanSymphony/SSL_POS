@@ -1,6 +1,6 @@
-﻿@model ShampanPOS.Models.SaleOrderReportVM
+﻿@model ShampanPOS.Models.SaleReturnReportVM
 @{
-    ViewBag.Title = "Sale Order Create";
+    ViewBag.Title = "Sale Return Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0"> Sale Order Report </h1>
+                <h1 class="m-0"> Sale Return Report </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -40,35 +40,18 @@
 
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.OrderFromDate)
+                        @Html.LabelFor(model => model.InvoiceFromDate)
                         <div>
-                            @Html.TextBoxFor(model => model.OrderFromDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "FromDate" })
+                            @Html.TextBoxFor(model => model.InvoiceFromDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "FromDate" })
                         </div>
                     </div>
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.OrderToDate)
+                        @Html.LabelFor(model => model.InvoiceToDate)
                         <div>
-                            @Html.TextBoxFor(model => model.OrderToDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "ToDate" })
+                            @Html.TextBoxFor(model => model.InvoiceToDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "ToDate" })
                         </div>
                     </div>
-
-
-                    @*<div class="col-sm-2">
-                        @Html.LabelFor(model => model.DeliveryFromDate)
-                        <div>
-                            @Html.TextBoxFor(model => model.DeliveryFromDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "DeliveryFromDate" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.DeliveryToDate)
-                        <div>
-                            @Html.TextBoxFor(model => model.DeliveryToDate, new { @class = "form-control form-control-sm kendoDatePicker", @id = "DeliveryToDate" })
-                        </div>
-                    </div>*@
-
-
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.ReportType)
@@ -77,6 +60,7 @@
                         </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
+
 
 
                     <div class="col-sm-2 d-flex flex-column">
@@ -107,7 +91,6 @@
 
                     </div>
 
-
                     <!-- Print Button -->
                     <div class="col-sm-2" style="margin-top:26px;">
                         <button type="button"
@@ -134,40 +117,29 @@
 
 <script>
 
-
     function PrintSaleReport() {
-
         var customerId = $("#CustomerId").data("kendoMultiColumnComboBox").value();
-
-        var orderFromObj = $("#FromDate").data("kendoDatePicker").value();
-        var orderToObj = $("#ToDate").data("kendoDatePicker").value();
-
-        //var deliveryFromObj = $("#DeliveryFromDate").data("kendoDatePicker").value();
-        //var deliveryToObj = $("#DeliveryToDate").data("kendoDatePicker").value();
+        var fromDateObj = $("#FromDate").data("kendoDatePicker").value();
+        var toDateObj = $("#ToDate").data("kendoDatePicker").value();
 
         var reportType = $("#ReportType").data("kendoMultiColumnComboBox").value();
-
         var isSummary = $("#IsSummary").is(":checked");
 
         // =========================
         // SAFE DEFAULTS
         // =========================
         customerId = customerId || 0;
-        reportType = reportType || 0;
+        if (!reportType) reportType = 0;
 
-        var fromDate = orderFromObj ? kendo.toString(orderFromObj, "yyyy-MM-dd") : "";
-        var toDate = orderToObj ? kendo.toString(orderToObj, "yyyy-MM-dd") : "";
+        var fromDate = fromDateObj ? kendo.toString(fromDateObj, "yyyy-MM-dd") : "";
+        var toDate = toDateObj ? kendo.toString(toDateObj, "yyyy-MM-dd") : "";
 
-        //var deliveryFromDate = deliveryFromObj ? kendo.toString(deliveryFromObj, "yyyy-MM-dd") : "";
-        //var deliveryToDate = deliveryToObj ? kendo.toString(deliveryToObj, "yyyy-MM-dd") : "";
-
-        // ✅ CORRECT URL
-        var url = '@Url.Action("SaleOrderListReport", "SaleOrder")'
-            + `?customerId=${encodeURIComponent(customerId)}`
-            + `&fromDate=${encodeURIComponent(fromDate)}`
-            + `&toDate=${encodeURIComponent(toDate)}`
-            + `&reportType=${encodeURIComponent(reportType)}`
-            + `&isSummary=${encodeURIComponent(isSummary)}`;
+        var url = `/DMS/SaleReturn/SaleReturnListReport` +
+            `?customerId=${encodeURIComponent(customerId)}` +
+            `&fromDate=${encodeURIComponent(fromDate)}` +
+            `&toDate=${encodeURIComponent(toDate)}` +
+            `&reportType=${encodeURIComponent(reportType)}` +
+            `&isSummary=${encodeURIComponent(isSummary)}`;
 
         window.open(url, "_blank");
     }
@@ -239,6 +211,7 @@
 
         }).data("kendoMultiColumnComboBox");
     }
+
 
     $(document).ready(function () {
         // Initialize Kendo DatePicker for FromDate and ToDate fields

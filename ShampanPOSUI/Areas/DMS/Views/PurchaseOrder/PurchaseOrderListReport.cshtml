@@ -1,7 +1,7 @@
-﻿@model List<ShampanPOS.Models.PurchaseReportVM>
+﻿@model List<ShampanPOS.Models.PurchaseOrderReportVM>
 
 @{
-    ViewBag.Title = "Purchase Report";
+    ViewBag.Title = "Purchase Order Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
@@ -66,40 +66,32 @@
             </td>
             <td style="text-align:right;border:none;">
                 <h3 style="margin:0;">Symphony Softtech Limited</h3>
-                <div>69/1 Trhidara Tower</div>
+                <div>69/1 Tridhara Tower</div>
                 <div>📞 01612264439</div>
-                <div>✉️ symphonysorftech1999@gamil.com</div>
+                <div>✉️ symphonysorftech1999@gmail.com</div>
             </td>
         </tr>
     </table>
 
     <!-- TITLE -->
     <h2 style="text-align:center;border-bottom:1px solid #000;">
-        PURCHASE REPORT (@(isSummary ? "SUMMARY" : "DETAILS"))
+        PURCHASE ORDER REPORT (@(isSummary ? "SUMMARY" : "DETAILS"))
     </h2>
 
     <!-- TABLE -->
     <table>
         <thead>
             <tr>
-                <!-- 🔥 summary + details both এ show হবে -->
-                <th>Purchase Code</th>
+                <th>Purchase Order Code</th>
                 <th>Supplier</th>
-
-                <th>Invoice Date</th>
-                <th>Purchase Date</th>
+                <th>Order Date</th>
+                <th>Delivery Date </th>
+                <th>Product</th>
 
                 @if (!isSummary)
                 {
-                    <th>Product</th>
-                    <th>Unit Price</th>
-                    <th>SD</th>
-                    <th>VAT Rate</th>
-                }
-                else
-                {
-                    <th>Product</th>
-                    <!-- 🔥 summary fix -->
+                    //<th>Product</th>
+                    //<th>Product Code</th>
                 }
 
                 <th>Quantity</th>
@@ -115,23 +107,17 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <!-- 🔥 summary + details both -->
                         <td>@item.Code</td>
                         <td>@item.SupplierName</td>
+                        <td>@item.OrderDate</td>
+                        <td>@item.DeliveryDateTime</td>
+                        <td>@item.ProductName</td>
 
-                        <td>@item.InvoiceDateTime</td>
-                        <td>@item.PurchaseDate</td>
 
                         @if (!isSummary)
                         {
-                            <td>@item.ProductName</td>
-                            <td class="text-right">@item.UnitPrice</td>
-                            <td class="text-right">@item.SD</td>
-                            <td class="text-right">@item.VATRate</td>
-                        }
-                        else
-                        {
-                            <td>@item.ProductName</td>
+                            //<td>@item.ProductName</td>
+                            //<td>@item.ProductCode</td>
                         }
 
                         <td class="text-right">@item.Quantity</td>
@@ -143,7 +129,7 @@
 
                 <!-- TOTAL -->
                 <tr style="font-weight:bold;background:#f1f1f1;">
-                    <td colspan="@(isSummary ?  5 : 8)">Total</td>
+                    <td colspan="@(isSummary ? 4 : 5)">Total</td>
 
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
                     <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
@@ -154,8 +140,8 @@
             else
             {
                 <tr>
-                    <td colspan="12" style="text-align:center;">
-                        No purchase data found
+                    <td colspan="10" style="text-align:center;">
+                        No purchase order data found
                     </td>
                 </tr>
             }
@@ -164,7 +150,7 @@
 
     <!-- FOOTER -->
     <div style="text-align:right;margin-top:10px;">
-        <strong>Total Row:</strong> @(Model != null ? Model.Count : 0)
+        <strong>Total Rows:</strong> @(Model != null ? Model.Count : 0)
     </div>
 
 </div>

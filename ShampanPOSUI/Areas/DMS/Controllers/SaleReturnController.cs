@@ -848,5 +848,48 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+
+
+        public ActionResult SaleReturnIndex()
+        {
+            var vm = new SaleReturnReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+
+        public ActionResult SaleReturnListReport(int? customerId, string fromDate, string toDate, int? reportType, bool isSummary)
+        {
+            List<SaleReturnReportVM> vmList = new List<SaleReturnReportVM>();
+
+            SaleReturnReportVM param = new SaleReturnReportVM();
+
+            //param.CustomerId = string.IsNullOrEmpty(customerId) ? 0 : Convert.ToInt32(customerId);
+            param.CustomerId = customerId ?? 0;
+            param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
+            param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
+
+            param.IsSummary = isSummary;
+            param.ReportType = reportType ?? 0; // ✅ FIX
+
+            ResultVM result = _repo.GetSaleReturnByList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SaleReturnReportVM>>(result.DataVM.ToString());
+            }
+
+            ViewBag.IsSummary = isSummary; // ✅ IMPORTANT
+
+            //return View("~/Views/Sale/SaleListReport.cshtml", vmList); // ✅ FORCE PATH
+
+            return View("SaleReturnListReport", vmList);
+
+            //return View("~/Areas/DMS/Views/Sale/SaleListReport.cshtml", vmList);
+        }
+
+
+
     }
 }

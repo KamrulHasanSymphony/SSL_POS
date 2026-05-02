@@ -892,7 +892,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
 
-        public ActionResult SaleOrderListReport(int? customerId, string fromDate, string toDate, string deliveryFromDate, string deliveryToDate, int? reportType, bool isSummary)
+        public ActionResult SaleOrderListReport(int? customerId, string fromDate, string toDate, int? reportType, bool isSummary)
         {
             List<SaleOrderReportVM> vmList = new List<SaleOrderReportVM>();
 
@@ -903,11 +903,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             param.OrderFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
             param.OrderToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
 
-            param.DeliveryFromDate = string.IsNullOrEmpty(deliveryFromDate) ? "01-01-2025" : deliveryFromDate;
-            param.DeliveryToDate = string.IsNullOrEmpty(deliveryToDate) ? DateTime.Now.ToString("dd-MM-yyyy") : deliveryToDate;
-
+           
             param.IsSummary = isSummary;
-            param.ReportType = reportType ?? 0; // ✅ FIX
+            param.ReportType = reportType ?? 0; 
 
             ResultVM result = _repo.GetSaleOrderByList(param);
 

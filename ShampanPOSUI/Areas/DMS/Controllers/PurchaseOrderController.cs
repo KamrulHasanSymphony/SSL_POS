@@ -697,5 +697,51 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+
+        public ActionResult PurchaseOrderIndex()
+        {
+            var vm = new PurchaseOrderReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+
+        public ActionResult PurchaseOrderListReport(int? supplierId, string fromDate, string toDate, string deliveryFromDate, string deliveryToDate, int? reportType, bool isSummary)
+        {
+            List<PurchaseOrderReportVM> vmList = new List<PurchaseOrderReportVM>();
+
+            PurchaseOrderReportVM param = new PurchaseOrderReportVM();
+
+
+            param.SupplierId = supplierId ?? 0;
+
+            param.OrderFromDate = string.IsNullOrEmpty(fromDate) ? null : fromDate;
+            param.OrderToDate = string.IsNullOrEmpty(toDate) ? null : toDate;
+
+            param.DeliveryFromDate = string.IsNullOrEmpty(deliveryFromDate) ? null : deliveryFromDate;
+            param.DeliveryToDate = string.IsNullOrEmpty(deliveryToDate) ? null : deliveryToDate;
+
+
+
+            param.IsSummary = isSummary;
+            param.ReportType = reportType ?? 0;
+
+            ResultVM result = _repo.GetPurchaseOrderByList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<PurchaseOrderReportVM>>(result.DataVM.ToString());
+            }
+
+            ViewBag.IsSummary = isSummary;
+
+            return View("PurchaseOrderListReport", vmList);
+
+
+        }
+
+
+
     }
 }

@@ -37,74 +37,6 @@
         let currentKeyword = "";
         let currentGroupId = "";
 
-        $(document).on("keyup", "#productSearchInput", function () {
-            currentKeyword = $(this).val().toLowerCase().trim();
-            applyFilter();
-        });
-
-        $(document).on("change", "#modalProductGroup", function () {
-            currentGroupId = $(this).val();
-            applyFilter();
-        });
-
-        function applyFilter() {
-
-            var filtered = allProducts.filter(function (item) {
-
-                var matchText =
-                    (!currentKeyword ||
-                        (item.ProductName && item.ProductName.toLowerCase().includes(currentKeyword)) ||
-                        (item.ProductId && item.ProductId.toString().includes(currentKeyword)));
-
-                var matchGroup =
-                    (!currentGroupId || item.ProductGroupId == currentGroupId);
-
-                return matchText && matchGroup;
-            });
-
-            renderProductCardsInModal(filtered);
-
-            // 🔥 dropdown আবার build করো (THIS IS THE REAL FIX)
-            var groupDropdown = $("#modalProductGroup");
-
-            groupDropdown.empty().append('<option value="">All Group</option>');
-
-            var groups = [];
-
-            allProducts.forEach(function (item) {
-                if (item.ProductGroupId &&
-                    !groups.find(x => x.id == item.ProductGroupId)) {
-
-                    groups.push({
-                        id: item.ProductGroupId,
-                        name: item.ProductGroupName
-                    });
-                }
-            });
-
-            groups.forEach(function (g) {
-                groupDropdown.append(
-                    `<option value="${g.id}">${g.name}</option>`
-                );
-            });
-
-            // 🔥 restore selected value
-            groupDropdown.val(currentGroupId);
-
-            // 🔥 restore search text
-            $("#productSearchInput").val(currentKeyword);
-
-            // 🔥 cursor fix
-            setTimeout(function () {
-                let input = $("#productSearchInput")[0];
-                if (input) {
-                    input.focus();
-                    input.setSelectionRange(input.value.length, input.value.length);
-                }
-            }, 0);
-        }
-
-
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
@@ -1389,6 +1321,143 @@
 
         }).data("kendoMultiColumnComboBox");
     };
+    $(document).on("keyup", "#productSearchInput", function () {
+
+        currentKeyword = $(this).val().toLowerCase().trim();
+        applyFilter();
+    });
+
+
+    $(document).on("click", ".category-item", function () {
+
+        $(".category-item").removeClass("active");
+        $(this).addClass("active");
+
+        currentGroupId = $(this).data("id");
+
+
+        let name = $(this).find("span:first").text().trim();
+
+
+        $("#categoryTitle").text("Categories : " + name);
+
+        applyFilter();
+
+
+        $("#categoryItems").slideUp();
+    });
+
+    $(document).on("click", "#clearCategory", function () {
+
+        currentGroupId = "";
+        $(".category-item").removeClass("active");
+
+        applyFilter();
+    });
+
+    function applyFilter() {
+
+        var filtered = allProducts.filter(function (item) {
+
+            var matchText =
+                (!currentKeyword ||
+                    (item.ProductName && item.ProductName.toLowerCase().includes(currentKeyword)) ||
+                    (item.ProductId && item.ProductId.toString().includes(currentKeyword)));
+
+            var matchGroup =
+                (!currentGroupId || item.ProductGroupId == currentGroupId);
+
+            return matchText && matchGroup;
+        });
+
+        renderProductCardsInModal(filtered);
+
+
+        renderCategoryList(allProducts);
+
+        $("#productSearchInput").val(currentKeyword);
+
+
+        setTimeout(function () {
+            let input = $("#productSearchInput")[0];
+            if (input) {
+                input.focus();
+                input.setSelectionRange(input.value.length, input.value.length);
+            }
+        }, 0);
+    }
+
+    function renderCategoryList(products) {
+
+        let groups = [];
+
+        products.forEach(p => {
+            if (p.ProductGroupId &&
+                !groups.find(g => g.id == p.ProductGroupId)) {
+
+                groups.push({
+                    id: p.ProductGroupId,
+                    name: p.ProductGroupName
+                });
+            }
+        });
+
+        // 🔥 selected name বের করো
+        let selectedName = "Categories";
+
+        if (currentGroupId) {
+            let selected = groups.find(g => g.id == currentGroupId);
+            if (selected) {
+                selectedName = `Categories : ${selected.name}`;
+            }
+        }
+
+        let html = `
+<div class="category-box-modern">
+
+    <div class="category-header" id="toggleCategory">
+
+        <div class="left">
+            <i class="fa fa-layer-group"></i>
+            <span id="categoryTitle">${selectedName}</span>
+        </div>
+
+        <div class="right">
+            <span class="clear-btn" id="clearCategory">Clear</span>
+            <i class="fa fa-chevron-down arrow"></i>
+        </div>
+
+    </div>
+
+    
+    <div class="category-items" id="categoryItems">
+`;
+
+        groups.forEach(g => {
+
+            let count = products.filter(p => p.ProductGroupId == g.id).length;
+
+            html += `
+    <div class="category-item ${currentGroupId == g.id ? 'active' : ''}" data-id="${g.id}">
+        <span>${g.name}</span>
+        <span class="badge">${count}</span>
+    </div>
+    `;
+        });
+
+        html += `</div></div>`;
+
+        $("#categoryContainer").html(html);
+    }
+
+    $(document).on("click", "#toggleCategory", function (e) {
+
+
+        if ($(e.target).attr("id") === "clearCategory") return;
+
+        $("#categoryItems").stop(true, true).slideToggle();
+    });
+
 
     function openProductCardModal(groupId) {
 
@@ -1419,31 +1488,31 @@
                     renderProductCardsInModal(filtered);
 
                     // 🔥 dropdown fill (initial load)
-                    var groupDropdown = $("#modalProductGroup");
+                    //var groupDropdown = $("#modalProductGroup");
 
-                    groupDropdown.empty().append('<option value="">All Group</option>');
+                    //groupDropdown.empty().append('<option value="">All Group</option>');
 
-                    var groups = [];
+                    //var groups = [];
 
-                    allProducts.forEach(function (item) {
-                        if (item.ProductGroupId &&
-                            !groups.find(x => x.id == item.ProductGroupId)) {
+                    //allProducts.forEach(function (item) {
+                    //    if (item.ProductGroupId &&
+                    //        !groups.find(x => x.id == item.ProductGroupId)) {
 
-                            groups.push({
-                                id: item.ProductGroupId,
-                                name: item.ProductGroupName
-                            });
-                        }
-                    });
+                    //        groups.push({
+                    //            id: item.ProductGroupId,
+                    //            name: item.ProductGroupName
+                    //        });
+                    //    }
+                    //});
 
-                    groups.forEach(function (g) {
-                        groupDropdown.append(
-                            `<option value="${g.id}">${g.name}</option>`
-                        );
-                    });
+                    //groups.forEach(function (g) {
+                    //    groupDropdown.append(
+                    //        `<option value="${g.id}">${g.name}</option>`
+                    //    );
+                    //});
 
-                    groupDropdown.val(currentGroupId);
-
+                    //groupDropdown.val(currentGroupId);
+                    renderCategoryList(allProducts);
                     $("#productSearchInput").focus();
 
                 }, 50);
@@ -1455,32 +1524,105 @@
         });
     }
 
+    function initPage() {
 
+        renderCategoryList(allProducts); // 🔥 only once
+        renderProductCardsInModal(allProducts);
+    }
+    function updateProductList(products) {
 
+        let html = "";
+
+        if (!products || products.length === 0) {
+            html = `
+        <div style="grid-column:1/-1; text-align:center; padding:30px; color:#999;">
+            No product found 😔
+        </div>
+        `;
+        }
+
+        products.forEach(function (item) {
+
+            var imgPath = item.ImagePath
+                ? item.ImagePath
+                : "/images/no-image.png";
+
+            html += `
+        <div class="product-card">
+
+            <div class="product-img">
+                <img src="${imgPath}"
+                     onerror="this.src='/images/no-image.png'" />
+            </div>
+
+            <div class="product-info">
+                <div class="tooltipMain">
+                    <h6 class="product-title">
+                        ${item.ProductName || ''}
+                    </h6>
+                    <span class="tooltip-text">${item.ProductName || ''}</span>
+                </div>
+
+                <div class="product-meta">
+                    <span>Code: ${item.ProductId || ''}</span>
+                    <span class="price">৳ ${item.SalesPrice || 0}</span>
+                </div>
+            </div>
+
+            <div class="qty-modern">
+
+                <button class="qty-side qty-minus" data-id="${item.ProductId}">−</button>
+
+                <div class="qty-center">
+                    <input type="number" min="1" value="1"
+                           id="qty_${item.ProductId}" />
+                </div>
+
+                <button class="qty-side qty-plus" data-id="${item.ProductId}">+</button>
+
+            </div>
+
+            <button class="btn btn-success btn-sm add-product-btn add-btn"
+                    data-id="${item.ProductId}">
+                Add
+            </button>
+
+        </div>
+        `;
+        });
+
+        $(".product-grid").html(html);
+    }
     function renderProductCardsInModal(products) {
 
         var html = `
+    <div>
 
-    <div style="margin-bottom:12px; display:flex; gap:10px; align-items:center;">
+        <div style="display:flex; gap:10px; margin-bottom:10px; justify-content: space-between; align-items:center;" class="salecardheader">
+        <div class="categoryInputSerch pro-search">
 
-        <select id="modalProductGroup"
-                class="form-control form-control-sm"a
-                style="max-width:200px;">
-            <option value="">All Group</option>
-        </select>
+    <div class="input-wrapper">
+        <span class="icon">🔍</span>
 
-        <input type="text" id="productSearchInput"
-               class="form-control form-control-sm"
-               placeholder="🔍 Search by Product Name or Code..."
-               style="max-width:250px;" />
+        <input type="text"
+               id="productSearchInput"
+               placeholder="Search products..."
+               autocomplete="off" />
 
-        <span style="font-size:12px; color:#777;">
-            Total: ${products.length} items
-        </span>
-
+        
     </div>
 
-    <div class="product-grid">
+    <div class="total-box">
+        <span id="totalItems"><small>Total items: </small>${products.length}</span>
+        
+    </div>
+
+</div>
+           
+             <div id="categoryContainer" class="category-box"></div>
+        </div>
+
+        <div class="product-grid">
     `;
 
         if (!products || products.length === 0) {
@@ -1541,13 +1683,17 @@
         `;
         });
 
-        html += '</div>';
-
+        //html += '</div>';
+        html += '</div></div></div>';
         $("#productCardContainer").html(html);
     }
 
+    //$(document).on("click", "#clearSearch", function () {
+    //    debugger;
+    //    $("#productSearchInput").val("");
 
 
+    //});
     $(document).on("click", ".product-img img", function () {
         var src = $(this).attr("src");
 
@@ -1929,9 +2075,3 @@
     }
 
 }(CommonService, CommonAjaxService);
-
-
-
-
-
-

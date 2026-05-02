@@ -1,7 +1,7 @@
 ﻿
-@model ShampanPOS.Models.PurchaseReportVM
+@model ShampanPOS.Models.PurchaseOrderReportVM
 @{
-    ViewBag.Title = "Purchase Index";
+    ViewBag.Title = "Purchase Order Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0"> Purchase Report </h1>
+                <h1 class="m-0"> Purchase Order Report </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -37,38 +37,38 @@
                     </div>
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.PurchaseFromDate)
+                        @Html.LabelFor(model => model.OrderFromDate)
                         <div class="d-flex align-items-center">
-                            @Html.TextBoxFor(model => model.PurchaseFromDate,
-                                new { @class = "form-control form-control-sm kendoDatePicker", @id = "PurchaseFromDate" })
-                            <input type="checkbox" id="chkPurchaseFromDate" style="margin-left:6px;" />
+                            @Html.TextBoxFor(model => model.OrderFromDate,
+                                new { @class = "form-control form-control-sm kendoDatePicker", @id = "OrderFromDate" })
+                            <input type="checkbox" id="chkOrderFromDate" style="margin-left:6px;" />
                         </div>
                     </div>
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.PurchaseToDate)
+                        @Html.LabelFor(model => model.OrderToDate)
                         <div class="d-flex align-items-center">
-                            @Html.TextBoxFor(model => model.PurchaseToDate,
-                                new { @class = "form-control form-control-sm kendoDatePicker", @id = "PurchaseToDate" })
-                            <input type="checkbox" id="chkPurchaseToDate" style="margin-left:6px;" />
+                            @Html.TextBoxFor(model => model.OrderToDate,
+                                new { @class = "form-control form-control-sm kendoDatePicker", @id = "OrderToDate" })
+                            <input type="checkbox" id="chkOrderToDate" style="margin-left:6px;" />
                         </div>
                     </div>
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.InvoiceFromDate)
+                        @Html.LabelFor(model => model.DeliveryFromDate)
                         <div class="d-flex align-items-center">
-                            @Html.TextBoxFor(model => model.InvoiceFromDate,
-                                new { @class = "form-control form-control-sm kendoDatePicker", @id = "InvoiceFromDate" })
-                            <input type="checkbox" id="chkInvoiceFromDate" style="margin-left:6px;" />
+                            @Html.TextBoxFor(model => model.DeliveryFromDate,
+                                new { @class = "form-control form-control-sm kendoDatePicker", @id = "DeliveryFromDate" })
+                            <input type="checkbox" id="chkDeliveryFromDate" style="margin-left:6px;" />
                         </div>
                     </div>
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.InvoiceToDate)
+                        @Html.LabelFor(model => model.DeliveryToDate)
                         <div class="d-flex align-items-center">
-                            @Html.TextBoxFor(model => model.InvoiceToDate,
-                                new { @class = "form-control form-control-sm kendoDatePicker", @id = "InvoiceToDate" })
-                            <input type="checkbox" id="chkInvoiceToDate" style="margin-left:6px;" />
+                            @Html.TextBoxFor(model => model.DeliveryToDate,
+                                new { @class = "form-control form-control-sm kendoDatePicker", @id = "DeliveryToDate" })
+                            <input type="checkbox" id="chkDeliveryToDate" style="margin-left:6px;" />
                         </div>
                     </div>
 
@@ -112,7 +112,7 @@
                         </button>
                     </div>
 
-                
+
 
                 </div>
 
@@ -140,17 +140,17 @@
         GetSupplierComboBox();
         GetReportTypeComboBox()
         // Kendo DatePickers
-        $("#PurchaseFromDate").kendoDatePicker();
-        $("#PurchaseToDate").kendoDatePicker();
-        $("#InvoiceFromDate").kendoDatePicker();
-        $("#InvoiceToDate").kendoDatePicker();
+        $("#OrderFromDate").kendoDatePicker();
+        $("#OrderToDate").kendoDatePicker();
+        $("#DeliveryFromDate").kendoDatePicker();
+        $("#DeliveryToDate").kendoDatePicker();
 
         var currentDate = new Date();
 
-        $("#PurchaseFromDate").data("kendoDatePicker").value(currentDate);
-        $("#PurchaseToDate").data("kendoDatePicker").value(currentDate);
-        $("#InvoiceFromDate").data("kendoDatePicker").value(currentDate);
-        $("#InvoiceToDate").data("kendoDatePicker").value(currentDate);
+        $("#OrderFromDate").data("kendoDatePicker").value(currentDate);
+        $("#OrderToDate").data("kendoDatePicker").value(currentDate);
+        $("#DeliveryFromDate").data("kendoDatePicker").value(currentDate);
+        $("#DeliveryToDate").data("kendoDatePicker").value(currentDate);
     });
 
 
@@ -241,54 +241,54 @@
         supplierId = supplierId || 0;
         reportType = reportType || 0;
 
-        var fromDate = "";
-        var toDate = "";
-        var invoiceFromDate = "";
-        var invoiceToDate = "";
+        var orderFromDate = "";
+        var orderToDate = "";
+        var deliveryFromDate = "";
+        var deliveryToDate = "";
 
-        if ($("#chkPurchaseFromDate").is(":checked")) {
-            fromDate = $("#PurchaseFromDate").val();
+        if ($("#chkOrderFromDate").is(":checked")) {
+            orderFromDate = $("#OrderFromDate").val();
         }
 
-        if ($("#chkPurchaseToDate").is(":checked")) {
-            toDate = $("#PurchaseToDate").val();
+        if ($("#chkOrderToDate").is(":checked")) {
+            orderToDate = $("#OrderToDate").val();
         }
 
-        if ($("#chkInvoiceFromDate").is(":checked")) {
-            invoiceFromDate = $("#InvoiceFromDate").val();
+        if ($("#chkDeliveryFromDate").is(":checked")) {
+            deliveryFromDate = $("#DeliveryFromDate").val();
         }
 
-        if ($("#chkInvoiceToDate").is(":checked")) {
-            invoiceToDate = $("#InvoiceToDate").val();
+        if ($("#chkDeliveryToDate").is(":checked")) {
+            deliveryToDate = $("#DeliveryToDate").val();
         }
 
-      var url = '@Url.Action("PurchaseListReport", "Purchase", new { area = "DMS" })'
-    + '?supplierId=' + supplierId
-    + '&fromDate=' + fromDate
-    + '&toDate=' + toDate
-    + '&invoiceFromDate=' + invoiceFromDate
-    + '&invoiceToDate=' + invoiceToDate
-    + '&reportType=' + reportType
-    + '&isSummary=' + isSummary;
+        var url = '@Url.Action("PurchaseOrderListReport", "PurchaseOrder", new { area = "DMS" })'
+            + '?supplierId=' + supplierId
+            + '&fromDate=' + encodeURIComponent(orderFromDate)
+            + '&toDate=' + encodeURIComponent(orderToDate)
+            + '&deliveryFromDate=' + encodeURIComponent(deliveryFromDate)
+            + '&deliveryToDate=' + encodeURIComponent(deliveryToDate)
+            + '&reportType=' + reportType
+            + '&isSummary=' + isSummary;
 
-        window.open(url, "_blank");
+         window.open(url, "_blank");
     }
 
 
-    $("#chkPurchaseFromDate").change(function () {
-        $("#PurchaseFromDate").prop("disabled", !this.checked);
+    $("#chkOrderFromDate").change(function () {
+        $("#OrderFromDate").prop("disabled", !this.checked);
     });
 
-    $("#chkPurchaseToDate").change(function () {
-        $("#PurchaseToDate").prop("disabled", !this.checked);
+    $("#chkOrderToDate").change(function () {
+        $("#OrderToDate").prop("disabled", !this.checked);
     });
 
-    $("#chkInvoiceFromDate").change(function () {
-        $("#InvoiceFromDate").prop("disabled", !this.checked);
+    $("#chkDeliveryFromDate").change(function () {
+        $("#DeliveryFromDate").prop("disabled", !this.checked);
     });
 
-    $("#chkInvoiceToDate").change(function () {
-        $("#InvoiceToDate").prop("disabled", !this.checked);
+    $("#chkDeliveryToDate").change(function () {
+        $("#DeliveryToDate").prop("disabled", !this.checked);
     });
 
 

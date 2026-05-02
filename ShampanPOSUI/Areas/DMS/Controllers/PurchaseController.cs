@@ -1341,31 +1341,51 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         public ActionResult PurchaseIndex()
         {
-            return View();
+            var vm = new PurchaseReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
         }
-        public ActionResult PurchaseReport( string supplierName, string fromDate, string toDate, string invoiceFromDate, string invoiceToDate)
+
+
+        public ActionResult PurchaseListReport(int? supplierId, string fromDate, string toDate, string invoiceFromDate, string invoiceToDate, int? reportType, bool isSummary)
         {
-            //reportVM rVm=new reportVM();
-            List<PurchaseVM> vmList = new List<PurchaseVM>();
+            List<PurchaseReportVM> vmList = new List<PurchaseReportVM>();
 
-            PurchaseVM param = new PurchaseVM();
+            PurchaseReportVM param = new PurchaseReportVM();
 
-            param.SupplierName = string.IsNullOrEmpty(supplierName) ? "" : supplierName;
-            param.PurchaseFromDate = string.IsNullOrEmpty(fromDate) ? "" : fromDate;
-            param.PurchaseToDate = string.IsNullOrEmpty(toDate) ? "" : toDate;
-            param.InvoiceFromDate = string.IsNullOrEmpty(invoiceFromDate) ? "" : invoiceFromDate;
-            param.InvoiceToDate = string.IsNullOrEmpty(invoiceToDate) ? "" : invoiceToDate;
+
+            param.SupplierId = supplierId ?? 0;
+            //param.SupplierName = string.IsNullOrEmpty(supplierName) ? "" : supplierName;
+            //param.PurchaseFromDate = string.IsNullOrEmpty(fromDate) ? "" : fromDate;
+            //param.PurchaseToDate = string.IsNullOrEmpty(toDate) ? "" : toDate;
+            //param.InvoiceFromDate = string.IsNullOrEmpty(invoiceFromDate) ? "" : invoiceFromDate;
+            //param.InvoiceToDate = string.IsNullOrEmpty(invoiceToDate) ? "" : invoiceToDate;
+
+
+            param.PurchaseFromDate = string.IsNullOrEmpty(fromDate) ? null : fromDate;
+            param.PurchaseToDate = string.IsNullOrEmpty(toDate) ? null : toDate;
+
+            param.InvoiceFromDate = string.IsNullOrEmpty(invoiceFromDate) ? null : invoiceFromDate;
+            param.InvoiceToDate = string.IsNullOrEmpty(invoiceToDate) ? null : invoiceToDate;
+
+
+
+            param.IsSummary = isSummary;
+            param.ReportType = reportType ?? 0;
 
             ResultVM result = _repo.GetPurchaseByList(param);
 
-
             if (result.Status == "Success" && result.DataVM != null)
             {
-                vmList = JsonConvert.DeserializeObject<List<PurchaseVM>>(result.DataVM.ToString());
-
+                vmList = JsonConvert.DeserializeObject<List<PurchaseReportVM>>(result.DataVM.ToString());
             }
 
+            ViewBag.IsSummary = isSummary;
+
             return View("PurchaseListReport", vmList);
+
+
         }
 
 

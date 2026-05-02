@@ -394,7 +394,7 @@ namespace ShampanPOS.Repo
             }
         }
 
-        public ResultVM GetPurchaseByList(PurchaseVM model)
+        public ResultVM GetPurchaseByList(PurchaseReportVM model)
         {
             try
             {

@@ -117,7 +117,10 @@
     <Compile Include="PurchaseDataVM.cs" />
     <Compile Include="PurchaseOrderDetailVM.cs" />
     <Compile Include="PurchaseDetailVM.cs" />
+    <Compile Include="PurchaseOrderReportVM.cs" />
+    <Compile Include="PurchaseReportVM.cs" />
     <Compile Include="PurchaseReturnDetailVM.cs" />
+    <Compile Include="PurchaseReturnReportVM.cs" />
     <Compile Include="PurchaseReturnVM.cs" />
     <Compile Include="SaleCreditCardVM.cs" />
     <Compile Include="SaleDataVM.cs" />
@@ -140,6 +143,7 @@
     <Compile Include="ResultVM.cs" />
     <Compile Include="SaleReportVM.cs" />
     <Compile Include="SaleReturnDetailVM.cs" />
+    <Compile Include="SaleReturnReportVM.cs" />
     <Compile Include="SaleReturnVM.cs" />
     <Compile Include="SalesByMonthModelVM.cs" />
     <Compile Include="SaleVM.cs" />
