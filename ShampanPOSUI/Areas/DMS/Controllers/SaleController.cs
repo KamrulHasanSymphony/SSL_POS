@@ -483,27 +483,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     vm = new SaleVM();
                 }
 
-                //vm.ColunWidth = new Dictionary<string, string>
-                //{
-                //    { "Code", "5%" },
-                //    { "CustomerName", "15%" },
-                //    { "TailorMasterName", "15%" },
-                //    { "FabricTotal", "15%" },
-                //    { "MakingChargeTotal", "15%" },
-                //    { "GrandTotal", "35%" },
-                //    { "Advance", "35%" },
-                //    { "Dues", "35%" }
-                //};
-
-                //vm.PageSize = new Dictionary<string, string>
-                //{
-                //    { "A4_Width", "210mm" },
-                //    { "A4_Height", "297mm" },
-                //    { "Letter_Width", "216mm" },
-                //    { "Letter_Height", "279mm" },
-                //    { "Orientation", "Portrait" },
-                //    { "Default", "A4" }
-                //};
 
                 return View("SaleReport", vm);
             }
@@ -514,6 +493,43 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+
+        [HttpGet]
+        public ActionResult getSaleReport(string id)
+        {
+            try
+            {
+                var companyId = Session["CompanyId"];
+
+                SaleReportVM vm = new SaleReportVM();
+                CommonVM param = new CommonVM();
+                param.Id = id;
+                param.CompanyId = companyId.ToString();
+
+                ResultVM result = _repo.GetReport(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    vm = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString()).FirstOrDefault();
+                }
+                else
+                {
+                    vm = new SaleReportVM();
+                }
+
+
+                return View("Report", vm);
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return RedirectToAction("Index");
+            }
+        }
+
+
 
 
         //[HttpPost]
@@ -858,19 +874,21 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
 
-        public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,int? reportType,bool isSummary)
+
+        public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,int? reportType,bool isSummary,int? productId)
         {
             List<SaleReportVM> vmList = new List<SaleReportVM>();
 
             SaleReportVM param = new SaleReportVM();
 
-            //param.CustomerId = string.IsNullOrEmpty(customerId) ? 0 : Convert.ToInt32(customerId);
             param.CustomerId = customerId ?? 0;
             param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
             param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
 
             param.IsSummary = isSummary;
-            param.ReportType = reportType ?? 0; // ✅ FIX
+            param.ReportType = reportType ?? 0;
+
+            param.ProductId = productId ?? 0;   // ✅ ADD
 
             ResultVM result = _repo.GetSaleByList(param);
 
@@ -879,14 +897,43 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
             }
 
-            ViewBag.IsSummary = isSummary; // ✅ IMPORTANT
-
-            //return View("~/Views/Sale/SaleListReport.cshtml", vmList); // ✅ FORCE PATH
+            ViewBag.IsSummary = isSummary;
+            ViewBag.ReportType = reportType ?? 0;
+            ViewBag.ProductId = productId;   // ✅ optional
 
             return View("SaleListReport", vmList);
-
-            //return View("~/Areas/DMS/Views/Sale/SaleListReport.cshtml", vmList);
         }
+
+
+
+
+        //public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,int? reportType,bool isSummary)
+        //{
+        //    List<SaleReportVM> vmList = new List<SaleReportVM>();
+
+        //    SaleReportVM param = new SaleReportVM();
+
+        //    //param.CustomerId = string.IsNullOrEmpty(customerId) ? 0 : Convert.ToInt32(customerId);
+        //    param.CustomerId = customerId ?? 0;
+        //    param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
+        //    param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
+
+        //    param.IsSummary = isSummary;
+        //    param.ReportType = reportType ?? 0; 
+
+        //    ResultVM result = _repo.GetSaleByList(param);
+
+        //    if (result.Status == "Success" && result.DataVM != null)
+        //    {
+        //        vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
+        //    }
+
+        //    ViewBag.IsSummary = isSummary; 
+
+
+        //    return View("SaleListReport", vmList);
+
+        //}
 
 
 

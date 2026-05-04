@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
+    int type = ViewBag.ReportType != null ? (int)ViewBag.ReportType : 0;
 }
 
 <style>
@@ -43,7 +44,6 @@
 
         table th {
             background: #e9e9e9;
-            font-weight: bold;
             text-align: center;
         }
 
@@ -52,113 +52,300 @@
     }
 </style>
 
-<button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
-    Print
-</button>
+<button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">Print</button>
 
 <div class="report-box">
 
-    <!-- HEADER -->
-    <table style="border:none;margin-bottom:10px;">
-        <tr>
-            <td style="width:140px;border:none;">
-                <img src="~/Content/AdminLte/dist/img/logo.png"
-                     style="width:230px;height:120px;" />
-            </td>
-            <td style="text-align:right;border:none;">
-                <h3 style="margin:0;">Symphony Softtech Limited</h3>
-                <div>69/1 Trhidara Tower</div>
-                <div>📞 01612264439</div>
-                <div>✉️ symphonysorftech1999@gamil.com</div>
-            </td>
-        </tr>
-    </table>
-
-    <!-- TITLE -->
     <h2 style="text-align:center;border-bottom:1px solid #000;">
         SALE REPORT (@(isSummary ? "SUMMARY" : "DETAILS"))
     </h2>
 
-    <!-- TABLE -->
     <table>
         <thead>
             <tr>
-                <th>Sale Code</th>
-                <th>Invoice Date</th>
-                <th>Customer</th>
 
-                @if (!isSummary)
+                @if (isSummary)
                 {
-                    <th>Product</th>
-                    <th>Unit Rate</th>
-                    <th>SD</th>
-                    <th>VAT Rate</th>
+                    if (type == 1)
+                    {
+                        <th>Date</th>
+                        <th>Total Invoice</th>
+                        <th>Quantity</th>
+                        <th>Sub Total</th>
+                        <th>VAT</th>
+                        <th>Total</th>
+                    }
+                    else if (type == 2)
+                    {
+                        <th>Month</th>
+                        <th>Total Invoice</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    }
+                    else if (type == 3)
+                    {
+                        <th>Customer</th>
+                        <th>Total Invoice</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    }
+                    else if (type == 4)
+                    {
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Sub Total</th>
+                        <th>VAT</th>
+                        <th>Total</th>
+                    }
+                    else if (type == 5)
+                    {
+                        <th>Sale Code</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Quantity</th>
+                        <th>Sub Total</th>
+                        <th>VAT</th>
+                        <th>Total</th>
+                    }
+                }
+                else
+                {
+                    if (type == 1)
+                    {
+                        <th>Date</th>
+                        <th>Sale Code</th>
+                        <th>Quantity</th>
+                        <th>Sub Total</th>
+                        <th>VAT</th>
+                        <th>Total</th>
+                    }
+                    else if (type == 2)
+                    {
+                        <th>Month</th>
+                        <th>Sale Code</th>
+                        <th>Date</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    }
+                    else if (type == 3)
+                    {
+                        <th>Customer</th>
+                        <th>Sale Code</th>
+                        <th>Date</th>
+                        <th>Quantity</th>
+                        <th>Unit Rate</th>
+                        <th>Sub Total</th>
+                        <th>VAT</th>
+                        <th>Total</th>
+                    }
+                    else if (type == 4)
+                    {
+                        <th>Product</th>
+                        <th>Sale Code</th>
+                        <th>Date</th>
+                        <th>Quantity</th>
+                        <th>Unit Rate</th>
+                        <th>Sub Total</th>
+                        <th>VAT</th>
+                        <th>Total</th>
+                    }
+                    else if (type == 5)
+                    {
+                        <th>Sale Code</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Rate</th>
+                        <th>Sub Total</th>
+                        <th>VAT</th>
+                        <th>Total</th>
+                    }
                 }
 
-                <th>Quantity</th>
-                <th>Sub Total</th>
-                <th>VAT Amount</th>
-                <th>Line Total</th>
             </tr>
         </thead>
 
         <tbody>
+
             @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.Code</td>
-                        <td>@item.InvoiceDateTime</td>
-                        <td>@item.CustomerName</td>
-
-                        @if (!isSummary)
+                        @if (isSummary)
                         {
-                            <td>@item.ProductName</td>
-                            <td class="text-right">@item.UnitRate</td>
-                            <td class="text-right">@item.SD</td>
-                            <td class="text-right">@item.VATRate</td>
+                            if (type == 1)
+                            {
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.TotalInvoice</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.SubTotal</td>
+                                <td>@item.VATAmount</td>
+                                <td>@item.LineTotal</td>
+                            }
+                            else if (type == 2)
+                            {
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.TotalInvoice</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.LineTotal</td>
+                            }
+                            else if (type == 3)
+                            {
+                                <td>@item.CustomerName</td>
+                                <td>@item.TotalInvoice</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.LineTotal</td>
+                            }
+                            else if (type == 4)
+                            {
+                                <td>@item.ProductName</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.SubTotal</td>
+                                <td>@item.VATAmount</td>
+                                <td>@item.LineTotal</td>
+                            }
+                            else if (type == 5)
+                            {
+                                <td>@item.Code</td>
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.CustomerName</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.SubTotal</td>
+                                <td>@item.VATAmount</td>
+                                <td>@item.LineTotal</td>
+                            }
                         }
-
-                        <td class="text-right">@item.Quantity</td>
-                        <td class="text-right">@item.SubTotal</td>
-                        <td class="text-right">@item.VATAmount</td>
-                        <td class="text-right">@item.LineTotal</td>
+                        else
+                        {
+                            if (type == 1)
+                            {
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.Code</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.SubTotal</td>
+                                <td>@item.VATAmount</td>
+                                <td>@item.LineTotal</td>
+                            }
+                            else if (type == 2)
+                            {
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.Code</td>
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.LineTotal</td>
+                            }
+                            else if (type == 3)
+                            {
+                                <td>@item.CustomerName</td>
+                                <td>@item.Code</td>
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitRate</td>
+                                <td>@item.SubTotal</td>
+                                <td>@item.VATAmount</td>
+                                <td>@item.LineTotal</td>
+                            }
+                            else if (type == 4)
+                            {
+                                <td>@item.ProductName</td>
+                                <td>@item.Code</td>
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitRate</td>
+                                <td>@item.SubTotal</td>
+                                <td>@item.VATAmount</td>
+                                <td>@item.LineTotal</td>
+                            }
+                            else if (type == 5)
+                            {
+                                <td>@item.Code</td>
+                                <td>@item.InvoiceDateTime</td>
+                                <td>@item.CustomerName</td>
+                                <td>@item.ProductName</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitRate</td>
+                                <td>@item.SubTotal</td>
+                                <td>@item.VATAmount</td>
+                                <td>@item.LineTotal</td>
+                            }
+                        }
                     </tr>
                 }
 
-                <!-- TOTAL ROW -->
-                <tr style="font-weight:bold;background:#f1f1f1;">
-                    <td colspan="3">Total</td>
+                <!-- 🔥 FINAL TOTAL FIX -->
+        <tr style="font-weight:bold;background:#f1f1f1;">
 
-                    @if (!isSummary)
-                    {
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    }
-
+            @if (isSummary)
+            {
+                if (type == 1)
+                {
+                    <td colspan="2">Total</td>
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
                     <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
                     <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
                     <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                </tr>
+                }
+                else if (type == 2 || type == 3)
+                {
+                    <td colspan="2">Total</td>
+                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                }
+                else if (type == 4)
+                {
+                    <td>Total</td>
+                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                }
+                else if (type == 5)
+                {
+                    <td colspan="3">Total</td>
+                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                }
+            }
+            else
+            {
+                if (type == 1) // ✅ Day-wise Details FIX
+                {
+                    <td colspan="2">Total</td>
+                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                }
+                else if (type == 2) // ✅ Monthly Details FIX
+                {
+                    <td colspan="3">Total</td>
+                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                }
+                else
+                {
+                    <td colspan="3">Total</td>
+                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    <td></td>
+                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                }
+            }
+        </tr>
             }
             else
             {
                 <tr>
-                    <td colspan="12" style="text-align:center;">
-                        No sale data found
-                    </td>
+                    <td colspan="10" style="text-align:center;">No data</td>
                 </tr>
             }
+
         </tbody>
     </table>
-
-    <!-- FOOTER -->
-    <div style="text-align:right;margin-top:10px;">
-        <strong>Total Row:</strong> @(Model != null ? Model.Count : 0)
-    </div>
 
 </div>

@@ -53,6 +53,29 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-2" id="productContainer">
+                        <label for="ProductName">Product</label>
+
+                        <div class="input-group input-group-sm" id="productGroup">
+                            <input type="text"
+                                   id="ProductName"
+                                   class="form-control"
+                                   placeholder="Select Product"
+                                    />
+
+                            <input type="hidden" id="ProductId" name="ProductId" />
+
+                            <div class="input-group-append">
+                                <button type="button"
+                                        id="btnProductSearch"
+                                        class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.ReportType)
                         <div class="input-group ">
@@ -61,45 +84,6 @@
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
 
-
-                    <!--<div class="col-sm-2">
-
-        @Html.LabelFor(model => model.ReportType)
-
-        <div class="input-group">
-            <input id="ReportType"
-                   name="ReportType"
-                   class="form-control form-control-sm" />
-        </div>
-
-        <span id="titleError1" class="text-danger" style="display:none;"></span>
-
-    </div>
-
-    <div class="col-sm-2 d-flex flex-column">-->
-                    <!-- ✅ Custom Label -->
-                    <!--<label for="IsSummary">Summary</label>
-
-    <div class="Onoffbtn">
-        <div class="input-group" style="width: 78%;">-->
-                    <!-- Hidden field ensures false value is posted when unchecked -->
-                    <!--<input type="hidden" name="IsSummary" value="false" />-->
-                    <!-- Bootstrap Switch Checkbox -->
-                    <!--<input id="IsSummary"
-                       name="IsSummary"
-                       type="checkbox"
-                       value="true"
-                       @(Model != null && Model.IsSummary ? "checked=\"checked\"" : "")
-                       data-bootstrap-switch
-                       data-off-color="danger"
-                       data-on-color="success"
-                       data-on-text="True"
-                       data-off-text="False" />
-
-            </div>
-        </div>
-
-    </div>-->
 
 
 
@@ -131,9 +115,6 @@
 
                     </div>
 
-
-
-
                     <!-- Print Button -->
                     <div class="col-sm-2" style="margin-top:26px;">
                         <button type="button"
@@ -148,9 +129,26 @@
             </div>
 
         </div>
+
     </div>
 </div>
 
+
+@*<div id="saleDetailsWindow" style="display:none;">
+    <div id="saleDetailsGrid"></div>
+</div>*@
+
+<div id="saleDetailsWindow" style="display:none; padding:10px;">
+
+    <!-- 🔽 Product Group Dropdown -->
+    <div style="margin-bottom:10px;">
+        <input id="ProductGroupId" style="width:100%;" />
+    </div>
+
+    <!-- 🔽 Product Grid -->
+    <div id="saleDetailsGrid"></div>
+
+</div>
 @section scripts{
 
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
@@ -160,68 +158,69 @@
 
 <script>
 
-
-    //function PrintSaleReport() {
-
-    //    debugger;
-    //    var customerId = $("#CustomerId").val() || "";
-
-    //    var fromDate = $("#FromDate").val() || "";
-    //    var toDate = $("#ToDate").val() || "";
-
-    //    getCustomerId = $("#CustomerId").val();
-    //    getReportTypeId = $("#ReportType").val();
-
-    //    var url = `/DMS/Sale/SaleReport?customerId=${customerId}&fromDate=${fromDate}&toDate=${toDate}`;
-
-    //    window.open(url, "_blank");
-    //}
-
-
-
     function PrintSaleReport() {
         var customerId = $("#CustomerId").data("kendoMultiColumnComboBox").value();
         var fromDateObj = $("#FromDate").data("kendoDatePicker").value();
         var toDateObj = $("#ToDate").data("kendoDatePicker").value();
 
-        var reportType = $("#ReportType").data("kendoMultiColumnComboBox").value();
+        //var reportType = $("#ReportType").data("kendoMultiColumnComboBox").value();
+
+        var combo = $("#ReportType").data("kendoMultiColumnComboBox");
+
+        var selectedItem = combo.dataItem();
+
+        var reportType = 0;
+
+        if (selectedItem) {
+            switch (selectedItem.Name) {
+                case "Day Wise":
+                    reportType = 1;
+                    break;
+                case "Monthly":
+                    reportType = 2;
+                    break;
+                case "Customer Wise":
+                    reportType = 3;
+                    break;
+                case "Product Wise":
+                    reportType = 4;
+                    break;
+                case "Invoice Wise":
+                    reportType = 5;
+                    break;
+            }
+        }
+
+        console.log("Mapped ReportType:", reportType);
+
         var isSummary = $("#IsSummary").is(":checked");
 
         // =========================
         // SAFE DEFAULTS
         // =========================
         customerId = customerId || 0;
-        if (!reportType) reportType = 0;
+
+        //if (!reportType) reportType = 0;
+
+        //if (reportType === "" || reportType === null) reportType = 0;
 
         var fromDate = fromDateObj ? kendo.toString(fromDateObj, "yyyy-MM-dd") : "";
         var toDate = toDateObj ? kendo.toString(toDateObj, "yyyy-MM-dd") : "";
+
+        var productId = $("#ProductId").val() || 0;
 
         var url = `/DMS/Sale/SaleListReport` +
             `?customerId=${encodeURIComponent(customerId)}` +
             `&fromDate=${encodeURIComponent(fromDate)}` +
             `&toDate=${encodeURIComponent(toDate)}` +
             `&reportType=${encodeURIComponent(reportType)}` +
-            `&isSummary=${encodeURIComponent(isSummary)}`;
+            `&isSummary=${encodeURIComponent(isSummary)}` +
+            `&productId=${encodeURIComponent(productId)}`;
 
         window.open(url, "_blank");
     }
 
 
-
-    //function PrintSaleReport() {
-    //    var customerId = $("#CustomerId").data("kendoMultiColumnComboBox").value();
-    //    var fromDate = kendo.toString($("#FromDate").data("kendoDatePicker").value(), "dd-MM-yyyy");
-    //    var toDate = kendo.toString($("#ToDate").data("kendoDatePicker").value(), "dd-MM-yyyy");
-
-    //    var reportType = $("#ReportType").data("kendoMultiColumnComboBox").value();
-    //    var isSummary = $("#IsSummary").is(":checked");
-
-    //    if (!customerId) customerId = "";
-
-    //    var url = `/DMS/Sale/SaleListReport?customerId=${encodeURIComponent(customerId)}&fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}&reportType=${reportType}&isSummary=${isSummary}`;
-
-    //    window.open(url, "_blank");
-    //}
 
     function GetCustomerComboBox() {
         var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
@@ -242,8 +241,14 @@
             },
             placeholder: "Select Customer",
             value: "",
+            //dataBound: function (e) {
+            //    if (getCustomerId) {
+            //        this.value(parseInt(getCustomerId));
+            //    }
+            //}
+
             dataBound: function (e) {
-                if (getCustomerId) {
+                if (typeof getCustomerId !== "undefined" && getCustomerId) {
                     this.value(parseInt(getCustomerId));
                 }
             }
@@ -276,7 +281,13 @@
             value: "",
 
             dataBound: function (e) {
-                if (getReportTypeId && getReportTypeId !== "0") {
+                //if (getReportTypeId && getReportTypeId !== "0") {
+                //    this.value(getReportTypeId);
+                //} else {
+                //    this.value("");
+                //}
+
+                if (typeof getReportTypeId !== "undefined" && getReportTypeId !== "0") {
                     this.value(getReportTypeId);
                 } else {
                     this.value("");
@@ -290,83 +301,55 @@
         }).data("kendoMultiColumnComboBox");
     }
 
-    //$(function () {
+    function GetProductGroupComboBox() {
 
-    //    $("#IsSummary").on("switchChange.bootstrapSwitch", function (e, state) {
+        $("#ProductGroupId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
 
-    //        var combo = $("#ReportType").data("kendoMultiColumnComboBox");
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 }
+            ],
 
-    //        if (!combo) return;
+            filter: "contains",
+            filterFields: ["Code", "Name"],
 
-    //        if (state === false) {
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetProductGroupList"
+                }
+            },
 
-    //            // 🔴 Only Details show
-    //            combo.dataSource.filter({
-    //                field: "Name",
-    //                operator: "eq",
-    //                value: "Details"
-    //            });
+            placeholder: "Select Product Group",
 
-    //            combo.value(2040);
-    //        }
-    //        else {
-
-    //            // 🟢 Remove Details
-    //            combo.dataSource.filter({
-    //                field: "Name",
-    //                operator: "neq",
-    //                value: "Details"
-    //            });
-
-    //            combo.value("");
-    //        }
-    //    });
-
-    //});
+            change: function () {
+                applyProductGroupFilter(); // 🔥 MAIN TRIGGER
+            }
+        });
+    }
 
 
-    //function applyReportTypeFilter(isSummary) {
+    function applyProductGroupFilter() {
 
-    //    var combo = $("#ReportType").data("kendoMultiColumnComboBox");
+        var combo = $("#ProductGroupId").data("kendoMultiColumnComboBox");
+        var groupId = combo.value();
 
-    //    if (!combo) return;
+        var grid = $("#saleDetailsGrid").data("kendoGrid");
 
-    //    if (isSummary === false) {
+        if (!grid) return;
 
-    //        // 🔴 Only Details
-    //        combo.dataSource.filter({
-    //            field: "Name",
-    //            operator: "eq",
-    //            value: "Details"
-    //        });
-
-    //        // set value AFTER filter is applied
-    //        setTimeout(function () {
-
-    //            var data = combo.dataSource.data().find(x => x.Name === "Details");
-
-    //            if (data) {
-    //                combo.value(data.Id);
-    //                combo.text(data.Name);   // 🔥 IMPORTANT FIX
-    //            }
-
-    //        }, 100);
-    //    }
-    //    else {
-
-    //        // 🟢 Remove Details
-    //        combo.dataSource.filter({
-    //            field: "Name",
-    //            operator: "neq",
-    //            value: "Details"
-    //        });
-
-    //        setTimeout(function () {
-    //            combo.value("");
-    //            combo.text("");   // 🔥 clear display properly
-    //        }, 100);
-    //    }
-    //}
+        if (groupId) {
+            grid.dataSource.filter({
+                field: "ProductGroupId",
+                operator: "eq",
+                value: parseInt(groupId)
+            });
+        } else {
+            grid.dataSource.filter({}); // reset
+        }
+    }
 
     $(document).ready(function () {
         // Initialize Kendo DatePicker for FromDate and ToDate fields
@@ -390,7 +373,210 @@
         //applyReportTypeFilter(isSummary);
     });
 
+    $("#ProductName").on("click", function () {
+        OpenProductPopup(null);
+    });
 
+    $("#btnProductSearch").on("click", function () {
+        OpenProductPopup(null);
+    });
+
+    function OpenProductPopup(detailRow) {
+
+        var wnd = $("#saleDetailsWindow").data("kendoWindow");
+
+        if (!wnd) {
+            $("#saleDetailsWindow").kendoWindow({
+                width: "700px",
+                height: "500px",
+                title: "Select Product",
+                modal: true,
+                visible: false
+            });
+            wnd = $("#saleDetailsWindow").data("kendoWindow");
+        }
+
+        wnd.center().open();
+
+        // 🔥 Combo load
+        GetProductGroupComboBox();
+
+        // 🔥 Reset Grid
+        $("#saleDetailsGrid").empty();
+
+        $("#saleDetailsGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductModal"
+                    }
+                }
+            },
+            height: 380,
+            sortable: true,
+            filterable: true,
+            pageable: true,
+            selectable: "row",
+
+            columns: [
+                { field: "ProductId", hidden: true },
+                { field: "ProductName", title: "Product Name" },
+                { field: "UOMName", title: "UOM" },
+                { field: "ProductGroupName", title: "Group" },
+                { field: "SalesPrice", title: "Price" }
+            ]
+        });
+
+        // 🔥 Select product
+        $("#saleDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
+
+            var grid = $("#saleDetailsGrid").data("kendoGrid");
+            var item = grid.dataItem($(this));
+
+            ApplyProductSelection(detailRow, item);
+            wnd.close();
+        });
+    }
+
+    function LoadItemsGrid() {
+        $("#items").kendoListView({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductModal",
+                        dataType: "json"
+                    }
+                }
+            },
+
+            template: `
+        <div class="item-card">
+
+            <h5>#: Name #</h5>
+
+            <div class="item-image">
+                <img src="#: Image #" alt="#: Name #" />
+            </div>
+
+            <div class="item-info">
+                <div><b>UOM:</b> #: UomName #</div>
+                <div><b>Cost:</b> #: kendo.toString(PurchasePrice,'n2') #</div>
+                <div><b>VAT:</b> #: VATRate # %</div>
+                <div><b>SD:</b> #: SDRate # %</div>
+            </div>
+
+
+            <div class="card-actions">
+                <input type='number' class='qty' value='1' min='1' />
+                <button class='addToCart'
+                        data-id='#: Id #'
+                        data-name='#: Name #'
+                        data-uom='#: UomName #'
+                        data-uomid='#: UomId #'
+                        data-price='#: PurchasePrice #'
+                        data-vat='#: VATRate #'
+                        data-sd='#: SDRate #'>
+                    Add
+                </button>
+            </div>
+
+        </div>
+        `,
+
+            dataBound: function () {
+                $(".addToCart").off("click").on("click", function () {
+
+                    var item = {
+                        Id: $(this).data("id"),
+                        Name: $(this).data("name"),
+                        UomId: $(this).data("uomid"),
+                        UomName: $(this).data("uom"),
+                        PurchasePrice: $(this).data("price"),
+                        VATRate: $(this).data("vat"),
+                        SDRate: $(this).data("sd"),
+                        Quantity: $(this).closest(".item-card").find(".qty").val()
+                    };
+
+                    AddItemToSaleDetails(item);
+                });
+            }
+        });
+    }
+
+
+    function AddItemToSaleDetails(item) {
+
+        var grid = $("#saleDetails").data("kendoGrid");
+
+        var detailRow = grid.dataSource.add({
+            ProductId: item.Id,
+            ProductName: item.Name,
+            UOMId: item.UomId,
+            UOMName: item.UomName,
+            Quantity: parseFloat(item.Quantity),
+            UnitRate: parseFloat(item.PurchasePrice),
+            VATRate: item.VATRate || 0,
+            SD: item.SD || 0
+        });
+
+        var qty = detailRow.Quantity || 0;
+        var unit = detailRow.UnitRate || 0;
+        var sdRate = detailRow.SD || 0;
+        var vatRate = detailRow.VATRate || 0;
+
+        var subTotal = qty * unit;
+        detailRow.set("SubTotal", subTotal);
+
+        var sdAmount = (subTotal * sdRate) / 100;
+        detailRow.set("SDAmount", sdAmount);
+
+        var vatAmount = ((subTotal + sdAmount) * vatRate) / 100;
+        detailRow.set("VATAmount", vatAmount);
+
+        var total = subTotal + sdAmount + vatAmount;
+        detailRow.set("LineTotal", total);
+
+        grid.refresh();
+    }
+
+    function ApplyProductSelection(detailRow, item) {
+
+        console.log(item);
+
+        // ✅ MASTER FIELD CASE
+        if (!detailRow) {
+            $("#ProductId").val(item.ProductId);
+            $("#ProductName").val(item.ProductName);
+            return;
+        }
+
+        // ✅ DETAILS GRID CASE
+        detailRow.set("ProductId", item.ProductId);
+        detailRow.set("ProductName", item.ProductName);
+
+        detailRow.set("UOMId", item.UOMId);
+        detailRow.set("UOMName", item.UOMName);
+
+        detailRow.set("UnitRate", item.SalesPrice);
+
+        detailRow.set("VATRate", item.VATRate);
+        detailRow.set("SD", item.SDRate);
+
+        if (!detailRow.Quantity || detailRow.Quantity <= 0) {
+            detailRow.set("Quantity", 1);
+        }
+
+        var subTotal = detailRow.Quantity * item.SalesPrice;
+        detailRow.set("SubTotal", subTotal);
+
+        var sdAmt = (subTotal * (item.SDRate || 0)) / 100;
+        detailRow.set("SDAmount", sdAmt);
+
+        var vatAmt = ((subTotal + sdAmt) * (item.VATRate || 0)) / 100;
+        detailRow.set("VATAmount", vatAmt);
+
+        detailRow.set("LineTotal", subTotal + sdAmt + vatAmt);
+    }
 
 </script>
 

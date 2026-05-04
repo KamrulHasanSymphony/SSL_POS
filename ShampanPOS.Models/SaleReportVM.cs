@@ -23,6 +23,7 @@ namespace ShampanPOS.Models
         public int? CompanyId { get; set; }
         public string? UserId { get; set; }
         public int? ProductGroupId { get; set; }
+        public int? ProductId { get; set; }
 
         [Display(Name = "Customer")]
         public int? CustomerId { get; set; }
@@ -75,6 +76,9 @@ namespace ShampanPOS.Models
         [DataType(DataType.Currency)]
         public decimal? SubTotal { get; set; }
 
+        [Display(Name = "Total Invoice")]
+        [DataType(DataType.Currency)]
+        public decimal? TotalInvoice { get; set; }
         [Display(Name = "SD")]
         [DataType(DataType.Currency)]
         public decimal? SD { get; set; }
@@ -113,9 +117,53 @@ namespace ShampanPOS.Models
         public string? InvoiceToDate { get; set; }
         public string? BranchName { get; set; }
 
+        public string? BranchAddress { get; set; }
+
         public string? CompanyName { get; set; }
 
         public bool IsSummary { get; set; }
 
+
+        [Display(Name = "Posted")]
+        public bool IsPost { get; set; }
+
+        [Display(Name = "Posted By")]
+        public string? PostedBy { get; set; }
+
+        [Display(Name = "Posted On")]
+
+        public string? PostedOn { get; set; }
+
+        [Display(Name = "Period")]
+        public string? PeriodId { get; set; }
+
+        [Display(Name = "Created By")]
+        public string? CreatedBy { get; set; }
+
+        [Display(Name = "Created On")]
+
+        public string? CreatedOn { get; set; }
+        public string? CreatedFrom { get; set; }
+
+        [Display(Name = "Last Modified By")]
+        public string? LastModifiedBy { get; set; }
+
+        [Display(Name = "Last Modified On")]
+        public string? LastModifiedOn { get; set; }
+        public string? LastUpdateFrom { get; set; }
+
+        public int? SaleOrderId { get; set; }
+
+        [Display(Name = "Sale Order Code")]
+        public string? SaleOrderCode { get; set; }
+        public List<SaleDetailVM> saleDetailsList { get; set; }
+        public List<SaleCreditCardVM> SaleCreditCardList { get; set; }
+
+        public SaleReportVM()
+        {
+            saleDetailsList = new List<SaleDetailVM>();
+            SaleCreditCardList = new List<SaleCreditCardVM>();
+
+        }
     }
 }

@@ -48,6 +48,31 @@
     .button {
         float: none !important;
     }
+
+
+
+    button[onclick*="saleReportLink"] {
+        background: #138496;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s ease-in-out;
+    }
+
+        button[onclick*="saleReportLink"]:hover {
+            background: #117a8b;
+        }
+
+        button[onclick*="saleReportLink"]:focus {
+            outline: none;
+        }
+
 </style>
 <div class="content-header">
     <div class="container-fluid">
@@ -85,6 +110,15 @@
                    style="display:none;">
                 </a>
 
+                <button type="button" onclick="document.getElementById('saleReportLink').click();">
+                    <i class="k-icon k-i-print"></i> Sale Print
+                </button>
+
+                <a id="saleReportLink"
+                   href="/DMS/Sale/getSaleReport/@Model.Id"
+                   style="display:none;">
+                </a>
+
                 <!-- ✅ Right side -->
                 <button type="button"
                         style="margin-left:auto;"
@@ -115,6 +149,10 @@
                         <i class="k-icon k-i-print"></i> Print
                     </button>
 
+                    <button type="button" onclick="document.getElementById('saleReportLink').click();">
+                        <i class="k-icon k-i-print"></i> Sale Print
+                    </button>
+
                 </div>
 
                 <!-- RIGHT SIDE -->
@@ -133,7 +171,10 @@
                style="display:none;">
             </a>
 
-
+            <a id="saleReportLink"
+               href="/DMS/Sale/getSaleReport/@Model.Id"
+               style="display:none;">
+            </a>
         }
         else
         {
@@ -152,6 +193,10 @@
                     <i class="k-icon k-i-print"></i> Print
                 </button>
 
+                <button type="button" onclick="document.getElementById('saleReportLink').click();">
+                    <i class="k-icon k-i-print"></i>Sale Print
+                </button>
+
             </div>
 
             <!-- RIGHT SIDE -->
@@ -168,10 +213,15 @@
            href="/DMS/Sale/getReport/@Model.Id"
            style="display:none;">
         </a>
+
+        <a id="saleReportLink"
+           href="/DMS/Sale/getSaleReport/@Model.Id"
+           style="display:none;">
+        </a>
     </div>
-        <div class="divSave">
-            <button class="button btnsave sslSave" type="button" id="">Save</button>
-        </div>
+            <div class="divSave">
+                <button class="button btnsave sslSave" type="button" id="">Save</button>
+            </div>
         }
 
     </div>
@@ -454,29 +504,44 @@
                        href="/DMS/Sale/getReport/@Model.Id"
                        style="display:none;">
                     </a>
+
+                    <button type="button" style="margin-left:5px;" onclick="document.getElementById('saleReportLink').click();">
+                        <i class="k-icon k-i-print"></i> Sale Print
+                    </button>
+
+                    <a id="saleReportLink"
+                       href="/DMS/Sale/getSaleReport/@Model.Id"
+                       style="display:none;">
+                    </a>
                 </div>
             }
             else if (Model.Operation.Equals("update", StringComparison.OrdinalIgnoreCase))
             {
-                    <div style="display: flex; align-items: center; gap: 5px;">
 
-                    <button type="button" class="button btnsave sslUpdate">Update</button>
+            <div style="display: flex; align-items: center; gap: 5px;">
 
-                    <button type="button" class="button btnPost sslPost">Post</button>
+            <button type="button" class="button btnsave sslUpdate">Update</button>
 
-                    <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
+            <button type="button" class="button btnPost sslPost">Post</button>
 
-                    <button type="button" onclick="document.getElementById('reportLink').click();">
-                        <i class="k-icon k-i-print"></i> Print
-                    </button>
+            <button type="button" style="display:none;" class="button sslPush">Already Posted</button>
 
-                    <a id="reportLink"
-                       href="/DMS/Sale/getReport/@Model.Id"
-                       style="display:none;">
-                    </a>
+            <button type="button" onclick="document.getElementById('reportLink').click();">
+                <i class="k-icon k-i-print"></i> Print
+            </button>
 
-
-                    </div>
+            <a id="reportLink"
+               href="/DMS/Sale/getReport/@Model.Id"
+               style="display:none;">
+            </a>
+            <button type="button" onclick="document.getElementById('saleReportLink').click();">
+                <i class="k-icon k-i-print"></i> Sale Print
+            </button>
+            <a id="saleReportLink"
+               href="/DMS/Sale/getSaleReport/@Model.Id"
+               style="display:none;">
+            </a>
+         </div>
 
             }
             else
@@ -494,6 +559,15 @@
 
                 <a id="reportLink"
                    href="/DMS/Sale/getReport/@Model.Id"
+                   style="display:none;">
+                </a>
+
+                <button type="button" onclick="document.getElementById('saleReportLink').click();">
+                    <i class="k-icon k-i-print"></i>Sale Print
+                </button>
+
+                <a id="saleReportLink"
+                   href="/DMS/Sale/getSaleReport/@Model.Id"
                    style="display:none;">
                 </a>
             </div>
