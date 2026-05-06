@@ -16,7 +16,10 @@ namespace ShampanPOS.Models
         public string? Code { get; set; }
         [Display(Name = "Report Type")]
 
-        public int ReportType { get; set; }
+        //public int ReportType { get; set; }
+
+        public string ReportType { get; set; }
+
 
         [Display(Name = "Distributor")]
         public int? BranchId { get; set; }

@@ -875,20 +875,65 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
 
-        public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,int? reportType,bool isSummary,int? productId)
+        //public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,int? reportType,bool isSummary,int? productId)
+        //{
+        //    List<SaleReportVM> vmList = new List<SaleReportVM>();
+
+        //    SaleReportVM param = new SaleReportVM();
+
+        //    param.CustomerId = customerId ?? 0;
+        //    param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
+        //    param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
+
+        //    param.IsSummary = isSummary;
+        //    param.ReportType = reportType ?? 0;
+
+        //    param.ProductId = productId ?? 0;   // ✅ ADD
+
+        //    ResultVM result = _repo.GetSaleByList(param);
+
+        //    if (result.Status == "Success" && result.DataVM != null)
+        //    {
+        //        vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
+        //    }
+
+        //    ViewBag.IsSummary = isSummary;
+        //    ViewBag.ReportType = reportType ?? 0;
+        //    ViewBag.ProductId = productId;   // ✅ optional
+
+        //    string ViewName = "SaleListReport";
+
+        //    if (reportType == 1)
+        //    {
+        //        ViewName = "SaleListReport";
+        //    }
+        //    else if (reportType == 1)
+        //    {
+        //        ViewName = "SaleListReport";
+        //    }
+
+
+        //    return View(ViewName, vmList);
+        //}
+
+
+
+
+        public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,string reportType,bool isSummary,int? productId)
         {
             List<SaleReportVM> vmList = new List<SaleReportVM>();
 
             SaleReportVM param = new SaleReportVM();
 
             param.CustomerId = customerId ?? 0;
-            param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "01-01-2025" : fromDate;
-            param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("dd-MM-yyyy") : toDate;
+            param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "2025-01-01" : fromDate;
+            param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("yyyy-MM-dd") : toDate;
 
             param.IsSummary = isSummary;
-            param.ReportType = reportType ?? 0;
 
-            param.ProductId = productId ?? 0;   // ✅ ADD
+            param.ReportType = reportType ?? "";
+
+            param.ProductId = productId ?? 0;
 
             ResultVM result = _repo.GetSaleByList(param);
 
@@ -898,10 +943,11 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
 
             ViewBag.IsSummary = isSummary;
-            ViewBag.ReportType = reportType ?? 0;
-            ViewBag.ProductId = productId;   // ✅ optional
+            ViewBag.ReportType = reportType;   // ✅ string pass
 
-            return View("SaleListReport", vmList);
+            string viewName = "SaleListReport";
+
+            return View(viewName, vmList);
         }
 
 

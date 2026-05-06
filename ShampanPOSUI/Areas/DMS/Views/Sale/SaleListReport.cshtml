@@ -5,7 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
-    int type = ViewBag.ReportType != null ? (int)ViewBag.ReportType : 0;
+
+    // 🔥 FIX: int → string (API এর সাথে match করার জন্য)
+    string reportType = ViewBag.ReportType != null ? ViewBag.ReportType.ToString() : "";
 }
 
 <style>
@@ -66,7 +68,7 @@
 
                 @if (isSummary)
                 {
-                    if (type == 1)
+                    if (reportType == "Day Wise")
                     {
                         <th>Date</th>
                         <th>Total Invoice</th>
@@ -75,21 +77,21 @@
                         <th>VAT</th>
                         <th>Total</th>
                     }
-                    else if (type == 2)
+                    else if (reportType == "Monthly")
                     {
                         <th>Month</th>
                         <th>Total Invoice</th>
                         <th>Quantity</th>
                         <th>Total</th>
                     }
-                    else if (type == 3)
+                    else if (reportType == "Customer Wise")
                     {
                         <th>Customer</th>
                         <th>Total Invoice</th>
                         <th>Quantity</th>
                         <th>Total</th>
                     }
-                    else if (type == 4)
+                    else if (reportType == "Product Wise")
                     {
                         <th>Product</th>
                         <th>Quantity</th>
@@ -97,7 +99,7 @@
                         <th>VAT</th>
                         <th>Total</th>
                     }
-                    else if (type == 5)
+                    else if (reportType == "Invoice Wise")
                     {
                         <th>Sale Code</th>
                         <th>Date</th>
@@ -110,7 +112,7 @@
                 }
                 else
                 {
-                    if (type == 1)
+                    if (reportType == "Day Wise")
                     {
                         <th>Date</th>
                         <th>Sale Code</th>
@@ -119,7 +121,7 @@
                         <th>VAT</th>
                         <th>Total</th>
                     }
-                    else if (type == 2)
+                    else if (reportType == "Monthly")
                     {
                         <th>Month</th>
                         <th>Sale Code</th>
@@ -127,7 +129,7 @@
                         <th>Quantity</th>
                         <th>Total</th>
                     }
-                    else if (type == 3)
+                    else if (reportType == "Customer Wise")
                     {
                         <th>Customer</th>
                         <th>Sale Code</th>
@@ -138,7 +140,7 @@
                         <th>VAT</th>
                         <th>Total</th>
                     }
-                    else if (type == 4)
+                    else if (reportType == "Product Wise")
                     {
                         <th>Product</th>
                         <th>Sale Code</th>
@@ -149,7 +151,7 @@
                         <th>VAT</th>
                         <th>Total</th>
                     }
-                    else if (type == 5)
+                    else if (reportType == "Invoice Wise")
                     {
                         <th>Sale Code</th>
                         <th>Date</th>
@@ -175,7 +177,7 @@
                     <tr>
                         @if (isSummary)
                         {
-                            if (type == 1)
+                            if (reportType == "Day Wise")
                             {
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.TotalInvoice</td>
@@ -184,21 +186,21 @@
                                 <td>@item.VATAmount</td>
                                 <td>@item.LineTotal</td>
                             }
-                            else if (type == 2)
+                            else if (reportType == "Monthly")
                             {
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.TotalInvoice</td>
                                 <td>@item.Quantity</td>
                                 <td>@item.LineTotal</td>
                             }
-                            else if (type == 3)
+                            else if (reportType == "Customer Wise")
                             {
                                 <td>@item.CustomerName</td>
                                 <td>@item.TotalInvoice</td>
                                 <td>@item.Quantity</td>
                                 <td>@item.LineTotal</td>
                             }
-                            else if (type == 4)
+                            else if (reportType == "Product Wise")
                             {
                                 <td>@item.ProductName</td>
                                 <td>@item.Quantity</td>
@@ -206,7 +208,7 @@
                                 <td>@item.VATAmount</td>
                                 <td>@item.LineTotal</td>
                             }
-                            else if (type == 5)
+                            else if (reportType == "Invoice Wise")
                             {
                                 <td>@item.Code</td>
                                 <td>@item.InvoiceDateTime</td>
@@ -219,7 +221,7 @@
                         }
                         else
                         {
-                            if (type == 1)
+                            if (reportType == "Day Wise")
                             {
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.Code</td>
@@ -228,7 +230,7 @@
                                 <td>@item.VATAmount</td>
                                 <td>@item.LineTotal</td>
                             }
-                            else if (type == 2)
+                            else if (reportType == "Monthly")
                             {
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.Code</td>
@@ -236,7 +238,7 @@
                                 <td>@item.Quantity</td>
                                 <td>@item.LineTotal</td>
                             }
-                            else if (type == 3)
+                            else if (reportType == "Customer Wise")
                             {
                                 <td>@item.CustomerName</td>
                                 <td>@item.Code</td>
@@ -247,7 +249,7 @@
                                 <td>@item.VATAmount</td>
                                 <td>@item.LineTotal</td>
                             }
-                            else if (type == 4)
+                            else if (reportType == "Product Wise")
                             {
                                 <td>@item.ProductName</td>
                                 <td>@item.Code</td>
@@ -258,7 +260,7 @@
                                 <td>@item.VATAmount</td>
                                 <td>@item.LineTotal</td>
                             }
-                            else if (type == 5)
+                            else if (reportType == "Invoice Wise")
                             {
                                 <td>@item.Code</td>
                                 <td>@item.InvoiceDateTime</td>
@@ -274,69 +276,128 @@
                     </tr>
                 }
 
-                <!-- 🔥 FINAL TOTAL FIX -->
-        <tr style="font-weight:bold;background:#f1f1f1;">
+                <!-- TOTAL -->
 
-            @if (isSummary)
-            {
-                if (type == 1)
-                {
-                    <td colspan="2">Total</td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                }
-                else if (type == 2 || type == 3)
-                {
-                    <td colspan="2">Total</td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                }
-                else if (type == 4)
-                {
-                    <td>Total</td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                }
-                else if (type == 5)
-                {
-                    <td colspan="3">Total</td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                }
-            }
-            else
-            {
-                if (type == 1) // ✅ Day-wise Details FIX
-                {
-                    <td colspan="2">Total</td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                }
-                else if (type == 2) // ✅ Monthly Details FIX
-                {
-                    <td colspan="3">Total</td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                }
-                else
-                {
-                    <td colspan="3">Total</td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td></td>
-                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                }
-            }
-        </tr>
+
+                <tr style="font-weight:bold;background:#f1f1f1;">
+                    @if (isSummary)
+                    {
+                        if (reportType == "Day Wise")
+                        {
+                            <td>Total</td>
+                            <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else if (reportType == "Monthly")
+                        {
+                            <td>Total</td>
+                            //<td></td>
+                            <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else if (reportType == "Customer Wise")
+                        {
+                            <td>Total</td>
+                            //<td></td>
+                            <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else if (reportType == "Product Wise")
+                        {
+                            <td>Total</td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else if (reportType == "Invoice Wise")
+                        {
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else
+                        {
+                            <td>Total</td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                    }
+                    else
+                    {
+                        if (reportType == "Day Wise")
+                        {
+                            <td>Total</td>
+                            <td></td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else if (reportType == "Monthly")
+                        {
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else if (reportType == "Customer Wise")
+                        {
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.UnitRate)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else if (reportType == "Product Wise")
+                        {
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.UnitRate)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else if (reportType == "Invoice Wise")
+                        {
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.UnitRate)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                        else
+                        {
+                            <td>Total</td>
+                            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                            <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                            <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                            <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        }
+                    }
+                </tr>
+
             }
             else
             {
