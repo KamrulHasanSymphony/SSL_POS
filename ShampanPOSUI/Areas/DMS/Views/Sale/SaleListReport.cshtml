@@ -1,4 +1,5 @@
 ﻿@model List<ShampanPOS.Models.SaleReportVM>
+@*@model ShampanPOS.Models.SaleReportVM*@
 
 @{
     ViewBag.Title = "Sale Report";
@@ -6,9 +7,13 @@
 
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
 
-    // 🔥 FIX: int → string (API এর সাথে match করার জন্য)
     string reportType = ViewBag.ReportType != null ? ViewBag.ReportType.ToString() : "";
 }
+
+
+@*@{
+    var groupName = Model.FirstOrDefault()?.ByGroup == "All" ? "All" : Model.FirstOrDefault()?.CustomerName ?? "N/A";
+}*@
 
 <style>
     body {
@@ -56,11 +61,77 @@
 
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">Print</button>
 
-<div class="report-box">
 
-    <h2 style="text-align:center;border-bottom:1px solid #000;">
+
+@*<h2 style="text-align:center;border-bottom:1px solid #000;">
         SALE REPORT (@(isSummary ? "SUMMARY" : "DETAILS"))
+    </h2>*@
+
+
+
+<div class="report-box">
+    <!-- HEADER -->
+    <table style="border:none;">
+        <tr>
+            <td style="width:140px;border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png"
+                     style="width:230px;height:120px;" />
+            </td>
+            <td style="text-align:right;border:none;">
+                <h3 style="margin:0;"> @(Model.FirstOrDefault()?.CompanyName) </h3>
+                <div> @(Model.FirstOrDefault()?.BranchName)</div>
+                <div>69/1 Trhidara Tower</div>
+                <div>📞 01612264439</div>
+                <div>✉️ symphonysorftech1999@gamil.com</div>
+            </td>
+        </tr>
+    </table>
+
+    <div style="width:100%; margin-bottom:15px; display:flex; justify-content:space-between; font-size:14px; line-height:1.8;">
+
+        <!-- LEFT SIDE -->
+        <div style="width:48%; text-align:left;">
+            <div><strong>Customer Name:</strong> @(ViewBag.CustomerName )</div>
+            <div><strong>From Date:</strong> @(ViewBag.InvoiceFromDate )</div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div style="width:48%; text-align:right;">
+            <div><strong>Product Name:</strong> @(ViewBag.ProductName )</div>
+            <div><strong>To Date:</strong> @(ViewBag.InvoiceToDate)</div>
+        </div>
+
+    </div>
+    <h2 style="text-align:center;border-bottom:1px solid #000;">
+        @* Dynamically set the report title based on report type *@
+        @if (reportType == "Day Wise")
+        {
+            <text>Day Wise @(isSummary ? "Summary" : "Details") Report</text>
+        }
+        else if (reportType == "Monthly")
+        {
+            <text>Monthly @(isSummary ? "Summary" : "Details") Report</text>
+        }
+        else if (reportType == "Customer Wise")
+        {
+            <text>Customer Wise @(isSummary ? "Summary" : "Details") Report</text>
+        }
+        else if (reportType == "Product Wise")
+        {
+            <text>Product Wise @(isSummary ? "Summary" : "Details") Report</text>
+        }
+        else if (reportType == "Invoice Wise")
+        {
+            <text>Invoice Wise @(isSummary ? "Summary" : "Details") Report</text>
+        }
+        else
+        {
+            <text>Sale @(isSummary ? "Summary" : "Details") Report</text>
+        }
     </h2>
+
+
 
     <table>
         <thead>
@@ -181,42 +252,42 @@
                             {
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.TotalInvoice</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.SubTotal</td>
-                                <td>@item.VATAmount</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.SubTotal</td>
+                                <td class="text-right">@item.VATAmount</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                             else if (reportType == "Monthly")
                             {
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.TotalInvoice</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                             else if (reportType == "Customer Wise")
                             {
                                 <td>@item.CustomerName</td>
                                 <td>@item.TotalInvoice</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                             else if (reportType == "Product Wise")
                             {
                                 <td>@item.ProductName</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.SubTotal</td>
-                                <td>@item.VATAmount</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.SubTotal</td>
+                                <td class="text-right">@item.VATAmount</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                             else if (reportType == "Invoice Wise")
                             {
                                 <td>@item.Code</td>
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.CustomerName</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.SubTotal</td>
-                                <td>@item.VATAmount</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.SubTotal</td>
+                                <td class="text-right">@item.VATAmount</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                         }
                         else
@@ -225,40 +296,40 @@
                             {
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.Code</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.SubTotal</td>
-                                <td>@item.VATAmount</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.SubTotal</td>
+                                <td class="text-right">@item.VATAmount</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                             else if (reportType == "Monthly")
                             {
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.Code</td>
                                 <td>@item.InvoiceDateTime</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                             else if (reportType == "Customer Wise")
                             {
                                 <td>@item.CustomerName</td>
                                 <td>@item.Code</td>
                                 <td>@item.InvoiceDateTime</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.UnitRate</td>
-                                <td>@item.SubTotal</td>
-                                <td>@item.VATAmount</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.UnitRate</td>
+                                <td class="text-right">@item.SubTotal</td>
+                                <td class="text-right">@item.VATAmount</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                             else if (reportType == "Product Wise")
                             {
                                 <td>@item.ProductName</td>
                                 <td>@item.Code</td>
                                 <td>@item.InvoiceDateTime</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.UnitRate</td>
-                                <td>@item.SubTotal</td>
-                                <td>@item.VATAmount</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.UnitRate</td>
+                                <td class="text-right">@item.SubTotal</td>
+                                <td class="text-right">@item.VATAmount</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                             else if (reportType == "Invoice Wise")
                             {
@@ -266,11 +337,11 @@
                                 <td>@item.InvoiceDateTime</td>
                                 <td>@item.CustomerName</td>
                                 <td>@item.ProductName</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.UnitRate</td>
-                                <td>@item.SubTotal</td>
-                                <td>@item.VATAmount</td>
-                                <td>@item.LineTotal</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.UnitRate</td>
+                                <td class="text-right">@item.SubTotal</td>
+                                <td class="text-right">@item.VATAmount</td>
+                                <td class="text-right">@item.LineTotal</td>
                             }
                         }
                     </tr>

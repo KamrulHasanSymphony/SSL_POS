@@ -20,6 +20,7 @@ namespace ShampanPOS.Models
 
         public string ReportType { get; set; }
 
+        //public string ReportMode { get; set; }
 
         [Display(Name = "Distributor")]
         public int? BranchId { get; set; }
@@ -159,6 +160,15 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Sale Order Code")]
         public string? SaleOrderCode { get; set; }
+
+        public string? CompanyAddress { get; set; }
+
+        public string? CompanyTelephoneNo { get; set; }
+
+        public string? CompanyEmail { get; set; }
+
+        public string? ByGroup { get; set; }
+
         public List<SaleDetailVM> saleDetailsList { get; set; }
         public List<SaleCreditCardVM> SaleCreditCardList { get; set; }
 
