@@ -1,8 +1,16 @@
-﻿@model List<ShampanPOS.Models.SaleReportVM>
+﻿@* ================================
+       CustomerProductDateWise.cshtml
+    ================================ *@
+
+@model List<ShampanPOS.Models.SaleReturnReportVM>
 
 @{
-    ViewBag.Title = "Monthly Summary Report";
+    ViewBag.Title = "Customer Product Date Wise Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
 }
 
 <style>
@@ -36,7 +44,8 @@
         font-size: 13px;
     }
 
-        table th, table td {
+        table th,
+        table td {
             border: 1px solid #777;
             padding: 6px;
         }
@@ -51,12 +60,10 @@
     }
 </style>
 
-
 <button onclick="window.print()" class="sslPrint">Print</button>
 
 <div class="report-box">
 
-    <!-- ================= HEADER ================= -->
     <table style="border:none;">
         <tr>
             <td style="width:140px;border:none;">
@@ -82,7 +89,6 @@
 
     <hr />
 
-    <!-- ================= FILTER INFO ================= -->
     <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
         <div>
             <strong>Customer:</strong> @ViewBag.CustomerName <br />
@@ -96,42 +102,67 @@
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Monthly Summary Report
+        Customer Product Date Wise-@ViewBag.ReportTitle
     </h3>
 
-    <!-- ================= TABLE ================= -->
-
     <table>
+
         <thead>
             <tr>
-                <th>Month</th>
-                <th>Total Invoice</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Sale Code</th>
+                <th>Date</th>
                 <th>Quantity</th>
+                @*<th>Unit Rate</th>*@
+                <th>Sub Total</th>
+                <th>VAT</th>
                 <th>Total</th>
             </tr>
         </thead>
 
         <tbody>
+
             @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
                 {
                     <tr>
+                        <td>@item.CustomerName</td>
+                        <td>@item.ProductName</td>
+                        <td>@item.Code</td>
                         <td>@item.InvoiceDateTime</td>
-                        <td class="text-right">@item.TotalInvoice</td>
                         <td class="text-right">@item.Quantity</td>
+                        @*<td class="text-right">@item.UnitRate</td>*@
+                        <td class="text-right">@item.SubTotal</td>
+                        <td class="text-right">@item.VATAmount</td>
                         <td class="text-right">@item.LineTotal</td>
                     </tr>
                 }
 
                 <tr style="font-weight:bold;background:#f1f1f1;">
                     <td>Total</td>
-                    <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    @*<td class="text-right">@Model.Sum(x => x.UnitRate)</td>*@
+                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
                     <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
                 </tr>
             }
+            else
+            {
+                <tr>
+                    <td colspan="9" style="text-align:center;">
+                        No data found
+                    </td>
+                </tr>
+            }
+
         </tbody>
+
     </table>
 
 </div>

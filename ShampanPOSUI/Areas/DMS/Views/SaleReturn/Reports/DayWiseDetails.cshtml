@@ -1,8 +1,10 @@
-﻿@model List<ShampanPOS.Models.SaleReportVM>
+﻿@model List<ShampanPOS.Models.SaleReturnReportVM>
 
 @{
-    ViewBag.Title = "Monthly Summary Report";
+    ViewBag.Title = "Day Wise Details Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string reportType = "Day Wise";
 }
 
 <style>
@@ -27,7 +29,7 @@
         border-radius: 4px;
         border: none;
         float: right;
-        margin-bottom: 10px;
+        margin: 10px 0;
     }
 
     table {
@@ -51,7 +53,6 @@
     }
 </style>
 
-
 <button onclick="window.print()" class="sslPrint">Print</button>
 
 <div class="report-box">
@@ -61,7 +62,7 @@
         <tr>
             <td style="width:140px;border:none;">
                 <img src="~/Content/AdminLte/dist/img/logo.png"
-                     style="width:200px;height:100px;" />
+                     style="width:230px;height:120px;" />
             </td>
 
             <td style="text-align:right;border:none;">
@@ -96,42 +97,60 @@
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Monthly Summary Report
+        Day Wise Details Report
     </h3>
 
     <!-- ================= TABLE ================= -->
-
     <table>
+
         <thead>
             <tr>
-                <th>Month</th>
-                <th>Total Invoice</th>
+                <th>Date</th>
+                <th>Sale Code</th>
                 <th>Quantity</th>
+                <th>Sub Total</th>
+                <th>VAT</th>
                 <th>Total</th>
             </tr>
         </thead>
 
         <tbody>
+
             @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
                 {
                     <tr>
                         <td>@item.InvoiceDateTime</td>
-                        <td class="text-right">@item.TotalInvoice</td>
+                        <td>@item.Code</td>
                         <td class="text-right">@item.Quantity</td>
+                        <td class="text-right">@item.SubTotal</td>
+                        <td class="text-right">@item.VATAmount</td>
                         <td class="text-right">@item.LineTotal</td>
                     </tr>
                 }
 
+                <!-- ================= TOTAL ================= -->
                 <tr style="font-weight:bold;background:#f1f1f1;">
                     <td>Total</td>
-                    <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
+                    <td></td>
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
                     <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
                 </tr>
             }
+            else
+            {
+                <tr>
+                    <td colspan="6" style="text-align:center;">
+                        No data found
+                    </td>
+                </tr>
+            }
+
         </tbody>
+
     </table>
 
 </div>

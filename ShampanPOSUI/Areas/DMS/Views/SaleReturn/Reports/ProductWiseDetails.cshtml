@@ -1,8 +1,10 @@
-﻿@model List<ShampanPOS.Models.SaleReportVM>
+﻿@model List<ShampanPOS.Models.SaleReturnReportVM>
 
 @{
-    ViewBag.Title = "Monthly Summary Report";
+    ViewBag.Title = "Product Wise Details Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool isSummary = false;
 }
 
 <style>
@@ -51,7 +53,6 @@
     }
 </style>
 
-
 <button onclick="window.print()" class="sslPrint">Print</button>
 
 <div class="report-box">
@@ -96,42 +97,67 @@
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Monthly Summary Report
+        Product Wise Details Report
     </h3>
 
     <!-- ================= TABLE ================= -->
-
     <table>
+
         <thead>
             <tr>
-                <th>Month</th>
-                <th>Total Invoice</th>
+                <th>Product</th>
+                <th>Sale Code</th>
+                <th>Date</th>
                 <th>Quantity</th>
+                <th>Unit Rate</th>
+                <th>Sub Total</th>
+                <th>VAT Amount</th>
+
                 <th>Total</th>
             </tr>
         </thead>
 
         <tbody>
+
             @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
                 {
                     <tr>
+                        <td>@item.ProductName</td>
+                        <td>@item.Code</td>
                         <td>@item.InvoiceDateTime</td>
-                        <td class="text-right">@item.TotalInvoice</td>
                         <td class="text-right">@item.Quantity</td>
+                        <td class="text-right">@item.UnitRate</td>
+                        <td class="text-right">@item.SubTotal</td>
+                        <td class="text-right">@item.VATAmount</td>
                         <td class="text-right">@item.LineTotal</td>
                     </tr>
                 }
 
+                <!-- TOTAL ROW -->
                 <tr style="font-weight:bold;background:#f1f1f1;">
                     <td>Total</td>
-                    <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
+                    <td></td>
+                    <td></td>
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    <td class="text-right">@Model.Sum(x => x.UnitRate)</td>
+                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
                     <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
                 </tr>
             }
+            else
+            {
+                <tr>
+                    <td colspan="6" style="text-align:center;">
+                        No data found
+                    </td>
+                </tr>
+            }
+
         </tbody>
+
     </table>
 
 </div>

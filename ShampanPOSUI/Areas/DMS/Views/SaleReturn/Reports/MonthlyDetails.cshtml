@@ -1,7 +1,7 @@
-﻿@model List<ShampanPOS.Models.SaleReportVM>
+﻿@model List<ShampanPOS.Models.SaleReturnReportVM>
 
 @{
-    ViewBag.Title = "Monthly Summary Report";
+    ViewBag.Title = "Monthly Details Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -51,7 +51,6 @@
     }
 </style>
 
-
 <button onclick="window.print()" class="sslPrint">Print</button>
 
 <div class="report-box">
@@ -96,7 +95,7 @@
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Monthly Summary Report
+        Monthly Details Report
     </h3>
 
     <!-- ================= TABLE ================= -->
@@ -105,7 +104,8 @@
         <thead>
             <tr>
                 <th>Month</th>
-                <th>Total Invoice</th>
+                <th>Sale Code</th>
+                <th>Date</th>
                 <th>Quantity</th>
                 <th>Total</th>
             </tr>
@@ -118,7 +118,8 @@
                 {
                     <tr>
                         <td>@item.InvoiceDateTime</td>
-                        <td class="text-right">@item.TotalInvoice</td>
+                        <td>@item.Code</td>
+                        <td>@item.InvoiceDateTime</td>
                         <td class="text-right">@item.Quantity</td>
                         <td class="text-right">@item.LineTotal</td>
                     </tr>
@@ -126,7 +127,8 @@
 
                 <tr style="font-weight:bold;background:#f1f1f1;">
                     <td>Total</td>
-                    <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
+                    <td></td>
+                    <td></td>
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
                     <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
                 </tr>

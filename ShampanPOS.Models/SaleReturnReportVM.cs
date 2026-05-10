@@ -27,7 +27,8 @@ namespace ShampanPOS.Models
         public string? CustomerName { get; set; }
 
         [Display(Name = "Product")]
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
+        public int? ProductGroupId { get; set; }
         public string? ProductName { get; set; }
 
         public string? ProductCode { get; set; }
@@ -89,7 +90,11 @@ namespace ShampanPOS.Models
         public bool IsSummary { get; set; }
 
         [Display(Name = "Report Type")]
-        public int ReportType { get; set; }
+        public string ReportType { get; set; }
+
+        [Display(Name = "Total Invoice")]
+        [DataType(DataType.Currency)]
+        public decimal? TotalInvoice { get; set; }
 
     }
 }

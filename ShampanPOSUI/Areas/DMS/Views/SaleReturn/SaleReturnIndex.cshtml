@@ -1,6 +1,8 @@
-﻿@model ShampanPOS.Models.SaleReturnReportVM
+﻿
+
+@model ShampanPOS.Models.SaleReturnReportVM
 @{
-    ViewBag.Title = "Sale Return Create";
+    ViewBag.Title = "Sale Retun Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -54,13 +56,47 @@
                     </div>
 
                     <div class="col-sm-2">
-                        @Html.LabelFor(model => model.ReportType)
-                        <div class="input-group ">
-                            @Html.TextBoxFor(model => model.ReportType, new { placeholder = " Enter Report Type", @class = " required form-control form-control-sm " })
+                        <label>Product</label>
+
+                        <div class="input-group input-group-sm">
+
+                            <input type="text"
+                                   id="ProductName"
+                                   class="form-control"
+                                   placeholder="Select Product" />
+
+                            <input type="hidden" id="ProductId" />
+
+                            <div class="input-group-append">
+
+                                <button type="button"
+                                        id="btnClearProduct"
+                                        class="btn btn-warning"
+                                        onclick="ClearProduct()">
+                                    ✖
+                                </button>
+
+                                <button type="button"
+                                        id="btnProductSearch"
+                                        class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+
+                            </div>
+
                         </div>
-                        <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
 
+                    <div class="col-sm-2">
+                        <label for="ReportType">Report Type</label>
+
+                        <div class="input-group">
+                            <input id="ReportType"
+                                   name="ReportType"
+                                   class="form-control form-control-sm"
+                                   placeholder="Select Report Type" />
+                        </div>
+                    </div>
 
 
                     <div class="col-sm-2 d-flex flex-column">
@@ -105,9 +141,23 @@
             </div>
 
         </div>
+
     </div>
 </div>
 
+
+
+<div id="saleDetailsWindow" style="display:none; padding:10px;">
+
+    <!-- 🔽 Product Group Dropdown -->
+    <div style="margin-bottom:10px;">
+        <input id="ProductGroupId" style="width:100%;" />
+    </div>
+
+    <!-- 🔽 Product Grid -->
+    <div id="saleDetailsGrid"></div>
+
+</div>
 @section scripts{
 
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
@@ -118,32 +168,47 @@
 <script>
 
     function PrintSaleReport() {
-        var customerId = $("#CustomerId").data("kendoMultiColumnComboBox").value();
+
+        var customerCombo = $("#CustomerId").data("kendoMultiColumnComboBox");
+        var customerId = customerCombo ? customerCombo.value() : 0;
+
         var fromDateObj = $("#FromDate").data("kendoDatePicker").value();
         var toDateObj = $("#ToDate").data("kendoDatePicker").value();
 
-        var reportType = $("#ReportType").data("kendoMultiColumnComboBox").value();
-        var isSummary = $("#IsSummary").is(":checked");
+        var combo = $("#ReportType").data("kendoMultiColumnComboBox");
 
-        // =========================
-        // SAFE DEFAULTS
-        // =========================
-        customerId = customerId || 0;
-        if (!reportType) reportType = 0;
+        // 🔥 SAFE CHECK
+        if (!combo) {
+            alert("Report Type not loaded");
+            return;
+        }
+
+        var selectedItem = combo.dataItem();
+        var reportType = selectedItem ? selectedItem.Name : "";
+
+
+        var isSummary = $("#IsSummary").is(":checked");
 
         var fromDate = fromDateObj ? kendo.toString(fromDateObj, "yyyy-MM-dd") : "";
         var toDate = toDateObj ? kendo.toString(toDateObj, "yyyy-MM-dd") : "";
 
-        var url = `/DMS/SaleReturn/SaleReturnListReport` +
-            `?customerId=${encodeURIComponent(customerId)}` +
+        var productId = $("#ProductId").val() || 0;
+
+        var url = `/DMS/SaleReturn/ReportList` +
+            `?customerId=${encodeURIComponent(customerId || 0)}` +
             `&fromDate=${encodeURIComponent(fromDate)}` +
             `&toDate=${encodeURIComponent(toDate)}` +
             `&reportType=${encodeURIComponent(reportType)}` +
-            `&isSummary=${encodeURIComponent(isSummary)}`;
+            `&isSummary=${encodeURIComponent(isSummary)}` +
+            `&productId=${encodeURIComponent(productId)}`;
 
         window.open(url, "_blank");
     }
 
+    function ClearProduct() {
+        $("#ProductId").val("");
+        $("#ProductName").val("");
+    }
 
     function GetCustomerComboBox() {
         var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
@@ -164,53 +229,20 @@
             },
             placeholder: "Select Customer",
             value: "",
+            //dataBound: function (e) {
+            //    if (getCustomerId) {
+            //        this.value(parseInt(getCustomerId));
+            //    }
+            //}
+
             dataBound: function (e) {
-                if (getCustomerId) {
+                if (typeof getCustomerId !== "undefined" && getCustomerId) {
                     this.value(parseInt(getCustomerId));
                 }
             }
         }).data("kendoMultiColumnComboBox");
     };
 
-    //function GetReportTypeComboBox() {
-
-    //    var ReportTypeComboBox = $("#ReportType").kendoMultiColumnComboBox({
-    //        dataTextField: "Name",
-    //        dataValueField: "Id",
-    //        height: 400,
-
-    //        columns: [
-    //            //{ field: "Id", title: "ID", width: 80 },
-    //            { field: "Name", title: "Report Type", width: 200 }
-    //        ],
-
-    //        filter: "contains",
-    //        filterFields: ["Name"],
-
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetReportTypeList"
-    //            }
-    //        },
-
-    //        placeholder: "Select Report Type",
-
-    //        value: "",
-
-    //        dataBound: function (e) {
-    //            if (getReportTypeId && getReportTypeId !== "0") {
-    //                this.value(getReportTypeId);
-    //            } else {
-    //                this.value("");
-    //            }
-    //        },
-
-    //        change: function (e) {
-    //            $("#ReportType").val(this.value());
-    //        }
-
-    //    }).data("kendoMultiColumnComboBox");
-    //}
 
     function GetReportTypeComboBox() {
 
@@ -233,7 +265,7 @@
                         dataType: "json",
                         data: function () {
                             return {
-                                Value: "SaleReturnReportType"   // ✅ IMPORTANT FIX
+                                Value: "ReportType"   // ✅ IMPORTANT FIX
                             };
                         }
                     }
@@ -268,29 +300,279 @@
         });
     }
 
+
+    function GetProductGroupComboBox() {
+
+        $("#ProductGroupId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 }
+            ],
+
+            filter: "contains",
+            filterFields: ["Code", "Name"],
+
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetProductGroupList"
+                }
+            },
+
+            placeholder: "Select Product Group",
+
+            change: function () {
+                applyProductGroupFilter(); // 🔥 MAIN TRIGGER
+            }
+        });
+    }
+
+
+    function applyProductGroupFilter() {
+
+        var combo = $("#ProductGroupId").data("kendoMultiColumnComboBox");
+        var groupId = combo.value();
+
+        var grid = $("#saleDetailsGrid").data("kendoGrid");
+
+        if (!grid) return;
+
+        if (groupId) {
+            grid.dataSource.filter({
+                field: "ProductGroupId",
+                operator: "eq",
+                value: parseInt(groupId)
+            });
+        } else {
+            grid.dataSource.filter({}); // reset
+        }
+    }
+
     $(document).ready(function () {
-        // Initialize Kendo DatePicker for FromDate and ToDate fields
+
         $("#FromDate").kendoDatePicker();
         $("#ToDate").kendoDatePicker();
 
-        // Get the current date
         var currentDate = new Date();
 
-        // Set the current date for both FromDate and ToDate fields
         $("#FromDate").data("kendoDatePicker").value(currentDate);
         $("#ToDate").data("kendoDatePicker").value(currentDate);
 
         GetCustomerComboBox();
-        GetReportTypeComboBox();
+        GetReportTypeComboBox(); // ✅ MUST
 
         $("input[data-bootstrap-switch]").bootstrapSwitch();
-
-        // 🔥 APPLY DEFAULT FILTER HERE
-        var isSummary = $("#IsSummary").is(":checked");
-        //applyReportTypeFilter(isSummary);
     });
 
+    $("#ProductName").on("click", function () {
+        OpenProductPopup(null);
+    });
 
+    $("#btnProductSearch").on("click", function () {
+        OpenProductPopup(null);
+    });
+
+    function OpenProductPopup(detailRow) {
+
+        var wnd = $("#saleDetailsWindow").data("kendoWindow");
+
+        if (!wnd) {
+            $("#saleDetailsWindow").kendoWindow({
+                width: "700px",
+                height: "500px",
+                title: "Select Product",
+                modal: true,
+                visible: false
+            });
+            wnd = $("#saleDetailsWindow").data("kendoWindow");
+        }
+
+        wnd.center().open();
+
+        // 🔥 Combo load
+        GetProductGroupComboBox();
+
+        // 🔥 Reset Grid
+        $("#saleDetailsGrid").empty();
+
+        $("#saleDetailsGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductModal"
+                    }
+                }
+            },
+            height: 380,
+            sortable: true,
+            filterable: true,
+            pageable: true,
+            selectable: "row",
+
+            columns: [
+                { field: "ProductId", hidden: true },
+                { field: "ProductName", title: "Product Name" },
+                { field: "UOMName", title: "UOM" },
+                { field: "ProductGroupName", title: "Group" },
+                { field: "SalesPrice", title: "Price" }
+            ]
+        });
+
+        // 🔥 Select product
+        $("#saleDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
+
+            var grid = $("#saleDetailsGrid").data("kendoGrid");
+            var item = grid.dataItem($(this));
+
+            ApplyProductSelection(detailRow, item);
+            wnd.close();
+        });
+    }
+
+    function LoadItemsGrid() {
+        $("#items").kendoListView({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "/Common/Common/GetProductModal",
+                        dataType: "json"
+                    }
+                }
+            },
+
+            template: `
+        <div class="item-card">
+
+            <h5>#: Name #</h5>
+
+            <div class="item-image">
+                <img src="#: Image #" alt="#: Name #" />
+            </div>
+
+            <div class="item-info">
+                <div><b>UOM:</b> #: UomName #</div>
+                <div><b>Cost:</b> #: kendo.toString(PurchasePrice,'n2') #</div>
+                <div><b>VAT:</b> #: VATRate # %</div>
+                <div><b>SD:</b> #: SDRate # %</div>
+            </div>
+
+
+            <div class="card-actions">
+                <input type='number' class='qty' value='1' min='1' />
+                <button class='addToCart'
+                        data-id='#: Id #'
+                        data-name='#: Name #'
+                        data-uom='#: UomName #'
+                        data-uomid='#: UomId #'
+                        data-price='#: PurchasePrice #'
+                        data-vat='#: VATRate #'
+                        data-sd='#: SDRate #'>
+                    Add
+                </button>
+            </div>
+
+        </div>
+        `,
+
+            dataBound: function () {
+                $(".addToCart").off("click").on("click", function () {
+
+                    var item = {
+                        Id: $(this).data("id"),
+                        Name: $(this).data("name"),
+                        UomId: $(this).data("uomid"),
+                        UomName: $(this).data("uom"),
+                        PurchasePrice: $(this).data("price"),
+                        VATRate: $(this).data("vat"),
+                        SDRate: $(this).data("sd"),
+                        Quantity: $(this).closest(".item-card").find(".qty").val()
+                    };
+
+                    AddItemToSaleDetails(item);
+                });
+            }
+        });
+    }
+
+
+    function AddItemToSaleDetails(item) {
+
+        var grid = $("#saleDetails").data("kendoGrid");
+
+        var detailRow = grid.dataSource.add({
+            ProductId: item.Id,
+            ProductName: item.Name,
+            UOMId: item.UomId,
+            UOMName: item.UomName,
+            Quantity: parseFloat(item.Quantity),
+            UnitRate: parseFloat(item.PurchasePrice),
+            VATRate: item.VATRate || 0,
+            SD: item.SD || 0
+        });
+
+        var qty = detailRow.Quantity || 0;
+        var unit = detailRow.UnitRate || 0;
+        var sdRate = detailRow.SD || 0;
+        var vatRate = detailRow.VATRate || 0;
+
+        var subTotal = qty * unit;
+        detailRow.set("SubTotal", subTotal);
+
+        var sdAmount = (subTotal * sdRate) / 100;
+        detailRow.set("SDAmount", sdAmount);
+
+        var vatAmount = ((subTotal + sdAmount) * vatRate) / 100;
+        detailRow.set("VATAmount", vatAmount);
+
+        var total = subTotal + sdAmount + vatAmount;
+        detailRow.set("LineTotal", total);
+
+        grid.refresh();
+    }
+
+    function ApplyProductSelection(detailRow, item) {
+
+        console.log(item);
+
+        // ✅ MASTER FIELD CASE
+        if (!detailRow) {
+            $("#ProductId").val(item.ProductId);
+            $("#ProductName").val(item.ProductName);
+            return;
+        }
+
+        // ✅ DETAILS GRID CASE
+        detailRow.set("ProductId", item.ProductId);
+        detailRow.set("ProductName", item.ProductName);
+
+        detailRow.set("UOMId", item.UOMId);
+        detailRow.set("UOMName", item.UOMName);
+
+        detailRow.set("UnitRate", item.SalesPrice);
+
+        detailRow.set("VATRate", item.VATRate);
+        detailRow.set("SD", item.SDRate);
+
+        if (!detailRow.Quantity || detailRow.Quantity <= 0) {
+            detailRow.set("Quantity", 1);
+        }
+
+        var subTotal = detailRow.Quantity * item.SalesPrice;
+        detailRow.set("SubTotal", subTotal);
+
+        var sdAmt = (subTotal * (item.SDRate || 0)) / 100;
+        detailRow.set("SDAmount", sdAmt);
+
+        var vatAmt = ((subTotal + sdAmt) * (item.VATRate || 0)) / 100;
+        detailRow.set("VATAmount", vatAmt);
+
+        detailRow.set("LineTotal", subTotal + sdAmt + vatAmt);
+    }
 
 </script>
+
+
 

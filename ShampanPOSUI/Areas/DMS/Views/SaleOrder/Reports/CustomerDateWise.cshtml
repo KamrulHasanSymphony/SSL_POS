@@ -74,10 +74,12 @@
 
             <td style="text-align:right;border:none;">
                 <h3 style="margin:0;">
-                    @Model.FirstOrDefault()?.CompanyName
+                    @ViewBag.CompanyName
                 </h3>
 
-                <div>@Model.FirstOrDefault()?.BranchName</div>
+                <div>
+                    @ViewBag.BranchName
+                </div>
 
                 <div>69/1 Trhidara Tower</div>
                 <div>📞 01612264439</div>
