@@ -199,7 +199,7 @@
 
         var productId = $("#ProductId").val() || 0;
 
-        var url = `/DMS/Sale/SaleListReport` +
+        var url = `/DMS/Sale/ReportList` +
             `?customerId=${encodeURIComponent(customerId || 0)}` +
             `&fromDate=${encodeURIComponent(fromDate)}` +
             `&toDate=${encodeURIComponent(toDate)}` +
@@ -249,6 +249,54 @@
     };
 
 
+    //function GetReportTypeComboBox() {
+
+    //    $("#ReportType").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+
+    //        columns: [
+    //            { field: "Name", title: "Name", width: 200 }
+    //        ],
+
+    //        filter: "contains",
+    //        filterFields: ["Name"],
+
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetReportTypeList?SaleReportType"
+    //            },
+    //            schema: {
+    //                data: function (response) {
+    //                    return response.filter(function (item) {
+    //                        return item.Name !== "Supplier Wise";
+    //                    });
+    //                }
+    //            }
+    //        },
+
+    //        placeholder: "Select Report Type",
+    //        value: "",
+
+    //        dataBound: function () {
+    //            var combo = this;
+
+    //            if (!getReportTypeId || getReportTypeId === "0") {
+    //                combo.value("");
+    //                combo.text("");
+    //            } else {
+    //                combo.value(getReportTypeId);
+    //            }
+    //        },
+
+    //        change: function () {
+             
+    //        }
+    //    });
+    //}
+
+
     function GetReportTypeComboBox() {
 
         $("#ReportType").kendoMultiColumnComboBox({
@@ -257,7 +305,7 @@
             height: 400,
 
             columns: [
-                { field: "Name", title: "Name", width: 200 }
+                { field: "Name", title: "Report Type", width: 200 }
             ],
 
             filter: "contains",
@@ -265,13 +313,14 @@
 
             dataSource: {
                 transport: {
-                    read: "/Common/Common/GetReportTypeList?SaleReportType"
-                },
-                schema: {
-                    data: function (response) {
-                        return response.filter(function (item) {
-                            return item.Name !== "Supplier Wise";
-                        });
+                    read: {
+                        url: "/Common/Common/GetReportTypeList",
+                        dataType: "json",
+                        data: function () {
+                            return {
+                                Value: "ReportType"   // ✅ IMPORTANT FIX
+                            };
+                        }
                     }
                 }
             },
@@ -280,18 +329,26 @@
             value: "",
 
             dataBound: function () {
-                var combo = this;
 
-                if (!getReportTypeId || getReportTypeId === "0") {
-                    combo.value("");
-                    combo.text("");
-                } else {
-                    combo.value(getReportTypeId);
+                if (typeof getReportTypeId !== "undefined" &&
+                    getReportTypeId &&
+                    getReportTypeId !== "0") {
+
+                    this.value(getReportTypeId);
+                }
+                else {
+                    this.value("");
                 }
             },
 
             change: function () {
-             
+
+                var selected = this.dataItem();
+
+                // ✅ store proper value
+                if (selected) {
+                    $("#ReportType").val(selected.Name);
+                }
             }
         });
     }

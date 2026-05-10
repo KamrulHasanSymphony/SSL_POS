@@ -25,6 +25,10 @@ namespace ShampanPOS.Models
         [Display(Name = "Order To Date")]
         public string? OrderToDate { get; set; }
 
+        public int? SaleOrderId { get; set; }
+
+        [Display(Name = "Sale Order Code")]
+        public string? SaleOrderCode { get; set; }
 
         [Display(Name = "Delivery From Date")]
         public string? DeliveryFromDate { get; set; }
@@ -54,7 +58,6 @@ namespace ShampanPOS.Models
         public int? CompanyId { get; set; }
         public string? ProductName { get; set; }
         public string? ProductCode { get; set; }
-        public string? SaleOrderCode { get; set; }
 
         [Display(Name = "Quantity")]
         [DataType(DataType.Currency)]
@@ -87,6 +90,10 @@ namespace ShampanPOS.Models
         [DataType(DataType.Currency)]
         public decimal? LineTotal { get; set; }
 
+
+        [Display(Name = "Total Invoice")]
+        [DataType(DataType.Currency)]
+        public decimal? TotalInvoice { get; set; }
         public string? InvoiceDateTime { get; set; }
         public string? Operation { get; set; }
 
@@ -103,7 +110,10 @@ namespace ShampanPOS.Models
         public string? CompanyName { get; set; }
 
         [Display(Name = "Report Type")]
-        public int ReportType { get; set; }
+
+        //public int ReportType { get; set; }
+
+        public string ReportType { get; set; }
 
         public bool IsSummary { get; set; }
     }
