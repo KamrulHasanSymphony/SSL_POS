@@ -707,38 +707,197 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
-        public ActionResult PurchaseOrderListReport(int? supplierId, string fromDate, string toDate, string deliveryFromDate, string deliveryToDate, int? reportType, bool isSummary)
+        //public ActionResult PurchaseOrderListReport(int? supplierId, string fromDate, string toDate, string deliveryFromDate, string deliveryToDate, int? reportType, bool isSummary)
+        //{
+        //    List<PurchaseOrderReportVM> vmList = new List<PurchaseOrderReportVM>();
+
+        //    PurchaseOrderReportVM param = new PurchaseOrderReportVM();
+
+
+        //    param.SupplierId = supplierId ?? 0;
+
+        //    param.OrderFromDate = string.IsNullOrEmpty(fromDate) ? null : fromDate;
+        //    param.OrderToDate = string.IsNullOrEmpty(toDate) ? null : toDate;
+
+        //    param.DeliveryFromDate = string.IsNullOrEmpty(deliveryFromDate) ? null : deliveryFromDate;
+        //    param.DeliveryToDate = string.IsNullOrEmpty(deliveryToDate) ? null : deliveryToDate;
+
+
+
+        //    param.IsSummary = isSummary;
+        //    param.ReportType = reportType ?? 0;
+
+        //    ResultVM result = _repo.GetPurchaseOrderByList(param);
+
+        //    if (result.Status == "Success" && result.DataVM != null)
+        //    {
+        //        vmList = JsonConvert.DeserializeObject<List<PurchaseOrderReportVM>>(result.DataVM.ToString());
+        //    }
+
+        //    ViewBag.IsSummary = isSummary;
+
+        //    return View("PurchaseOrderListReport", vmList);
+
+
+        //}
+
+
+        public ActionResult ReportList(int? supplierId,string fromDate,string toDate,string deliveryFromDate,string deliveryToDate,string reportType,bool isSummary,int? productId,string supplierCode,string supplierName,string productName)
         {
             List<PurchaseOrderReportVM> vmList = new List<PurchaseOrderReportVM>();
 
             PurchaseOrderReportVM param = new PurchaseOrderReportVM();
 
-
             param.SupplierId = supplierId ?? 0;
 
-            param.OrderFromDate = string.IsNullOrEmpty(fromDate) ? null : fromDate;
-            param.OrderToDate = string.IsNullOrEmpty(toDate) ? null : toDate;
+            param.OrderFromDate = string.IsNullOrEmpty(fromDate)
+                ? "2025-01-01"
+                : fromDate;
 
-            param.DeliveryFromDate = string.IsNullOrEmpty(deliveryFromDate) ? null : deliveryFromDate;
-            param.DeliveryToDate = string.IsNullOrEmpty(deliveryToDate) ? null : deliveryToDate;
+            param.OrderToDate = string.IsNullOrEmpty(toDate)
+                ? DateTime.Now.ToString("yyyy-MM-dd")
+                : toDate;
 
+            param.DeliveryFromDate = string.IsNullOrEmpty(deliveryFromDate)
+                ? "2025-01-01"
+                : deliveryFromDate;
 
+            param.DeliveryToDate = string.IsNullOrEmpty(deliveryToDate)
+                ? DateTime.Now.ToString("yyyy-MM-dd")
+                : deliveryToDate;
 
             param.IsSummary = isSummary;
-            param.ReportType = reportType ?? 0;
+            param.ReportType = reportType ?? "";
+            param.ProductId = productId ?? 0;
+
+            param.Code = string.IsNullOrEmpty(supplierCode)
+                ? ""
+                : supplierCode;
+
+            param.SupplierName = string.IsNullOrEmpty(supplierName)
+                ? ""
+                : supplierName;
 
             ResultVM result = _repo.GetPurchaseOrderByList(param);
 
             if (result.Status == "Success" && result.DataVM != null)
             {
-                vmList = JsonConvert.DeserializeObject<List<PurchaseOrderReportVM>>(result.DataVM.ToString());
+                vmList = JsonConvert.DeserializeObject<List<PurchaseOrderReportVM>>
+                (
+                    result.DataVM.ToString()
+                );
             }
 
+            // ViewBag
+            ViewBag.SupplierId = supplierId;
+            ViewBag.SupplierName = supplierName ?? "All";
+
+            ViewBag.ProductId = productId ?? 0;
+            ViewBag.ProductName = productName ?? "All";
+
+            ViewBag.OrderFromDate = fromDate ?? "All";
+            ViewBag.OrderToDate = toDate ?? "All";
+
+            ViewBag.DeliveryFromDate = deliveryFromDate ?? "All";
+            ViewBag.DeliveryToDate = deliveryToDate ?? "All";
+
             ViewBag.IsSummary = isSummary;
+            ViewBag.ReportType = reportType;
 
-            return View("PurchaseOrderListReport", vmList);
+            ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
+            ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
 
+            ViewBag.ReportTitle = reportType + (isSummary ? " Summary" : " Details") + " Report";
 
+            // =========================================
+            // EXTRA SMART VIEW ROUTING
+            // =========================================
+
+            bool hasSupplier = supplierId.HasValue && supplierId.Value > 0;
+            bool hasProduct = productId.HasValue && productId.Value > 0;
+
+            bool hasDate =
+                !string.IsNullOrWhiteSpace(fromDate) &&
+                !string.IsNullOrWhiteSpace(toDate);
+
+            // =========================================
+            // Dynamic View Name
+            // =========================================
+
+            string viewName = "";
+
+            if (reportType == "Day Wise")
+            {
+                viewName = isSummary
+                    ? "Reports/DayWiseSummary"
+                    : "Reports/DayWiseDetails";
+            }
+
+            else if (reportType == "Monthly")
+            {
+                viewName = isSummary
+                    ? "Reports/MonthlySummary"
+                    : "Reports/MonthlyDetails";
+            }
+
+            else if (reportType == "Supplier Wise")
+            {
+                viewName = isSummary
+                    ? "Reports/SupplierWiseSummary"
+                    : "Reports/SupplierWiseDetails";
+            }
+
+            else if (reportType == "Product Wise")
+            {
+                viewName = isSummary
+                    ? "Reports/ProductWiseSummary"
+                    : "Reports/ProductWiseDetails";
+            }
+
+            else if (reportType == "Invoice Wise")
+            {
+                viewName = isSummary
+                    ? "Reports/InvoiceWiseSummary"
+                    : "Reports/InvoiceWiseDetails";
+            }
+
+            else
+            {
+                // =========================================
+                // FALLBACK LOGIC (NO REPORT TYPE)
+                // =========================================
+
+                if (hasSupplier && hasProduct && hasDate)
+                {
+                    viewName = "Reports/SupplierProductDateWise";
+                }
+                else if (hasSupplier && hasDate)
+                {
+                    viewName = "Reports/SupplierDateWise";
+                }
+                else if (hasProduct && hasDate)
+                {
+                    viewName = "Reports/ProductDateWise";
+                }
+                else if (hasDate)
+                {
+                    viewName = "Reports/DateWise";
+                }
+                else if (hasSupplier)
+                {
+                    viewName = "Reports/SupplierWiseDetails";
+                }
+                else if (hasProduct)
+                {
+                    viewName = "Reports/ProductWiseDetails";
+                }
+                else
+                {
+                    viewName = "Reports/DayWiseDetails";
+                }
+            }
+
+            return View(viewName, vmList);
         }
 
 

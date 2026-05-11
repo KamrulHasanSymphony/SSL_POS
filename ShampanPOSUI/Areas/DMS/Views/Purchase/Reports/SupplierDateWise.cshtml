@@ -1,0 +1,201 @@
+﻿@* ================================
+       CustomerDateWise.cshtml
+    ================================ *@
+
+@model List<ShampanPOS.Models.PurchaseReportVM>
+
+@{
+    ViewBag.Title = "Supplier Date Wise Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
+}
+
+
+<style>
+    body {
+        font-family: Arial;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1100px;
+        margin: 20px auto;
+        border-radius: 6px;
+    }
+
+    .sslPrint {
+        background: #17a2b8;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        float: right;
+        margin-bottom: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        table th,
+        table td {
+            border: 1px solid #777;
+            padding: 6px;
+        }
+
+        table th {
+            background: #e9e9e9;
+            text-align: center;
+        }
+
+    .text-right {
+        text-align: right;
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint">Print</button>
+
+<div class="report-box">
+
+    <table style="border:none;">
+        <tr>
+            <td style="width:140px;border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png"
+                     style="width:200px;height:100px;" />
+            </td>
+
+            <td style="text-align:right;border:none;">
+                <h3 style="margin:0;">
+                    @ViewBag.CompanyName
+                </h3>
+
+                <div>
+                    @ViewBag.BranchName
+                </div>
+
+                <div>69/1 Trhidara Tower</div>
+                <div>📞 01612264439</div>
+                <div>✉️ symphonysorftech1999@gamil.com</div>
+            </td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+        <div>
+            <strong>Supplier:</strong> @ViewBag.SupplierName <br />
+            <strong>From:</strong> @ViewBag.InvoiceFromDate
+        </div>
+
+        <div style="text-align:right;">
+            <strong>To:</strong> @ViewBag.InvoiceToDate
+        </div>
+    </div>
+
+    <h3 style="text-align:center;border-bottom:1px solid #000;">
+        Supplier Date Wise-@ViewBag.ReportTitle
+    </h3>
+
+    <table>
+
+        <thead>
+            <tr>
+                @if (isSummary)
+                {
+                    <th>Supplier</th>
+                    <th>Invoice Date</th>
+                    <th>Purchase Date</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                }
+                else
+                {
+                    <th>Supplier</th>
+                    <th>Purchase Code</th>
+                    <th>Invoice Date</th>
+                    <th>Purchase Date</th>
+                    <th>Quantity</th>
+                    <th>Sub Total</th>
+                    <th>VAT</th>
+                    <th>Total</th>
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+
+                        @if (isSummary)
+                        {
+                            <td>@item.SupplierName</td>
+                            <td>@item.InvoiceDateTime</td>
+                            <td>@item.PurchaseDate</td>
+                            <td class="text-right">@item.Quantity</td>
+                            <td class="text-right">@item.LineTotal</td>
+                        }
+                        else
+                        {
+                            <td>@item.SupplierName</td>
+                            <td>@item.Code</td>
+                            <td>@item.InvoiceDateTime</td>
+                            <td>@item.PurchaseDate</td>
+                            <td class="text-right">@item.Quantity</td>
+                            <td class="text-right">@item.SubTotal</td>
+                            <td class="text-right">@item.VATAmount</td>
+                            <td class="text-right">@item.LineTotal</td>
+                        }
+
+                    </tr>
+                }
+
+                <tr style="font-weight:bold;background:#f1f1f1;">
+                    <td>Total</td>
+
+                    @if (isSummary)
+                    {
+                        <td></td>
+                        <td></td>
+                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                        <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                        <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                    }
+
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" style="text-align:center;">
+                        No data found
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
