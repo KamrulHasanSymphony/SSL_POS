@@ -3,9 +3,6 @@
 
     var init = function () {
 
-
-
-
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
         debugger;
@@ -14,11 +11,7 @@
             GetGridDataList();
 
         };
-
-
         $('.btnsave').click('click', function (e) {
-            debugger;
-
             e.preventDefault();
 
             var form = $("#frmEntry");
@@ -160,7 +153,6 @@
     };
 
     var GetGridDataList = function () {
-        debugger;
         var gridDataSource = new kendo.data.DataSource({
             type: "json",
             serverPaging: true,
@@ -207,33 +199,54 @@
                     }
 
                     if (options.filter && options.filter.filters) {
-                        options.filter.filters.forEach(function (param) {
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
-                            if (param.field === "OverHead") {
-                                param.field = "H.OverHead";
-                            }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
-                                if (statusValue.startsWith("a")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("i")) {
-                                    param.value = 0;
-                                } else {
-                                    param.value = null;
+                        var mapFilters = function (filters) {
+
+                            filters.forEach(function (param) {
+
+                                // Handle nested filters
+                                if (param.filters) {
+                                    mapFilters(param.filters);
+                                    return;
                                 }
 
-                                param.field = "H.IsActive";
-                                param.operator = "eq";
-                            }
-                        });
-                    }
-                    return options;
+                                if (param.field === "Code") {
+                                    param.field = "H.Code";
+                                }
+
+                                if (param.field === "OverHead") {
+                                    param.field = "H.OverHead";
+                                }
+
+                                if (param.field === "Comments") {
+                                    param.field = "H.Comments";
+                                }
+
+                                if (param.field === "Status") {
+
+                                    let statusValue = param.value
+                                        ? param.value.toString().trim().toLowerCase()
+                                        : "";
+
+                                    if (statusValue.startsWith("a")) {
+                                        param.value = 1;
+                                    }
+                                    else if (statusValue.startsWith("i")) {
+                                        param.value = 0;
+                                    }
+                                    else {
+                                        param.value = null;
+                                    }
+
+                                    param.field = "H.IsActive";
+                                    param.operator = "eq";
+                                }
+                            });
+                        };
+
+                        // CALL FUNCTION HERE
+                        mapFilters(options.filter.filters);
+                    }                    return options;
                 }
             },
             batch: true,
@@ -278,7 +291,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "Comments", "Status"]
+                fields: ["Code", "OverHead", "Status"]
             },
             excel: {
                 fileName: "OverHeads.xlsx",
