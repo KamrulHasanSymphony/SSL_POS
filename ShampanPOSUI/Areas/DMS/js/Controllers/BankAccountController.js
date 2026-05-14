@@ -205,9 +205,7 @@
 
                     if (options.sort) {
                         options.sort.forEach(function (param) {
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
+                            
                             if (param.field === "AccountNo") {
                                 param.field = "H.AccountNo";  
                             }
@@ -262,9 +260,7 @@
 
                     if (options.filter && options.filter.filters) {
                         options.filter.filters.forEach(function (param) {
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
+                          
                             if (param.field === "AccountNo") {
                                 param.field = "H.AccountNo";
                             }
@@ -360,7 +356,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "AccountName", "AccountNo", "BankId", "BranchName", "Comments", "IsCash", "Status"]
+                fields: [ "AccountName", "AccountNo", "BankId", "BranchName", "Comments", "IsCash"]
             },
             excel: {
                 fileName: "BankAccounts.xlsx",

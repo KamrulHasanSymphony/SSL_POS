@@ -278,7 +278,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "Comments", "Status"]
+                fields: ["Code","OverHead", "Comments"]
             },
             excel: {
                 fileName: "OverHeads.xlsx",

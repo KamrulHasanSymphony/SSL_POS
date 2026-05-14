@@ -381,7 +381,7 @@
                 {
                     field: "SD",
                     title: "SD Rate",
-                    width: 60,
+                    width: 100,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input name="' + options.field + '"/>');
@@ -436,7 +436,7 @@
                 {
                     field: "VATRate",
                     title: "VAT Rate",
-                    width: 60,
+                    width: 100,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input name="' + options.field + '"/>');

@@ -93,6 +93,8 @@ namespace ShampanPOSUI.Controllers
 
                 loginModel.CompanyInfos = companyInfos;
 
+                loginModel.Message = TempData["ErrorMessage"]?.ToString();
+
                 if (User.Identity.IsAuthenticated)
                 {
                     return RedirectToAction("Index", "Home", new { area = "Common", branchChange = false });
@@ -175,10 +177,29 @@ namespace ShampanPOSUI.Controllers
 
                 model.CompanyInfos = companyInfos;
 
-                if (string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
+                //if (string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
+                //{
+                //    return View(model);
+                //}
+
+                if (string.IsNullOrWhiteSpace(model.UserName))
+                {
+                    ModelState.AddModelError("UserName",
+                        "The User Name field is required.");
+                }
+
+                if (string.IsNullOrWhiteSpace(model.Password))
+                {
+                    ModelState.AddModelError("Password",
+                        "The Password field is required.");
+                }
+
+                if (!ModelState.IsValid)
                 {
                     return View(model);
                 }
+
+
                 if (model.CompanyId == 0)
                 {
                     model.Message = "Please Select Company.";
@@ -188,36 +209,20 @@ namespace ShampanPOSUI.Controllers
 
                 var result = _repo.SignInAuthentication(model);
 
-                AuthModel tokens = JsonConvert.DeserializeObject<AuthModel>(result.Data.ToString());
+                //AuthModel tokens = JsonConvert.DeserializeObject<AuthModel>(result.Data.ToString());
 
-                ClaimNames.token = tokens.token.ToString();
+                //ClaimNames.token = tokens.token.ToString();
+
+
+                if (result != null && result.Status == "Success")
 
                 //if (result.Status == "Success")
-                //{
-                //    var companyName = model.CompanyInfos.Where(x => x.CompanyId == model.CompanyId).FirstOrDefault()?.CompanyName;
-                //    // Create a new ClaimsIdentity
-                //    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                //    identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName));
-                //    identity.AddClaim(new Claim(ClaimNames.UserId, model.UserName));
-                //    identity.AddClaim(new Claim(ClaimNames.CompanyId, model.CompanyId.ToString()));
-                //    identity.AddClaim(new Claim(ClaimNames.CompanyName, companyName));
-
-                //    // Get authentication manager
-                //    var authenticationManager = HttpContext.GetOwinContext().Authentication;
-
-                //    // Sign in the user with persistent authentication                   
-                //    authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
-
-                //    Session["UserId"] = model.UserName;
-                //    Session["CompanyId"] = model.CompanyId.ToString();
-                //    return RedirectToAction("Index", "Home", new { area = "Common", branchChange = false });
-                //}
-
-
-               
-
-                if (result.Status == "Success")
                 {
+
+                    AuthModel tokens = JsonConvert.DeserializeObject<AuthModel>(result.Data.ToString());
+
+                    ClaimNames.token = tokens.token.ToString();
+
                     var companyName = model.CompanyInfos
                         .FirstOrDefault(x => x.CompanyId == model.CompanyId)?.CompanyName;
 
@@ -239,20 +244,39 @@ namespace ShampanPOSUI.Controllers
 
                     return RedirectToAction("Index", "Home", new { area = "Common", branchChange = false });
                 }
+                //else
+                //{
+                //    model.Message = "Wrong user name or password!";
+                //    ModelState.AddModelError("Message", "Wrong user name or password!");
+                //    return View(model);
+                //}
+
                 else
                 {
-                    model.Message = "Wrong user name or password!";
-                    ModelState.AddModelError("Message", "Wrong user name or password!");
-                    return View(model);
+                    TempData["ErrorMessage"] = "Wrong user name or password!";
+
+                    return RedirectToAction("Index");
                 }
             }
+            //catch (Exception e)
+            //{
+            //    Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+            //    model.Message = "Wrong user name or password!";
+            //    ModelState.AddModelError("Message", "Wrong user name or password!");
+            //    //return RedirectToAction("Index");
+
+            //    return View(model);
+            //}
+
             catch (Exception e)
             {
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                model.Message = "Wrong user name or password!";
-                ModelState.AddModelError("Message", "Wrong user name or password!");
+
+                TempData["ErrorMessage"] = "Wrong user name or password!";
+
                 return RedirectToAction("Index");
             }
+
         }
 
 

@@ -33,11 +33,11 @@ namespace ShampanPOS.Models
         [Display(Name = "BE Number (Challan No.)")]
         public string? BENumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Invoice Date is required")]
         [Display(Name = "Invoice Date")]
         public string? InvoiceDateTime { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Purchase Date is required")]
         [Display(Name = "Purchase Date")]
         public string? PurchaseDate { get; set; }
         public string? OrderDate { get; set; }

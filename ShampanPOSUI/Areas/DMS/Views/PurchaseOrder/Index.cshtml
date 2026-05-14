@@ -6,6 +6,29 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .form-group.row {
+        align-items: end;
+    }
+
+    .form-group .form-control,
+    .form-group .k-dropdown,
+    .form-group .k-picker,
+    .form-group .btn,
+    .form-group .input-group {
+        height: 31px !important;
+    }
+
+    .form-group .btn {
+        margin-top: 24px;
+    }
+
+    .form-group label {
+        margin-bottom: 4px;
+        font-weight: 600;
+    }
+</style>
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -54,27 +77,6 @@
                             @Html.ValidationMessageFor(model => model.IsPosted)
                         </div>
 
-                        @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.FromDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.FromDate, new { @class = "  form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-2">
-            @Html.LabelFor(model => model.ToDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.ToDate, new { @class = "  form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>*@
-
-
                         <div class="col-sm-2">
                             @Html.LabelFor(model => model.FromDate)
                             <div>
@@ -89,7 +91,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-2" style="margin-top: 26px;">
+                        <div class="col-sm-2">
                             <button type="button" id="indexSearch" class="btn btn-primary btn-sm">
                                 Search
                             </button>

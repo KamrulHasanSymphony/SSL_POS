@@ -1,18 +1,17 @@
 ﻿@* ================================
-       SupplierDateWise.cshtml
+       SupplierProductDateWise.cshtml
     ================================ *@
 
-@model List<ShampanPOS.Models.PurchaseReportVM>
+@model List<ShampanPOS.Models.PurchaseReturnReportVM>
 
 @{
-    ViewBag.Title = "Supplier Date Wise Report";
+    ViewBag.Title = "Supplier Product Date Wise Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
 }
-
 
 <style>
     body {
@@ -97,37 +96,29 @@
         </div>
 
         <div style="text-align:right;">
+            <strong>Product:</strong> @ViewBag.ProductName <br />
             <strong>To:</strong> @ViewBag.InvoiceToDate
         </div>
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Supplier Date Wise-@ViewBag.ReportTitle
+        Supplier Product Date Wise-@ViewBag.ReportTitle
     </h3>
 
     <table>
 
         <thead>
             <tr>
-                @if (isSummary)
-                {
-                    <th>Supplier</th>
-                    <th>Invoice Date</th>
-                    <th>Purchase Date</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                }
-                else
-                {
-                    <th>Supplier</th>
-                    <th>Purchase Code</th>
-                    <th>Invoice Date</th>
-                    <th>Purchase Date</th>
-                    <th>Quantity</th>
-                    <th>Sub Total</th>
-                    <th>VAT</th>
-                    <th>Total</th>
-                }
+                <th>Supplier</th>
+                <th>Product</th>
+                <th>Purchase Code</th>
+                <th>Invoice Date</th>
+                <th>Purchase Date</th>
+                <th>Quantity</th>
+                @*<th>Unit Rate</th>*@
+                <th>Sub Total</th>
+                <th>VAT</th>
+                <th>Total</th>
             </tr>
         </thead>
 
@@ -138,57 +129,36 @@
                 foreach (var item in Model)
                 {
                     <tr>
-
-                        @if (isSummary)
-                        {
-                            <td>@item.SupplierName</td>
-                            <td>@item.InvoiceDateTime</td>
-                            <td>@item.PurchaseDate</td>
-                            <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.LineTotal</td>
-                        }
-                        else
-                        {
-                            <td>@item.SupplierName</td>
-                            <td>@item.Code</td>
-                            <td>@item.InvoiceDateTime</td>
-                            <td>@item.PurchaseDate</td>
-                            <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.SubTotal</td>
-                            <td class="text-right">@item.VATAmount</td>
-                            <td class="text-right">@item.LineTotal</td>
-                        }
-
+                        <td>@item.SupplierName</td>
+                        <td>@item.ProductName</td>
+                        <td>@item.Code</td>
+                        <td>@item.InvoiceDateTime</td>
+                        <td>@item.PurchaseDate</td>
+                        <td class="text-right">@item.Quantity</td>
+                        @*<td class="text-right">@item.UnitRate</td>*@
+                        <td class="text-right">@item.SubTotal</td>
+                        <td class="text-right">@item.VATAmount</td>
+                        <td class="text-right">@item.LineTotal</td>
                     </tr>
                 }
 
                 <tr style="font-weight:bold;background:#f1f1f1;">
                     <td>Total</td>
-
-                    @if (isSummary)
-                    {
-                        <td></td>
-                        <td></td>
-                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                    }
-                    else
-                    {
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                        <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                    }
-
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                    @*<td class="text-right">@Model.Sum(x => x.UnitRate)</td>*@
+                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
                 </tr>
             }
             else
             {
                 <tr>
-                    <td colspan="7" style="text-align:center;">
+                    <td colspan="9" style="text-align:center;">
                         No data found
                     </td>
                 </tr>

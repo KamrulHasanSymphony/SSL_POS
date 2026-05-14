@@ -45,6 +45,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Fax No.")]
         public string? FaxNo { get; set; }
 
+        [Required(ErrorMessage = "Email is required.")]
         [Display(Name = "Email")]
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format")]
         public string? Email { get; set; }

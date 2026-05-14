@@ -112,14 +112,20 @@
 
             var isFormValid = true;
 
-            //if (model.IsAutoCode?.toLowerCase() === "n" && isEmpty(model.Code)) {
-            //    markInvalid("#Code", "Code is required.");
-            //    isFormValid = false;
-            //}
 
             if (isInvalid(model.CustomerId)) {
                 markInvalid("#CustomerId", "Customer is required.");
                 isFormValid = false;
+            }
+
+            //if (isEmpty(model.InvoiceDateTime)) {
+            //    $(".kendoInvoiceDateTime").addClass("input-validation-error");
+            //    ShowNotification(3, "Invoice Date Time is required.");
+            //    isFormValid = false;
+            //}
+
+            if (!isFormValid) {
+                return;
             }
             
 
@@ -170,7 +176,7 @@
             }
 
             if (!details.length) {
-                ShowNotification(3, "Please add at least one item to the sale details.");
+                ShowNotification(3, "Complete Details first!");
                 return;
             }
 
@@ -621,7 +627,7 @@
                 { 
                     field: "SD",
                     title: "SD Rate",
-                    width: 60,
+                    width: 100,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input data-bind="value:' + options.field + '"/>')
@@ -690,7 +696,7 @@
                 {
                     field: "VATRate",
                     title: "VAT Rate",
-                    width: 60,
+                    width: 100,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input data-bind="value:' + options.field + '"/>')
