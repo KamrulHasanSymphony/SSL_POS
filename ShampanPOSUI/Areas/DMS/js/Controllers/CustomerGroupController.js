@@ -215,7 +215,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "Description","Status"]
+                fields: ["Code", "Name", "Description"]
             },
             excel: {
                 fileName: "CustomerGroups.xlsx",
@@ -235,49 +235,18 @@
 
                
 
-                var branchName = "All Branch Name";
-                var companyName = "All Company Name";
-                var companyAddress = "All Company Address";
-
-                var grid = e.sender;
-
-                // Hide the "Action" and checkbox columns
-                var actionColumnIndex = grid.columns.findIndex(col => col.title === "Action");
-                var selectionColumnIndex = grid.columns.findIndex(col => col.selectable === true);
-
-                if (actionColumnIndex == 0 || actionColumnIndex > 0) {
-                    var actionVisibility = [
-                        grid.columns[actionColumnIndex].hidden,
-                    ];
-
-                    grid.hideColumn(actionColumnIndex);
-                }
-                if (selectionColumnIndex == 0 || selectionColumnIndex > 0) {
-                    var selectableVisibility = [
-                        grid.columns[selectionColumnIndex].hidden
-                    ];
-
-                    grid.hideColumn(selectionColumnIndex);
-                }
-
+                var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
                 var fileName = `CustomerGroups_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
-                var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
-                var columnWidth = 100;
-                var totalWidth = numberOfColumns * columnWidth;
-
                 e.sender.options.pdf = {
-                    //paperSize: [totalWidth, 2800],
-                    paperSize: "A2",
+                    paperSize: "A4",
                     margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
                     landscape: true,
                     allPages: true,
                     template: `
                             <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                                <div>Company Name :- ${companyName}</div>
-                                <div>Company Address :- ${companyAddress}</div>
+                                <div>${companyName}</div>
                             </div> `
                 };
 

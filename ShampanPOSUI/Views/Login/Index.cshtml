@@ -3,6 +3,33 @@
     ViewBag.Title = "Login";
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
+
+<style>
+
+    .input-group-wrapper {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .validation-msg {
+        position: absolute;
+        left: 0;
+        top: 100%;
+        font-size: 14px;
+        margin-top: 2px;
+        color: red;
+    }
+    .footer-logo {
+        margin-top: 8px; 
+        text-align: center;
+    }
+
+        .footer-logo img {
+            height: 52px; 
+            display: inline-block;
+        }
+</style>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,21 +53,62 @@
                     @Html.HiddenFor(model => model.returnUrl)
                     @Html.HiddenFor(model => model.dbName)
 
-                    <div class="input-group mb-3">
-                        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @placeholder = "User Name" })
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fa fa-user"></i></span>
-                        </div>
-                    </div>
-                    @Html.ValidationMessageFor(model => model.UserName)
+            @*<div class="input-group mb-3">
+                @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @placeholder = "User Name" })
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+            </div>
+            @Html.ValidationMessageFor(model => model.UserName)
 
-                    <div class="input-group mb-3">
-                        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", type = "password", @placeholder = "Password" })
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+            <div class="input-group mb-3">
+                @Html.TextBoxFor(model => model.Password, new { @class = "form-control", type = "password", @placeholder = "Password" })
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                </div>
+            </div>
+            @Html.ValidationMessageFor(model => model.Password)*@
+
+
+                    <div class="input-group-wrapper">
+                        <div class="input-group mb-1">
+                            @Html.TextBoxFor(model => model.UserName,
+                                new { @class = "form-control", @placeholder = "User Name" })
+
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fa fa-user"></i>
+                                </span>
+                            </div>
                         </div>
+
+                        @Html.ValidationMessageFor(model => model.UserName, "",
+                            new { @class = "text-danger validation-msg" })
                     </div>
-                    @Html.ValidationMessageFor(model => model.Password)
+
+
+                    <div class="input-group-wrapper">
+                        <div class="input-group mb-1">
+                            @Html.TextBoxFor(model => model.Password,
+                                new
+                                     {
+                                    @class = "form-control",
+                                    type = "password",
+                                    @placeholder = "Password"
+                                })
+
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fas fa-key"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        @Html.ValidationMessageFor(model => model.Password, "",
+                            new { @class = "text-danger validation-msg" })
+                    </div>
+
+
 
                     <div class="input-group mb-3">
                         <select id="CompanyId" name="CompanyId" class="form-control">
@@ -54,7 +122,17 @@
                         </div>
                     </div>
 
-                    @Html.ValidationMessageFor(model => model.Message)
+                    @*@Html.ValidationMessageFor(model => model.Message)*@
+
+
+                <div class="text-center">
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-danger">
+                            @Model.Message
+                        </div>
+                    }
+                </div>
 
                     <div class="clearfix"></div>
 
@@ -73,19 +151,29 @@
                     </div>
 
                     @*<button type="button" title="Sign Up" data-url="/SetUp/UserProfile/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                        New
-                    </button>*@
+                New
+            </button>*@
                 }
             </div>
         </div>
 
-        <div class="row" style="text-align:left !important;">
+        <div class="row footer-logo">
+            <div class="col-md-12 text-center">
+                <a href="https://www.symphonysofttech.com/" target="_blank">
+                    <img src="~/Content/AdminLte/dist/img/logo.png"
+                         alt="Symphony Logo">
+                </a>
+            </div>
+        </div>
+
+
+        @*<div class="row" style="text-align:left !important;">
             <div class="col-md-2">
                 <a href="https://www.symphonysofttech.com/" target="_blank">
                     <img src="~/Content/AdminLte/dist/img/logo.png" alt="Symphony Logo" class="logo" height="30">
                 </a>
             </div>
-        </div>
+        </div>*@
 
     </div>
 

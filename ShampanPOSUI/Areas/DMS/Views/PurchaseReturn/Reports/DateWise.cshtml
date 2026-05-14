@@ -1,18 +1,17 @@
 ﻿@* ================================
-       SupplierDateWise.cshtml
+       DateWise.cshtml
     ================================ *@
 
-@model List<ShampanPOS.Models.PurchaseReportVM>
+@model List<ShampanPOS.Models.PurchaseReturnReportVM>
 
 @{
-    ViewBag.Title = "Supplier Date Wise Report";
+    ViewBag.Title = "Date Wise Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
 }
-
 
 <style>
     body {
@@ -92,17 +91,18 @@
 
     <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
         <div>
-            <strong>Supplier:</strong> @ViewBag.SupplierName <br />
             <strong>From:</strong> @ViewBag.InvoiceFromDate
+            @*<strong>Purchase From:</strong> @ViewBag.PurchaseFromDate*@
         </div>
 
         <div style="text-align:right;">
             <strong>To:</strong> @ViewBag.InvoiceToDate
+            @*<strong>Purchase To:</strong> @ViewBag.PurchaseToDate*@
         </div>
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Supplier Date Wise-@ViewBag.ReportTitle
+        Date Wise-@ViewBag.ReportTitle
     </h3>
 
     <table>
@@ -111,21 +111,19 @@
             <tr>
                 @if (isSummary)
                 {
-                    <th>Supplier</th>
                     <th>Invoice Date</th>
                     <th>Purchase Date</th>
+                    <th>Supplier</th>
                     <th>Quantity</th>
                     <th>Total</th>
                 }
                 else
                 {
-                    <th>Supplier</th>
-                    <th>Purchase Code</th>
                     <th>Invoice Date</th>
                     <th>Purchase Date</th>
+                    <th>Purchase Code</th>
+                    <th>Supplier</th>
                     <th>Quantity</th>
-                    <th>Sub Total</th>
-                    <th>VAT</th>
                     <th>Total</th>
                 }
             </tr>
@@ -138,27 +136,23 @@
                 foreach (var item in Model)
                 {
                     <tr>
-
                         @if (isSummary)
                         {
-                            <td>@item.SupplierName</td>
                             <td>@item.InvoiceDateTime</td>
                             <td>@item.PurchaseDate</td>
+                            <td>@item.SupplierName</td>
                             <td class="text-right">@item.Quantity</td>
                             <td class="text-right">@item.LineTotal</td>
                         }
                         else
                         {
-                            <td>@item.SupplierName</td>
-                            <td>@item.Code</td>
                             <td>@item.InvoiceDateTime</td>
                             <td>@item.PurchaseDate</td>
+                            <td>@item.Code</td>
+                            <td>@item.SupplierName</td>
                             <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.SubTotal</td>
-                            <td class="text-right">@item.VATAmount</td>
                             <td class="text-right">@item.LineTotal</td>
                         }
-
                     </tr>
                 }
 
@@ -178,8 +172,6 @@
                         <td></td>
                         <td></td>
                         <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                        <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
                         <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
                     }
 
@@ -188,7 +180,7 @@
             else
             {
                 <tr>
-                    <td colspan="7" style="text-align:center;">
+                    <td colspan="5" style="text-align:center;">
                         No data found
                     </td>
                 </tr>

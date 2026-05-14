@@ -157,6 +157,8 @@
             toolbar: ["search"],
 
             filterable: true,
+            scrollable: true,
+            height: 500,
 
             search: {
                 fields: ["Code", "Name", "ProductGroupName"]
@@ -169,7 +171,7 @@
                    
                     }
                 },                
-                pageSize: 10,
+                //pageSize: 10,
                 schema: {
                     data: function (res) { return res; },
                     total: function (res) { return res.length; }
@@ -189,22 +191,29 @@
                 { field: "SDRate", title: "SD Rate", hidden: true, width: 80 },
                 {
                     title: "Action",
-                    width: 90,
+                    width: 60,
+                    attributes: {
+                        style: "text-align:center;"
+                    },
+                    headerAttributes: {
+                        style: "text-align:center;"
+                    },
                     template: `
-                    <button type="button" 
-                            class="k-button k-primary addToDetails"
-                            data-id="#: Id #"
-                            data-code="#: Code #"
-                            data-name="#: Name #"
-                            data-group="#: ProductGroupName #"
-                            data-bangla-name="#: BanglaName #"
-                            data-description="#: Description #"
-                            data-uom-id="#: UOMId #"
-                            data-hs-code="#: HSCodeNo #"
-                            data-vat-rate="#: VATRate #"
-                            data-sd-rate="#: SDRate #">
-                        Add
-                    </button>`
+                <button type="button" 
+                        class="k-button k-primary addToDetails"
+                        style="margin:auto; display:block;"
+                        data-id="#: Id #"
+                        data-code="#: Code #"
+                        data-name="#: Name #"
+                        data-group="#: ProductGroupName #"
+                        data-bangla-name="#: BanglaName #"
+                        data-description="#: Description #"
+                        data-uom-id="#: UOMId #"
+                        data-hs-code="#: HSCodeNo #"
+                        data-vat-rate="#: VATRate #"
+                        data-sd-rate="#: SDRate #">
+                    Add
+                </button>`
                 }
             ],
 
@@ -271,8 +280,9 @@
                     width: 70,
                     template: `
                 <button type="button"
-                        class="k-button k-danger removeItem"
-                        title="Remove">
+                        class="k-button removeItem"
+                        title="Remove"
+                        style="color:red;">
                     <i class="k-icon k-i-trash"></i>
                 </button>`
                 }
@@ -296,10 +306,52 @@
     }
 
 
+    //function Addtolist(item) {
+    //    debugger;
+
+    //    var grid = $("#AddedItemGrid").data("kendoGrid");
+    //    if (!grid) {
+    //        kendo.alert("Added Item grid not initialized!");
+    //        return;
+    //    }
+
+    //    var ds = grid.dataSource;
+
+    //    // ✅ Correct duplicate check
+    //    var exists = ds.data().some(function (x) {
+    //        return x.Id === item.Id;
+    //    });
+
+    //    if (exists) {
+    //        ShowNotification(3, "This Product Item is already added!");
+    //        return;
+    //    }
+
+    //    // Add the new item to the grid, including all necessary fields
+    //    ds.add({
+    //        Id: item.Id,
+    //        Code: item.Code,
+    //        Name: item.Name,
+    //        BanglaName: item.BanglaName,
+    //        UOMId: item.UOMId,
+    //        VATRate: item.VATRate,
+    //        HSCodeNo: item.HSCodeNo,
+    //        SDRate: item.SDRate,
+    //        Description: item.Description,
+    //        ProductGroupDescription: item.ProductGroupDescription,
+    //        ProductGroupCode: item.ProductGroupCode,
+    //        ProductGroupName: item.ProductGroupName,
+    //        ProductGroupId: item.ProductGroupId
+    //    });
+    //}
+
+
+
     function Addtolist(item) {
         debugger;
 
         var grid = $("#AddedItemGrid").data("kendoGrid");
+
         if (!grid) {
             kendo.alert("Added Item grid not initialized!");
             return;
@@ -307,35 +359,42 @@
 
         var ds = grid.dataSource;
 
-        // ✅ Correct duplicate check
+        // ✅ Duplicate Check (Create + Edit both)
         var exists = ds.data().some(function (x) {
-            return x.Id === item.Id;
+
+            var existingProductId = parseInt(x.ProductId || x.Id);
+            var newProductId = parseInt(item.Id);
+
+            return existingProductId === newProductId;
         });
 
         if (exists) {
-            ShowNotification(3, "This supplier is already added!");
+            ShowNotification(3, "This Product Item is already added!");
             return;
         }
 
-        // Add the new item to the grid, including all necessary fields
+        // ✅ Add Item
         ds.add({
             Id: item.Id,
+            ProductId: item.Id,
+
             Code: item.Code,
             Name: item.Name,
             BanglaName: item.BanglaName,
+
             UOMId: item.UOMId,
             VATRate: item.VATRate,
             HSCodeNo: item.HSCodeNo,
             SDRate: item.SDRate,
+
             Description: item.Description,
+
             ProductGroupDescription: item.ProductGroupDescription,
             ProductGroupCode: item.ProductGroupCode,
             ProductGroupName: item.ProductGroupName,
             ProductGroupId: item.ProductGroupId
         });
     }
-
-
 
 
 
@@ -525,10 +584,13 @@
                 operators: {
                     string: {
                         startswith: "Starts with",
+                        endswith: "Ends with",
                         contains: "Contains",
                         doesnotcontain: "Does not contain",
                         eq: "Is equal to",
-                        neq: "Is not equal to"
+                        neq: "Is not equal to",
+                        gt: "Is greater than",
+                        lt: "Is less than"
                     }
                 }
             },
@@ -538,7 +600,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "BanglaName", "Address","SupplierGroupName", "City", "TelephoneNo", "ContactPerson","Status"]
+                fields: ["Code", "Name", "BanglaName", "Address","SupplierGroupName", "City", "TelephoneNo", "ContactPerson"]
             },
             excel: {
                 fileName: "Supplier.xlsx",
@@ -556,51 +618,18 @@
                 $(".k-grouping-header").hide();
                 $(".k-floatwrap").hide();
 
-                
-
-                var branchName = "All Branch Name";
-                var companyName = "All Company Name";
-                var companyAddress = "All Company Address";
-
-                var grid = e.sender;
-
-                // Hide the "Action" and checkbox columns
-                var actionColumnIndex = grid.columns.findIndex(col => col.title === "Action");
-                var selectionColumnIndex = grid.columns.findIndex(col => col.selectable === true);
-
-                if (actionColumnIndex == 0 || actionColumnIndex > 0) {
-                    var actionVisibility = [
-                        grid.columns[actionColumnIndex].hidden,
-                    ];
-
-                    grid.hideColumn(actionColumnIndex);
-                }
-                if (selectionColumnIndex == 0 || selectionColumnIndex > 0) {
-                    var selectableVisibility = [
-                        grid.columns[selectionColumnIndex].hidden
-                    ];
-
-                    grid.hideColumn(selectionColumnIndex);
-                }
-
+                var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
                 var fileName = `Suppliers_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
-                var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
-                var columnWidth = 100;
-                var totalWidth = numberOfColumns * columnWidth;
-
                 e.sender.options.pdf = {
-                    //paperSize: [totalWidth, 2800],
-                    paperSize: "A2",
+                    paperSize: "A4",
                     margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
                     landscape: true,
                     allPages: true,
                     template: `
                             <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                                <div>Company Name :- ${companyName}</div>
-                                <div>Company Address :- ${companyAddress}</div>
+                                <div>${companyName}</div>
                             </div> `
                 };
 

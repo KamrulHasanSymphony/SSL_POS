@@ -292,7 +292,7 @@
             columns: [
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
-                { field: "Description", title: "Description", width: 200 },
+                //{ field: "Description", title: "Description", width: 200 },
             ],
             filter: "contains",
             filterFields: ["Code", "Name", "Description"],
@@ -557,7 +557,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "Description", "ProductGroupName", "SDRate", "VATRate", "PurchasePrice","SalePrice","Status"]
+                fields: ["Code", "Name", "Description", "ProductGroupName", "SDRate", "VATRate", "PurchasePrice","SalePrice"]
             },
             excel: {
                 fileName: "Products.xlsx",
@@ -577,7 +577,7 @@
 
                 
 
-                var companyName = "OSAKA ELECTRIC & INDUSTRIAL CO.";
+                var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
                 var fileName = `Products_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 

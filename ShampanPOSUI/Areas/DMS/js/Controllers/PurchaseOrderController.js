@@ -351,7 +351,7 @@
                         return dataItem.ProductName || "";
                     },
                     footerTemplate: "Total:",
-                    width: 160
+                    width: 150
                 },
                 {
                     field: "Quantity",
@@ -421,7 +421,7 @@
                 {
                     field: "SD",
                     title: "SD Rate",
-                    width: 60,
+                    width: 100,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 
@@ -477,7 +477,7 @@
                 {
                     field: "VATRate",
                     title: "VAT Rate",
-                    width: 60,
+                    width: 100,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 
@@ -1399,6 +1399,37 @@
                 allPages: true,
                 avoidLink: true,
                 filterable: true
+            },
+
+            pdfExport: function (e) {
+
+                $(".k-grid-toolbar").hide();
+                $(".k-grouping-header").hide();
+                $(".k-floatwrap").hide();
+
+
+
+                var companyName = "SEYMPHONY SOFTTECH LIMITED";
+
+
+                var fileName = `PurchaseOrder_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+
+                e.sender.options.pdf = {
+                    paperSize: "A4",
+                    margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
+                    landscape: true,
+                    allPages: true,
+                    template: `
+                            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+                                <div>${companyName}</div>
+                            </div> `
+                };
+
+                e.sender.options.pdf.fileName = fileName;
+
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
             },
             columns: [
                 {

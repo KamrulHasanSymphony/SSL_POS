@@ -541,7 +541,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "CustomerGroupName", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "TINNo", "BINNo", "NIDNo","Comments","Status"]
+                fields: ["Code", "Name", "CustomerGroupName", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "TINNo", "BINNo", "NIDNo","Comments"]
             },
             excel: {
                 fileName: "Customers.xlsx",

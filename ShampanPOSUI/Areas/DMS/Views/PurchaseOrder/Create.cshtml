@@ -245,8 +245,11 @@
 
                         @Html.TextBoxFor(model => model.OrderDate, new
                         {
-                            @class = "form-control form-control-sm kendoDate"
+                            @class = "form-control form-control-sm kendoDate",
+                            required = "required"
                         })
+
+                        @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="col-sm-2">
@@ -254,8 +257,11 @@
 
                         @Html.TextBoxFor(model => model.DeliveryDateTime, new
                         {
-                            @class = "form-control form-control-sm kendoDateTime"
+                            @class = "form-control form-control-sm kendoDateTime",
+                            required = "required"
                         })
+
+                        @Html.ValidationMessageFor(model => model.DeliveryDateTime, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-1"></div>
 

@@ -200,7 +200,7 @@
 
                     if (options.sort) {
                         options.sort.forEach(function (param) {
-
+                            
                             if (param.field === "AccountNo") {
                                 param.field = "H.AccountNo";  
                             }
@@ -369,7 +369,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["AccountName", "AccountNo", "BankName", "BranchName", "IsCash", "Status"]
+                fields: [ "AccountName", "AccountNo", "BankId", "BranchName", "Comments", "IsCash"]
             },
             excel: {
                 fileName: "BankAccounts.xlsx",

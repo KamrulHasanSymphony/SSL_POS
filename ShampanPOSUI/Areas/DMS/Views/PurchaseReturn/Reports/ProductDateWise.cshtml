@@ -1,18 +1,17 @@
 ﻿@* ================================
-       SupplierDateWise.cshtml
+       ProductDateWise.cshtml
     ================================ *@
 
-@model List<ShampanPOS.Models.PurchaseReportVM>
+@model List<ShampanPOS.Models.PurchaseReturnReportVM>
 
 @{
-    ViewBag.Title = "Supplier Date Wise Report";
+    ViewBag.Title = "Product Date Wise Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
 }
-
 
 <style>
     body {
@@ -92,7 +91,7 @@
 
     <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
         <div>
-            <strong>Supplier:</strong> @ViewBag.SupplierName <br />
+            <strong>Product:</strong> @ViewBag.ProductName <br />
             <strong>From:</strong> @ViewBag.InvoiceFromDate
         </div>
 
@@ -102,7 +101,7 @@
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Supplier Date Wise-@ViewBag.ReportTitle
+        Product Date Wise-@ViewBag.ReportTitle
     </h3>
 
     <table>
@@ -111,7 +110,7 @@
             <tr>
                 @if (isSummary)
                 {
-                    <th>Supplier</th>
+                    <th>Product</th>
                     <th>Invoice Date</th>
                     <th>Purchase Date</th>
                     <th>Quantity</th>
@@ -119,8 +118,8 @@
                 }
                 else
                 {
-                    <th>Supplier</th>
-                    <th>Purchase Code</th>
+                    <th>Product</th>
+                    <th>Purchase Order Code</th>
                     <th>Invoice Date</th>
                     <th>Purchase Date</th>
                     <th>Quantity</th>
@@ -141,7 +140,7 @@
 
                         @if (isSummary)
                         {
-                            <td>@item.SupplierName</td>
+                            <td>@item.ProductName</td>
                             <td>@item.InvoiceDateTime</td>
                             <td>@item.PurchaseDate</td>
                             <td class="text-right">@item.Quantity</td>
@@ -149,7 +148,7 @@
                         }
                         else
                         {
-                            <td>@item.SupplierName</td>
+                            <td>@item.ProductName</td>
                             <td>@item.Code</td>
                             <td>@item.InvoiceDateTime</td>
                             <td>@item.PurchaseDate</td>
@@ -182,7 +181,6 @@
                         <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
                         <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
                     }
-
                 </tr>
             }
             else

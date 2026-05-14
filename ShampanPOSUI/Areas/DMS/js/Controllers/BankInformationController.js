@@ -440,7 +440,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "Status"]
+                fields: ["Code", "Name", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "Comments"]
             },
             excel: {
                 fileName: "BankInformations.xlsx",

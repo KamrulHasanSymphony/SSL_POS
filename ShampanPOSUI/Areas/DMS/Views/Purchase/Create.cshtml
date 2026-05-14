@@ -230,41 +230,45 @@
                         </div>
                     </div>
 
-                    @*<div class="col-sm-2">
-                @Html.LabelFor(model => model.InvoiceDateTime)
-                <div class="input-group date">
-                    @Html.TextBoxFor(model => model.InvoiceDateTime, new { @class = "  form-control form-control-sm dateRange" })
-                    <div class="input-group-append">
-                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                    @*<div class="col-sm-2 mr-4">
+                        @Html.LabelFor(model => model.InvoiceDateTime)
+                        @Html.TextBoxFor(model => model.InvoiceDateTime, new
+                        {
+                            @class = "form-control form-control-sm kendoInvoiceDateTime"
+                        })
                     </div>
-                </div>
-            </div>
 
-            <div class="col-sm-2">
-                @Html.LabelFor(model => model.PurchaseDate)
-                <div class="input-group date">
-                    @Html.TextBoxFor(model => model.PurchaseDate, new { @class = "  form-control form-control-sm dateRange" })
-                    <div class="input-group-append">
-                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.PurchaseDate)
+
+                            @Html.TextBoxFor(model => model.PurchaseDate, new
+                            {
+                                @class = "form-control form-control-sm kendoPurchaseDate"
+                            })
+                        </div>*@
+
+                    <div class="col-sm-2 mr-4">
+                        @Html.LabelFor(model => model.InvoiceDateTime)
+
+                        @Html.TextBoxFor(model => model.InvoiceDateTime, new
+                        {
+                            @class = "form-control form-control-sm kendoInvoiceDateTime",
+                            required = "required"
+                        })
+
+                        @Html.ValidationMessageFor(model => model.InvoiceDateTime, "", new { @class = "text-danger" })
                     </div>
-                </div>
-            </div>*@
-
-                <div class="col-sm-2 mr-4">
-                    @Html.LabelFor(model => model.InvoiceDateTime)
-                    @Html.TextBoxFor(model => model.InvoiceDateTime, new
-                    {
-                        @class = "form-control form-control-sm kendoInvoiceDateTime"
-                    })
-                </div>
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.PurchaseDate)
 
                         @Html.TextBoxFor(model => model.PurchaseDate, new
                         {
-                            @class = "form-control form-control-sm kendoPurchaseDate"
+                            @class = "form-control form-control-sm kendoPurchaseDate",
+                            required = "required"
                         })
+
+                        @Html.ValidationMessageFor(model => model.PurchaseDate, "", new { @class = "text-danger" })
                     </div>
 
 

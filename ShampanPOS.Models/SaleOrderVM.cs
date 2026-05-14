@@ -30,11 +30,16 @@ namespace ShampanPOS.Models
         [Display(Name = "Delivery Address")]
         public string? DeliveryAddress { get; set; }
 
+        [Required(ErrorMessage = "Delivery Date is required")]
+
         [Display(Name = "Expected Delivery Date")]
         public string? DeliveryDate { get; set; }
 
+        [Required(ErrorMessage = "Order Date is required")]
+
         [Display(Name = "Order Date")]
         public string? OrderDate { get; set; }
+
 
         [Display(Name = "Comments")]
         public string? Comments { get; set; }

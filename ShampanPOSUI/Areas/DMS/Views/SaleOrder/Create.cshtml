@@ -207,48 +207,55 @@
                         </div>
                     </div>
 
-                    @*<div class="col-sm-2">
-                            @Html.LabelFor(model => model.OrderDate)
-                            <div class="input-group date">
-                                @Html.TextBoxFor(model => model.OrderDate, new { @class = "  form-control form-control-sm dateRange" })
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="col-sm-2">
-                            @Html.LabelFor(model => model.DeliveryDate)
-                            <div class="input-group date">
-                                @Html.TextBoxFor(model => model.DeliveryDate, new { @class = "  form-control form-control-sm dateRange" })
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                </div>
-                            </div>
-                        </div>*@
+                      @*<div class="col-sm-2 pr-3">
+                             @Html.LabelFor(model => model.OrderDate)
 
+                             @Html.TextBoxFor(model => model.OrderDate, new
+                        {
+                            @class = "kendoOrderDate",
+                            style = "width:100%; height:2em;"
+
+                        })
+                         </div>
+
+                         <div class="col-sm-2">
+                             @Html.LabelFor(model => model.DeliveryDate)
+
+                             @Html.TextBoxFor(model => model.DeliveryDate, new
+                        {
+                            @class = "kendoDeliveryDate",
+                            style = "width:100%; height:2em;"
+                        })
+                         </div>*@
 
 
                     <div class="col-sm-2 pr-3">
                         @Html.LabelFor(model => model.OrderDate)
 
                         @Html.TextBoxFor(model => model.OrderDate, new
-                   {
-                       @class = "kendoOrderDate",
-                       style = "width:100%; height:2em;"
+                        {
+                            @class = "kendoOrderDate",
+                            style = "width:100%; height:2em;",
+                            required = "required"
+                        })
 
-                   })
+                        @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.DeliveryDate)
 
                         @Html.TextBoxFor(model => model.DeliveryDate, new
-                   {
-                       @class = "kendoDeliveryDate",
-                       style = "width:100%; height:2em;"
-                   })
+                        {
+                            @class = "kendoDeliveryDate",
+                            style = "width:100%; height:2em;",
+                            required = "required"
+                        })
+
+                        @Html.ValidationMessageFor(model => model.DeliveryDate, "", new { @class = "text-danger" })
                     </div>
+
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)

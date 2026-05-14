@@ -62,6 +62,8 @@ namespace ShampanPOS.Models
         [Display(Name = "Delivery Address")]
         public string? DeliveryAddress { get; set; }
 
+        [Required(ErrorMessage = "Invoice Date Time is required")]
+
         [Display(Name = "Invoice Date")]
         public string? InvoiceDateTime { get; set; }
 
