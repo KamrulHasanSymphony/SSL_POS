@@ -11,14 +11,20 @@
 
         $(document).ready(function () {
 
-            $(".kendoTransactionDate").kendoDatePicker({
-                format: "yyyy-MM-dd"
-            });
+            $(".kendoChequeDate").data("kendoDatePicker").bind("change", function () {
 
-            $(".kendoChequeDate").kendoDatePicker({
-                format: "yyyy-MM-dd"
-            });
+                var chequeDate = this.value();
+                var transactionDate = $(".kendoTransactionDate").data("kendoDatePicker").value();
 
+                if (chequeDate && transactionDate) {
+
+                    if (chequeDate < transactionDate) {
+                        alert("Cheque Date cannot be earlier than Transaction Date.");
+
+                        this.value(null);
+                    }
+                }
+            });
         });
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
@@ -161,25 +167,22 @@
 
     function GetFromBankAccountComboBox() {
 
-        $("#FromBankAccountId").kendoMultiColumnComboBox({
+        var BankAccountCombo = $("#FromBankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountName",
             dataValueField: "Id",
             height: 400,
+
             columns: [
                 { field: "AccountNo", title: "Account No", width: 150 },
                 { field: "AccountName", title: "Account Name", width: 150 },
                 { field: "BranchName", title: "Branch Name", width: 150 }
             ],
+
             filter: "contains",
             filterFields: ["AccountNo", "AccountName"],
             dataSource: {
                 transport: {
                     read: "/Common/Common/GetBankAccountList"
-                },
-                filter: {
-                    field: "AccountName",
-                    operator: "contains",
-                    value: "Bank"
                 }
             },
             placeholder: "Select Bank Account",
@@ -197,10 +200,9 @@
                 this.element.trigger("blur");
             }
 
-        });
+        }).data("kendoMultiColumnComboBox");
 
     }
-
     //function GetToBankAccountComboBox() {
     //    debugger;
     //    var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
@@ -562,7 +564,7 @@
                 { field: "TotalDepositAmount", title: "Total Deposit Amount", sortable: true, width: 200 },
                 { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                 { field: "Reference", title: "Reference", sortable: true, hidden: true, width: 200 },
-                { field: "IsCash", title: "Cash Status", sortable: true, width: 100 },
+                {field: "IsCash",title: "Cash Status",sortable: true,width: 100,template: "#= IsCash ? 'Yes' : 'No' #"},
                 {
                     field: "Status", title: "Status", sortable: true, hidden: true, width: 100,
                     filterable: {

@@ -60,6 +60,7 @@ namespace ShampanPOS.Models
         public string? Reference { get; set; }
 
         //[Range(0, double.MaxValue, ErrorMessage = "Total Deposit Amount must be a positive value.")]
+        [Required(ErrorMessage = "Total Deposit Amount is required.")]
         [Display(Name = "Total Deposit Amount")]
         public decimal? TotalDepositAmount { get; set; }
 

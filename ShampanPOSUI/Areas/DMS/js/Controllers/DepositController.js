@@ -182,7 +182,7 @@
 
     function GetToBankAccountComboBox() {
 
-        $("#ToBankAccountId").kendoMultiColumnComboBox({
+        var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
             dataTextField: "AccountName",
             dataValueField: "Id",
             height: 400,
@@ -196,14 +196,9 @@
             dataSource: {
                 transport: {
                     read: "/Common/Common/GetBankAccountList"
-                },
-                filter: {
-                    field: "AccountName",
-                    operator: "contains",
-                    value: "Cash"
                 }
             },
-            placeholder: "Select Cash Account",
+            placeholder: "Select BankAccount",
 
             dataBound: function () {
 
@@ -211,9 +206,14 @@
                     this.value(parseInt(getToBankAccountId));
                 }
 
+            },
+
+            change: function () {
+                this.element.val(this.value());
+                this.element.trigger("blur");
             }
 
-        });
+        }).data("kendoMultiColumnComboBox");
 
     }
 
