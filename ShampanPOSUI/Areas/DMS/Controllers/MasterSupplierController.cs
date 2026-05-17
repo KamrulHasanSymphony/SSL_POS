@@ -86,6 +86,34 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     model.CreatedFrom = Ordinary.GetLocalIpAddress();
 
                     resultVM = _repo.Insert(model);
+
+                    if (resultVM.Status == ResultStatus.Success.ToString())
+                    {
+                        model = JsonConvert.DeserializeObject<MasterSupplierVM>(resultVM.DataVM.ToString());
+                        model.Operation = "add";
+                        model.ImagePath = model.ImagePath;
+                        Session["result"] = resultVM.Status + "~" + resultVM.Message;
+                        //model.ImagePath = resultVM.ImagePath;
+                        result = new ResultModel<MasterSupplierVM>()
+                        {
+                            Success = true,
+                            Status = Status.Success,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                    }
+                    else
+                    {
+                        Session["result"] = "Fail" + "~" + resultVM.Message;
+                        result = new ResultModel<MasterSupplierVM>()
+                        {
+                            Status = Status.Fail,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                    }
+
+
                 }
                 // ✅ UPDATE
                 else if (model.Operation.ToLower() == "update")
@@ -95,40 +123,43 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
 
                     resultVM = _repo.Update(model);
+
+                    if (resultVM.Status == ResultStatus.Success.ToString())
+                    {
+                        Session["result"] = resultVM.Status + "~" + resultVM.Message;
+                        result = new ResultModel<MasterSupplierVM>()
+                        {
+                            Success = true,
+                            Status = Status.Success,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                    }
+                    else
+                    {
+                        Session["result"] = "Fail" + "~" + resultVM.Message;
+                        result = new ResultModel<MasterSupplierVM>()
+                        {
+                            Status = Status.Fail,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                    }
+
                 }
                 else
                 {
                     return RedirectToAction("Index");
                 }
 
-                if (resultVM.Status == ResultStatus.Success.ToString())
-                {
-                    return Json(new
-                    {
-                        Success = true,
-                        Status = Status.Success,
-                        Message = resultVM.Message,
-                        Data = model
-                    });
-                }
-
-                return Json(new
-                {
-                    Success = false,
-                    Status = Status.Fail,
-                    Message = resultVM.Message,
-                    Data = model
-                });
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
-                return Json(new
-                {
-                    Success = false,
-                    Message = ex.Message
-                });
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return View("Create", model);
             }
+            return Json(result);
         }
 
 

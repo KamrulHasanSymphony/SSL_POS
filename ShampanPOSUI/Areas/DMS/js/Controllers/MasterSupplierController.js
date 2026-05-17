@@ -570,7 +570,7 @@
 
 
     function saveDone(result) {
-        
+
         if (result.Status === 200) {
             if (result.Data.Operation === "add") {
                 ShowNotification(1, result.Message);
@@ -589,9 +589,6 @@
                 ShowNotification(1, result.Message);
                 $("#LastModifiedBy").val(result.Data.LastModifiedBy);
                 $("#LastModifiedOn").val(result.Data.LastModifiedOn);
-                setTimeout(function () {
-                    location.reload();
-                }, 700);
 
                 $("#imageUpload").prop("disabled", true);
             }
