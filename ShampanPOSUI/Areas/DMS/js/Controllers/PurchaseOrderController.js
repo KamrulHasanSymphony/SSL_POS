@@ -306,7 +306,7 @@
                         ProductName: { type: "string", defaultValue: "" },
                         Quantity: { type: "number", defaultValue: 0 },
                         UnitPrice: { type: "number", defaultValue: 0 },
-                        SubTotal: { type: "number", defaultValue: 0 },
+                        SubTotal: { type: "number", defaultValue: 0},
                         SDAmount: { type: "number", defaultValue: 0 },
                         VATAmount: { type: "number", defaultValue: 0 },
                         LineTotal: { type: "number", defaultValue: 0 },
@@ -333,6 +333,21 @@
             editable: {
                 mode: "incell",
                 createAt: "bottom"
+            },
+            edit: function (e) {
+
+                var nonEditableFields = [
+                    "SubTotal",
+                    "UnitPrice",
+                    "SDAmount",
+                    "VATAmount",
+                    "LineTotal"
+                ];
+
+                if (nonEditableFields.includes(e.container.find("input").attr("name"))) {
+
+                    this.closeCell();
+                }
             },
             columns: [
                 {
@@ -366,8 +381,34 @@
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            spinners: false,
                             change: function () {
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
+
+
+
+
+                                var value = this.value() || 0;
+
+                                // ❌ Negative not allowed
+                                if (value < 0) {
+
+                                    value = 0;
+
+                                    this.value(0);
+
+                                    ShowNotification(3, "Negative quantity is not allowed.");
+                                }
+
+                                // ❌ Zero not allowed
+                                if (value === 0) {
+
+                                    ShowNotification(3, "Quantity must be greater than zero.");
+                                }
+
+
+
 
                                 // Update the model value for Quantity
                                 options.model.set("Quantity", this.value());
@@ -400,12 +441,17 @@
                     field: "UnitPrice",
                     title: "Unit Rate",
                     width: 100,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input name="' + options.field + '"/>');
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            spinners: false,
                             readonly: true // Make UnitRate non-editable if you don't want users to change it
                         });
                     }
@@ -414,7 +460,9 @@
                     field: "SubTotal",
                     title: "Sub Total",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
@@ -470,10 +518,13 @@
                     field: "SDAmount",
                     title: "SD Amount",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
+                
                 {
                     field: "VATRate",
                     title: "VAT Rate",
@@ -526,10 +577,13 @@
                     field: "VATAmount",
                     title: "VAT Amount",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
+                
                 {
                     field: "OthersAmount",
                     title: "Others Amount",
@@ -543,6 +597,21 @@
                             decimals: 2,
                             change: function () {
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
+
+
+                                var value = this.value() || 0;
+
+                                // ❌ Negative not allowed
+                                if (value < 0) {
+
+                                    value = 0;
+
+                                    this.value(0);
+
+                                    ShowNotification(3, "Negative value is not allowed.");
+                                }
+
+
 
                                 // Update the model value for Quantity
                                 options.model.set("OthersAmount", this.value());
@@ -574,10 +643,13 @@
                     field: "LineTotal",
                     title: "Total",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
+                
                 {
                     command: [{
                         name: "destroy",
@@ -1401,36 +1473,36 @@
                 filterable: true
             },
 
-            pdfExport: function (e) {
+            //pdfExport: function (e) {
 
-                $(".k-grid-toolbar").hide();
-                $(".k-grouping-header").hide();
-                $(".k-floatwrap").hide();
-
-
-
-                var companyName = "SEYMPHONY SOFTTECH LIMITED";
+            //    $(".k-grid-toolbar").hide();
+            //    $(".k-grouping-header").hide();
+            //    $(".k-floatwrap").hide();
 
 
-                var fileName = `PurchaseOrder_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
-                e.sender.options.pdf = {
-                    paperSize: "A4",
-                    margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
-                    landscape: true,
-                    allPages: true,
-                    template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>${companyName}</div>
-                            </div> `
-                };
+            //    var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
-                e.sender.options.pdf.fileName = fileName;
 
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            },
+            //    var fileName = `PurchaseOrder_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+
+            //    e.sender.options.pdf = {
+            //        paperSize: "A4",
+            //        margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
+            //        landscape: true,
+            //        allPages: true,
+            //        template: `
+            //                <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+            //                    <div>${companyName}</div>
+            //                </div> `
+            //    };
+
+            //    e.sender.options.pdf.fileName = fileName;
+
+            //    setTimeout(function () {
+            //        window.location.reload();
+            //    }, 1000);
+            //},
             columns: [
                 {
                     selectable: true, width: 35

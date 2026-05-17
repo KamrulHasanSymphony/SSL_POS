@@ -466,6 +466,22 @@
                 updateSaleSummary();
             },
 
+            edit: function (e) {
+
+                var nonEditableFields = [
+                    "SubTotal",
+                    "UnitPrice",
+                    "SDAmount",
+                    "VATAmount",
+                    "LineTotal"
+                ];
+
+                if (nonEditableFields.includes(e.container.find("input").attr("name"))) {
+
+                    this.closeCell();
+                }
+            },
+
             columns: [
                 {
                     field: "SLNo",
@@ -481,7 +497,7 @@
                 {
                     field: "ProductId",
                     title: "Product Name",
-                    editor: itemSelectorEditor,//eta banate hobe
+                    editor: itemSelectorEditor,
                     template: function (dataItem) {
                         return dataItem.ProductName || "";
                     },
@@ -496,6 +512,8 @@
                     field: "Quantity",
                     title: "Quantity",
                     width: 100,
+                    min: 0,
+                    spinners: false,
                     attributes: { style: "text-align:right;" },
                     footerAttributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= sum #</b>",
@@ -556,7 +574,11 @@
                     field: "UnitRate",
                     title: "Unit Rate",
                     width: 100,
-                    editable: false,
+                    min: 0,
+                    spinners: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 
@@ -591,7 +613,11 @@
                     field: "SubTotal",
                     title: "Sub Total",
                     width: 100,
-                    editable: false,
+                    min: 0,
+                    spinners: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 
@@ -660,7 +686,9 @@
                     field: "SDAmount",
                     title: "SD Amount",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 
@@ -728,7 +756,9 @@
                     field: "VATAmount",
                     title: "VAT Amount",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 
@@ -767,7 +797,9 @@
                     field: "LineTotal",
                     title: "Total",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 

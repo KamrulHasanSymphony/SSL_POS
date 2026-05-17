@@ -9,7 +9,7 @@
 @{
     var serial = 1;
 }
-<style>
+@*<style>
     .k-dropdown-wrap .k-input {
         line-height: 1.6em !important;
     }
@@ -50,7 +50,78 @@
     .k-picker-wrap.k-state-default {
         width: 89% !important
     }
+</style>*@
+
+
+<style>
+
+    .k-dropdown-wrap .k-input {
+        line-height: 1.6em !important;
+    }
+
+    .button.secondary {
+        background-color: #adb5bd;
+        color: #212529;
+        border: 1px solid #adb5bd;
+    }
+
+    .dFormat {
+        text-align: right;
+    }
+
+    button[onclick*="reportLink"] {
+        background: #138496;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s ease-in-out;
+    }
+
+        button[onclick*="reportLink"]:hover {
+            background: #117a8b;
+        }
+
+        button[onclick*="reportLink"]:focus {
+            outline: none;
+        }
+
+    /* ===== FIX DROPDOWN & DATE OVERLAP ===== */
+
+    .k-datepicker,
+    .k-datetimepicker,
+    .k-dropdown,
+    .k-combobox,
+    .k-multicolumncombobox {
+        width: 100% !important;
+    }
+
+    .k-picker-wrap,
+    .k-dropdown-wrap,
+    .k-numeric-wrap {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .k-widget.form-control {
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    .k-input {
+        height: 30px !important;
+        line-height: 30px !important;
+    }
 </style>
+
+
 
 <div class="content-header">
     <div class="container-fluid">
@@ -311,7 +382,7 @@
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.BENumber)
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.BENumber, new { placeholder = "Enter Challan Number", @class = "required form-control form-control-sm" })
+                            @Html.TextBoxFor(model => model.BENumber, new { placeholder = "Enter Challan Number", type = "number", @class = "required form-control form-control-sm" })
                         </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
 
@@ -331,7 +402,7 @@
 
         <div class="card card-secondary">
             <div class="card-header">
-                <h3 class="card-title"> Sale Order Details </h3>
+                <h3 class="card-title"> Purchase Details </h3>
             </div>
             <div class="card-body">
                 <div id="saleOrderDetails"></div>
@@ -407,32 +478,51 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp;Paid Amount </label>
-                            </div>
-                            <div class="editor-field">
-                                <div class="input-group">
-                                    @Html.TextBoxFor(model => model.PaidAmount, new { placeholder = "PaidAmount", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
-                                </div>
-                            </div>
+                        @*<div class="col-md-2">
+            <div class="editor-label">
+                <label>&nbsp;Paid Amount </label>
+            </div>
+            <div class="editor-field">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.PaidAmount, new { placeholder = "PaidAmount", @class = " dFormat trGrandSubTotal form-control form-control-sm   priceLen NumberCheck text-right" })
+                </div>
+            </div>
+        </div>*@
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label>&nbsp;Paid Amount </label>
                         </div>
-                        <div class="col-md-2">
-                            <div class="editor-label">
-                                <label>&nbsp;Due Amount </label>
-                            </div>
-                            <div class="editor-field">
-                                <div class="input-group">
-                                    <input type="text"
-                                           id="DueAmount"
-                                           class="form-control form-control-sm text-right"
-                                           readonly />
-                                </div>
+
+                        <div class="editor-field">
+                            <div class="input-group">
+
+                                @Html.TextBoxFor(model => model.PaidAmount, new
+                                {
+                                    @type = "text",
+                                    @oninput = "this.value=this.value.replace(/[^0-9.]/g,'')",
+                                    @class = "form-control form-control-sm text-right",
+                                    placeholder = "0.00"
+                                })
+
                             </div>
                         </div>
                     </div>
+                            <div class="col-md-2">
+                                <div class="editor-label">
+                                    <label>&nbsp;Due Amount </label>
+                                </div>
+                                <div class="editor-field">
+                                    <div class="input-group">
+                                        <input type="text"
+                                               id="DueAmount"
+                                               class="form-control form-control-sm text-right"
+                                               readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                </div>
+                    </div>
 
             </div>
         </div>

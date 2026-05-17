@@ -718,7 +718,7 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            if (param.field === "SupplierName") {
+                            if (param.field === "CustomerName") {
                                 param.field = "S.Name";
                             }
                             if (param.field === "AccountNo") {
@@ -777,7 +777,7 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            if (param.field === "SupplierName") {
+                            if (param.field === "CustomerName") {
                                 param.field = "S.Name";
                             }
                             if (param.field === "AccountNo") {
@@ -837,6 +837,9 @@
             }
         });
 
+
+
+
         $("#GridDataList").kendoGrid({
             dataSource: gridDataSource,
             pageable: {
@@ -871,9 +874,8 @@
             reorderable: true,
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
-            search: {
-                fields: ["Code", "Name", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "Comments", "Status"]
-            },
+            search: ["Code", "CustomerName", "AccountName", "TransactionDate", "IsCash","TotalCollectAmount"],
+
             excel: {
                 fileName: "Collections.xlsx",
                 filterable: true
@@ -884,72 +886,12 @@
                 avoidLink: true,
                 filterable: true
             },
-            pdfExport: function (e) {
 
-                $(".k-grid-toolbar").hide();
-                $(".k-grouping-header").hide();
-                $(".k-floatwrap").hide();
-
-
-
-                var branchName = "All Branch Name";
-                var companyName = "All Company Name";
-                var companyAddress = "All Company Address";
-
-                var grid = e.sender;
-
-                var actionColumnIndex = grid.columns.findIndex(col => col.title === "Action");
-                var selectionColumnIndex = grid.columns.findIndex(col => col.selectable === true);
-
-                if (actionColumnIndex == 0 || actionColumnIndex > 0) {
-                    var actionVisibility = [
-                        grid.columns[actionColumnIndex].hidden,
-                    ];
-
-                    grid.hideColumn(actionColumnIndex);
-                }
-                if (selectionColumnIndex == 0 || selectionColumnIndex > 0) {
-                    var selectableVisibility = [
-                        grid.columns[selectionColumnIndex].hidden
-                    ];
-
-                    grid.hideColumn(selectionColumnIndex);
-                }
-
-
-                var fileName = `Collections_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
-
-                var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
-                var columnWidth = 100;
-                var totalWidth = numberOfColumns * columnWidth;
-
-                e.sender.options.pdf = {
-                    //paperSize: [totalWidth, 2800],
-                    paperSize: "A2",
-                    margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
-                    landscape: true,
-                    allPages: true,
-                    template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                                <div>Company Name :- ${companyName}</div>
-                                <div>Company Address :- ${companyAddress}</div>
-                            </div> `
-                };
-
-                e.sender.options.pdf.fileName = fileName;
-
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            },
             columns: [
-                //{
-                //    selectable: true, width: 35
-                //},
                 {
                     title: "Action",
-                    width:50,
+                    width: 40,
+                    attributes: { style: "text-align: center;" },
                     template: function (dataItem) {
 
                         return `
@@ -965,47 +907,47 @@
                 { field: "AccountName", title: "Account Name", sortable: true, hidden: true, width: 200 },
                 {
                     field: "TransactionDate", title: "Transaction Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(TransactionDate), "yyyy-MM-dd") #',
-                  filterable:
+                    filterable:
                     {
-                       ui: "datepicker"
-                         }
-                     },
-                   {
-                       field: "IsCash", title: "Cash", sortable: true, width: 100, hidden: true,
+                        ui: "datepicker"
+                    }
+                },
+                {
+                    field: "IsCash", title: "Cash", sortable: true, width: 100, hidden: true,
 
-                     },
+                },
 
                 { field: "Comments", title: "Comments", hidden: true, sortable: true, width: 200 },
                 {
                     field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
                     filterable: {
-                             ui: function (element) {
-                               element.kendoDropDownList({
-                                  dataSource: [
+                        ui: function (element) {
+                            element.kendoDropDownList({
+                                dataSource: [
                                     { text: "Active", value: "1" },
-                                      { text: "Inactive", value: "0" }
-                                         ],
-                                            dataTextField: "text",
-                                            dataValueField: "value",
-                                            optionLabel: "Select Option"
-                                        });
-                                    }
-                                }
+                                    { text: "Inactive", value: "0" }
+                                ],
+                                dataTextField: "text",
+                                dataValueField: "value",
+                                optionLabel: "Select Option"
+                            });
+                        }
+                    }
                 },
-                            {
-                                field: "TotalCollectAmount",
-                                title: "Total Collect Amount",
-                                sortable: true,
-                                width: 200,
-                                aggregates: ["sum"],
-                                format: "{0:n2}",
-                                footerTemplate: "#=kendo.toString(sum, 'n2')#",
-                                groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
-                                attributes: { style: "text-align: left;" }
-                            }
-                            ,
+                {
+                    field: "TotalCollectAmount",
+                    title: "Total Collect Amount",
+                    sortable: true,
+                    width: 200,
+                    aggregates: ["sum"],
+                    format: "{0:n2}",
+                    //footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                    //groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+                    attributes: { style: "text-align: left;" }
+                }
+                ,
 
-            //    { field: "Reference", title: "Reference", hidden: true, sortable: true, width: 200 },
+                //    { field: "Reference", title: "Reference", hidden: true, sortable: true, width: 200 },
             ],
             editable: false,
             selectable: "multiple row",
@@ -1013,13 +955,199 @@
             columnMenu: true
         });
 
+
+
+
+
+
+
+
+
+
+
+        //$("#GridDataList").kendoGrid({
+        //    dataSource: gridDataSource,
+        //    pageable: {
+        //        refresh: true,
+        //        serverPaging: true,
+        //        serverFiltering: true,
+        //        serverSorting: true,
+        //        pageSizes: [10, 20, 50, "all"]
+        //    },
+        //    noRecords: true,
+        //    messages: {
+        //        noRecords: "No Record Found!"
+        //    },
+        //    scrollable: true,
+        //    filterable: {
+        //        extra: true,
+        //        operators: {
+        //            string: {
+        //                startswith: "Starts with",
+        //                endswith: "Ends with",
+        //                contains: "Contains",
+        //                doesnotcontain: "Does not contain",
+        //                eq: "Is equal to",
+        //                neq: "Is not equal to",
+        //                gt: "Is greater than",
+        //                lt: "Is less than"
+        //            }
+        //        }
+        //    },
+        //    sortable: true,
+        //    resizable: true,
+        //    reorderable: true,
+        //    groupable: true,
+        //    toolbar: ["excel", "pdf", "search"],
+        //    search: {
+        //        fields: ["Code", "Name", "BanglaName", "Address", "BanglaAddress", "TelephoneNo", "FaxNo", "Email", "Comments", "Status"]
+        //    },
+        //    excel: {
+        //        fileName: "Collections.xlsx",
+        //        filterable: true
+        //    },
+        //    pdf: {
+        //        fileName: `Collections_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+        //        allPages: true,
+        //        avoidLink: true,
+        //        filterable: true
+        //    },
+        //    pdfExport: function (e) {
+
+        //        $(".k-grid-toolbar").hide();
+        //        $(".k-grouping-header").hide();
+        //        $(".k-floatwrap").hide();
+
+
+
+        //        var branchName = "All Branch Name";
+        //        var companyName = "All Company Name";
+        //        var companyAddress = "All Company Address";
+
+        //        var grid = e.sender;
+
+        //        var actionColumnIndex = grid.columns.findIndex(col => col.title === "Action");
+        //        var selectionColumnIndex = grid.columns.findIndex(col => col.selectable === true);
+
+        //        if (actionColumnIndex == 0 || actionColumnIndex > 0) {
+        //            var actionVisibility = [
+        //                grid.columns[actionColumnIndex].hidden,
+        //            ];
+
+        //            grid.hideColumn(actionColumnIndex);
+        //        }
+        //        if (selectionColumnIndex == 0 || selectionColumnIndex > 0) {
+        //            var selectableVisibility = [
+        //                grid.columns[selectionColumnIndex].hidden
+        //            ];
+
+        //            grid.hideColumn(selectionColumnIndex);
+        //        }
+
+
+        //        var fileName = `Collections_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+
+        //        var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
+        //        var columnWidth = 100;
+        //        var totalWidth = numberOfColumns * columnWidth;
+
+        //        e.sender.options.pdf = {
+        //            //paperSize: [totalWidth, 2800],
+        //            paperSize: "A2",
+        //            margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
+        //            landscape: true,
+        //            allPages: true,
+        //            template: `
+        //                    <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+        //                        <div>Branch Name :- ${branchName}</div>
+        //                        <div>Company Name :- ${companyName}</div>
+        //                        <div>Company Address :- ${companyAddress}</div>
+        //                    </div> `
+        //        };
+
+        //        e.sender.options.pdf.fileName = fileName;
+
+        //        setTimeout(function () {
+        //            window.location.reload();
+        //        }, 1000);
+        //    },
+        //    columns: [
+        //        //{
+        //        //    selectable: true, width: 35
+        //        //},
+        //        {
+        //            title: "Action",
+        //            width:50,
+        //            template: function (dataItem) {
+
+        //                return `
+        //    <a href="/DMS/Collection/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit" title="Edit Credit Limit">
+        //        <i class="fas fa-pencil-alt"></i>
+        //    </a>`;
+        //            }
+        //        },
+        //        { field: "Id", width: 50, hidden: true, sortable: true },
+        //        { field: "Code", title: "Code", width: 150, sortable: true },
+        //        { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
+
+        //        { field: "AccountName", title: "Account Name", sortable: true, hidden: true, width: 200 },
+        //        {
+        //            field: "TransactionDate", title: "Transaction Date", sortable: true, width: 135, template: '#= kendo.toString(kendo.parseDate(TransactionDate), "yyyy-MM-dd") #',
+        //          filterable:
+        //            {
+        //               ui: "datepicker"
+        //                 }
+        //             },
+        //           {
+        //               field: "IsCash", title: "Cash", sortable: true, width: 100, hidden: true,
+
+        //             },
+
+        //        { field: "Comments", title: "Comments", hidden: true, sortable: true, width: 200 },
+        //        {
+        //            field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
+        //            filterable: {
+        //                     ui: function (element) {
+        //                       element.kendoDropDownList({
+        //                          dataSource: [
+        //                            { text: "Active", value: "1" },
+        //                              { text: "Inactive", value: "0" }
+        //                                 ],
+        //                                    dataTextField: "text",
+        //                                    dataValueField: "value",
+        //                                    optionLabel: "Select Option"
+        //                                });
+        //                            }
+        //                        }
+        //        },
+        //                    {
+        //                        field: "TotalCollectAmount",
+        //                        title: "Total Collect Amount",
+        //                        sortable: true,
+        //                        width: 200,
+        //                        aggregates: ["sum"],
+        //                        format: "{0:n2}",
+        //                        footerTemplate: "#=kendo.toString(sum, 'n2')#",
+        //                        groupFooterTemplate: "#=kendo.toString(sum, 'n2')#",
+        //                        attributes: { style: "text-align: left;" }
+        //                    }
+        //                    ,
+
+        //    //    { field: "Reference", title: "Reference", hidden: true, sortable: true, width: 200 },
+        //    ],
+        //    editable: false,
+        //    selectable: "multiple row",
+        //    navigatable: true,
+        //    columnMenu: true
+        //});
+
     };
     function save(details) {
 
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
 
-        var result = validator.form();
+        var result = validator.form(); 
 
         if (!result) {
             validator.focusInvalid();

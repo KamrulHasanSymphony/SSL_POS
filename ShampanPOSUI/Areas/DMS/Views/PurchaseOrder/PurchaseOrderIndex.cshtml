@@ -204,6 +204,93 @@
         $("#OrderToDate").data("kendoDatePicker").value(currentDate);
         $("#DeliveryFromDate").data("kendoDatePicker").value(currentDate);
         $("#DeliveryToDate").data("kendoDatePicker").value(currentDate);
+
+
+
+        // =========================
+        // Order Date Validation
+        // =========================
+
+        var orderFromPicker = $("#OrderFromDate").data("kendoDatePicker");
+        var orderToPicker = $("#OrderToDate").data("kendoDatePicker");
+
+        orderFromPicker.bind("change", function () {
+
+            var fromDate = orderFromPicker.value();
+            var toDate = orderToPicker.value();
+
+            if (fromDate) {
+                orderToPicker.min(fromDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                orderToPicker.value(fromDate);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+        orderToPicker.bind("change", function () {
+
+            var fromDate = orderFromPicker.value();
+            var toDate = orderToPicker.value();
+
+            if (toDate) {
+                orderFromPicker.max(toDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                orderFromPicker.value(toDate);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+
+        // =========================
+        // Delivery Date Validation
+        // =========================
+
+        var deliveryFromPicker = $("#DeliveryFromDate").data("kendoDatePicker");
+        var deliveryToPicker = $("#DeliveryToDate").data("kendoDatePicker");
+
+        deliveryFromPicker.bind("change", function () {
+
+            var fromDate = deliveryFromPicker.value();
+            var toDate = deliveryToPicker.value();
+
+            if (fromDate) {
+                deliveryToPicker.min(fromDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                deliveryToPicker.value(fromDate);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+        deliveryToPicker.bind("change", function () {
+
+            var fromDate = deliveryFromPicker.value();
+            var toDate = deliveryToPicker.value();
+
+            if (toDate) {
+                deliveryFromPicker.max(toDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                deliveryFromPicker.value(toDate);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+
     });
 
 

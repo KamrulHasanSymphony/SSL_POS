@@ -209,6 +209,95 @@
         $("#PurchaseToDate").data("kendoDatePicker").value(currentDate);
         $("#InvoiceFromDate").data("kendoDatePicker").value(currentDate);
         $("#InvoiceToDate").data("kendoDatePicker").value(currentDate);
+
+
+
+
+        // ================================
+        // Purchase Date Validation
+        // ================================
+
+        var purchaseFromPicker = $("#PurchaseFromDate").data("kendoDatePicker");
+        var purchaseToPicker = $("#PurchaseToDate").data("kendoDatePicker");
+
+        purchaseFromPicker.bind("change", function () {
+
+            var fromDate = purchaseFromPicker.value();
+            var toDate = purchaseToPicker.value();
+
+            if (fromDate) {
+                purchaseToPicker.min(fromDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                purchaseToPicker.value(fromDate);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+        purchaseToPicker.bind("change", function () {
+
+            var fromDate = purchaseFromPicker.value();
+            var toDate = purchaseToPicker.value();
+
+            if (toDate) {
+                purchaseFromPicker.max(toDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                purchaseFromPicker.value(toDate);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+
+        // ================================
+        // Invoice Date Validation
+        // ================================
+
+        var invoiceFromPicker = $("#InvoiceFromDate").data("kendoDatePicker");
+        var invoiceToPicker = $("#InvoiceToDate").data("kendoDatePicker");
+
+        invoiceFromPicker.bind("change", function () {
+
+            var fromDate = invoiceFromPicker.value();
+            var toDate = invoiceToPicker.value();
+
+            if (fromDate) {
+                invoiceToPicker.min(fromDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                invoiceToPicker.value(fromDate);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+        invoiceToPicker.bind("change", function () {
+
+            var fromDate = invoiceFromPicker.value();
+            var toDate = invoiceToPicker.value();
+
+            if (toDate) {
+                invoiceFromPicker.max(toDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                invoiceFromPicker.value(toDate);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+
+
     });
 
 

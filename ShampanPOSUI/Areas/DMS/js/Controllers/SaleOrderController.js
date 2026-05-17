@@ -332,6 +332,21 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                 mode: "incell",
                 createAt: "bottom"
             },
+            edit: function (e) {
+
+                var nonEditableFields = [
+                    "SubTotal",
+                    "UnitPrice",
+                    "SDAmount",
+                    "VATAmount",
+                    "LineTotal"
+                ];
+
+                if (nonEditableFields.includes(e.container.find("input").attr("name"))) {
+
+                    this.closeCell();
+                }
+            },
             columns: [
                 {
                     title: "Sl No",
@@ -364,6 +379,8 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            spinners: false,
                             change: function () {
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
 
@@ -393,12 +410,17 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                     field: "UnitRate",
                     title: "Unit Rate",
                     width: 100,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input name="' + options.field + '"/>');
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            spinners: false,
                             readonly: true // Make UnitRate non-editable if you don't want users to change it
                         });
                     }
@@ -407,7 +429,11 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                     field: "SubTotal",
                     title: "Sub Total",
                     width: 100,
-                    editable: false,
+                    min: 0,
+                    spinners: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
@@ -457,7 +483,9 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                     field: "SDAmount",
                     title: "SD Amount",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
@@ -505,7 +533,9 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                     field: "VATAmount",
                     title: "VAT Amount",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
@@ -513,7 +543,9 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                     field: "LineTotal",
                     title: "Total",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
@@ -521,14 +553,18 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
                     field: "CompletedQty",
                     title: "Completed Qty",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" }
                 },
                 {
                     field: "RemainQty",
                     title: "Remain Qty",
                     width: 100,
-                    editable: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input data-bind="value:' + options.field + '"/>')

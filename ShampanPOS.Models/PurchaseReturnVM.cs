@@ -37,6 +37,7 @@ namespace ShampanPOS.Models
 
         public string PurchaseDate { get; set; }
 
+        [Display(Name = "Invoice Date Time")]
         [Required(ErrorMessage = "Invoice Date Time is required")]
         public DateTime? InvoiceDateTime { get; set; }
 

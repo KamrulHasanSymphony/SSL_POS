@@ -365,6 +365,46 @@
         GetReportTypeComboBox(); // ✅ MUST
 
         $("input[data-bootstrap-switch]").bootstrapSwitch();
+
+
+        // =========================
+        // From Date / To Date Validation
+        // =========================
+
+        $("#FromDate").data("kendoDatePicker").bind("change", function () {
+
+            var fromDate = $("#FromDate").data("kendoDatePicker").value();
+            var toDate = $("#ToDate").data("kendoDatePicker").value();
+
+            if (fromDate) {
+                $("#ToDate").data("kendoDatePicker").min(fromDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+
+                $("#ToDate").data("kendoDatePicker").value(fromDate);
+            }
+        });
+
+        $("#ToDate").data("kendoDatePicker").bind("change", function () {
+
+            var fromDate = $("#FromDate").data("kendoDatePicker").value();
+            var toDate = $("#ToDate").data("kendoDatePicker").value();
+
+            if (toDate) {
+                $("#FromDate").data("kendoDatePicker").max(toDate);
+            }
+
+            if (fromDate && toDate && fromDate > toDate) {
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+
+                $("#FromDate").data("kendoDatePicker").value(toDate);
+            }
+        });
+
     });
 
     $("#ProductName").on("click", function () {

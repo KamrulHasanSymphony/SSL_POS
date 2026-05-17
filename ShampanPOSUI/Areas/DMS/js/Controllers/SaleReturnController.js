@@ -240,6 +240,21 @@
                 mode: "incell",
                 createAt: "bottom"
             },
+            edit: function (e) {
+
+                var nonEditableFields = [
+                    "SubTotal",
+                    "UnitPrice",
+                    "SDAmount",
+                    "VATAmount",
+                    "LineTotal"
+                ];
+
+                if (nonEditableFields.includes(e.container.find("input").attr("name"))) {
+
+                    this.closeCell();
+                }
+            },
             columns: [
                 {
                     field: "ProductName",
@@ -255,6 +270,8 @@
                     field: "Quantity",
                     title: "Quantity",
                     width: 100,
+                    min: 0,
+                    spinners: false,
                     format: "{0:n2}",
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "#= kendo.toString(sum || 0, 'n2') #",
@@ -266,6 +283,25 @@
                             decimals: 2,
                             change: function () {
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
+
+                                var value = this.value() || 0;
+
+                                // ❌ Negative not allowed
+                                if (value < 0) {
+
+                                    value = 0;
+
+                                    this.value(0);
+
+                                    ShowNotification(3, "Negative quantity is not allowed.");
+                                }
+
+                                // ❌ Zero not allowed
+                                if (value === 0) {
+
+                                    ShowNotification(3, "Quantity must be greater than zero.");
+                                }
+
 
                                 // Update the model value for Quantity
                                 options.model.set("Quantity", this.value());
@@ -293,7 +329,11 @@
                     field: "UnitRate",
                     title: "Unit Rate",
                     width: 100,
-                    editable: false,
+                    min: 0,
+                    spinners: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
                         var input = $('<input data-bind="value:' + options.field + '"/>')
@@ -313,7 +353,11 @@
                     field: "SubTotal",
                     title: "Sub Total",
                     width: 100,
-                    editable: false,
+                    min: 0,
+                    spinners: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
@@ -365,7 +409,11 @@
                     field: "SDAmount",
                     title: "SD Amount",
                     width: 100,
-                    editable: false,
+                    min: 0,
+                    spinners: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
@@ -415,7 +463,11 @@
                     field: "VATAmount",
                     title: "VAT Amount",
                     width: 100,
-                    editable: false,
+                    min: 0,
+                    spinners: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
@@ -423,7 +475,11 @@
                     field: "LineTotal",
                     title: "Total",
                     width: 100,
-                    editable: false,
+                    min: 0,
+                    spinners: false,
+                    editable: function () {
+                        return false;
+                    },
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
