@@ -3,6 +3,7 @@
     ViewBag.Title = "Product Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -37,7 +38,7 @@
                     <div class="col-sm-2">
                         @Html.Label("Product Code")
                         <div class="input-group ">
-                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Write Customer Code", @class = "  form-control form-control-sm " })
+                            @Html.TextBoxFor(model => model.Code, new { placeholder = "Write Product Code", @class = "  form-control form-control-sm " })
                         </div>
                     </div>
 
@@ -45,7 +46,7 @@
                     <div class="col-sm-2">
                         @Html.Label("Product Name")
                         <div class="input-group ">
-                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Write Customer Name", @class = "  form-control form-control-sm " })
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Write Product Name", @class = "form-control form-control-sm", style = "border:1px solid #ced4da !important; box-shadow:none !important;" })
                         </div>
                     </div>
 
@@ -70,17 +71,6 @@
 
     <script src="~/Areas/Common/js/Services/CommonService.js"></script>
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
-    @*<script src="~/Areas/DMS/js/Controllers/ProductController.js"></script>
-
-    <script>
-        $(document).ready(function () {
-
-            ProductController.init();
-        });
-
-    </script>*@
-
-
 }
 
 <script>
@@ -96,8 +86,8 @@
             height: 400,
             columns: [
                 { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "Description", title: "Description", width: 200 }
+                { field: "Name", title: "Name", width: 150 }
+                //{ field: "Description", title: "Description", width: 200 }
             ],
             filter: "contains",
             filterFields: ["Code", "Name", "Description"],

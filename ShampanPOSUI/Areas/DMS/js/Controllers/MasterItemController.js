@@ -306,51 +306,74 @@
                     }
 
                     if (options.filter && options.filter.filters) {
-                        options.filter.filters.forEach(function (param) {
-                            if (param.field === "Id") {
-                                param.field = "H.ID";
-                            }
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
-                            if (param.field === "Name") {
-                                param.field = "H.Name";
-                            }
-                            if (param.field === "Description") {
-                                param.field = "H.Description";
-                            }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
-                            
-                            if (param.field === "ProductGroupName") {
-                                param.field = "PG.Name";
-                            }
-                            if (param.field === "UOMName") {
-                                param.field = "uom.Name";
-                            }
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
-                                if (statusValue.startsWith("a")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("i")) {
-                                    param.value = 0;
-                                }
-                                else if (statusValue == "1") {
-                                    param.value = 1;
-                                }
-                                else if (statusValue == "0") {
-                                    param.value = 0;
-                                }
-                                else {
-                                    param.value = null;
+                        function mapFilters(filters) {
+
+                            filters.forEach(function (param) {
+
+                                // nested filter handle
+                                if (param.filters) {
+                                    mapFilters(param.filters);
+                                    return;
                                 }
 
-                                param.field = "H.IsActive";
-                                param.operator = "eq";
-                            }
-                        });
+                                if (param.field === "Id") {
+                                    param.field = "H.Id";
+                                }
+
+                                if (param.field === "Code") {
+                                    param.field = "H.Code";
+                                }
+
+                                if (param.field === "Name") {
+                                    param.field = "H.Name";
+                                }
+
+                                if (param.field === "Description") {
+                                    param.field = "H.Description";
+                                }
+
+                                if (param.field === "Comments") {
+                                    param.field = "H.Comments";
+                                }
+
+                                if (param.field === "ProductGroupName") {
+                                    param.field = "MG.Name";
+                                }
+
+                                if (param.field === "UOMName") {
+                                    param.field = "uom.Name";
+                                }
+
+                                if (param.field === "Status") {
+
+                                    let statusValue = param.value
+                                        ? param.value.toString().trim().toLowerCase()
+                                        : "";
+
+                                    if (statusValue.startsWith("a")) {
+                                        param.value = 1;
+                                    }
+                                    else if (statusValue.startsWith("i")) {
+                                        param.value = 0;
+                                    }
+                                    else if (statusValue == "1") {
+                                        param.value = 1;
+                                    }
+                                    else if (statusValue == "0") {
+                                        param.value = 0;
+                                    }
+                                    else {
+                                        param.value = null;
+                                    }
+
+                                    param.field = "H.IsActive";
+                                    param.operator = "eq";
+                                }
+                            });
+                        }
+
+                        mapFilters(options.filter.filters);
                     }
                     return options;
                 }
@@ -397,7 +420,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "Description", "ProductGroupName","Status"]
+                fields: ["Code", "Name", "UOMName", "ProductGroupName","Status"]
             },
             excel: {
                 fileName: "Products.xlsx",
