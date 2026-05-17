@@ -35,6 +35,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Bangla Address")]
         public string? BanglaAddress { get; set; }
 
+        [Required(ErrorMessage = "Telephone No is required.")]
         [StringLength(50, ErrorMessage = "Telephone No cannot exceed 50 characters.")]
         [Display(Name = "Telephone No")]
         public string? TelephoneNo { get; set; }

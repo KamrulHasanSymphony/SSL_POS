@@ -19,10 +19,7 @@
 
         };
 
-
         $('.btnsave').on('click', function (e) {
-            debugger;
-
             e.preventDefault();
 
             var form = $("#frmEntry");
@@ -73,8 +70,6 @@
                 gridElement.data("kendoGrid").destroy();
                 gridElement.empty();
             }
-
-            //GetGridDataList();
 
         });
 
@@ -223,10 +218,6 @@
                                 param.field = "H.BranchName";
                             }
 
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
-
                             if (param.field === "IsCash") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
@@ -259,57 +250,79 @@
                     }
 
                     if (options.filter && options.filter.filters) {
-                        options.filter.filters.forEach(function (param) {
-                          
-                            if (param.field === "AccountNo") {
-                                param.field = "H.AccountNo";
-                            }
-                            if (param.field === "AccountName") {
-                                param.field = "H.AccountName";
-                            }
-                            if (param.field === "BankId") {
-                                param.field = "H.BankId";
-                            }
-                            if (param.field === "BankName") {
-                                param.field = "b.Name";
-                            }
-                            if (param.field === "BranchName") {
-                                param.field = "H.BranchName";
-                            }
 
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
+                        var mapFilters = function (filters) {
 
-                            if (param.field === "IsCash") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+                            filters.forEach(function (param) {
 
-                                if (statusValue.startsWith("a")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("i")) {
-                                    param.value = 0;
-                                } else {
-                                    param.value = null;
+                                // Nested search filter support
+                                if (param.filters) {
+                                    mapFilters(param.filters);
+                                    return;
+                                }
+                                if (param.field === "AccountNo") {
+                                    param.field = "H.AccountNo";
                                 }
 
-                                param.field = "H.IsCash";
-                                param.operator = "eq";
-                            }
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                                if (statusValue.startsWith("a")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("i")) {
-                                    param.value = 0;
-                                } else {
-                                    param.value = null;
+                                if (param.field === "AccountName") {
+                                    param.field = "H.AccountName";
                                 }
 
-                                param.field = "H.IsActive";
-                                param.operator = "eq";
-                            }
-                        });
+                                if (param.field === "BankId") {
+                                    param.field = "H.BankId";
+                                }
+
+                                if (param.field === "BankName") {
+                                    param.field = "b.Name";
+                                }
+
+                                if (param.field === "BranchName") {
+                                    param.field = "H.BranchName";
+                                }
+
+                                if (param.field === "IsCash") {
+
+                                    let statusValue = param.value
+                                        ? param.value.toString().trim().toLowerCase()
+                                        : "";
+
+                                    if (statusValue.startsWith("a")) {
+                                        param.value = 1;
+                                    }
+                                    else if (statusValue.startsWith("i")) {
+                                        param.value = 0;
+                                    }
+                                    else {
+                                        param.value = null;
+                                    }
+
+                                    param.field = "H.IsCash";
+                                    param.operator = "eq";
+                                }
+
+                                if (param.field === "Status") {
+
+                                    let statusValue = param.value
+                                        ? param.value.toString().trim().toLowerCase()
+                                        : "";
+
+                                    if (statusValue.startsWith("a")) {
+                                        param.value = 1;
+                                    }
+                                    else if (statusValue.startsWith("i")) {
+                                        param.value = 0;
+                                    }
+                                    else {
+                                        param.value = null;
+                                    }
+
+                                    param.field = "H.IsActive";
+                                    param.operator = "eq";
+                                }
+                            });
+                        };
+
+                        mapFilters(options.filter.filters);
                     }
                     return options;
                 }
@@ -525,7 +538,7 @@
                 ShowNotification(1, result.Message);
                 $(".divSave").hide();
                 $(".divUpdate").show();
-                $("#Code").val(result.Data.Code);
+                //$("#Code").val(result.Data.Code);
                 $("#Id").val(result.Data.Id);
                 $("#Operation").val("update");
                 $("#CreatedBy").val(result.Data.CreatedBy);

@@ -46,7 +46,6 @@ namespace ShampanPOS.Models
         [Display(Name = "Cheque Date")]
         public string ChequeDate { get; set; }
 
-        [Required(ErrorMessage = "Cash is required.")]
         [Display(Name = "Cash")]
         public bool IsCash { get; set; }
 
@@ -59,6 +58,7 @@ namespace ShampanPOS.Models
         public string? Reference { get; set; }
 
         //[Range(0, double.MaxValue, ErrorMessage = "Total Deposit Amount must be a positive value.")]
+        [Required(ErrorMessage = "Total Deposit Amount is required.")]
         [Display(Name = "Total Deposit Amount")]
         public decimal? TotalDepositAmount { get; set; }
 

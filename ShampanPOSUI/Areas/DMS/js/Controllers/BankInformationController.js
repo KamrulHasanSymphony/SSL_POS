@@ -261,7 +261,6 @@
     };
 
     var GetGridDataList = function () {
-        debugger;
         var gridDataSource = new kendo.data.DataSource({
             type: "json",
             serverPaging: true,
@@ -307,10 +306,6 @@
                             if (param.field === "Email") {
                                 param.field = "H.Email";
                             }
-
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
@@ -329,52 +324,76 @@
                     }
 
                     if (options.filter && options.filter.filters) {
-                        options.filter.filters.forEach(function (param) {
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
-                            if (param.field === "Name") {
-                                param.field = "H.Name";
-                            }
 
-                            if (param.field === "BanglaName") {
-                                param.field = "H.BanglaName";
-                            }
-                            if (param.field === "Address") {
-                                param.field = "H.Address";
-                            }
-                            if (param.field === "BanglaAddress") {
-                                param.field = "H.BanglaAddress";
-                            }
+                        var mapFilterFields = function (filters) {
 
-                            if (param.field === "TelephoneNo") {
-                                param.field = "H.TelephoneNo";
-                            }
-                            if (param.field === "FaxNo") {
-                                param.field = "H.FaxNo";
-                            }
-                            if (param.field === "Email") {
-                                param.field = "H.Email";
-                            }
+                            filters.forEach(function (param) {
 
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
-
-                                if (statusValue.startsWith("a")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("i")) {
-                                    param.value = 0;
-                                } else {
-                                    param.value = null;
+                                // Handle nested filters
+                                if (param.filters) {
+                                    mapFilterFields(param.filters);
+                                    return;
                                 }
 
-                                param.field = "H.IsActive";
-                                param.operator = "eq";
-                            }
-                        });
+                                if (param.field === "Code") {
+                                    param.field = "H.Code";
+                                }
+
+                                if (param.field === "Name") {
+                                    param.field = "H.Name";
+                                }
+
+                                if (param.field === "BanglaName") {
+                                    param.field = "H.BanglaName";
+                                }
+
+                                if (param.field === "Address") {
+                                    param.field = "H.Address";
+                                }
+
+                                if (param.field === "BanglaAddress") {
+                                    param.field = "H.BanglaAddress";
+                                }
+
+                                if (param.field === "TelephoneNo") {
+                                    param.field = "H.TelephoneNo";
+                                }
+
+                                if (param.field === "FaxNo") {
+                                    param.field = "H.FaxNo";
+                                }
+
+                                if (param.field === "Email") {
+                                    param.field = "H.Email";
+                                }
+
+                                if (param.field === "Comments") {
+                                    param.field = "H.Comments";
+                                }
+
+                                if (param.field === "Status") {
+
+                                    let statusValue = param.value
+                                        ? param.value.toString().trim().toLowerCase()
+                                        : "";
+
+                                    if (statusValue.startsWith("a")) {
+                                        param.value = 1;
+                                    }
+                                    else if (statusValue.startsWith("i")) {
+                                        param.value = 0;
+                                    }
+                                    else {
+                                        param.value = null;
+                                    }
+
+                                    param.field = "H.IsActive";
+                                    param.operator = "eq";
+                                }
+                            });
+                        };
+
+                        mapFilterFields(options.filter.filters);
                     }
                     return options;
                 }
@@ -1144,7 +1163,6 @@
 
     //};
     function save() {
-
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
 
@@ -1166,129 +1184,7 @@
         CommonAjaxService.finalSave(url, model, saveDone, saveFail);
     };
 
-    //function save() {
-    //    debugger;
-
-    //    //var isDropdownValid1 = CommonService.validateDropdown("#CustomerGroupId", "#titleError1", "Customer Group is required");
-    //    //var isDropdownValid2 = CommonService.validateDropdown("#RouteId", "#titleError2", "Route is required");
-    //    //var isDropdownValid3 = CommonService.validateDropdown("#AreaId", "#titleError3", "Area is required");
-
-
-    //    //var isDropdownValid = isDropdownValid1;
-
-    //    var status = $('#IsActive').is(':checked');
-    //    var validator = $("#frmEntry").validate();
-    //    var formData = new FormData();
-    //    var model = serializeInputs("frmEntry");
-    //    //model.Potential = model.Potential.replace(/,/g, '');
-
-    //    var result = validator.form();
-
-    //    //if (!result || !isDropdownValid) {
-    //    //    if (!result) {
-    //    //        validator.focusInvalid();
-    //    //    }
-    //    //    return;
-    //    //}
-
-    //    // Append form fields to FormData
-    //    for (var key in model) {
-    //        formData.append(key, model[key]);
-    //    }
-
-    //    // Handle checkbox value
-    //    formData.append("IsActive", $('#IsActive').prop('checked'));
-
-    //    //if (parseInt(model.CustomerGroupId) == 0) {
-    //    //    ShowNotification(3, 'Customer Group is Required.');
-    //    //    return;
-    //    //}
-    //    //if (parseInt(model.RouteId) == 0) {
-    //    //    ShowNotification(3, 'Route is Required.');
-    //    //    return;
-    //    //}
-    //    //if (parseInt(model.AreaId) == 0) {
-    //    //    ShowNotification(3, 'Area is Required.');
-    //    //    return;
-    //    //}
-    //    //if (parseInt(model.FocalPointId) == 0 || model.FocalPointId == "") {
-    //    //    ShowNotification(3, 'Focal Point is Required.');
-    //    //    return;
-    //    //}
-    //    if (model.TelephoneNo == "") {
-    //        ShowNotification(3, 'Phone Number is Required.');
-    //        return;
-    //    }
-    //    if (model.Address == "") {
-    //        ShowNotification(3, 'Address is Required.');
-    //        return;
-    //    }
-    //    if (model.BanglaAddress == "") {
-    //        ShowNotification(3, 'Bangla Address is Required.');
-    //        return;
-    //    }
-
-
-    //    // Check if delete button was clicked to remove image
-    //    var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-    //    if (deleteImageClicked) {
-    //        formData.append("ImagePath", "");
-    //        $("#imagePreview").remove();
-    //        $("#ImagePath").val("");
-    //    }
-
-    //    var fileInput = document.getElementById("imageUpload");
-    //    if (fileInput.files.length > 0) {
-    //        var file = fileInput.files[0];
-
-    //        if (file.size > 26214400) {
-    //            ShowNotification(3, "Image size cannot exceed 25MB.");
-    //            return;
-    //        }
-
-    //        formData.append("file", file);
-    //    } else if (!deleteImageClicked) {
-    //        var existingImagePath = $("#ImagePath").val();
-    //        if (existingImagePath) {
-    //            formData.append("ImagePath", existingImagePath);
-    //        }
-    //    }
-
-    //    //// Check if delete button was clicked to remove image
-    //    //var deleteImageClicked = $("#deleteImageBtn").hasClass("clicked");
-    //    //if (deleteImageClicked) {
-    //    //    formData.append("ImagePath", "");  // Mark image for deletion
-    //    //    $("#imagePreview").remove();
-    //    //    $("#ImagePath").val("");
-    //    //}
-
-    //    //var fileInput = document.getElementById("imageUpload");
-    //    //if (fileInput.files.length > 0) {
-    //    //    var file = fileInput.files[0];
-
-    //    //    // ✅ Validate file size (Max 25MB)
-    //    //    if (file.size > 26214400) { // 25MB in bytes
-    //    //        ShowNotification(3, "Image size cannot exceed 25MB.");
-    //    //        return;
-    //    //    }
-
-    //    //    formData.append("file", file);
-    //    //} else if (!deleteImageClicked) {
-    //    //    var existingImagePath = $("#ImagePath").val();
-    //    //    if (existingImagePath) {
-    //    //        formData.append("ImagePath", existingImagePath);
-    //    //    }
-    //    //}
-
-    //    var url = "/DMS/BankInformation/CreateEdit";
-
-    //    CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
-    //};
-
-    // Handle the image delete button click
-
     function saveDone(result) {
-        debugger;
         if (result.Status == 200) {
             if (result.Data.Operation == "add") {
                 ShowNotification(1, result.Message);
@@ -1377,7 +1273,6 @@
         init: init
     }
 
-    debagger;
 }(CommonService, CommonAjaxService);
 document.addEventListener("DOMContentLoaded", function () {
     var container = document.querySelector(".sslPrintC");
