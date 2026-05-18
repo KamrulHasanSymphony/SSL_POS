@@ -9,11 +9,11 @@
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
-        $("#FYearStart").kendoDatePicker({
-        });
+        //$("#FYearStart").kendoDatePicker({
+        //});
 
-        $("#FYearEnd").kendoDatePicker({
-        });
+        //$("#FYearEnd").kendoDatePicker({
+        //});
 
         if (parseInt(getId) == 0 && getOperation == '') {
             GetGridDataList();
@@ -405,16 +405,13 @@
                 //},
                 {
                     title: "Action",
-                    width: 100,
+                    width: 50,
                     template: function (dataItem) {
 
                         return `
                                 <a href="/SetUp/CompanyProfile/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                     <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                 <a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-                                    <i class='fas fa-print'></i>
-                                </a>
+                                </a>                               
                                 `;
                     }
                 },

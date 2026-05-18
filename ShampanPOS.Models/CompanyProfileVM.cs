@@ -20,6 +20,7 @@ namespace ShampanPOS.Models
         [DisplayName("Company Bangla Name")]
         public string? CompanyBanglaName { get; set; }
 
+        [Required]
         [DisplayName("Company Legal Name")]
         public string? CompanyLegalName { get; set; }
 
@@ -32,12 +33,14 @@ namespace ShampanPOS.Models
         [DisplayName("Zip Code")]
         public string? ZipCode { get; set; }
 
+        [Required]
         [DisplayName("Telephone No.")]
         public string? TelephoneNo { get; set; }
 
         [DisplayName("Fax No.")]
         public string? FaxNo { get; set; }
 
+        [Required]
         [DisplayName("Email")]
         public string? Email { get; set; }
 
@@ -99,6 +102,7 @@ namespace ShampanPOS.Models
         [DataType(DataType.DateTime)]
         public DateTime? LastModifiedOn { get; set; }
 
+        public int? MainCompanyId { get; set; }
 
         public string? Operation { get; set; }
 
