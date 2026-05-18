@@ -151,13 +151,13 @@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.BIN)
-                        @Html.TextAreaFor(model => model.BIN, new { placeholder = "Enter BIN", @class = "form-control form-control-sm" })
+                        @Html.TextAreaFor(model => model.BIN, new { placeholder = " Enter BIN", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
                         @Html.ValidationMessageFor(model => model.BIN)
                     </div>
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.TIN)
-                        @Html.TextAreaFor(model => model.TIN, new { placeholder = "Enter BIN", @class = "form-control form-control-sm" })
+                        @Html.TextAreaFor(model => model.TIN, new { placeholder = " Enter TIN", @class = "form-control form-control-sm", type = "number", @oninput = "this.value = this.value.replace(/[^0-9]/g, '')" })
                         @Html.ValidationMessageFor(model => model.BIN)
                     </div>
                 </div>

@@ -42,6 +42,7 @@ namespace ShampanPOS.Models
 
         [Required]
         [DisplayName("Email")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
         public string? Email { get; set; }
 
         [DisplayName("Contact Person")]
