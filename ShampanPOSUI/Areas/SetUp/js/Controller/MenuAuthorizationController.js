@@ -347,11 +347,21 @@
             resizable: true,
             reorderable: true,
             groupable: true,
-            toolbar: ["excel", "pdf"],
+            toolbar: ["excel", "pdf", "search"],
+
+            search: ["Name"],
+
             excel: {
                 fileName: "Roles.xlsx",
                 filterable: true
             },
+            pdf: {
+                fileName: `Roles_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+                allPages: true,
+                avoidLink: true,
+                filterable: true
+            },
+
             columns: [                
                 {
                     title: "Action",
@@ -449,7 +459,17 @@
             resizable: true,
             reorderable: true,
             groupable: true,
-            toolbar: ["excel", "pdf"],
+            toolbar: ["excel", "pdf", "search"],
+
+            search: ["Name"],
+
+            pdf: {
+                fileName: `UserGroups_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+                allPages: true,
+                avoidLink: true,
+                filterable: true
+            },
+
             excel: {
                 fileName: "UserGroup.xlsx",
                 filterable: true
@@ -552,11 +572,21 @@
             resizable: true,
             reorderable: true,
             groupable: true,
-            toolbar: ["excel", "pdf"],
+            toolbar: ["excel", "pdf", "search"],
+
+            search: ["Name"],
+
             excel: {
                 fileName: "RoleMenu.xlsx",
                 filterable: true
             },
+            pdf: {
+                fileName: `RoleMenu_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+                allPages: true,
+                avoidLink: true,
+                filterable: true
+            },
+
             columns: [
                 {
                     title: "Action",
@@ -599,15 +629,16 @@
                 parameterMap: function (options) {
                     if (options.sort) {
                         options.sort.forEach(function (param) {
-                            if (param.field === "Name") {
+                            if (param.field === "RoleName") {
                                 param.field = "H.Name";
                             }
+
                         });
                     }
 
                     if (options.filter && options.filter.filters) {
                         options.filter.filters.forEach(function (param) {
-                            if (param.field === "Name") {
+                            if (param.field === "RoleName") {
                                 param.field = "H.Name";
                             }
                         });
@@ -655,11 +686,21 @@
             resizable: true,
             reorderable: true,
             groupable: true,
-            toolbar: ["excel", "pdf"],
+            toolbar: ["excel", "pdf", "search"],
+
+            search: ["RoleName", "UserId"],
+
             excel: {
                 fileName: "UserMenu.xlsx",
                 filterable: true
             },
+            pdf: {
+                fileName: `UserMenu_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+                allPages: true,
+                avoidLink: true,
+                filterable: true
+            },
+
             columns: [
                 {
                     title: "Action",
@@ -677,7 +718,7 @@
                     }
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
-                { field: "UserId", title: "User Id", sortable: true, width: 150 },
+                { field: "UserId", title: "User Name", sortable: true, width: 150 },
                 { field: "RoleName", title: "Role Name", sortable: true, width: 150 },
             ],
             editable: false,
