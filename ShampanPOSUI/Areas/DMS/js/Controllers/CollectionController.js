@@ -7,6 +7,7 @@
 
     var init = function () {
 
+
         if ($("#IsPosted").length) {
             LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
             $("#IsPosted").val('');

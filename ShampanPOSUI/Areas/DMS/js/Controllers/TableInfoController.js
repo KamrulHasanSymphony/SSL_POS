@@ -205,24 +205,17 @@
 
                     if (options.sort) {
                         options.sort.forEach(function (param) {
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
+                            
                             if (param.field === "TableNumber") {
                                 param.field = "H.TableNumber";
-                            }
-                            if (param.field === "Capacity") {
-                                param.field = "H.Capacity";
-                            }
-                            if (param.field === "SectionId") {
-                                param.field = "H.SectionId";
-                            }
+                            }                           
+                           
                             if (param.field === "SectionName") {
                                 param.field = "S.SectionName";
                             }
 
-                            if (param.field === "BranchName") {
-                                param.field = "H.BranchName";
+                            if (param.field === "Capacity") {
+                                param.field = "H.Capacity";
                             }
 
                             if (param.field === "Status") {
@@ -244,24 +237,16 @@
 
                     if (options.filter && options.filter.filters) {
                         options.filter.filters.forEach(function (param) {
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
+                           
                             if (param.field === "TableNumber") {
                                 param.field = "H.TableNumber";
                             }
-                            if (param.field === "Capacity") {
-                                param.field = "H.Capacity";
-                            }
-                            if (param.field === "SectionId") {
-                                param.field = "H.SectionId";
-                            }
+                            
                             if (param.field === "SectionName") {
                                 param.field = "S.SectionName";
                             }
-
-                            if (param.field === "BranchName") {
-                                param.field = "H.BranchName";
+                            if (param.field === "Capacity") {
+                                param.field = "H.Capacity";
                             }
 
                             if (param.field === "Status") {
@@ -325,7 +310,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "AccountName", "AccountNo", "BankId", "BranchName", "Comments", "IsCash", "Status"]
+                fields: ["TableNumber", "Capacity","SectionName"]
             },
             excel: {
                 fileName: "TableInfo.xlsx",
@@ -413,6 +398,7 @@
                 { field: "Id", width: 50, hidden: true, sortable: true },
 
                 { field: "TableNumber", title: "Table Number", sortable: true, width: 200 },
+                { field: "Capacity", title: "Capacity", sortable: true, width: 200 },
                 { field: "SectionId", title: "Section", width: 150, hidden: true, sortable: true },
                 { field: "SectionName", title: "Section Name", width: 150, sortable: true },
                 { field: "BranchName", title: "Branch Name", sortable: true, hidden: true, width: 200 },

@@ -10,6 +10,15 @@
 }
 
 
+<style>
+    #PaymentDetailsGrid .k-grid-delete .k-icon.k-i-trash {
+        color: red;
+    }
+
+    #PaymentDetailsGrid .k-grid-delete:hover .k-icon.k-i-trash {
+        color: darkred;
+    }
+</style>
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -32,7 +41,7 @@
 
         @if (Model.IsActive)
         {
-           
+
             <button style="float:right;" type="button" title="Add New" data-url="/DMS/Payment/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                 New
             </button>
@@ -49,7 +58,7 @@
         {
             <div style="display:none;" class="divUpdate">
                 <button type="button" class="button btnsave sslUpdate">Update</button>
-           
+
                 <button style="float:right;" type="button" title="Add New" data-url="/DMS/Payment/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                     New
                 </button>
@@ -86,27 +95,34 @@
                         </div>
                     </div>
 
-                    @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.TransactionDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.TransactionDate, new { @class = "required  form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>*@
 
-                <div class="col-sm-2 d-flex flex-column">
-                    @Html.LabelFor(model => model.TransactionDate)
+                    <div class="col-sm-2 d-flex flex-column">
+                        @Html.LabelFor(model => model.TransactionDate)
 
-                    <div style="width:100%">
-                        @Html.TextBoxFor(model => model.TransactionDate, new
-                   {
-                       @class = "required kendoTransactionDate",
-                       style = "width:100%; height:2em;"
-                   })
+                        <div style="width:100%">
+                            @Html.TextBoxFor(model => model.TransactionDate, new
+                            {
+                                @class = "form-control kendoTransactionDate",
+                                style = "width:100%; height:2em;"
+                            })
+
+                            @Html.ValidationMessageFor(model => model.TransactionDate, "",
+                                new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
+
+
+                    @*<div class="col-sm-2 d-flex flex-column">
+                            @Html.LabelFor(model => model.TransactionDate)
+
+                            <div style="width:100%">
+                                @Html.TextBoxFor(model => model.TransactionDate, new
+                           {
+                               @class = "required kendoTransactionDate",
+                               style = "width:100%; height:2em;"
+                           })
+                            </div>
+                        </div>*@
 
 
                     <div class="col-sm-2">
@@ -117,11 +133,10 @@
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
 
-
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.BankAccountId)
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.BankAccountId, new { @class = "required form-control form-control-sm" })
+                            @Html.TextBoxFor(model => model.BankAccountId, new { @class = "form-control form-control-sm" })
                         </div>
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
@@ -265,8 +280,8 @@
                             @Html.Label("Updated")
                         </div>
                         @*<div class="col-sm-3">
-                            @Html.Label("Posted")
-                        </div>*@
+                                @Html.Label("Posted")
+                            </div>*@
                     </div>
                 </div>
             </div>

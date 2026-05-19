@@ -28,8 +28,25 @@
                 value: new Date()
             });
 
+            //$(".kendoInvoiceDateTime").kendoDateTimePicker({
+            //    format: "yyyy-MM-dd HH:mm"
+            //});
+
+
             $(".kendoInvoiceDateTime").kendoDateTimePicker({
-                format: "yyyy-MM-dd HH:mm"
+                format: "yyyy-MM-dd HH:mm",
+
+                change: function () {
+
+                    var value = this.value();
+
+                    if (value) {
+
+                        this.wrapper.removeClass("k-invalid");
+
+                        $("#invoiceError").text("").hide();
+                    }
+                }
             });
 
         });
@@ -84,27 +101,90 @@
                 return value === "" || value === null || value === undefined;
             }
 
+            //function markInvalid(selector, message) {
+            //    var widget = $(selector).data("kendoMultiColumnComboBox");
+            //    if (widget) {
+            //        widget.wrapper.addClass("k-invalid");
+            //        widget._inputWrapper.addClass("k-state-invalid");
+            //    } else {
+            //        $(selector).addClass("input-validation-error");
+            //    }
+            //    $(selector).closest(".input-group").siblings("span.text-danger").text(message).show();
+            //}
+
+            //function clearInvalid(selector) {
+            //    var widget = $(selector).data("kendoMultiColumnComboBox");
+            //    if (widget) {
+            //        widget.wrapper.removeClass("k-invalid");
+            //        widget._inputWrapper.removeClass("k-state-invalid");
+            //    } else {
+            //        $(selector).removeClass("input-validation-error");
+            //    }
+            //    $(selector).closest(".input-group").siblings("span.text-danger").text("").hide();
+            //}
+
             function markInvalid(selector, message) {
-                var widget = $(selector).data("kendoMultiColumnComboBox");
-                if (widget) {
-                    widget.wrapper.addClass("k-invalid");
-                    widget._inputWrapper.addClass("k-state-invalid");
-                } else {
+
+                var multiColumn = $(selector).data("kendoMultiColumnComboBox");
+                var datePicker = $(selector).data("kendoDateTimePicker");
+
+                if (multiColumn) {
+
+                    multiColumn.wrapper.addClass("k-invalid");
+                    multiColumn._inputWrapper.addClass("k-state-invalid");
+                }
+                else if (datePicker) {
+
+                    datePicker.wrapper.addClass("k-invalid");
+                }
+                else {
+
                     $(selector).addClass("input-validation-error");
                 }
-                $(selector).closest(".input-group").siblings("span.text-danger").text(message).show();
+
+                // CustomerId
+                if (selector === "#CustomerId") {
+
+                    $("#titleError1").text(message).show();
+                }
+
+                // InvoiceDateTime
+                if (selector === "#InvoiceDateTime") {
+
+                    $("#invoiceError").text(message).show();
+                }
             }
 
             function clearInvalid(selector) {
-                var widget = $(selector).data("kendoMultiColumnComboBox");
-                if (widget) {
-                    widget.wrapper.removeClass("k-invalid");
-                    widget._inputWrapper.removeClass("k-state-invalid");
-                } else {
+
+                var multiColumn = $(selector).data("kendoMultiColumnComboBox");
+                var datePicker = $(selector).data("kendoDateTimePicker");
+
+                if (multiColumn) {
+
+                    multiColumn.wrapper.removeClass("k-invalid");
+                    multiColumn._inputWrapper.removeClass("k-state-invalid");
+                }
+                else if (datePicker) {
+
+                    datePicker.wrapper.removeClass("k-invalid");
+                }
+                else {
+
                     $(selector).removeClass("input-validation-error");
                 }
-                $(selector).closest(".input-group").siblings("span.text-danger").text("").hide();
+
+                if (selector === "#CustomerId") {
+
+                    $("#titleError1").text("").hide();
+                }
+
+                if (selector === "#InvoiceDateTime") {
+
+                    $("#invoiceError").text("").hide();
+                }
             }
+
 
             clearInvalid("#CustomerId");
             clearInvalid("#TransactionDateTime");
@@ -123,6 +203,20 @@
             //    ShowNotification(3, "Invoice Date Time is required.");
             //    isFormValid = false;
             //}
+
+            var invoiceValue = $("#InvoiceDateTime")
+                .data("kendoDateTimePicker")
+                ?.value();
+
+            if (!invoiceValue) {
+
+                markInvalid("#InvoiceDateTime", "Invoice Date Time is required.");
+                isFormValid = false;
+            }
+            else {
+
+                clearInvalid("#InvoiceDateTime");
+            }
 
             if (!isFormValid) {
                 return;
@@ -1326,6 +1420,21 @@
                 if (getCustomerId) {
                     this.value(parseInt(getCustomerId));
                 }
+            },
+
+            change: function () {
+
+                var value = this.value();
+
+                if (value && value > 0) {
+
+                    var widget = this;
+
+                    widget.wrapper.removeClass("k-invalid");
+                    widget._inputWrapper.removeClass("k-state-invalid");
+
+                    $("#titleError1").text("").hide();
+                }
             }
         }).data("kendoMultiColumnComboBox");
     };
@@ -1363,8 +1472,61 @@
     // PRODUCT POPUP WINDOW (SEARCHABLE PRODUCT LIST)
     // ============================================================
 
+    //function OpenProductPopup(detailRow) {
+    //    debugger;
+    //    var wnd = $("#saleDetailsWindow").kendoWindow({
+    //        width: "650px",
+    //        height: "450px",
+    //        title: "Select Product",
+    //        modal: true,
+    //        visible: false
+    //    }).data("kendoWindow");
+
+    //    wnd.center().open();
+
+    //    $("#saleDetailsGrid").kendoGrid({
+    //        dataSource: {
+    //            transport: {
+    //                read: {
+    //                    url: "/Common/Common/GetProductModal" // API for Product list
+    //                }
+    //            }
+    //        },
+    //        height: 380,
+    //        sortable: true,
+    //        filterable: true,
+    //        pageable: true,
+    //        selectable: "row",
+
+    //        columns: [
+    //            { field: "ProductId", title: "Product ID", hidden: true },
+    //            { field: "ProductName", title: "Product Name", width: 100 },
+    //            { field: "UOMId", hidden: true },
+    //            { field: "UOMName", title: "UOM", width: 100 },
+    //            //{ field: "HSCodeNo", title: "HS Code No", width: 80 },
+    //            { field: "ProductGroupId", title: "Product Group Id", width: 100 },
+    //            { field: "ProductGroupName", title: "Product Group Name", width: 100 },
+    //            { field: "PurchasePrice", title: "Purchase Price", width: 100 },
+    //            { field: "SalesPrice", title: "Sale Price", width: 100 },
+    //            { field: "VATRate", title: "VAT Rate", width: 100 },
+    //            { field: "SDRate", title: "SD Rate", width: 100 },
+    //        ]
+    //    });
+
+    //    // DOUBLE CLICK SELECT
+    //    $("#saleDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
+
+    //        var grid = $("#saleDetailsGrid").data("kendoGrid");
+    //        var selectedItem = grid.dataItem($(this));
+    //        ApplyProductSelection(detailRow, selectedItem);
+    //        wnd.close();
+    //    });
+    //}
+
+
+
+
     function OpenProductPopup(detailRow) {
-        debugger;
         var wnd = $("#saleDetailsWindow").kendoWindow({
             width: "650px",
             height: "450px",
@@ -1379,40 +1541,48 @@
             dataSource: {
                 transport: {
                     read: {
-                        url: "/Common/Common/GetProductModal" // API for Product list
+                        url: "/Common/Common/GetProductModal",
+                        dataType: "json"
                     }
+                },
+                pageSize: 10,
+                schema: {
+                    data: function (response) { return response || []; },  // handle plain array
+                    total: function (response) { return response ? response.length : 0; }
                 }
             },
             height: 380,
             sortable: true,
             filterable: true,
-            pageable: true,
+            pageable: {
+                refresh: true,
+                pageSizes: [10, 20, 50],
+                messages: {
+                    display: "{0}-{1} of {2} items",
+                    empty: "No products found"
+                }
+            },
             selectable: "row",
-
             columns: [
                 { field: "ProductId", title: "Product ID", hidden: true },
                 { field: "ProductName", title: "Product Name", width: 100 },
-                { field: "UOMId", hidden: true },
                 { field: "UOMName", title: "UOM", width: 100 },
-                //{ field: "HSCodeNo", title: "HS Code No", width: 80 },
-                { field: "ProductGroupId", title: "Product Group Id", width: 100 },
-                { field: "ProductGroupName", title: "Product Group Name", width: 100 },
                 { field: "PurchasePrice", title: "Purchase Price", width: 100 },
                 { field: "SalesPrice", title: "Sale Price", width: 100 },
                 { field: "VATRate", title: "VAT Rate", width: 100 },
-                { field: "SDRate", title: "SD Rate", width: 100 },
+                { field: "SDRate", title: "SD Rate", width: 100 }
             ]
         });
 
         // DOUBLE CLICK SELECT
         $("#saleDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
-
             var grid = $("#saleDetailsGrid").data("kendoGrid");
             var selectedItem = grid.dataItem($(this));
             ApplyProductSelection(detailRow, selectedItem);
             wnd.close();
         });
     }
+
 
     function LoadItemsGrid() {
         $("#items").kendoListView({
@@ -1895,6 +2065,7 @@
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", width: 180, sortable: true },
+                { field: "SaleOrderCode", title: "Sale Order Code", width: 180, sortable: true },
                 { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
                 {
                     field: "InvoiceDateTime", title: "Invoice DateTime", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',

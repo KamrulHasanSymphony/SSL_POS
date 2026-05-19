@@ -302,16 +302,19 @@
 
 
 
-
                     @*<div class="col-sm-2 mr-4">
-             @Html.LabelFor(model => model.InvoiceDateTime)
+            @Html.LabelFor(model => model.InvoiceDateTime)
 
-             @Html.TextBoxFor(model => model.InvoiceDateTime, new
-        {
-            @class = "kendoInvoiceDateTime",
-            style = "width:95%; height:2em;"
-        })
-         </div>*@
+            @Html.TextBoxFor(model => model.InvoiceDateTime, new
+            {
+                @class = "kendoInvoiceDateTime",
+                style = "width:95%; height:2em;",
+                required = "required"
+            })
+
+            @Html.ValidationMessageFor(model => model.InvoiceDateTime, "", new { @class = "text-danger" })
+        </div>*@
+
 
 
                     <div class="col-sm-2 mr-4">
@@ -324,8 +327,10 @@
                             required = "required"
                         })
 
-                        @Html.ValidationMessageFor(model => model.InvoiceDateTime, "", new { @class = "text-danger" })
+                        <span id="invoiceError" class="text-danger" style="display:none;"></span>
                     </div>
+
+
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.DeliveryAddress)

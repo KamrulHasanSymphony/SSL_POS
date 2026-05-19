@@ -1,9 +1,21 @@
 ﻿var PaymentController = function (CommonService, CommonAjaxService) {
 
-
+    var notification;
     var decimalPlace = 0;
 
     var init = function () {
+
+
+        notification = $("#notification").kendoNotification({
+            position: {
+                pinned: true,
+                top: 30,
+                right: 30
+            },
+            autoHideAfter: 3000,
+            stacking: "down"
+        }).data("kendoNotification");
+
 
         if ($("#IsPosted").length) {
             LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
@@ -411,34 +423,52 @@
         kendo.bind(container, options.model);
     }
     var selectedGridModel = null;
-    function openModal(gridModel) {
-        selectedGridModel = gridModel;
-        debugger;
-        var supplier = $("#SupplierId").val();
-        //alert(supplier);
 
-        $("#poWindow").kendoWindow({
-            title: "Select Order",
-            modal: true,
-            width: "900px",
-            height: "550px",
-            visible: false,
-            close: function () {
-                selectedGridModel = null;
+
+    var selectedGridModel = null;
+
+    // 1️⃣ Supplier ComboBox setup
+    function GetSupplierComboBox() {
+        $("#SupplierId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 }
+            ],
+            filter: "contains",
+            filterFields: ["Code", "Name"],
+            dataSource: {
+                transport: { read: "/Common/Common/GetSupplierList" }
+            },
+            placeholder: "Select Supplier",
+            change: function () {
+                //var selectedItem = this.dataItem();
+                //var supplierId = selectedItem ? selectedItem.Id : 0;
+                //updatePurchaseCodeDataSource(supplierId); // Reload popup grid with selected supplier
             }
-        }).data("kendoWindow").center().open();
+        });
+    }
 
+    // 2️⃣ Function to create/update popup grid
+    function updatePurchaseCodeDataSource(supplierId) {
+        var windowGrid = $("#windowGrid").data("kendoGrid");
+
+        // Destroy previous grid if exists
+        if (windowGrid) {
+            windowGrid.destroy();
+            $("#windowGrid").empty();
+        }
+        debugger;
+        // Create grid with supplier filter
         $("#windowGrid").kendoGrid({
             dataSource: {
                 transport: {
                     read: {
                         url: "/Common/Common/PurchaseModal",
                         dataType: "json",
-                        data: function () {
-                            return {
-                                value: $("#SupplierId").val()
-                            };
-                        }
+                        data: { value: supplierId ? supplierId : 0 }
                     }
                 },
                 pageSize: 10
@@ -447,7 +477,6 @@
             filterable: true,
             selectable: "row",
             toolbar: ["search"],
-            searchable: true,
             columns: [
                 { field: "Id", hidden: true },
                 { field: "Code", title: "Code", width: 150 },
@@ -459,45 +488,57 @@
                 { field: "Comments", title: "Comments", width: 200 }
             ],
             dataBound: function () {
-                this.tbody.find("tr").on("dblclick", function () {
-                    var grid = $("#windowGrid").data("kendoGrid");
-                    var dataItem = grid.dataItem(this);
-                    if (dataItem && selectedGridModel) {
-                        selectedGridModel.set("PurchaseId", dataItem.Id);
-                        selectedGridModel.set("PurchaseCode", dataItem.Code);
-                        selectedGridModel.set("PurchaseAmount", dataItem.GrandTotal);
-                        selectedGridModel.set("PaidAmount", dataItem.PaymentAmount);
-                        selectedGridModel.set("DueAmount", dataItem.DueAmount);
+                this.tbody.find("tr").off("dblclick").on("dblclick", function () {
+                    var dataItem = $("#windowGrid").data("kendoGrid").dataItem(this);
+                    if (!dataItem || !selectedGridModel) return;
 
-                        selectedGridModel.set("PaymentAmount", 0);
-                        selectedGridModel.set("PaymentAfter", dataItem.PaymentAmount);
-                        selectedGridModel.set("DueAfter", dataItem.DueAmount);
+                    var detailsGrid = $("#PaymentDetailsGrid").data("kendoGrid");
+                    if (!detailsGrid) return;
 
-                        var window = $("#poWindow").data("kendoWindow");
-                        if (window) window.close();
+                    // Duplicate check
+                    if (detailsGrid.dataSource.data().some(item => item.PurchaseId == dataItem.Id)) {
+                        notification.show("This item already added", "error");
+                        $("#poWindow").data("kendoWindow").close();
+                        return;
                     }
+
+                    // Set details into main grid
+                    selectedGridModel.set("PurchaseId", dataItem.Id);
+                    selectedGridModel.set("PurchaseCode", dataItem.Code);
+                    selectedGridModel.set("PurchaseAmount", dataItem.GrandTotal);
+                    selectedGridModel.set("PaidAmount", dataItem.PaymentAmount);
+                    selectedGridModel.set("DueAmount", dataItem.DueAmount);
+                    selectedGridModel.set("PaymentAmount", 0);
+                    selectedGridModel.set("PaymentAfter", dataItem.PaymentAmount);
+                    selectedGridModel.set("DueAfter", dataItem.DueAmount);
+
+                    $("#poWindow").data("kendoWindow").close();
                 });
             }
         });
     }
 
-    //function calculateTotalPaymentGrid() {
+    // 3️⃣ Open popup modal
+    function openModal(gridModel) {
+        selectedGridModel = gridModel;
+        var window = $("#packageDetailsWindow").data("kendoWindow");
 
-    //    var grid = $("#PaymentDetailsGrid").data("kendoGrid");
-    //    var data = grid.dataSource.data();
-
-    //    var total = 0;
-
-    //    for (var i = 0; i < data.length; i++) {
-
-    //        total += parseFloat(data[i].PaymentAmount) || 0;
-    //    }
-
-    //    $("#TotalPaymentAmount").val(total.toFixed(2));
-    //}
-
-
-
+        if (!window) {
+            if (!window) {
+                $("#poWindow").kendoWindow({
+                    title: "Select Order",
+                    modal: true,
+                    width: "900px",
+                    height: "550px",
+                    visible: false,
+                    close: function () { selectedGridModel = null; }
+                }).data("kendoWindow").center().open();
+                debugger;
+                var supplierId = $("#SupplierId").val();
+                updatePurchaseCodeDataSource(supplierId);
+            }                // Load grid on open
+        }
+    }
     function calculateTotalPaymentGrid() {
 
         var grid = $("#PaymentDetailsGrid").data("kendoGrid");
@@ -649,43 +690,53 @@
     }
 
 
-    function GetSupplierComboBox() {
-        var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetSupplierList"
-                }
-            },
-            placeholder: "Select Supplier",
-            value: "",
-            dataBound: function (e) {
-                if (getSupplierId) {
-                    this.value(parseInt(getSupplierId));  // Set initial value if available
-                }
-            },
+    //function GetSupplierComboBox() {
+    //    var SupplierComboBox = $("#SupplierId").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetSupplierList"
+    //            }
+    //        },
+    //        placeholder: "Select Supplier",
+    //        value: "",
+    //        dataBound: function (e) {
+    //            if (getSupplierId) {
+    //                this.value(parseInt(getSupplierId));  // Set initial value if available
+    //            }
+    //        },
 
-            change: function (e) {
-                var selectedItem = this.dataItem();
-                if (selectedItem) {
-                    getSupplierId = selectedItem.Id;   // ✅ keep updated
-                } else {
-                    getSupplierId = 0;
-                }
-            }
+    //        //change: function (e) {
+    //        //    var selectedItem = this.dataItem();
+    //        //    if (selectedItem) {
+    //        //        getSupplierId = selectedItem.Id;   // ✅ keep updated
+    //        //    } else {
+    //        //        getSupplierId = 0;
+    //        //    }
+    //        //}
+    //        change: function (e) {
+    //            debugger;
+    //            var selectedItem = this.dataItem();
+    //            if (selectedItem) {
+    //                getSupplierId = selectedItem.Id;
+    //                updatePurchaseCodeDataSource(getSupplierId);
+    //            } else {
+    //                getSupplierId = 0;
+    //                updatePurchaseCodeDataSource(0);
+    //            }
+    //        }
 
 
-
-        }).data("kendoMultiColumnComboBox");
-    }
+    //    }).data("kendoMultiColumnComboBox");
+    //}
 
 
     var GetGridDataList = function () {

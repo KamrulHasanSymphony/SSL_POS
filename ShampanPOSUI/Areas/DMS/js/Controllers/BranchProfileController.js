@@ -272,9 +272,9 @@
                                 param.field = "H.TelephoneNo";
                             }
 
-                            if (param.field === "AreaName") {
-                                param.field = "A.Name";
-                            }
+                            //if (param.field === "AreaName") {
+                            //    param.field = "A.Name";
+                            //}
                             if (param.field === "Email") {
                                 param.field = "H.Email";
                             }
@@ -327,9 +327,9 @@
                                 param.field = "H.TelephoneNo";
                             }
 
-                            if (param.field === "AreaName") {
-                                param.field = "A.Name";
-                            }
+                            //if (param.field === "AreaName") {
+                            //    param.field = "A.Name";
+                            //}
                             if (param.field === "Email") {
                                 param.field = "H.Email";
                             }
@@ -415,7 +415,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name","BanglaName", "AreaName", "Email", "Comments", "Status", "VATRegistrationNo", "BIN","TINNO"]
+                fields: ["Code", "Name","BanglaName", "AreaName", "Email", "Comments", "VATRegistrationNo", "BIN","TINNO"]
             },
             excel: {
                 fileName: "BranchProfile.xlsx",
@@ -427,20 +427,13 @@
                 //},
                 {
                     title: "Action",
-                    width: 170,
+                    width: 50,
                     template: function (dataItem) {
                         
                         return `
                                 <a href="/DMS/BranchProfile/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                     <i class="fas fa-pencil-alt"></i></a>
 
-
-                                   </a> <a class='btn bg-info btn-sm mr-2' title='Branch Advance List' href='/DMS/BranchAdvance/Index/${dataItem.Id}'>
-                                    <i class='fas fa-th-list'></i>
-                                </a>
-                                 <a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-                                    <i class='fas fa-print'></i>
-                                </a>
                                 `;
                     }
                 },
@@ -449,7 +442,7 @@
                 { field: "DistributorCode", title: "Distributor Code", sortable: true, width: 150 },
                 { field: "Name", title: "Distributor Name", sortable: true, width: 200 },
                 { field: "BanglaName", title: "Distributor Bangla Name", sortable: true, width: 200 },
-                { field: "AreaName", title: "Area Name", sortable: true, width: 200 },
+                //{ field: "AreaName", title: "Area Name", sortable: true, width: 200 },
                 { field: "TelephoneNo", title: "Telephone No.", sortable: true, width: 130 },
                 { field: "VATRegistrationNo", title: "VAT Registration No.", sortable: true, width: 180 },
                 { field: "BIN", title: "BIN", sortable: true, width: 130 },

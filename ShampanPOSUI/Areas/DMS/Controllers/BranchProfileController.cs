@@ -37,123 +37,123 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View("Create", vm);
         }
 
+
+
         [HttpPost]
         public ActionResult CreateEdit(BranchProfileVM model)
         {
             ResultModel<BranchProfileVM> result = new ResultModel<BranchProfileVM>();
-            ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+            ResultVM resultVM = new ResultVM
+            {
+                Status = "Fail",
+                Message = "Error",
+                ExMessage = null,
+                Id = "0",
+                DataVM = null
+            };
+
             _repo = new BranchProfileRepo();
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (model.Operation.ToLower() == "add")
                 {
-                    if (model.Operation.ToLower() == "add")
+                    model.CreatedBy = Session["UserId"].ToString();
+                    model.CreatedOn = DateTime.Now.ToString();
+                    model.CreatedFrom = Ordinary.GetLocalIpAddress();
+
+                    resultVM = _repo.Insert(model);
+
+                    if (resultVM.Status == ResultStatus.Success.ToString())
                     {
-                        model.CreatedBy = Session["UserId"].ToString();
-                        model.CreatedOn = DateTime.Now.ToString();
-                        model.CreatedFrom = Ordinary.GetLocalIpAddress();
+                        model = JsonConvert.DeserializeObject<BranchProfileVM>(resultVM.DataVM.ToString());
+                        model.Operation = "add";
 
-						resultVM = _repo.Insert(model);
+                        Session["result"] = resultVM.Status + "~" + resultVM.Message;
 
-                        if (resultVM.Status == ResultStatus.Success.ToString())
+                        result = new ResultModel<BranchProfileVM>()
                         {
-                            model = JsonConvert.DeserializeObject<BranchProfileVM>(resultVM.DataVM.ToString());
-                            model.Operation = "add";
-                            Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            result =  new ResultModel<BranchProfileVM>()
-                            {
-                                Success = true,
-                                Status = Status.Success,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-                        else
-                        {                            
-                            Session["result"] = "Fail" + "~" + resultVM.Message;
+                            Success = true,
+                            Status = Status.Success,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
 
-                            result = new ResultModel<BranchProfileVM>()
-                            {
-                                Status = Status.Fail,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-
-                    }
-                    else if (model.Operation.ToLower() == "update")
-                    {
-                        model.LastModifiedBy = Session["UserId"].ToString();
-                        model.LastModifiedOn = DateTime.Now.ToString();
-                        model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
-
-                        resultVM = _repo.Update(model);
-
-                        if (resultVM.Status == ResultStatus.Success.ToString())
-                        {
-                            Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            result = new ResultModel<BranchProfileVM>()
-                            {
-                                Success = true,
-                                Status = Status.Success,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-                        else
-                        {
-                            Session["result"] = "Fail" + "~" + resultVM.Message;
-
-                            result = new ResultModel<BranchProfileVM>()
-                            {
-                                Status = Status.Fail,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
+                        return Json(result);
                     }
                     else
                     {
-                        return RedirectToAction("Index");
+                        Session["result"] = "Fail" + "~" + resultVM.Message;
+
+                        result = new ResultModel<BranchProfileVM>()
+                        {
+                            Success = false,
+                            Status = Status.Fail,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+
+                        return Json(result);
                     }
                 }
-                catch (Exception e)
+                else if (model.Operation.ToLower() == "update")
                 {
-                    Session["result"] = "Fail" + "~" + e.Message;
-                    Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                    return View("Create", model);
+                    model.LastModifiedBy = Session["UserId"].ToString();
+                    model.LastModifiedOn = DateTime.Now.ToString();
+                    model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
+
+                    resultVM = _repo.Update(model);
+
+                    if (resultVM.Status == ResultStatus.Success.ToString())
+                    {
+                        Session["result"] = resultVM.Status + "~" + resultVM.Message;
+
+                        result = new ResultModel<BranchProfileVM>()
+                        {
+                            Success = true,
+                            Status = Status.Success,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+
+                        return Json(result);
+                    }
+                    else
+                    {
+                        Session["result"] = "Fail" + "~" + resultVM.Message;
+
+                        result = new ResultModel<BranchProfileVM>()
+                        {
+                            Success = false,
+                            Status = Status.Fail,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+
+                        return Json(result);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Index");
                 }
             }
-            else
+            catch (Exception e)
             {
-                string msg = string.Empty;
-                foreach (var entry in ModelState.Values)
-                {
-                    if (entry.Errors.Count > 0)
-                    {
-                        foreach (var error in entry.Errors)
-                        {
-                            msg += "," + error.ErrorMessage;
-                        }
-                    }
-                }
+                Session["result"] = "Fail" + "~" + e.Message;
+
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
 
                 result = new ResultModel<BranchProfileVM>()
                 {
                     Success = false,
                     Status = Status.Fail,
-                    Message = msg + " Model State Error!",
+                    Message = e.Message,
                     Data = model
                 };
+
                 return Json(result);
             }
-            // return View("Create", model);
-
         }
 
 

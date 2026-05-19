@@ -913,18 +913,43 @@
 
         wnd.center().open();
 
+        //$("#saleDetailsGrid").kendoGrid({
+        //    dataSource: {
+        //        transport: {
+        //            read: {
+        //                url: "/Common/Common/GetProductModalPurchase" // API for Product list
+        //            }
+        //        }
+        //    },
+        //    height: 380,
+        //    sortable: true,
+        //    filterable: true,
+        //    pageable: true,
+        //    selectable: "row",
+
+
         $("#saleDetailsGrid").kendoGrid({
+
             dataSource: {
                 transport: {
                     read: {
-                        url: "/Common/Common/GetProductModalPurchase" // API for Product list
+                        url: "/Common/Common/GetProductModalPurchase",
+                        dataType: "json"
                     }
-                }
+                },
+
+                pageSize: 10
             },
+
             height: 380,
             sortable: true,
             filterable: true,
-            pageable: true,
+
+            pageable: {
+                refresh: true,
+                pageSizes: [10, 20, 50]
+            },
+
             selectable: "row",
 
             columns: [

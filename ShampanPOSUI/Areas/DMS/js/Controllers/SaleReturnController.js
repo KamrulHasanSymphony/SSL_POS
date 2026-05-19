@@ -281,26 +281,28 @@
                         input.appendTo(container).kendoNumericTextBox({
                             format: "n2",
                             decimals: 2,
+                            min: 0,
+                            spinners: false,
                             change: function () {
                                 var grid = $("#saleOrderDetails").data("kendoGrid");
 
-                                var value = this.value() || 0;
+                                //var value = this.value() || 0;
 
-                                // ❌ Negative not allowed
-                                if (value < 0) {
+                                //// ❌ Negative not allowed
+                                //if (value < 0) {
 
-                                    value = 0;
+                                //    value = 0;
 
-                                    this.value(0);
+                                //    this.value(0);
 
-                                    ShowNotification(3, "Negative quantity is not allowed.");
-                                }
+                                //    ShowNotification(3, "Negative quantity is not allowed.");
+                                //}
 
-                                // ❌ Zero not allowed
-                                if (value === 0) {
+                                //// ❌ Zero not allowed
+                                //if (value === 0) {
 
-                                    ShowNotification(3, "Quantity must be greater than zero.");
-                                }
+                                //    ShowNotification(3, "Quantity must be greater than zero.");
+                                //}
 
 
                                 // Update the model value for Quantity
@@ -364,7 +366,7 @@
                 {
                     field: "SD",
                     title: "SD Rate",
-                    width: 100,
+                    width: 120,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 
@@ -420,7 +422,7 @@
                 {
                     field: "VATRate",
                     title: "VAT Rate",
-                    width: 100,
+                    width: 120,
                     attributes: { style: "text-align:right;" },
                     editor: function (container, options) {
 
@@ -695,18 +697,53 @@
 
         wnd.center().open();
 
+        //$("#saleDetailsGrid").kendoGrid({
+        //    dataSource: {
+        //        transport: {
+        //            read: {
+        //                url: "/Common/Common/GetProductModal" // API for Product list
+        //            }
+        //        }
+        //    },
+        //    height: 380,
+        //    sortable: true,
+        //    filterable: true,
+        //    pageable: true,
+        //    selectable: "row",
+
+
         $("#saleDetailsGrid").kendoGrid({
             dataSource: {
                 transport: {
                     read: {
-                        url: "/Common/Common/GetProductModal" // API for Product list
+                        url: "/Common/Common/GetProductModal", // Sale Return এর API
+                        dataType: "json"
+                    }
+                },
+                pageSize: 10,
+                schema: {
+                    data: function (response) {
+                        // Support plain array or Items property
+                        if (Array.isArray(response)) return response;
+                        return response.Items || [];
+                    },
+                    total: function (response) {
+                        if (Array.isArray(response)) return response.length;
+                        return response.TotalCount || 0;
                     }
                 }
             },
             height: 380,
             sortable: true,
             filterable: true,
-            pageable: true,
+            pageable: {
+                refresh: true,
+                pageSizes: [10, 20, 50],
+                messages: {
+                    display: "{0}-{1} of {2} items",
+                    empty: "No products found"
+                }
+            },
             selectable: "row",
 
             columns: [

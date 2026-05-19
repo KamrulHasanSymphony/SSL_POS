@@ -32,7 +32,7 @@ namespace ShampanPOS.Models
             [Display(Name = "Transaction Date")]
             public DateTime? TransactionDate { get; set; }
 
-            [Required(ErrorMessage = "Bank Account is required.")]
+            //[Required(ErrorMessage = "Bank Account is required.")]
             [Display(Name = "Bank Account")]
             public int? BankAccountId { get; set; }
 

@@ -154,7 +154,7 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
 
                     // Validate ProductId
                     if (finalProductId <= 0) {
-                        ShowNotification(3, "Item is required in sale details.");
+                        ShowNotification(3, "Product name is required in sale details!");
                         return;
                     }
 
@@ -951,18 +951,54 @@ var SaleOrderController = function (CommonService, CommonAjaxService) {
 
         wnd.center().open();
 
+        //$("#saleDetailsGrid").kendoGrid({
+        //    dataSource: {
+        //        transport: {
+        //            read: {
+        //                url: "/Common/Common/GetProductModal" // API for Product list
+        //            }
+        //        }
+        //    },
+        //    height: 380,
+        //    sortable: true,
+        //    filterable: true,
+        //    pageable: true,
+        //    selectable: "row",
+
+
+
         $("#saleDetailsGrid").kendoGrid({
             dataSource: {
                 transport: {
                     read: {
-                        url: "/Common/Common/GetProductModal" // API for Product list
+                        url: "/Common/Common/GetProductModal",
+                        dataType: "json"
+                    }
+                },
+                pageSize: 10,
+                schema: {
+                    data: function (response) {
+                        // Handle plain array response or Items property
+                        if (Array.isArray(response)) return response;
+                        return response.Items || [];
+                    },
+                    total: function (response) {
+                        if (Array.isArray(response)) return response.length;
+                        return response.TotalCount || 0;
                     }
                 }
             },
             height: 380,
             sortable: true,
             filterable: true,
-            pageable: true,
+            pageable: {
+                refresh: true,
+                pageSizes: [10, 20, 50],
+                messages: {
+                    display: "{0}-{1} of {2} items",
+                    empty: "No products found"
+                }
+            },
             selectable: "row",
 
             columns: [

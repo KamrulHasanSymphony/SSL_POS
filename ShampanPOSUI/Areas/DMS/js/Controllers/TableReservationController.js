@@ -309,7 +309,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "AccountName", "AccountNo", "BankId", "BranchName", "Comments", "IsCash", "Status"]
+                fields: ["TableNumber", "CustomerName"]
             },
             excel: {
                 fileName: "TableInfo.xlsx",
