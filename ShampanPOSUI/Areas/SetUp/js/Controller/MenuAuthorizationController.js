@@ -630,7 +630,11 @@
                     if (options.sort) {
                         options.sort.forEach(function (param) {
                             if (param.field === "RoleName") {
-                                param.field = "H.Name";
+                                param.field = "R.Name";
+                            }
+
+                            if (param.field === "UserId") {
+                                param.field = "UserId";
                             }
 
                         });
@@ -639,8 +643,13 @@
                     if (options.filter && options.filter.filters) {
                         options.filter.filters.forEach(function (param) {
                             if (param.field === "RoleName") {
-                                param.field = "H.Name";
+                                param.field = "RoleName";
                             }
+
+                            if (param.field === "UserId") {
+                                param.field = "UserId";
+                            }
+
                         });
                     }
                     return options;
@@ -687,8 +696,9 @@
             reorderable: true,
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
-
-            search: ["RoleName", "UserId"],
+            search: {
+                fields: ["RoleName", "UserId"]
+            },
 
             excel: {
                 fileName: "UserMenu.xlsx",
@@ -719,7 +729,7 @@
                 },
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "UserId", title: "User Name", sortable: true, width: 150 },
-                { field: "RoleName", title: "Role Name", sortable: true, width: 150 },
+                { field: "RoleName", title: "Role Name", sortable: true, width: 150 }
             ],
             editable: false,
             selectable: "row",
