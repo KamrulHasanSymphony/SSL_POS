@@ -23,9 +23,18 @@
                             read: "/SetUp/MenuAuthorization/GetRoleData"
                         }
                     },
-                    dataBound: function (e) {
-                        if (getRoleId) {
+                    placeholder: "Select Role Name",
+
+                    dataBound: function () {
+
+                        if (getRoleId != null && getRoleId != "" && getRoleId != "0") {
+
                             this.value(parseInt(getRoleId));
+
+                        } else {
+
+                            this.value("");
+                            this.text("");
                         }
                     },
                     change: function (e) {
