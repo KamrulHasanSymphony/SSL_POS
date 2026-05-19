@@ -11,9 +11,9 @@
         if (parseInt(getId) == 0 && getOperation == '') {
             GetGridDataList();
         }
-        else {
-            GetSalePersonComboBox();
-        }
+        //else {
+        //    GetSalePersonComboBox();
+        //}
 
         $("#IsSalePerson").on('switchChange.bootstrapSwitch', function (event, state) {
             if (state) {
@@ -244,7 +244,7 @@
                 //},
                 {
                     title: "Action",
-                    width: 50,
+                    width: 60,
                     template: function (dataItem) {
                         return "<a href='/SetUp/UserProfile/Edit?id=" + dataItem.Id + "&mode=profileupdate' class='btn btn-primary btn-sm mr-2 edit' title='profile update'>" +
                             "<i class='fas fa-pencil-alt'></i>" +
@@ -258,15 +258,11 @@
                     }
                 },
 
-                {
-                    field: "Id", width: 50, hidden: true, sortable: true
-                },
-                {
-                    field: "UserName", title: "User Name", sortable: true, width: 100
-                },
-                {
-                    field: "FullName", title: "Full Name", sortable: true, width: 250
-                }
+                {field: "Id", width: 50, hidden: true, sortable: true},
+                { field: "UserName", title: "User Name", sortable: true, width: 200},
+                { field: "FullName", title: "Full Name", sortable: true, width: 200 },
+                { field: "PhoneNumber", title: "Phone Number", sortable: true, width: 200 }
+
             ],
             editable: false,
             selectable: "row",
@@ -277,7 +273,7 @@
     };
 
     function save() {
-
+        debugger;
         var validator = $("#frmEntry").validate();
         var formData = new FormData();
         var model = serializeInputs("frmEntry");
@@ -347,11 +343,11 @@
             }
             else {
                 ShowNotification(1, result.Message);
-                setTimeout(function () {
-                    /*            window.location.href = "/SetUp/UserProfile/Edit?id=" + result.Data.Id +"&mode=profileupdate";*/
+            //    setTimeout(function () {
+            //        /*            window.location.href = "/SetUp/UserProfile/Edit?id=" + result.Data.Id +"&mode=profileupdate";*/
 
-                    window.location.href = "/SetUp/UserProfile/Index";
-                }, 700);
+            //        window.location.href = "/SetUp/UserProfile/Index";
+            //    }, 700);
             }
         }
         else if (result.Status == 400) {

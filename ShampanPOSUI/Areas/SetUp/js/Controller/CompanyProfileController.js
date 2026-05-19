@@ -9,21 +9,19 @@
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
 
-        $("#FYearStart").kendoDatePicker({
+        //$("#FYearStart").kendoDatePicker({
+        //});
 
-        });
-
-        $("#FYearEnd").kendoDatePicker({
-
-        });
+        //$("#FYearEnd").kendoDatePicker({
+        //});
 
         if (parseInt(getId) == 0 && getOperation == '') {
             GetGridDataList();
         };  
 
-        if (getOperation !== '') {
-            GetCompanyTypeComboBox();
-        };  
+        //if (getOperation !== '') {
+        //    GetCompanyTypeComboBox();
+        //};  
 
         $('.btnsave').click('click', function () {
             debugger;
@@ -147,34 +145,34 @@
                             if (param.field === "Code") {
                                 param.field = "H.Code";
                             }
-                            if (param.field === "Name") {
-                                param.field = "H.Name";
+
+                            if (param.field === "CompanyName") {
+                                param.field = "H.CompanyName";
                             }
-                            //if (param.field === "TelephoneNo") {
-                            //    param.field = "H.TelephoneNo";
-                            //}
-                            if (param.field === "AreaId") {
-                                param.field = "H.AreaId";
+
+                            if (param.field === "FaxNo") {
+                                param.field = "H.FaxNo";
                             }
+
                             if (param.field === "TelephoneNo") {
                                 param.field = "H.TelephoneNo";
                             }
+
                             if (param.field === "Email") {
                                 param.field = "H.Email";
                             }
-                            if (param.field === "VATRegistrationNo") {
-                                param.field = "H.VATRegistrationNo";
-                            }
+
+                            //if (param.field === "VATRegistrationNo") {
+                            //    param.field = "H.VATRegistrationNo";
+                            //}
+
                             if (param.field === "BIN") {
                                 param.field = "H.BIN";
                             }
 
-                            if (param.field === "TINNO") {
-                                param.field = "H.TINNO";
+                            if (param.field === "TIN") {
+                                param.field = "H.TIN";
                             }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }  
                             if (param.field === "Status") {
                                 let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
 
@@ -194,83 +192,90 @@
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
                                 param.field = "H.FYearStart";
                             }
+
                             if (param.field === "FYearEnd" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
                                 param.field = "H.FYearEnd";
-                            }
-                            //if (filter.field === "FYearEnd") {
-                            //    param.field = "H.FYearEnd";
-                            //}
+                            }                            
                         });
                     }
 
-                    if (options.filter && options.filter.filters) {
-                        options.filter.filters.forEach(function (param) {
-                            if (param.field === "Code") {
-                                param.field = "H.Code";
-                            }
-                            if (param.field === "CompanyName") {
-                                param.field = "H.CompanyName";
-                            }
-                            //if (param.field === "TelephoneNo") {
-                            //    param.field = "H.TelephoneNo";
-                            //}
-                            if (param.field === "FaxNo") {
-                                param.field = "H.FaxNo";
-                            }
-                            if (param.field === "TelephoneNo") {
-                                param.field = "H.TelephoneNo";
-                            }
-                            if (param.field === "Email") {
-                                param.field = "H.Email";
-                            }
-                            if (param.field === "VATRegistrationNo") {
-                                param.field = "H.VATRegistrationNo";
-                            }
-                            if (param.field === "BIN") {
-                                param.field = "H.BIN";
-                            }
-                            if (param.field === "TINNo") {
-                                param.field = "H.TINNo";
-                            }
-                            if (param.field === "Comments") {
-                                param.field = "H.Comments";
-                            }
+                    if (options.filter) {
 
-                            if (param.field === "Status") {
-                                let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+                        function mapFilters(filters) {
 
-                                if (statusValue.startsWith("a")) {
-                                    param.value = 1;
-                                } else if (statusValue.startsWith("i")) {
-                                    param.value = 0;
-                                }
-                                else if (statusValue == "1") {
-                                    param.value = 1;
-                                }
-                                else if (statusValue == "0") {
-                                    param.value = 0;
-                                }
-                                else {
-                                    param.value = null;
+                            filters.forEach(function (param) {
+
+                                // Handle nested filters
+                                if (param.filters) {
+                                    mapFilters(param.filters);
+                                    return;
                                 }
 
-                                param.field = "H.IsActive";
-                                param.operator = "eq";
-                            }
+                                if (param.field === "Code") {
+                                    param.field = "H.Code";
+                                }
 
-                            //if (filter.field === "FYearStart" || filter.field === "FYearEnd") {
-                            //    filter.value = kendo.toString(filter.value, "yyyy-MM-dd");
-                            //}
-                            if (param.field === "FYearStart" && param.value) {
-                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "CONVERT(VARCHAR(10), H.FYearStart, 120)";
-                            }
-                            if (param.field === "FYearEnd" && param.value) {
-                                param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "CONVERT(VARCHAR(10), H.FYearEnd, 120)";
-                            }
-                        });
+                                if (param.field === "CompanyName") {
+                                    param.field = "H.CompanyName";
+                                }
+
+                                if (param.field === "FaxNo") {
+                                    param.field = "H.FaxNo";
+                                }
+
+                                if (param.field === "TelephoneNo") {
+                                    param.field = "H.TelephoneNo";
+                                }
+
+                                if (param.field === "Email") {
+                                    param.field = "H.Email";
+                                }
+
+                                //if (param.field === "VATRegistrationNo") {
+                                //    param.field = "H.VATRegistrationNo";
+                                //}
+
+                                if (param.field === "BIN") {
+                                    param.field = "H.BIN";
+                                }
+
+                                if (param.field === "TIN") {
+                                    param.field = "H.TIN";
+                                }
+
+                                if (param.field === "Status") {
+
+                                    let statusValue = param.value
+                                        ? param.value.toString().trim().toLowerCase()
+                                        : "";
+
+                                    if (statusValue.startsWith("a") || statusValue == "1") {
+                                        param.value = 1;
+                                    }
+                                    else if (statusValue.startsWith("i") || statusValue == "0") {
+                                        param.value = 0;
+                                    }
+                                    else {
+                                        param.value = null;
+                                    }
+
+                                    param.field = "H.IsActive";
+                                    param.operator = "eq";
+                                }
+
+                                if (param.field === "FYearStart" && param.value) {
+                                    param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+                                    param.field = "H.FYearStart";
+                                }
+
+                                if (param.field === "FYearEnd" && param.value) {
+                                    param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+                                    param.field = "H.FYearEnd";
+                                }
+                            });
+                        }
+                        mapFilters(options.filter.filters);
                     }
                     return options;
                 }
@@ -323,7 +328,8 @@
             reorderable: true,
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
-            search: ["Code", "Name", "CompanyName", "TelephoneNo", "FYearStart", "FYearEnd","Status"],
+
+            search: ["Code","CompanyName", "TelephoneNo", "FYearStart", "FYearEnd", "Status"],
             excel: {
                 fileName: "CompanyProfiles.xlsx",
                 filterable: true
@@ -399,16 +405,13 @@
                 //},
                 {
                     title: "Action",
-                    width: 100,
+                    width: 50,
                     template: function (dataItem) {
 
                         return `
                                 <a href="/SetUp/CompanyProfile/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
                                     <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                 <a style='background-color: darkgreen;' href='#' onclick='ReportPreview(${dataItem.Id})' class='btn btn-success btn-sm mr-2 edit' title='Report Preview'>
-                                    <i class='fas fa-print'></i>
-                                </a>
+                                </a>                               
                                 `;
                     }
                 },
@@ -432,9 +435,9 @@
                 { field: "TelephoneNo", title: "Telephon No.", sortable: true, width: 140 },
                 { field: "FaxNo", title: "Fax No.", width: 140, sortable: true },
                 { field: "Email", title: "Email", width: 200, sortable: true },
-                { field: "VatRegistrationNo", title: "VAT Registration No.", sortable: true, hidden: true, width: 200 },
+                //{ field: "VatRegistrationNo", title: "VAT Registration No.", sortable: true, hidden: true, width: 200 },
                 { field: "BIN", title: "BIN", sortable: true, width: 140 },
-                { field: "TINNo", title: "TIN No.", width: 140, hidden: true, sortable: true },
+                { field: "TIN", title: "TIN No.", width: 140, hidden: true, sortable: true },
                 { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                
                 {
