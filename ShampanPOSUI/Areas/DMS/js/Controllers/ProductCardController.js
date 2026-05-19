@@ -29,9 +29,17 @@
             });
 
             $(".kendoInvoiceDateTime").kendoDateTimePicker({
-                format: "yyyy-MM-dd HH:mm"
-            });
+                format: "yyyy-MM-dd HH:mm",
 
+                change: function () {
+
+                    $(this.element).removeClass("input-validation-error");
+
+                    this.wrapper.removeClass("k-invalid");
+
+                    $("#invoiceError").text("").hide();
+                }
+            });
         });
 
         let currentKeyword = "";
@@ -92,25 +100,65 @@
             }
 
             function markInvalid(selector, message) {
-                var widget = $(selector).data("kendoMultiColumnComboBox");
-                if (widget) {
-                    widget.wrapper.addClass("k-invalid");
-                    widget._inputWrapper.addClass("k-state-invalid");
-                } else {
+
+                var multiColumn = $(selector).data("kendoMultiColumnComboBox");
+                var datePicker = $(selector).data("kendoDateTimePicker");
+
+                if (multiColumn) {
+
+                    multiColumn.wrapper.addClass("k-invalid");
+                    multiColumn._inputWrapper.addClass("k-state-invalid");
+                }
+                else if (datePicker) {
+
+                    datePicker.wrapper.addClass("k-invalid");
+                }
+                else {
+
                     $(selector).addClass("input-validation-error");
                 }
-                $(selector).closest(".input-group").siblings("span.text-danger").text(message).show();
+
+                // CustomerId
+                if (selector === "#CustomerId") {
+
+                    $("#titleError1").text(message).show();
+                }
+
+                // InvoiceDateTime
+                if (selector === "#InvoiceDateTime") {
+
+                    $("#invoiceError").text(message).show();
+                }
             }
 
             function clearInvalid(selector) {
-                var widget = $(selector).data("kendoMultiColumnComboBox");
-                if (widget) {
-                    widget.wrapper.removeClass("k-invalid");
-                    widget._inputWrapper.removeClass("k-state-invalid");
-                } else {
+
+                var multiColumn = $(selector).data("kendoMultiColumnComboBox");
+                var datePicker = $(selector).data("kendoDateTimePicker");
+
+                if (multiColumn) {
+
+                    multiColumn.wrapper.removeClass("k-invalid");
+                    multiColumn._inputWrapper.removeClass("k-state-invalid");
+                }
+                else if (datePicker) {
+
+                    datePicker.wrapper.removeClass("k-invalid");
+                }
+                else {
+
                     $(selector).removeClass("input-validation-error");
                 }
-                $(selector).closest(".input-group").siblings("span.text-danger").text("").hide();
+
+                if (selector === "#CustomerId") {
+
+                    $("#titleError1").text("").hide();
+                }
+
+                if (selector === "#InvoiceDateTime") {
+
+                    $("#invoiceError").text("").hide();
+                }
             }
 
             clearInvalid("#CustomerId");
@@ -129,10 +177,24 @@
                 isFormValid = false;
             }
 
-            if (isEmpty(model.TransactionDateTime)) {
-                markInvalid("#TransactionDateTime", "Transaction Date is required.");
+            var invoiceValue = $("#InvoiceDateTime")
+                .data("kendoDateTimePicker")
+                ?.value();
+
+            if (!invoiceValue) {
+
+                markInvalid("#InvoiceDateTime", "Invoice Date Time is required.");
                 isFormValid = false;
             }
+            else {
+
+                clearInvalid("#InvoiceDateTime");
+            }
+
+            if (!isFormValid) {
+                return;
+            }
+
 
             var details = [];
             var grid = $("#saleDetails").data("kendoGrid");
@@ -1286,6 +1348,22 @@
             dataBound: function (e) {
                 if (getCustomerId) {
                     this.value(parseInt(getCustomerId));
+                }
+            },
+            change: function () {
+
+                var value = this.value();
+
+                if (value && value > 0) {
+
+                    this.wrapper.removeClass("k-invalid");
+                    this._inputWrapper.removeClass("k-state-invalid");
+
+                    $("#CustomerId")
+                        .closest(".input-group")
+                        .siblings("span.text-danger")
+                        .text("")
+                        .hide();
                 }
             }
         }).data("kendoMultiColumnComboBox");

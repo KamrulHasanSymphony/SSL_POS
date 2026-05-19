@@ -101,28 +101,6 @@
                 return value === "" || value === null || value === undefined;
             }
 
-            //function markInvalid(selector, message) {
-            //    var widget = $(selector).data("kendoMultiColumnComboBox");
-            //    if (widget) {
-            //        widget.wrapper.addClass("k-invalid");
-            //        widget._inputWrapper.addClass("k-state-invalid");
-            //    } else {
-            //        $(selector).addClass("input-validation-error");
-            //    }
-            //    $(selector).closest(".input-group").siblings("span.text-danger").text(message).show();
-            //}
-
-            //function clearInvalid(selector) {
-            //    var widget = $(selector).data("kendoMultiColumnComboBox");
-            //    if (widget) {
-            //        widget.wrapper.removeClass("k-invalid");
-            //        widget._inputWrapper.removeClass("k-state-invalid");
-            //    } else {
-            //        $(selector).removeClass("input-validation-error");
-            //    }
-            //    $(selector).closest(".input-group").siblings("span.text-danger").text("").hide();
-            //}
-
             function markInvalid(selector, message) {
 
                 var multiColumn = $(selector).data("kendoMultiColumnComboBox");
@@ -240,12 +218,12 @@
                         finalProductId = item.ItemId;
                     }
 
-                    if (finalProductId < 0) {
+                    if (finalProductId <= 0) {
                         ShowNotification(3, "Item is required in sale details.");
                         return;
                     }
 
-                    if (!item.Quantity || item.Quantity < 0) {
+                    if (!item.Quantity || item.Quantity <= 0) {
                         ShowNotification(3, "Quantity must be greater than zero.");
                         return;
                     }
@@ -1098,7 +1076,7 @@
                 },
                 {
                     field: "Remarks",
-                    title: "Remarks",
+                    title: "Reference No.",
                     width: 150,
                     editor: function (container, options) {
 
@@ -1817,8 +1795,15 @@
                             }
                             if (param.field === "InvoiceDateTime" && param.value) {
                                 param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
-                                param.field = "H.InvoiceDateTime";
+
+                                param.field = "CAST(H.InvoiceDateTime AS DATE)";
+
+                                param.operator = "eq";
                             }
+                            //if (param.field === "InvoiceDateTime" && param.value) {
+                            //    param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+                            //    param.field = "H.InvoiceDateTime";
+                            //}
 
                         });
                     }
@@ -1883,7 +1868,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Id", "Code", "Status", "CustomerName", "InvoiceDateTime"]
+                fields: ["Code", "Status", "CustomerName", "InvoiceDateTime"]
             },
 
             detailInit: function (e) {
@@ -2068,7 +2053,7 @@
                 { field: "SaleOrderCode", title: "Sale Order Code", width: 180, sortable: true },
                 { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
                 {
-                    field: "InvoiceDateTime", title: "Invoice DateTime", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
+                    field: "InvoiceDateTime", title: "Invoice Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(InvoiceDateTime), "yyyy-MM-dd") #',
                     filterable:
                     {
                         ui: "datepicker"

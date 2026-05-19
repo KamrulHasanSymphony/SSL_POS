@@ -758,38 +758,39 @@
                     </div>
 
 
-                    <div class="col-sm-2">
-                        @Html.LabelFor(model => model.SaleOrderCode)
-                        <div class="input-group">
+                    @*<div class="col-sm-2">
+            @Html.LabelFor(model => model.SaleOrderCode)
+            <div class="input-group">
 
-                            @Html.TextBoxFor(model => model.SaleOrderCode, new
-                            {
-                                @class = "form-control form-control-sm",
-                                @readonly = "readonly"   // ✅ only textbox readonly
-                            })
+                @Html.TextBoxFor(model => model.SaleOrderCode, new
+                {
+                    @class = "form-control form-control-sm",
+                    @readonly = "readonly"   // ✅ only textbox readonly
+                })
 
-                            <div class="input-group-append">
-                                <button type="button"
-                                        class="btn btn-outline-primary btn-sm"
-                                        id="btnSearchPurchaseOrder">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
+                <div class="input-group-append">
+                    <button type="button"
+                            class="btn btn-outline-primary btn-sm"
+                            id="btnSearchPurchaseOrder">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
 
-                        </div>
-                    </div>
-
-
+            </div>
+        </div>*@
 
 
                     <div class="col-sm-2 mr-4">
                         @Html.LabelFor(model => model.InvoiceDateTime)
 
                         @Html.TextBoxFor(model => model.InvoiceDateTime, new
-                   {
-                       @class = "kendoInvoiceDateTime",
-                       style = "width:95%; height:2em;"
-                   })
+                        {
+                            @class = "kendoInvoiceDateTime",
+                            style = "width:95%; height:2em;",
+                            required = "required"
+                        })
+
+                        <span id="invoiceError" class="text-danger" style="display:none;"></span>
                     </div>
 
 
