@@ -11,20 +11,20 @@
 
         $(document).ready(function () {
 
-            $(".kendoChequeDate").data("kendoDatePicker").bind("change", function () {
+        //    $(".kendoChequeDate").data("kendoDatePicker").bind("change", function () {
 
-                var chequeDate = this.value();
-                var transactionDate = $(".kendoTransactionDate").data("kendoDatePicker").value();
+        //        var chequeDate = this.value();
+        //        var transactionDate = $(".kendoTransactionDate").data("kendoDatePicker").value();
 
-                if (chequeDate && transactionDate) {
+        //        if (chequeDate && transactionDate) {
 
-                    if (chequeDate < transactionDate) {
-                        alert("Cheque Date cannot be earlier than Transaction Date.");
+        //            if (chequeDate < transactionDate) {
+        //                alert("Cheque Date cannot be earlier than Transaction Date.");
 
-                        this.value(null);
-                    }
-                }
-            });
+        //                this.value(null);
+        //            }
+        //        }
+        //    });
         });
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
@@ -132,38 +132,6 @@
 
     };
 
-    //function GetFromBankAccountComboBox() {
-    //    debugger;
-    //    var BankAccountCombo = $("#FromBankAccountId").kendoMultiColumnComboBox({
-    //        dataTextField: "AccountNo",
-    //        dataValueField: "BankId",
-    //        height: 400,
-    //        columns: [
-    //            { field: "AccountNo", title: "Account No", width: 150 },
-    //            { field: "AccountName", title: "Account Name", width: 150 },
-    //            { field: "BranchName", title: "Branch Name", width: 150 }
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetBankAccountList"
-    //            }
-    //        },
-    //        placeholder: "Select BankAccount",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getFromBankAccountId) {
-    //                this.value(parseInt(getFromBankAccountId));
-    //            }
-    //        },
-    //        change: function (e) {
-    //            this.element.val(this.value());
-    //            this.element.trigger("blur");
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
-
 
     function GetFromBankAccountComboBox() {
 
@@ -203,37 +171,6 @@
         }).data("kendoMultiColumnComboBox");
 
     }
-    //function GetToBankAccountComboBox() {
-    //    debugger;
-    //    var BankAccountCombo = $("#ToBankAccountId").kendoMultiColumnComboBox({
-    //        dataTextField: "AccountNo",
-    //        dataValueField: "BankId",
-    //        height: 400,
-    //        columns: [
-    //            { field: "AccountNo", title: "Account No", width: 150 },
-    //            { field: "AccountName", title: "Account Name", width: 150 },
-    //            { field: "BranchName", title: "Branch Name", width: 150 }
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["Code", "Name"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetBankAccountList"
-    //            }
-    //        },
-    //        placeholder: "Select BankAccount",
-    //        value: "",
-    //        dataBound: function (e) {
-    //            if (getToBankAccountId) {
-    //                this.value(parseInt(getToBankAccountId));
-    //            }
-    //        },
-    //        change: function (e) {
-    //            this.element.val(this.value());
-    //            this.element.trigger("blur");
-    //        }
-    //    }).data("kendoMultiColumnComboBox");
-    //};
 
     function GetToBankAccountComboBox() {
 
