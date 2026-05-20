@@ -20,7 +20,7 @@
         var selectedId = selectedRadio.val();
         var model = { IDs: [selectedId] }; // single ID as array
 
-        var form = $('<form>').attr('method', 'post').attr('action', '/DMS/SaleReturn/GetFromSale');
+        var form = $('<form>').attr('method', 'post').attr('action', '/DMS/PurchaseReturn/GetFromPurchase'); 
         $.each(model, function (key, value) {
             if ($.isArray(value)) {
                 $.each(value, function (i, v) {

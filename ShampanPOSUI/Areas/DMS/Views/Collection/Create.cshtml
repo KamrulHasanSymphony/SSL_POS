@@ -94,24 +94,31 @@
                         </div>
                     </div>
 
-                    @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.TransactionDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.TransactionDate, new { @class = " required form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>*@
-                    <div class="col-sm-2 pr-3">
+                    <div class="col-sm-2 d-flex flex-column">
                         @Html.LabelFor(model => model.TransactionDate)
 
-                        @Html.TextBoxFor(model => model.TransactionDate, new
-                   {
-                       @class = "kendoTransactionDate",
-                       style = "width:100%; height:2em;"
-                   })
+                        <div style="width:100%">
+                            @Html.TextBoxFor(model => model.TransactionDate, new
+                            {
+                                @class = "form-control kendoTransactionDate",
+                                style = "width:100%; height:2em;"
+                            })
+
+                            @Html.ValidationMessageFor(model => model.TransactionDate, "",
+                                new { @class = "text-danger" })
+                        </div>
                     </div>
+
+
+                    @*<div class="col-sm-2 pr-3">
+             @Html.LabelFor(model => model.TransactionDate)
+
+             @Html.TextBoxFor(model => model.TransactionDate, new
+        {
+            @class = "kendoTransactionDate",
+            style = "width:100%; height:2em;"
+        })
+         </div>*@
 
                     <div class="col-sm-2">
                         @Html.LabelFor(model => model.CustomerId)
@@ -138,17 +145,24 @@
                         </div>
                     </div>
 
-                    @*<div class="col-sm-2">
-            @Html.LabelFor(model => model.ChequeDate)
-            <div class="input-group date">
-                @Html.TextBoxFor(model => model.ChequeDate, new { @class = "  form-control form-control-sm dateRange" })
-                <div class="input-group-append">
-                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                </div>
-            </div>
-        </div>*@
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 d-flex flex-column">
+                        @Html.LabelFor(model => model.ChequeDate)
+
+                        <div style="width:100%">
+                            @Html.TextBoxFor(model => model.ChequeDate, new
+                            {
+                                @class = "form-control kendoChequeDate",
+                                style = "width:100%; height:2em;"
+                            })
+
+                            @Html.ValidationMessageFor(model => model.ChequeDate, "",
+                                new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    @*<div class="col-sm-2">
                         @Html.LabelFor(model => model.ChequeDate)
 
                         @Html.TextBoxFor(model => model.ChequeDate, new
@@ -157,7 +171,7 @@
                        style = "width:100%; height:2em;"
 
                    })
-                    </div>
+                    </div>*@
 
                 </div>
 

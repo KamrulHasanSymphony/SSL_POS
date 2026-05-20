@@ -140,15 +140,32 @@
                     width: 250
                 },
 
-                { field: "PurchaseAmount", title: "Purchase Amount", width: 120, format: "{0:n2}", editable: false },
+                { field: "PurchaseAmount", title: "Purchase Amount", width: 120, format: "{0:n2}", editable: true },
 
-                { field: "PaidAmount", title: "Paid", width: 120, format: "{0:n2}", editable: false },
+                { field: "PaidAmount", title: "Paid", width: 120, format: "{0:n2}", editable: true },
 
-                { field: "DueAmount", title: "Due", width: 120, format: "{0:n2}", editable: false },
+                { field: "DueAmount", title: "Due", width: 120, format: "{0:n2}", editable: true },
 
-                { field: "PaymentAmount", title: "Payment Amount", width: 150 },
+                //{ field: "PaymentAmount", title: "Payment Amount", width: 150 },
 
-                { field: "DueAfter", title: "Due After", width: 150, format: "{0:n2}", editable: false },
+
+                {
+                    field: "PaymentAmount",
+                    title: "Payment Amount",
+                    width: 150,
+                    editor: function (container, options) {
+                        $('<input name="' + options.field + '" type="number" min="0" class="k-input k-textbox" />')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                format: "n2",
+                                min: 0 // ✅ Prevent negative input
+                            });
+                    }
+                },
+
+
+
+                { field: "DueAfter", title: "Due After", width: 150, format: "{0:n2}", editable: true },
 
                 {
                     command: [{ name: "destroy", text: "", iconClass: "k-icon k-i-trash" }],
@@ -455,13 +472,11 @@
     function updatePurchaseCodeDataSource(supplierId) {
         var windowGrid = $("#windowGrid").data("kendoGrid");
 
-        // Destroy previous grid if exists
         if (windowGrid) {
             windowGrid.destroy();
             $("#windowGrid").empty();
         }
-        debugger;
-        // Create grid with supplier filter
+
         $("#windowGrid").kendoGrid({
             dataSource: {
                 transport: {
@@ -489,20 +504,25 @@
             ],
             dataBound: function () {
                 this.tbody.find("tr").off("dblclick").on("dblclick", function () {
-                    var dataItem = $("#windowGrid").data("kendoGrid").dataItem(this);
+                    var grid = $("#windowGrid").data("kendoGrid");
+                    var dataItem = grid.dataItem(this);
+
                     if (!dataItem || !selectedGridModel) return;
 
-                    var detailsGrid = $("#PaymentDetailsGrid").data("kendoGrid");
-                    if (!detailsGrid) return;
+                    var paymentGrid = $("#PaymentDetailsGrid").data("kendoGrid");
+                    if (!paymentGrid) return;
 
                     // Duplicate check
-                    if (detailsGrid.dataSource.data().some(item => item.PurchaseId == dataItem.Id)) {
-                        notification.show("This item already added", "error");
-                        $("#poWindow").data("kendoWindow").close();
-                        return;
+                    var exists = paymentGrid.dataSource.data().some(function (item) {
+                        return item.PurchaseCode === dataItem.Code;
+                    });
+
+                    if (exists) {
+                        ShowNotification(3, "This item already added!");
+                        return; // Prevent adding duplicate
                     }
 
-                    // Set details into main grid
+                    // Add selected item to main grid
                     selectedGridModel.set("PurchaseId", dataItem.Id);
                     selectedGridModel.set("PurchaseCode", dataItem.Code);
                     selectedGridModel.set("PurchaseAmount", dataItem.GrandTotal);
@@ -512,33 +532,40 @@
                     selectedGridModel.set("PaymentAfter", dataItem.PaymentAmount);
                     selectedGridModel.set("DueAfter", dataItem.DueAmount);
 
+                    // ✅ Close popup only on valid selection
                     $("#poWindow").data("kendoWindow").close();
                 });
             }
         });
     }
 
-    // 3️⃣ Open popup modal
     function openModal(gridModel) {
-        selectedGridModel = gridModel;
-        var window = $("#packageDetailsWindow").data("kendoWindow");
+        selectedGridModel = gridModel; // ✅ Set selected model first
 
-        if (!window) {
-            if (!window) {
-                $("#poWindow").kendoWindow({
-                    title: "Select Order",
-                    modal: true,
-                    width: "900px",
-                    height: "550px",
-                    visible: false,
-                    close: function () { selectedGridModel = null; }
-                }).data("kendoWindow").center().open();
-                debugger;
-                var supplierId = $("#SupplierId").val();
-                updatePurchaseCodeDataSource(supplierId);
-            }                // Load grid on open
+        var poWindow = $("#poWindow").data("kendoWindow");
+
+        if (!poWindow) {
+            $("#poWindow").kendoWindow({
+                title: "Select Purchase",
+                modal: true,
+                width: "900px",
+                height: "550px",
+                visible: false,
+                close: function () { selectedGridModel = null; }
+            });
         }
+
+        // Load grid first
+        var supplierId = $("#SupplierId").val() || 0;
+        updatePurchaseCodeDataSource(supplierId);
+
+        // Open popup after grid is ready
+        setTimeout(function () {
+            $("#poWindow").data("kendoWindow").center().open();
+        }, 100); // short delay to ensure grid is bound
     }
+
+
     function calculateTotalPaymentGrid() {
 
         var grid = $("#PaymentDetailsGrid").data("kendoGrid");

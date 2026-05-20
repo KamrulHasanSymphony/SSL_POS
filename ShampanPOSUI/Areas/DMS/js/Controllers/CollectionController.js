@@ -134,14 +134,28 @@
                     width: 250
                 },
 
-                { field: "SaleAmount", title: "Sale Amount", width: 120, format: "{0:n2}", editable: false },
-                { field: "PaidAmount", title: "Paid", width: 120, format: "{0:n2}", editable: false },
-                { field: "DueAmount", title: "Due", width: 120, format: "{0:n2}", editable: false },
+                { field: "SaleAmount", title: "Sale Amount", width: 120, format: "{0:n2}", editable: true },
+                { field: "PaidAmount", title: "Paid", width: 120, format: "{0:n2}", editable: true },
+                { field: "DueAmount", title: "Due", width: 120, format: "{0:n2}", editable: true },
 
-                { field: "CollectionAmount", title: "Collection Amount", width: 150 },
+                //{ field: "CollectionAmount", title: "Collection Amount", width: 150 },
 
-                //{ field: "PaymentAfter", title: "Payment After", width: 150, format: "{0:n2}", editable: false },
-                { field: "DueAfter", title: "Due After", width: 150, format: "{0:n2}", editable: false },
+                {
+                    field: "CollectionAmount",
+                    title: "Collection Amount",
+                    width: 150,
+                    editor: function (container, options) {
+                        $('<input name="' + options.field + '" type="number" min="0" class="k-input k-textbox" />')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                format: "n2",
+                                min: 0 // ✅ Prevent negative input
+                            });
+                    }
+                },
+
+
+                { field: "DueAfter", title: "Due After", width: 150, format: "{0:n2}", editable: true },
 
                 {
                     command: [{ name: "destroy", text: "", iconClass: "k-icon k-i-trash" }],
@@ -417,27 +431,132 @@
 
         kendo.bind(container, options.model);
     }
-    var selectedGridModel = null;
-    function openModal(gridModel) {
-        selectedGridModel = gridModel;
 
-        $("#poWindow").kendoWindow({
-            title: "Select Order",
-            modal: true,
-            width: "900px",
-            height: "550px",
-            visible: false,
-            close: function () {
-                selectedGridModel = null;
+    //var selectedGridModel = null;
+    //function openModal(gridModel) {
+    //    selectedGridModel = gridModel;
+
+    //    $("#poWindow").kendoWindow({
+    //        title: "Select Order",
+    //        modal: true,
+    //        width: "900px",
+    //        height: "550px",
+    //        visible: false,
+    //        close: function () {
+    //            selectedGridModel = null;
+    //        }
+    //    }).data("kendoWindow").center().open();
+
+    //    $("#windowGrid").kendoGrid({
+    //        dataSource: {
+    //            transport: {
+    //                read: {
+    //                    url: "/Common/Common/SaleModal",
+    //                    dataType: "json"
+    //                }
+    //            },
+    //            pageSize: 10
+    //        },
+    //        pageable: true,
+    //        filterable: true,
+    //        selectable: "row",
+    //        toolbar: ["search"],
+    //        searchable: true,
+    //        columns: [
+    //            { field: "Id", hidden: true },
+    //            { field: "Code", title: "Code", width: 180 },
+    //            { field: "CustomerId", hidden: true },
+    //            { field: "CustomerName", title: "Customer Name", width: 130 },
+    //            { field: "SaleOrderId", hidden: true },
+    //            { field: "SaleOrderCode", title: "SaleOrder Code", width: 180 },
+    //            { field: "GrandTotal", title: "Grand Total", width: 100 },
+    //            { field: "PaymentAmount", title: "Payment Amount", width: 100 },
+    //            { field: "DueAmount", title: "Due Amount", width: 100 },
+    //            { field: "Comments", title: "Comments", width: 100 }
+    //        ],
+    //        dataBound: function () {
+    //            this.tbody.find("tr").on("dblclick", function () {
+    //                var grid = $("#windowGrid").data("kendoGrid");
+    //                var dataItem = grid.dataItem(this);
+    //                if (dataItem && selectedGridModel) {
+    //                    selectedGridModel.set("SaleId", dataItem.Id);
+    //                    selectedGridModel.set("SaleCode", dataItem.Code);
+    //                    selectedGridModel.set("SaleAmount", dataItem.GrandTotal);
+    //                    selectedGridModel.set("PaidAmount", dataItem.PaymentAmount);
+    //                    selectedGridModel.set("DueAmount", dataItem.DueAmount);
+
+    //                    selectedGridModel.set("CollectionAmount", 0);
+    //                    selectedGridModel.set("PaymentAfter", dataItem.PaymentAmount);
+    //                    selectedGridModel.set("DueAfter", dataItem.DueAmount);
+
+    //                    var window = $("#poWindow").data("kendoWindow");
+    //                    if (window) window.close();
+    //                }
+    //            });
+    //        }
+    //    });
+    //}
+
+
+
+
+    // Selected details row model
+
+    var selectedGridModel = null;
+
+    // 1️⃣ Customer ComboBox
+
+    function GetCustomerComboBox() {
+        $("#CustomerId").kendoMultiColumnComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            height: 400,
+            columns: [
+                { field: "Code", title: "Code", width: 100 },
+                { field: "Name", title: "Name", width: 150 }
+            ],
+            filter: "contains",
+            filterFields: ["Code", "Name"],
+            dataSource: {
+                transport: { read: "/Common/Common/GetCustomerList" },
+                schema: {
+                    data: function (response) {
+                        // Id = 0 remove করা
+                        if (Array.isArray(response)) {
+                            return response.filter(x => x.Id !== 0);
+                        }
+                        return response;
+                    }
+                }
+            },
+            placeholder: "Select Customer",
+            autoBind: true, // load data immediately
+            value: "",      // no default selection
+            change: function () {
+                var selectedItem = this.dataItem();
+                var customerId = selectedItem ? selectedItem.Id : 0;
+                updateCustomerSaleCodeGrid(customerId); // reload popup grid
             }
-        }).data("kendoWindow").center().open();
+        });
+    }
+
+
+    // 2️⃣ Create/update customer-wise SaleCode popup grid
+    function updateCustomerSaleCodeGrid(customerId) {
+        var windowGrid = $("#windowGrid").data("kendoGrid");
+
+        if (windowGrid) {
+            windowGrid.destroy();
+            $("#windowGrid").empty();
+        }
 
         $("#windowGrid").kendoGrid({
             dataSource: {
                 transport: {
                     read: {
                         url: "/Common/Common/SaleModal",
-                        dataType: "json"
+                        dataType: "json",
+                        data: { value: customerId ? customerId : 0 } // filter by customer
                     }
                 },
                 pageSize: 10
@@ -460,10 +579,23 @@
                 { field: "Comments", title: "Comments", width: 100 }
             ],
             dataBound: function () {
-                this.tbody.find("tr").on("dblclick", function () {
+                this.tbody.find("tr").off("dblclick").on("dblclick", function () {
                     var grid = $("#windowGrid").data("kendoGrid");
                     var dataItem = grid.dataItem(this);
+
                     if (dataItem && selectedGridModel) {
+                        // 🔹 Duplicate check
+                        var collectionGrid = $("#CollectionDetailsGrid").data("kendoGrid");
+                        var exists = collectionGrid.dataSource.data().some(function (item) {
+                            return item.SaleCode === dataItem.Code;
+                        });
+
+                        if (exists) {
+                            ShowNotification(3, "This item already added! ");
+                            return; // Prevent adding duplicate
+                        }
+
+                        // Add item if not duplicate
                         selectedGridModel.set("SaleId", dataItem.Id);
                         selectedGridModel.set("SaleCode", dataItem.Code);
                         selectedGridModel.set("SaleAmount", dataItem.GrandTotal);
@@ -481,6 +613,25 @@
             }
         });
     }
+
+    // 3️⃣ Open modal
+    function openModal(gridModel) {
+        selectedGridModel = gridModel;
+
+        $("#poWindow").kendoWindow({
+            title: "Select Sale",
+            modal: true,
+            width: "900px",
+            height: "550px",
+            visible: false,
+            close: function () { selectedGridModel = null; }
+        }).data("kendoWindow").center().open();
+
+        var customerId = $("#CustomerId").val();
+        updateCustomerSaleCodeGrid(customerId);
+    }
+
+
     function calculateTotalCollectGrid() {
 
         var grid = $("#CollectionDetailsGrid").data("kendoGrid");
@@ -556,40 +707,6 @@
     };
 
 
-    //function GetBankAccountComboBox() {
-
-    //    var bankId = $("#BankAccountId").val();
-
-    //    var combo = $("#BankAccountId").kendoMultiColumnComboBox({
-    //        dataTextField: "AccountNo",
-    //        dataValueField: "Id",
-    //        height: 400,
-    //        columns: [
-    //            { field: "AccountNo", title: "Account No", width: 150 },
-    //            { field: "AccountName", title: "Account Name", width: 150 },
-    //            { field: "BranchName", title: "Branch Name", width: 150 }
-    //        ],
-    //        filter: "contains",
-    //        filterFields: ["AccountNo", "AccountName", "BranchName"],
-    //        dataSource: {
-    //            transport: {
-    //                read: "/Common/Common/GetBankAccountList"
-    //            }
-    //        },
-    //        placeholder: "Select Bank Account"
-    //    }).data("kendoMultiColumnComboBox");
-
-    //    // set value after datasource load
-    //    combo.one("dataBound", function () {
-    //        if (bankId) {
-    //            combo.value(bankId);
-    //        }
-    //    });
-
-    //}
-
-
-
     function GetBankAccountComboBox() {
 
         // Get initial value
@@ -652,43 +769,43 @@
 
 
 
-    var getCustomerId = $("#CustomerId").val() || "";
+    //var getCustomerId = $("#CustomerId").val() || "";
 
 
-    function GetCustomerComboBox() {
-        var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
-            dataTextField: "Name",
-            dataValueField: "Id",
-            height: 400,
-            columns: [
-                { field: "Code", title: "Code", width: 100 },
-                { field: "Name", title: "Name", width: 150 },
-                { field: "BanglaName", title: "BanglaName", width: 200 }
-            ],
-            filter: "contains",
-            filterFields: ["Code", "Name", "BanglaName"],
-            dataSource: {
-                transport: {
-                    read: "/Common/Common/GetCustomerList" 
-                }
-            },
-            placeholder: "Select Customer", 
-            value: "", 
-            dataBound: function (e) {
+    //function GetCustomerComboBox() {
+    //    var CustomerComboBox = $("#CustomerId").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 },
+    //            { field: "BanglaName", title: "BanglaName", width: 200 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name", "BanglaName"],
+    //        dataSource: {
+    //            transport: {
+    //                read: "/Common/Common/GetCustomerList" 
+    //            }
+    //        },
+    //        placeholder: "Select Customer", 
+    //        value: "", 
+    //        dataBound: function (e) {
                 
-                if (getCustomerId && getCustomerId !== "0") {
-                    this.value(parseInt(getCustomerId));  
-                } else {
-                    this.value("");  
-                }
-            }
-        }).data("kendoMultiColumnComboBox");
+    //            if (getCustomerId && getCustomerId !== "0") {
+    //                this.value(parseInt(getCustomerId));  
+    //            } else {
+    //                this.value("");  
+    //            }
+    //        }
+    //    }).data("kendoMultiColumnComboBox");
 
        
-        if (!getCustomerId || getCustomerId === "0") {
-            CustomerComboBox.value("");  
-        }
-    }
+    //    if (!getCustomerId || getCustomerId === "0") {
+    //        CustomerComboBox.value("");  
+    //    }
+    //}
 
 
 
