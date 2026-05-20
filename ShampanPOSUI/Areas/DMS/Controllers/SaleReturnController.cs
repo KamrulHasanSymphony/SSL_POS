@@ -752,12 +752,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 SaleRepo _repoo = new SaleRepo();
 
-                SaleReturnVM purchaseReturn = new SaleReturnVM();
+                SaleReturnVM saleReturn = new SaleReturnVM();
                 ResultVM result = _repoo.SaleList(vm);
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
-                    purchaseReturn = JsonConvert.DeserializeObject<List<SaleReturnVM>>(result.DataVM.ToString()).FirstOrDefault();
+                    saleReturn = JsonConvert.DeserializeObject<List<SaleReturnVM>>(result.DataVM.ToString()).FirstOrDefault();
                 }
                 else
                 {
@@ -765,8 +765,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     return RedirectToAction("FromSale", "Return", new { area = "DMS" });
                 }
 
-                purchaseReturn.Operation = "add";
-                purchaseReturn.IsPost = false;
+                saleReturn.Operation = "add";
+                saleReturn.IsPost = false;
 
                 #region DecimalPlace
                 CommonVM commonVM = new CommonVM();
@@ -778,12 +778,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 {
                     var data = JsonConvert.DeserializeObject<List<CommonVM>>(settingsValue.DataVM.ToString()).FirstOrDefault();
 
-                    purchaseReturn.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
+                    saleReturn.DecimalPlace = string.IsNullOrEmpty(data.SettingValue) ? 2 : Convert.ToInt32(data.SettingValue);
                 }
 
                 #endregion
 
-                return View("Create", purchaseReturn);
+                return View("Create", saleReturn);
             }
             catch (Exception e)
             {

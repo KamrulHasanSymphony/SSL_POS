@@ -328,7 +328,7 @@ namespace ShampanPOS.Repo
 
 
         public ResultVM SaleList(CommonVM model)
-        {
+       {
             try
             {
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
