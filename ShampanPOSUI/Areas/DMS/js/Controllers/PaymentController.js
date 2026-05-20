@@ -5,6 +5,7 @@
 
     var init = function () {
 
+        $("[data-bootstrap-switch]").bootstrapSwitch();
 
         notification = $("#notification").kendoNotification({
             position: {
@@ -1037,6 +1038,10 @@
         debugger;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
+
+        var isCashValue = $('#IsCash').prop('checked');
+        model.IsCash = isCashValue;
+
 
         var result = validator.form();
 
