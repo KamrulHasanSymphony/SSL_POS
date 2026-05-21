@@ -506,40 +506,90 @@
     var selectedGridModel = null;
 
     // 1️⃣ Customer ComboBox
+    function GetCustomerComboBox(selectedValue = null) {
 
-    function GetCustomerComboBox() {
         $("#CustomerId").kendoMultiColumnComboBox({
             dataTextField: "Name",
             dataValueField: "Id",
+            valuePrimitive: true,
             height: 400,
+
             columns: [
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 }
             ],
+
             filter: "contains",
             filterFields: ["Code", "Name"],
+
             dataSource: {
-                transport: { read: "/Common/Common/GetCustomerList" },
+                transport: {
+                    read: "/Common/Common/GetCustomerList"
+                },
                 schema: {
                     data: function (response) {
-                        // Id = 0 remove করা
+
                         if (Array.isArray(response)) {
                             return response.filter(x => x.Id !== 0);
                         }
+
                         return response;
                     }
                 }
             },
+
             placeholder: "Select Customer",
-            autoBind: true, // load data immediately
-            value: "",      // no default selection
+            autoBind: true,
+
+            dataBound: function () {
+
+                if (selectedValue) {
+                    this.value(selectedValue);
+                }
+            },
+
             change: function () {
+
                 var selectedItem = this.dataItem();
                 var customerId = selectedItem ? selectedItem.Id : 0;
-                updateCustomerSaleCodeGrid(customerId); // reload popup grid
+
+                updateCustomerSaleCodeGrid(customerId);
             }
         });
     }
+    //function GetCustomerComboBox() {
+    //    $("#CustomerId").kendoMultiColumnComboBox({
+    //        dataTextField: "Name",
+    //        dataValueField: "Id",
+    //        height: 400,
+    //        columns: [
+    //            { field: "Code", title: "Code", width: 100 },
+    //            { field: "Name", title: "Name", width: 150 }
+    //        ],
+    //        filter: "contains",
+    //        filterFields: ["Code", "Name"],
+    //        dataSource: {
+    //            transport: { read: "/Common/Common/GetCustomerList" },
+    //            schema: {
+    //                data: function (response) {
+    //                    // Id = 0 remove করা
+    //                    if (Array.isArray(response)) {
+    //                        return response.filter(x => x.Id !== 0);
+    //                    }
+    //                    return response;
+    //                }
+    //            }
+    //        },
+    //        placeholder: "Select Customer",
+    //        autoBind: true, // load data immediately
+    //        value: "",      // no default selection
+    //        change: function () {
+    //            var selectedItem = this.dataItem();
+    //            var customerId = selectedItem ? selectedItem.Id : 0;
+    //            updateCustomerSaleCodeGrid(customerId); // reload popup grid
+    //        }
+    //    });
+    //}
 
 
     // 2️⃣ Create/update customer-wise SaleCode popup grid
