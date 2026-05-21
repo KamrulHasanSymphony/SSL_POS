@@ -503,8 +503,7 @@
                 { field: "TotalDepositAmount", title: "Total Deposit Amount", sortable: true, width: 200 },
                 { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 200 },
                 { field: "Reference", title: "Reference", sortable: true, hidden: true, width: 200 },
-                { field: "IsCash", title: "Cash Status", sortable: true, width: 100 },
-                {
+                {field: "IsCash",title: "Cash Status", sortable: true,width: 100,template: "#= IsCash ? 'Cash' : 'Bank' #"},                {
                     field: "Status", title: "Status", sortable: true, width: 100, hidden: true,
                     filterable: {
                         ui: function (element) {

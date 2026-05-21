@@ -485,8 +485,8 @@
                         ui: function (element) {
                             element.kendoDropDownList({
                                 dataSource: [
-                                    { text: "Active", value: "1" },
-                                    { text: "Inactive", value: "0" }
+                                    { text: "Yes", value: "1" },
+                                    { text: "No", value: "0" }
                                 ],
                                 dataTextField: "text",
                                 dataValueField: "value",
