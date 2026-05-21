@@ -7,6 +7,7 @@
 
     var init = function () {
 
+        $("[data-bootstrap-switch]").bootstrapSwitch();
 
         if ($("#IsPosted").length) {
             LoadCombo("IsPosted", '/Common/Common/GetBooleanDropDown');
@@ -1264,6 +1265,9 @@
 
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
+
+        var isCashValue = $('#IsCash').prop('checked');
+        model.IsCash = isCashValue;
 
         var result = validator.form(); 
 

@@ -185,7 +185,7 @@
                         <span id="titleError1" class="text-danger" style="display:none;"></span>
                     </div>
 
-                    <div class="col-sm-2" style="flex-direction: column">
+                    <div class="col-sm-1" style="flex-direction: column">
                         @Html.LabelFor(model => model.IsCash)
                         <div class="Onoffbtn">
                             <div class="input-group" style="margin-bottom: -26px; width: 78%;">
@@ -382,7 +382,7 @@
             $("#tabs").tabs();
 
             $("#IsActive").bootstrapSwitch();
-            $("#IsCash").bootstrapSwitch();
+            //$("#IsCash").bootstrapSwitch();
 
             CollectionController.init();
         });

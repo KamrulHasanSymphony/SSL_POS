@@ -231,28 +231,21 @@
                             <div class="row mt-2">
 
                                 <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.ChequeDate)
-
-                                    @Html.TextBoxFor(model => model.ChequeDate, new
-                                    {
-                                        @class = "kendoChequeDate",
-                                        style = "width:100%; height:2em;"
-                                    })
-
-                                    @Html.ValidationMessageFor(model => model.ChequeDate, "", new { @class = "text-danger" })
+                                    @Html.LabelFor(model => model.TransactionDate)
+                                    <div class="input-group ">
+                                        @Html.TextBoxFor(model => model.TransactionDate, new { @class = "btnrequisitiondate", @style = "width: 95%;height: 26px;", @placeholder = "Transaction Date" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.TransactionDate)
                                 </div>
 
                                 <div class="col-sm-2">
-                                    @Html.LabelFor(model => model.TransactionDate)
-
-                                    @Html.TextBoxFor(model => model.TransactionDate, new
-                                    {
-                                        @class = "kendoTransactionDate form-control form-control-sm",
-                                        style = "width:100%;"
-                                    })
-
-                                    @Html.ValidationMessageFor(model => model.TransactionDate)
+                                    @Html.LabelFor(model => model.ChequeDate)
+                                    <div class="input-group ">
+                                        @Html.TextBoxFor(model => model.ChequeDate, new { @class = "btnrequisitiondate", @style = "width: 95%;height: 26px;", @placeholder = "Cheque Date" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeDate)
                                 </div>
+
 
                                 <div class="col-sm-2">
                                     @Html.LabelFor(model => model.TotalDepositAmount)
@@ -438,6 +431,33 @@
             //});
             $("#IsActive").bootstrapSwitch();
             $("#IsCash").bootstrapSwitch();
+
+
+            $(".btnrequisitiondate").kendoDatePicker({
+                format: "yyyy-MM-dd"
+            });
+
+            $("#TransactionDate").kendoDatePicker({
+                format: "yyyy-MM-dd"
+            });
+
+            $("#ChequeDate").change(function () {
+
+                var transactionDate = $("#TransactionDate").data("kendoDatePicker").value();
+                var chequeDate = $("#ChequeDate").data("kendoDatePicker").value();
+
+                if (transactionDate && chequeDate) {
+
+                    if (chequeDate < transactionDate) {
+
+                        ShowResult("Fail", "Cheque date should not be prior than transaction date.");
+
+                        $("#ChequeDate").data("kendoDatePicker").value("");
+
+                        return false;
+                    }
+                }
+            });
 
             WithdrawalController.init();
         });
