@@ -181,6 +181,8 @@
                         SD: item.SD,
                         LineTotal: item.LineTotal,
                         OthersAmount: item.OthersAmount,
+                        CompletedQty: item.CompletedQty,
+                        RemainQty: item.RemainQty,
                         Action: item.Action
                     });
                 }
@@ -312,7 +314,9 @@
                         LineTotal: { type: "number", defaultValue: 0 },
                         VATRate: { type: "number", defaultValue: 0 },
                         SD: { type: "number", defaultValue: 0 },
-                        OthersAmount: { type: "number", defaultValue: 0 }
+                        OthersAmount: { type: "number", defaultValue: 0 },
+                        RemainQty: { type: "number", defaultValue: 0 },
+                        CompletedQty: { type: "number", defaultValue: 0 }
                     }
                 }
             },
@@ -649,7 +653,53 @@
                     attributes: { style: "text-align:right;" },
                     footerTemplate: "<b>#= kendo.toString(sum, 'n2') #</b>"
                 },
-                
+                {
+                    field: "CompletedQty",
+                    title: "Completed Qty",
+                    width: 100,
+                    editable: function () {
+                        return false;
+                    },
+                    attributes: { style: "text-align:right;" }
+                },
+                {
+                    field: "RemainQty",
+                    title: "Remain Qty",
+                    width: 100,
+                    editable: function () {
+                        return false;
+                    },
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        var input = $('<input data-bind="value:' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                min: 0,
+                                max: 999999999999999.99,
+                                decimals: 2,
+                                step: 1.00,
+                                format: "n2",
+                                spinners: false,
+                                readonly: true
+                            });
+
+                        var numeric = input.data("kendoNumericTextBox");
+
+                        // Automatically update Remaining Qty when Quantity or Completed Qty changes
+                        input.on("change", function () {
+                            var dataItem = options.model;
+                            var quantity = dataItem.Quantity || 0;
+                            var completedQty = dataItem.CompletedQty || 0;
+
+                            // Calculate Remaining Qty
+                            var remainingQty = quantity - completedQty;
+
+                            // Update Remaining Qty
+                            dataItem.set("RemainingQty", remainingQty);
+                        });
+                    }
+                },
+
                 {
                     command: [{
                         name: "destroy",
@@ -1667,6 +1717,8 @@
                     SD: item.SD,
                     LineTotal: item.LineTotal,
                     OthersAmount: item.OthersAmount,
+                    CompletedQty: item.CompletedQty,
+                    RemainQty: item.RemainQty,
                     Action: item.Action
                 });
             }

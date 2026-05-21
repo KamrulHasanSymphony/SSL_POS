@@ -12,6 +12,8 @@ namespace ShampanPOS.Models
         [Display(Name = "User Name")]
         public string? UserName { get; set; }
 
+        public string? RoleId { get; set; }
+
         [Required]
         [Display(Name = "Full Name")]
         public string? FullName { get; set; }
@@ -28,28 +30,28 @@ namespace ShampanPOS.Models
 
         [Required(ErrorMessage = "Please enter your email address.")]
         [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Display(Name = "Phone Number")]
 
         [Required(ErrorMessage = "Please enter your phone number.")]
         [RegularExpression(@"^\d{11}$", ErrorMessage = "Please enter a valid 11-digit phone number.")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
         public string? NormalizedPassword { get; set; }
         public string? Operation { get; set; }
         public string? Mode { get; set; }
-        public bool IsAdmin { get; set; }
+        public bool? IsAdmin { get; set; }
 
-        [Display(Name = "Sale Person")]
-        public int? SalePersonId { get; set; }
+        //[Display(Name = "Sale Person")]
+        //public int? SalePersonId { get; set; }
 
-        [Display(Name = "Is Head Office")]
-        public bool IsHeadOffice { get; set; }
+        //[Display(Name = "Is Head Office")]
+        //public bool? IsHeadOffice { get; set; }
 
 
-        [Display(Name = "Is Sale Person")]
-        public bool IsSalePerson { get; set; }
-        public string? SalePersonName { get; set; }
-        public string? SalePersonCode { get; set; }
+        //[Display(Name = "Is Sale Person")]
+        //public bool? IsSalePerson { get; set; }
+        //public string? SalePersonName { get; set; }
+        //public string? SalePersonCode { get; set; }
 
         [Display(Name = "Created By")]
         public string? CreatedBy { get; set; }

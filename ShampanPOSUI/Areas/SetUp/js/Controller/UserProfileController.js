@@ -14,7 +14,7 @@
         //else {
         //    GetSalePersonComboBox();
         //}
-
+        GetRoleComboBox();
         $("#IsSalePerson").on('switchChange.bootstrapSwitch', function (event, state) {
             if (state) {
                 $('.salePerson').show();
@@ -96,6 +96,43 @@
         }
 
     };
+
+    function GetRoleComboBox() {
+        var RoleComboBox = $("#RoleId").kendoMultiColumnComboBox({
+            dataTextField: "RoleName",
+            dataValueField: "Id",
+            height: 400,
+            columns: [
+                { field: "RoleName", title: "Role Name", width: 100 },
+            ],
+            filter: "contains",
+            filterFields: ["RoleName"],
+            dataSource: {
+                transport: {
+                    read: "/SetUp/MenuAuthorization/GetRoleData"
+                }
+            },
+            placeholder: "Select Role Name",
+
+            dataBound: function () {
+
+                if (getRoleId != null && getRoleId != "" && getRoleId != "0") {
+
+                    this.value(parseInt(getRoleId));
+
+                } else {
+
+                    this.value("");
+                    this.text("");
+                }
+            },
+            change: function (e) {
+
+            }
+        }).data("kendoMultiColumnComboBox");
+    }
+
+
     function SelectData() {
         var IDs = [];
 
@@ -318,7 +355,9 @@
             }
         }
 
-        var url = "/SetUp/UserProfile/CreateEdit";
+        /*var url = "/SetUp/UserProfile/CreateEdit";*/
+
+        var url = "/SetUp/SignUp/SignUpCreateEdit";
 
         CommonAjaxService.finalImageSave(url, formData, saveDone, saveFail);
     };

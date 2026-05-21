@@ -1,6 +1,4 @@
-﻿
-
-var SaleOrderController = function (CommonService, CommonAjaxService) {
+﻿var SaleOrderController = function (CommonService, CommonAjaxService) {
 
     var getCustomerId = 0;
 

@@ -58,6 +58,7 @@ namespace ShampanPOSUI.Areas.SetUp.Controllers
                         userInfo.FullName = user.FullName;
                         userInfo.PhoneNumber = user.PhoneNumber;
                         userInfo.Email = user.Email;
+                        userInfo.RoleId = user.RoleId;
                         userInfo.CreatedBy = user.UserName;
                         userInfo.CreatedAt = DateTime.Now;
 

@@ -126,7 +126,7 @@
                             @Html.ValidationMessageFor(model => model.PhoneNumber)
                         </div>
 
-                        <div class="col-sm-1">
+                        @*<div class="col-sm-1">
                             @Html.LabelFor(model => model.IsHeadOffice)
                             <div class="Onoffbtn">
                                 <div class="input-group" style="margin-bottom: -26px; width: 78%;">
@@ -142,7 +142,7 @@
                                            data-off-text="No">
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
                         <div class="col-sm-2">
                             @Html.LabelFor(model => model.ImagePath)
                             <div class="input-group">
@@ -159,7 +159,7 @@
                                 <i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete
                             </button>
                         </div>
-                        <div class="col-sm-1">
+                        @*<div class="col-sm-1">
                             @Html.LabelFor(model => model.IsSalePerson)
                             <div class="Onoffbtn">
                                 <div class="input-group" style="margin-bottom: -26px; width: 78%;">
@@ -175,13 +175,13 @@
                                            data-off-text="No">
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
 
-                        <div class="col-sm-2 salePerson" style="display:none;">
+                        @*<div class="col-sm-2 salePerson" style="display:none;">
                             @Html.LabelFor(model => model.SalePersonId)
                             @Html.TextBoxFor(model => model.SalePersonId, new { @class = "form-control form-control-sm", autocomplete = "off" })
                             @Html.ValidationMessageFor(model => model.SalePersonId)
-                        </div>
+                        </div>*@
 
                     </div>
                 }
@@ -227,8 +227,8 @@
 
     <script>
         $(document).ready(function () {
-            $("#IsHeadOffice").bootstrapSwitch();
-            $("#IsSalePerson").bootstrapSwitch();
+            //$("#IsHeadOffice").bootstrapSwitch();
+            //$("#IsSalePerson").bootstrapSwitch();
 
             UserProfileController.init();
         });

@@ -53,7 +53,7 @@
                     @Html.HiddenFor(model => model.returnUrl)
                     @Html.HiddenFor(model => model.dbName)
 
-            @*<div class="input-group mb-3">
+                    @*<div class="input-group mb-3">
                 @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @placeholder = "User Name" })
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-user"></i></span>
@@ -125,14 +125,14 @@
                     @*@Html.ValidationMessageFor(model => model.Message)*@
 
 
-                <div class="text-center">
-                    @if (!string.IsNullOrEmpty(Model.Message))
-                    {
-                        <div class="alert alert-danger">
-                            @Model.Message
-                        </div>
-                    }
-                </div>
+                    <div class="text-center">
+                        @if (!string.IsNullOrEmpty(Model.Message))
+                        {
+                            <div class="alert alert-danger">
+                                @Model.Message
+                            </div>
+                        }
+                    </div>
 
                     <div class="clearfix"></div>
 
@@ -142,13 +142,25 @@
                         </div>
                     </div>
 
+           @*<div class="row mt-2 justify-content-center">
+                <div class="col-6">
+                    <a href="@Url.Action("SignUpCreate", "SignUp", new { area = "SetUp" })" class="btn btn-success btn-block">
+                        Sign Up
+                    </a>
+                </div>
+            </div>*@
+
+
                     <div class="row mt-2 justify-content-center">
-                        <div class="col-6">
-                            <a href="@Url.Action("SignUpCreate", "SignUp", new { area = "SetUp" })" class="btn btn-success btn-block">
-                                Sign Up
+                        <div class="col-6 text-center">
+                            <a href="@Url.Action("SignUpCreate", "SignUp", new { area = "SetUp" })" style="text-decoration: underline; color: blue; cursor: pointer;">
+                                Create an Account
                             </a>
                         </div>
                     </div>
+
+
+
 
                     @*<button type="button" title="Sign Up" data-url="/SetUp/UserProfile/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
                 New
