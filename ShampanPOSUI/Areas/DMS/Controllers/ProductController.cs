@@ -1622,6 +1622,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         [HttpGet]
         public ActionResult getReport(string id)
+        
         {
             try
             {
