@@ -1825,7 +1825,7 @@
             
                 { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
                 {
-                    field: "PostStatus", title: "Posted", sortable: true, width: 130,
+                    field: "PostStatus", title: "Status", sortable: true, width: 130,
                     filterable: {
                         ui: function (element) {
                             element.kendoDropDownList({
