@@ -166,25 +166,39 @@
                     <td>@item.ProductName</td>
                     <td>@item.ProductCode</td>
                     <td class="text-right">@item.Quantity</td>
-                    <td class="text-right">@item.UnitPrice</td>
-                    <td class="text-right">@item.SubTotal</td>
-                    <td class="text-right">@item.SDAmount</td>
-                    <td class="text-right">@item.VATAmount</td>
-                    <td class="text-right">@item.OthersAmount</td>
-                    <td class="text-right"><b>@item.LineTotal</b></td>
+
+                    <td class="text-right"><b>@((item.UnitPrice ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</b></td>
+                    <td class="text-right"><b>@((item.SubTotal ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</b></td>
+                    <td class="text-right">@((item.SDAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
+                    <td class="text-right">@((item.VATAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
+                    <td class="text-right"><b>@((item.OthersAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</b></td>
+                    <td class="text-right"><b>@((item.LineTotal ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</b></td>
+
                 </tr>
             }
 
         <tr class="purchasetotalrow" style="font-weight:bold;">
-            <td colspan="2" style="text-align: center;">Total :</td> 
-            <td></td> 
+            <td colspan="2" style="text-align: center;">Total :</td>
+            <td></td>
             <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.Quantity)</span></td>
-            <td></td> 
-            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.SubTotal)</span></td>
-            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.SDAmount)</span></td>
-            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.VATAmount)</span></td>
-            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.OthersAmount)</span></td>
-            <td class="text-right"><span>@Model.purchaseOrderDetailsList.Sum(x => x.LineTotal)</span></td>
+            <td></td>
+
+            <td class="text-right">
+                <span>@(Model.purchaseOrderDetailsList.Sum(x => x.SubTotal ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
+            </td>
+            <td class="text-right">
+                <span>@(Model.purchaseOrderDetailsList.Sum(x => x.SDAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
+            </td>
+
+            <td class="text-right">
+                <span>@(Model.purchaseOrderDetailsList.Sum(x => x.VATAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
+            </td>
+            <td class="text-right">
+                <span>@(Model.purchaseOrderDetailsList.Sum(x => x.OthersAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
+            </td>
+            <td class="text-right">
+                <span>@(Model.purchaseOrderDetailsList.Sum(x => x.LineTotal ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -192,7 +206,7 @@
     <div style="margin-top:20px;">
         <h5 class="section-title">Comments</h5>
         <div style="margin-top:5px;">
-            @Model.Comments
+            @Html.Raw(Model.Comments?.Replace("\n", "<br/>"))
         </div>
     </div>
 
