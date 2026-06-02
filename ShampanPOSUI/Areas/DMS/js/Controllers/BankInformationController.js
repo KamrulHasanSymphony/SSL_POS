@@ -458,11 +458,11 @@
                 $(".k-grouping-header").hide();
                 $(".k-floatwrap").hide();
 
+                var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
-
-                var branchName = "All Branch Name";
-                var companyName = "All Company Name";
-                var companyAddress = "All Company Address";
+                //var branchName = "All Branch Name";
+                //var companyName = "All Company Name";
+                //var companyAddress = "All Company Address";
 
                 var grid = e.sender;
 
@@ -499,11 +499,9 @@
                     landscape: true,
                     allPages: true,
                     template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                                <div>Company Name :- ${companyName}</div>
-                                <div>Company Address :- ${companyAddress}</div>
-                            </div> `
+                      <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+                          <div>${companyName}</div>
+                      </div>`
                 };
 
                 e.sender.options.pdf.fileName = fileName;
