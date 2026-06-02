@@ -280,12 +280,12 @@
                 $(".k-grouping-header").hide();
                 $(".k-floatwrap").hide();
 
-                
+                var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
-                const dataItems = this.dataSource.view();
-                const firstItem = dataItems.length > 0 ? dataItems[0] : {};
+                //const dataItems = this.dataSource.view();
+                //const firstItem = dataItems.length > 0 ? dataItems[0] : {};
 
-                branchName = firstItem.BranchName || "All Branch Name";
+                //branchName = firstItem.BranchName || "All Branch Name";
 
                 var grid = e.sender;
 
@@ -321,9 +321,9 @@
                     landscape: true,
                     allPages: true,
                     template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; left: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                            </div> `
+                    <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+                        <div>${companyName}</div>
+                    </div>`
                 };
 
                 e.sender.options.pdf.fileName = fileName;

@@ -563,6 +563,42 @@
                 fileName: "Products.xlsx",
                 filterable: true
             },
+            //pdf: {
+            //    fileName: `Products_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
+            //    allPages: true,
+            //    avoidLink: true,
+            //    filterable: true
+            //},
+            //pdfExport: function (e) {
+
+            //    $(".k-grid-toolbar").hide();
+            //    $(".k-grouping-header").hide();
+            //    $(".k-floatwrap").hide();
+
+
+
+            //    var companyName = "SEYMPHONY SOFTTECH LIMITED";
+
+            //    var fileName = `Products_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+
+            //    e.sender.options.pdf = {
+            //        paperSize: "A4",
+            //        margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
+            //        landscape: true,
+            //        allPages: true,
+            //        template: `
+            //                <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+            //                    <div>${companyName}</div>
+            //                </div> `
+            //    };
+
+            //    e.sender.options.pdf.fileName = fileName;
+
+            //    setTimeout(function () {
+            //        window.location.reload();
+            //    }, 1000);
+            //},
+
             pdf: {
                 fileName: `Products_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`,
                 allPages: true,
@@ -570,26 +606,59 @@
                 filterable: true
             },
             pdfExport: function (e) {
-                
+
                 $(".k-grid-toolbar").hide();
                 $(".k-grouping-header").hide();
                 $(".k-floatwrap").hide();
 
-                
-
                 var companyName = "SEYMPHONY SOFTTECH LIMITED";
+
+
+                var grid = e.sender;
+
+                // Hide the "Action" and checkbox columns
+                var actionColumnIndex = grid.columns.findIndex(col => col.title === "Action");
+                var selectionColumnIndex = grid.columns.findIndex(col => col.selectable === true);
+
+                if (actionColumnIndex == 0 || actionColumnIndex > 0) {
+                    var actionVisibility = [
+                        grid.columns[actionColumnIndex].hidden,
+                    ];
+
+                    grid.hideColumn(actionColumnIndex);
+                }
+
+                if (selectionColumnIndex == 0 || selectionColumnIndex > 0) {
+                    var selectableVisibility = [
+                        grid.columns[selectionColumnIndex].hidden
+                    ];
+
+                    grid.hideColumn(selectionColumnIndex);
+                }
+
 
                 var fileName = `Products_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
+                var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
+                var columnWidth = 100;
+                var totalWidth = numberOfColumns * columnWidth;
+
                 e.sender.options.pdf = {
                     paperSize: "A4",
-                    margin: { top: "4cm", left: "1cm", right: "1cm", bottom: "4cm" },
+                    margin: {
+                        top: "2cm",
+                        left: "1cm",
+                        right: "1cm",
+                        bottom: "1cm"
+                    },
                     landscape: true,
                     allPages: true,
+                    repeatHeaders: true,
+                    scale: 0.6, // <-- Add this
                     template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>${companyName}</div>
-                            </div> `
+            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+                <div>${companyName}</div>
+            </div>`
                 };
 
                 e.sender.options.pdf.fileName = fileName;
@@ -598,11 +667,12 @@
                     window.location.reload();
                 }, 1000);
             },
+
             columns: [
                 
                 {
                     title: "Action",
-                    width: 100,
+                    width: 90,
                     template: function (dataItem) {
                         
                         return `

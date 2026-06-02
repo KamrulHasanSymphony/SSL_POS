@@ -234,11 +234,7 @@
                 $(".k-grouping-header").hide();
                 $(".k-floatwrap").hide();
 
-                
-
-                var branchName = "All Branch Name";
-                var companyName = "All Company Name";
-                var companyAddress = "All Company Address";
+                var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
                 var grid = e.sender;
 
@@ -262,7 +258,7 @@
                 }
 
 
-                var fileName = `SupplierGroups_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+                var fileName = `MasterSupplierGroup_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
                 var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
                 var columnWidth = 100;
@@ -275,11 +271,9 @@
                     landscape: true,
                     allPages: true,
                     template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                                <div>Company Name :- ${companyName}</div>
-                                <div>Company Address :- ${companyAddress}</div>
-                            </div> `
+                      <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+                          <div>${companyName}</div>
+                      </div>`
                 };
 
                 e.sender.options.pdf.fileName = fileName;

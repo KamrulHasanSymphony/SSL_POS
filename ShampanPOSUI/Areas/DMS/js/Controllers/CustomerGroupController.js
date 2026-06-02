@@ -233,11 +233,38 @@
                 $(".k-grouping-header").hide();
                 $(".k-floatwrap").hide();
 
-               
 
                 var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
+                var grid = e.sender;
+
+                // Hide the "Action" and checkbox columns
+                var actionColumnIndex = grid.columns.findIndex(col => col.title === "Action");
+                var selectionColumnIndex = grid.columns.findIndex(col => col.selectable === true);
+
+                if (actionColumnIndex == 0 || actionColumnIndex > 0) {
+                    var actionVisibility = [
+                        grid.columns[actionColumnIndex].hidden,
+                    ];
+
+                    grid.hideColumn(actionColumnIndex);
+                }
+
+                if (selectionColumnIndex == 0 || selectionColumnIndex > 0) {
+                    var selectableVisibility = [
+                        grid.columns[selectionColumnIndex].hidden
+                    ];
+
+                    grid.hideColumn(selectionColumnIndex);
+                }
+
+
                 var fileName = `CustomerGroups_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
+
+
+                var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
+                var columnWidth = 100;
+                var totalWidth = numberOfColumns * columnWidth;
 
                 e.sender.options.pdf = {
                     paperSize: "A4",

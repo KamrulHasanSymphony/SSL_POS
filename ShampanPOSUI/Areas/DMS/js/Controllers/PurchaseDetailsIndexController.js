@@ -372,10 +372,7 @@
 
                 
 
-                const dataItems = this.dataSource.view();
-                const firstItem = dataItems.length > 0 ? dataItems[0] : {};
-
-                branchName = firstItem.BranchName || "All Branch Name";
+                var companyName = "SEYMPHONY SOFTTECH LIMITED";
 
                 var grid = e.sender;
 
@@ -401,19 +398,29 @@
 
                 var fileName = `Purchase_Details_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}.${new Date().getMilliseconds()}.pdf`;
 
-                var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
-                var columnWidth = 100;
-                var totalWidth = numberOfColumns * columnWidth;
+
+                // Calculate actual total width from visible columns
+                var totalWidth = 0;
+
+                e.sender.columns.forEach(function (col) {
+                    if (!col.hidden && col.field) {
+                        totalWidth += (col.width ? parseInt(col.width) : 150);
+                    }
+                });
+
+                //var numberOfColumns = e.sender.columns.filter(column => !column.hidden && column.field).length;
+                //var columnWidth = 100;
+                //var totalWidth = numberOfColumns * columnWidth;
 
                 e.sender.options.pdf = {
-                    paperSize: [totalWidth, 2800],
+                    paperSize: [totalWidth + 300, 1000],
                     margin: { top: "4cm", left: "1cm", left: "1cm", bottom: "4cm" },
                     landscape: true,
                     allPages: true,
                     template: `
-                            <div style="position: absolute; top: 1cm; left: 1cm; left: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
-                                <div>Branch Name :- ${branchName}</div>
-                            </div> `
+                    <div style="position: absolute; top: 1cm; left: 1cm; right: 1cm; text-align: center; font-size: 12px; font-weight: bold;">
+                        <div>${companyName}</div>
+                    </div> `
                 };
 
                 e.sender.options.pdf.fileName = fileName;
