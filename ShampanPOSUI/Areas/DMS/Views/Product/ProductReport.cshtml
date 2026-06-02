@@ -131,13 +131,13 @@
     <table>
         <tr>
             <th>Sale Price</th>
-            <td>@Model.SalePrice</td>
+            <td>@((Model.PurchasePrice ?? 0).ToString("N0", new System.Globalization.CultureInfo("en-IN")))</td>
             <th>VAT Rate (%)</th>
             <td style="width: 20%!important">@Model.VATRate</td>
         </tr>
         <tr>
             <th>Purchase Price</th>
-            <td>@Model.PurchasePrice</td>
+            <td>@((Model.SalePrice ?? 0).ToString("N0", new System.Globalization.CultureInfo("en-IN")))</td>
             <th>SD Rate (%)</th>
             <td style="width: 20%!important">@Model.SDRate</td>
         </tr>
