@@ -137,8 +137,10 @@
                         <td>@item.ProductGroupName</td>
                         <td>@item.HSCodeNo</td>
                         <td>@item.UOMName</td>
-                        <td style="text-align:right;">@item.PurchasePrice</td>
-                        <td style="text-align:right;">@item.SalePrice</td>
+                        <td style="text-align:right;">
+                            @((item.PurchasePrice ?? 0).ToString("N0", new System.Globalization.CultureInfo("en-IN")))</td>
+                        <td style="text-align:right;">
+                            @((item.SalePrice ?? 0).ToString("N0", new System.Globalization.CultureInfo("en-IN")))</td>
                         <td style="text-align:right;">@item.VATRate</td>
                         <td style="text-align:right;">@item.SDRate</td>
                     </tr>
