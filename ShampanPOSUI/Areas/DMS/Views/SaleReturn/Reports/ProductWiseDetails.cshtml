@@ -117,6 +117,10 @@
             </tr>
         </thead>
 
+        @using System.Globalization
+        @{
+            var bd = new CultureInfo("en-IN");
+        }
         <tbody>
 
             @if (Model != null && Model.Any())
@@ -128,24 +132,24 @@
                         <td>@item.Code</td>
                         <td>@item.InvoiceDateTime</td>
                         <td class="text-right">@item.Quantity</td>
-                        <td class="text-right">@item.UnitRate</td>
-                        <td class="text-right">@item.SubTotal</td>
-                        <td class="text-right">@item.VATAmount</td>
-                        <td class="text-right">@item.LineTotal</td>
+                        <td class="text-right"> @((item.UnitRate).ToString("N2", bd))</td>
+                        <td class="text-right"><b>@((item.SubTotal).ToString("N2", bd))</b></td>
+                        <td class="text-right"> @((item.VATAmount).ToString("N2", bd))</td>
+                        <td class="text-right"><b>@((item.LineTotal).ToString("N2", bd))</b></td>
                     </tr>
                 }
 
                 <!-- TOTAL ROW -->
-                <tr style="font-weight:bold;background:#f1f1f1;">
-                    <td>Total</td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.UnitRate)</td>
-                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                </tr>
+        <tr style="font-weight:bold;background:#f1f1f1;">
+            <td>Total</td>
+            <td></td>
+            <td></td>
+            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+            <td class="text-right">@(Model.Sum(x => x.UnitRate).ToString("N2", bd))</td>
+            <td class="text-right">@(Model.Sum(x => x.UnitRate).ToString("N2", bd))</td>
+            <td class="text-right">@(Model.Sum(x => x.VATAmount).ToString("N2", bd))</td>
+            <td class="text-right">@(Model.Sum(x => x.LineTotal).ToString("N2", bd))</td>
+        </tr>
             }
             else
             {
