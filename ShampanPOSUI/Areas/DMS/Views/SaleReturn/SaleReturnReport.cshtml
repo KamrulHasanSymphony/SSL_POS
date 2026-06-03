@@ -183,15 +183,15 @@
 
             <td></td>
             <td class="text-right">
-                <span>@(Model.saleReturnDetailList?.Sum(x => x.SDAmount) ?? 0)</span>
+                <span>@(Model.saleReturnDetailList.Sum(x => x.SDAmount).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
             </td>
 
             <td class="text-right">
-                <span>@(Model.saleReturnDetailList?.Sum(x => x.VATAmount) ?? 0)</span>
+                <span>@(Model.saleReturnDetailList.Sum(x => x.VATAmount).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
             </td>
 
             <td class="text-right">
-                <span>@(Model.saleReturnDetailList?.Sum(x => x.LineTotal) ?? 0)</span>
+                <span>@(Model.saleReturnDetailList.Sum(x => x.LineTotal).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
             </td>
         </tr>
 
