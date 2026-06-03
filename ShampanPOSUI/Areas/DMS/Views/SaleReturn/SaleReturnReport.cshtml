@@ -166,10 +166,10 @@
                     <td>@item.ProductName</td>
                     <td>@item.ProductCode</td>
                     <td class="text-right">@item.Quantity</td>
-                    <td class="text-right">@item.UnitRate</td>
-                    <td class="text-right">@item.SDAmount</td>
-                    <td class="text-right">@item.VATAmount</td>
-                    <td class="text-right">@item.LineTotal</td>
+                    <td class="text-right">@((item.UnitRate).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
+                    <td class="text-right">@((item.SDAmount).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
+                    <td class="text-right">@((item.VATAmount).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
+                    <td class="text-right"><b>@((item.LineTotal).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</b></td>
                 </tr>
             }
 
@@ -182,7 +182,6 @@
             </td>
 
             <td></td>
-
             <td class="text-right">
                 <span>@(Model.saleReturnDetailList?.Sum(x => x.SDAmount) ?? 0)</span>
             </td>

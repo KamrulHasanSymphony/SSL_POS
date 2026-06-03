@@ -129,6 +129,10 @@
             </tr>
         </thead>
 
+        @using System.Globalization
+        @{
+            var bd = new CultureInfo("en-IN");
+        }
         <tbody>
 
             @if (Model != null && Model.Any())
@@ -142,7 +146,9 @@
                             <td>@item.PurchaseDate</td>
                             <td>@item.SupplierName</td>
                             <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.LineTotal</td>
+                            <td class="text-right">
+                                <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            </td>
                         }
                         else
                         {
@@ -151,31 +157,38 @@
                             <td>@item.Code</td>
                             <td>@item.SupplierName</td>
                             <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.LineTotal</td>
+                            <td class="text-right">
+                                <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            </td>
+
                         }
                     </tr>
                 }
 
-                <tr style="font-weight:bold;background:#f1f1f1;">
-                    <td>Total</td>
+        <tr style="font-weight:bold;background:#f1f1f1;">
+            <td>Total</td>
 
-                    @if (isSummary)
-                    {
-                        <td></td>
-                        <td></td>
-                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                    }
-                    else
-                    {
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                    }
+            @if (isSummary)
+            {
+                <td></td>
+                <td></td>
+                <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                <td class="text-right">
+                    @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                </td>
+            }
+            else
+            {
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                <td class="text-right">
+                    @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                </td>
+            }
 
-                </tr>
+        </tr>
             }
             else
             {

@@ -129,7 +129,10 @@
                 }
             </tr>
         </thead>
-
+        @using System.Globalization
+        @{
+            var bd = new CultureInfo("en-IN");
+        }
         <tbody>
 
             @if (Model != null && Model.Any())
@@ -143,7 +146,9 @@
                             <td>@item.CustomerName</td>
                             <td>@item.OrderDate</td>
                             <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.LineTotal</td>
+                            <td class="text-right">
+                                <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            </td>
                         }
                         else
                         {
@@ -151,9 +156,9 @@
                             <td>@item.Code</td>
                             <td>@item.OrderDate</td>
                             <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.SubTotal</td>
-                            <td class="text-right">@item.VATAmount</td>
-                            <td class="text-right">@item.LineTotal</td>
+                            <td class="text-right"> @((item.SubTotal ?? 0).ToString("N2", bd))</td>
+                            <td class="text-right"> @((item.VATAmount ?? 0).ToString("N2", bd))</td>
+                            <td class="text-right"><b>@((item.LineTotal ?? 0).ToString("N2", bd))</b></td>
                         }
 
                     </tr>
@@ -166,16 +171,18 @@
                     {
                         <td></td>
                         <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                        </td>
                     }
                     else
                     {
                         <td></td>
                         <td></td>
                         <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                        <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        <td class="text-right">@(Model.Sum(x => x.SubTotal ?? 0).ToString("N2", bd))</td>
+                        <td class="text-right">@(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))</td>
+                        <td class="text-right">@(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))</td>
                     }
 
                 </tr>

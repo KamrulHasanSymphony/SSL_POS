@@ -109,6 +109,10 @@
             </tr>
         </thead>
 
+        @using System.Globalization
+        @{
+            var bd = new CultureInfo("en-IN");
+        }
         <tbody>
 
             @if (Model != null && Model.Any())
@@ -119,7 +123,9 @@
                         <td>@item.CustomerName</td>
                         <td class="text-right">@item.TotalInvoice</td>
                         <td class="text-right">@item.Quantity</td>
-                        <td class="text-right">@item.LineTotal</td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                        </td>
                     </tr>
                 }
 
@@ -128,7 +134,9 @@
                     <td>Total</td>
                     <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                    <td class="text-right">
+                        @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                    </td>
                 </tr>
             }
             else

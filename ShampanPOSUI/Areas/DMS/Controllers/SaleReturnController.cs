@@ -797,6 +797,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         public ActionResult getReport(string id)
         {
             try
+            
             {
                 var companyId = Session["CompanyId"];
 

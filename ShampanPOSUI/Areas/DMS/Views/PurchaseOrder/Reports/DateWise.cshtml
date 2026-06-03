@@ -118,8 +118,8 @@
                     <th>Total</th>
                 }
                 else
-                { 
-                   <th>Order Date</th>
+                {
+                    <th>Order Date</th>
                     <th>Delivery Date</th>
                     <th>Purchase Code</th>
                     <th>Supplier</th>
@@ -129,6 +129,10 @@
             </tr>
         </thead>
 
+        @using System.Globalization
+        @{
+            var bd = new CultureInfo("en-IN");
+        }
         <tbody>
 
             @if (Model != null && Model.Any())
@@ -142,7 +146,9 @@
                             <td>@item.DeliveryDateTime</td>
                             <td>@item.SupplierName</td>
                             <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.LineTotal</td>
+                            <td class="text-right">
+                                <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            </td>
                         }
                         else
                         {
@@ -151,7 +157,9 @@
                             <td>@item.Code</td>
                             <td>@item.SupplierName</td>
                             <td class="text-right">@item.Quantity</td>
-                            <td class="text-right">@item.LineTotal</td>
+                            <td class="text-right">
+                                <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            </td>
                         }
                     </tr>
                 }
@@ -164,7 +172,9 @@
                         <td></td>
                         <td></td>
                         <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                        </td>
                     }
                     else
                     {
@@ -173,7 +183,9 @@
                         <td></td>
 
                         <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                        <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                        </td>
                     }
 
                 </tr>
