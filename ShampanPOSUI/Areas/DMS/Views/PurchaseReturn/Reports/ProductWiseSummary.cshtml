@@ -1,4 +1,4 @@
-﻿@model List<ShampanPOS.Models.PurchaseReturnReportVM>
+﻿  @model List<ShampanPOS.Models.PurchaseReturnReportVM>
 
 @{
     ViewBag.Title = "Product Wise Summary Report";
@@ -113,6 +113,10 @@
             </tr>
         </thead>
 
+        @using System.Globalization
+        @{
+            var bd = new CultureInfo("en-IN");
+        }
         <tbody>
 
             @if (Model != null && Model.Any())
@@ -122,20 +126,36 @@
                     <tr>
                         <td>@item.ProductName</td>
                         <td class="text-right">@item.Quantity</td>
-                        <td class="text-right">@item.SubTotal</td>
-                        <td class="text-right">@item.VATAmount</td>
-                        <td class="text-right">@item.LineTotal</td>
+                        <td class="text-right">
+                            @((item.SubTotal ?? 0).ToString("N2", bd))
+                        </td>
+
+                        <td class="text-right">
+                            @((item.VATAmount ?? 0).ToString("N2", bd))
+                        </td>
+
+                        <td class="text-right">
+                            <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                        </td>
                     </tr>
                 }
 
                 <!-- TOTAL ROW -->
-                <tr style="font-weight:bold;background:#f1f1f1;">
-                    <td>Total</td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">@Model.Sum(x => x.SubTotal)</td>
-                    <td class="text-right">@Model.Sum(x => x.VATAmount)</td>
-                    <td class="text-right">@Model.Sum(x => x.LineTotal)</td>
-                </tr>
+        <tr style="font-weight:bold;background:#f1f1f1;">
+            <td>Total</td>
+            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+            <td class="text-right">
+                @(Model.Sum(x => x.SubTotal ?? 0).ToString("N2", bd))
+            </td>
+
+            <td class="text-right">
+                @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
+            </td>
+
+            <td class="text-right">
+                @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+            </td>
+        </tr>
             }
             else
             {
