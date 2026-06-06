@@ -7,25 +7,21 @@ using System.Threading.Tasks;
 
 namespace ShampanPOS.Models
 {
-    public class PurchaseDataVM
+    public class PurchaseOrderDataVM
     {
         public int Id { get; set; }
-        public int? PurchaseOrderId { get; set; }
-
         public string? Code { get; set; }
-        public string? PurchaseOrderCode { get; set; }
         public int? SupplierId { get; set; }
         public string? SupplierName { get; set; }
-        public string? Comments { get; set; }
-        public decimal GrandTotal { get; set; }
-        public decimal PaymentAmount { get; set; }
-        public decimal PaidAmount { get; set; }
-        public decimal DueAmount { get; set; }
-        public DateTime? PurchaseDate { get; set; }
+        [Display(Name = "Order Date")]
+        public string? OrderDate { get; set; }
+        public string? DeliveryDateTime { get; set; }
+        public string? ProductCode { get; set; }
+        public string? ProductName { get; set; }
         public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public PeramModel PeramModel { get; set; }
-        public PurchaseDataVM()
+        public PurchaseOrderDataVM()
         {
             PeramModel = new PeramModel();
         }

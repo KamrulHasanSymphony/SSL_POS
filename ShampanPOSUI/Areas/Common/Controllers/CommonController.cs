@@ -1633,7 +1633,51 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult GetPurchaseModal(string supplierId)
+        {
+            try
+            {
+                List<PurchaseDataVM> lst = new List<PurchaseDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = supplierId;
+                ResultVM result = _repo.GetPurchaseModal(param);
 
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<PurchaseDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetPurchaseOrderModal(string supplierId)
+        {
+            try
+            {
+                List<PurchaseOrderDataVM> lst = new List<PurchaseOrderDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = supplierId;
+                ResultVM result = _repo.GetPurchaseOrderModal(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<PurchaseOrderDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
 
