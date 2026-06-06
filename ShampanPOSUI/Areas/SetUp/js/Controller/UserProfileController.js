@@ -339,21 +339,21 @@
         }
 
         var fileInput = document.getElementById("imageUpload");
-        if (fileInput.files.length > 0) {
-            var file = fileInput.files[0];
+        //if (fileInput.files.length > 0) {
+        //    var file = fileInput.files[0];
 
-            if (file.size > 26214400) {
-                ShowNotification(3, "Image size cannot exceed 25MB.");
-                return;
-            }
+        //    if (file.size > 26214400) {
+        //        ShowNotification(3, "Image size cannot exceed 25MB.");
+        //        return;
+        //    }
 
-            formData.append("file", file);
-        } else if (!deleteImageClicked) {
-            var existingImagePath = $("#ImagePath").val();
-            if (existingImagePath) {
-                formData.append("ImagePath", existingImagePath);
-            }
-        }
+        //    formData.append("file", file);
+        //} else if (!deleteImageClicked) {
+        //    var existingImagePath = $("#ImagePath").val();
+        //    if (existingImagePath) {
+        //        formData.append("ImagePath", existingImagePath);
+        //    }
+        //}
 
         /*var url = "/SetUp/UserProfile/CreateEdit";*/
 

@@ -976,6 +976,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     : "Reports/InvoiceWiseDetails";
             }
 
+            else if (reportType == "Purchase Return List")
+            {
+                viewName = "Reports/PurchaseReturnReport";
+
+            }
+
             else
             {
                 // =========================================

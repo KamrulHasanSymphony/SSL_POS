@@ -1,9 +1,15 @@
 ﻿@model List<ShampanPOS.Models.PurchaseReportVM>
 
 @{
-    ViewBag.Title = "Invoice Wise Summary Report";
+    ViewBag.Title = "Supplier Wise";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
+@{
+    bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
+}
+
 
 <style>
     body {
@@ -95,24 +101,36 @@
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Invoice Wise Summary Report
+        Supplier Wise @ViewBag.ReportTitle
     </h3>
 
     <!-- ================= TABLE ================= -->
     <table>
+
         <thead>
             <tr>
-                <th>Purchase Code</th>
-                <th>Invoice Date</th>
-                <th>Purchase Date</th>
-                <th>Supplier</th>
-                <th>Quantity</th>
-                <th>Sub Total</th>
-                <th>SD</th>
-                <th>VAT</th>
-                <th>Total</th>
+                @if (isSummary)
+                {
+                    <th>Supplier</th>
+                    <th>Invoice Date</th>
+                    <th>Purchase Date</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                }
+                else
+                {
+                    <th>Supplier</th>
+                    <th>Purchase Code</th>
+                    <th>Invoice Date</th>
+                    <th>Purchase Date</th>
+                    <th>Quantity</th>
+                    <th>Sub Total</th>
+                    <th>VAT</th>
+                    <th>Total</th>
+                }
             </tr>
         </thead>
+
 
         @using System.Globalization
         @{
@@ -125,54 +143,70 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.Code</td>
-                        <td>@item.InvoiceDateTime</td>
-                        <td>@item.PurchaseDate</td>
-                        <td>@item.SupplierName</td>
-                        <td class="text-right">@item.Quantity</td>
-                        <td class="text-right">
-                            @item.SubTotal.ToString("N2", bd)
-                        </td>
 
-                        <td class="text-right">
-                            @((item.SDAmount ?? 0).ToString("N2", bd))
-                        </td>
-                        <td class="text-right">
-                            @((item.VATAmount ?? 0).ToString("N2", bd))
-                        </td>
-                        <td class="text-right">
-                            <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
-                        </td>
+                        @if (isSummary)
+                        {
+                            <td>@item.SupplierName</td>
+                            <td>@item.InvoiceDateTime</td>
+                            <td>@item.PurchaseDate</td>
+                            <td class="text-right">@item.Quantity</td>
+                            <td class="text-right">
+                                <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            </td>
+
+                        }
+                        else
+                        {
+                            <td>@item.SupplierName</td>
+                            <td>@item.Code</td>
+                            <td>@item.InvoiceDateTime</td>
+                            <td>@item.PurchaseDate</td>
+                            <td class="text-right">@item.Quantity</td>
+                            <td class="text-right">@item.SubTotal</td>
+                            <td class="text-right">@item.VATAmount</td>
+                            <td class="text-right">
+                                @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                            </td>
+                        }
+
                     </tr>
                 }
 
-                <!-- ================= TOTAL ================= -->
-        <tr style="font-weight:bold;background:#f1f1f1;">
-            <td>Total</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-            <td class="text-right">
-                @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
-            </td>
+                <tr style="font-weight:bold;background:#f1f1f1;">
+                    <td>Total</td>
 
-            <td class="text-right">
-                @(Model.Sum(x => x.SDAmount ?? 0).ToString("N2", bd))
-            </td>
+                    @if (isSummary)
+                    {
+                        <td></td>
+                        <td></td>
+                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                        <td class="text-right">@(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd)) </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
+                        </td>
 
-            <td class="text-right">
-                @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
-            </td>
-            <td class="text-right">
-                @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-            </td>
-        </tr>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
+                        </td>
+
+                        <td class="text-right">
+                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                        </td>
+                    }
+
+                </tr>
             }
             else
             {
                 <tr>
-                    <td colspan="7" style="text-align:center;">
+                    <td colspan="6" style="text-align:center;">
                         No data found
                     </td>
                 </tr>

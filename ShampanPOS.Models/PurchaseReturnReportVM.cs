@@ -20,6 +20,8 @@ namespace ShampanPOS.Models
 
         public string? UserId { get; set; }
 
+        public string? MonthYear { get; set; }
+
 
         public int? ProductGroupId { get; set; }
         public int? ProductId { get; set; }

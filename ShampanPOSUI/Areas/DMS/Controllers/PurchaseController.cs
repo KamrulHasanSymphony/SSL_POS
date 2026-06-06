@@ -1462,9 +1462,24 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             bool hasSupplier = supplierId.HasValue && supplierId.Value > 0;
             bool hasProduct = productId.HasValue && productId.Value > 0;
 
-            bool hasDate =
-                !string.IsNullOrWhiteSpace(fromDate) &&
-                !string.IsNullOrWhiteSpace(toDate);
+            //bool hasDate =
+            //    !string.IsNullOrWhiteSpace(fromDate) &&
+            //    !string.IsNullOrWhiteSpace(toDate);
+
+
+
+            bool hasInvoiceDate =
+                    !string.IsNullOrWhiteSpace(fromDate) &&
+                    !string.IsNullOrWhiteSpace(toDate);
+
+            bool hasPurchaseDate =
+                    !string.IsNullOrWhiteSpace(purchaseFromDate) &&
+                    !string.IsNullOrWhiteSpace(purchaseToDate);
+
+            bool hasDate = hasInvoiceDate || hasPurchaseDate;
+
+
+
 
             // =========================================
             // Dynamic View Name
@@ -1507,6 +1522,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     : "Reports/InvoiceWiseDetails";
             }
 
+            else if (reportType == "Purchase List")
+            {
+                viewName = "Reports/PurchaseReport";
+             
+            }
+
             else
             {
                 // =========================================
@@ -1531,15 +1552,15 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 }
                 else if (hasSupplier)
                 {
-                    viewName = "Reports/SupplierWiseDetails";
+                    viewName = "Reports/SupplierWise";
                 }
                 else if (hasProduct)
                 {
-                    viewName = "Reports/ProductWiseDetails";
+                    viewName = "Reports/ProductWise";
                 }
                 else
                 {
-                    viewName = "Reports/DayWiseDetails";
+                    viewName = "Reports/PurchaseReport";
                 }
             }
 

@@ -1024,10 +1024,14 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     ? "Reports/InvoiceWiseSummary"
                     : "Reports/InvoiceWiseDetails";
             }
-            //else
+
+            //else if (reportType == "Sale List")
             //{
-            //    viewName = "Reports/DayWiseDetails";
+            //    viewName = isSummary
+            //        ? "Reports/InvoiceWiseSummary"
+            //        : "Reports/InvoiceWiseDetails";
             //}
+          
 
             else
             {

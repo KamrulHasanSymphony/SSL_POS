@@ -192,6 +192,28 @@
 
                                 var productId = $("#ProductId").val() || 0;
 
+                                // =========================================
+                                // VALIDATION
+                                // =========================================
+
+                                var customerSelected = parseInt(customerId || 0) > 0;
+                                var productSelected = parseInt(productId || 0) > 0;
+                                var reportTypeSelected = reportType && reportType.trim() !== "";
+
+                                if (
+                                    !customerSelected &&
+                                    !productSelected &&
+                                    !reportTypeSelected
+                                ) {
+                                    ShowNotification(
+                                        3,
+                                        "Please select Customer, Product or Report Type before printing."
+                                    );
+
+                                    return false;
+                                }
+
+
                                 var url = `/DMS/SaleOrder/ReportList` +
                                     `?customerId=${encodeURIComponent(customerId || 0)}` +
                                     `&fromDate=${encodeURIComponent(fromDate)}` +
@@ -258,7 +280,7 @@
                                                 dataType: "json",
                                                 data: function () {
                                                     return {
-                                                        Value: "ReportType"   // ✅ IMPORTANT FIX
+                                                        Value: "SaleOrderReportType"   // ✅ IMPORTANT FIX
                                                     };
                                                 }
                                             }
