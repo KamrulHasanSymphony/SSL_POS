@@ -100,15 +100,18 @@
 
     <!-- ================= TABLE ================= -->
 
-    <table>
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Month</th>
                 <th>Purchase Code</th>
                 <th>Invoice Date</th>
                 <th>Purchase Date</th>
-                <th>Quantity</th>
-                <th>Total</th>
+                <th class="text-right">Quantity</th>
+                <th class="text-right">Unit Rate</th>
+                <th class="text-right">SD</th>
+                <th class="text-right">VAT</th>
+                <th class="text-right">Total</th>
             </tr>
         </thead>
 
@@ -123,28 +126,39 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.InvoiceDateTime</td>
+                        <td>@item.MonthYear</td>
                         <td>@item.Code</td>
                         <td>@item.InvoiceDateTime</td>
                         <td>@item.PurchaseDate</td>
-                        <td class="text-right">@item.Quantity</td>
-                        <td class="text-right">
-                            <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
-                        </td>
+                        <td class="text-right">@item.Quantity.ToString("N2", bd)</td>
+                        <td class="text-right">@item.UnitPrice.ToString("N2", bd)</td>
+                        <td class="text-right">@((item.SDAmount ?? 0).ToString("N2", bd))</td>
+                        <td class="text-right">@((item.VATAmount ?? 0).ToString("N2", bd))</td>
+                        <td class="text-right"><b>@((item.LineTotal ?? 0).ToString("N2", bd))</b></td>
                     </tr>
                 }
 
+                <!-- ================= TOTAL ================= -->
                 <tr style="font-weight:bold;background:#f1f1f1;">
                     <td>Total</td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">
-                        @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-                    </td>
+                    <td class="text-right">@Model.Sum(x => x.Quantity).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.UnitPrice).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.SDAmount ?? 0).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd)</td>
                 </tr>
             }
+            else
+            {
+                <tr>
+                    <td colspan="9" class="text-center">No data available</td>
+                </tr>
+            }
+      
+
         </tbody>
     </table>
 

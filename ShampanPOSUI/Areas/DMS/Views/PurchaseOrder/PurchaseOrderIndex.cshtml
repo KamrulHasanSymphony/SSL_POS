@@ -676,6 +676,37 @@ function PrintPurchaseReport() {
         deliveryToDate = $("#DeliveryToDate").val();
     }
 
+
+
+    // ==========================
+    // Validation
+    // ==========================
+
+    var hasOrderDate =
+        $("#chkOrderFromDate").is(":checked") ||
+        $("#chkOrderToDate").is(":checked");
+
+    var hasDeliveryDate =
+        $("#chkDeliveryFromDate").is(":checked") ||
+        $("#chkDeliveryToDate").is(":checked");
+
+    if (
+        parseInt(supplierId) === 0 &&
+        parseInt(productId) === 0 &&
+        !hasOrderDate &&
+        !hasDeliveryDate &&
+        !reportType
+    ) {
+
+        ShowNotification(
+            3,
+            "Please select Supplier, Product, Report Type, Order Date or Delivery Date before printing."
+        );
+
+        return false;
+    }
+
+
     var url = '@Url.Action("ReportList", "PurchaseOrder", new { area = "DMS" })'
         + '?supplierId=' + supplierId
         + '&supplierName=' + encodeURIComponent(supplierName)

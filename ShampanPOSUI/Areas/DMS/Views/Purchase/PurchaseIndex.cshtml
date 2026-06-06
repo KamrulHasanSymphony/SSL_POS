@@ -695,6 +695,36 @@
         toDate = $("#InvoiceToDate").val();
     }
 
+
+
+        // =========================================
+        // VALIDATION
+        // =========================================
+
+        var hasPurchaseDate =
+            $("#chkPurchaseFromDate").is(":checked") ||
+            $("#chkPurchaseToDate").is(":checked");
+
+        var hasInvoiceDate =
+            $("#chkInvoiceFromDate").is(":checked") ||
+            $("#chkInvoiceToDate").is(":checked");
+
+        if (
+            parseInt(supplierId) === 0 &&
+            parseInt(productId) === 0 &&
+            !hasPurchaseDate &&
+            !hasInvoiceDate &&
+            !reportType
+        ) {
+
+            ShowNotification(
+                3,
+                "Please select Supplier, Product, Report Type or Date Range before printing."
+            );
+
+            return false;
+        }
+
     // =========================================
     // URL
     // =========================================

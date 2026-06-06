@@ -108,6 +108,9 @@
                 <th>Invoice Date</th>
                 <th>Purchase Date</th>
                 <th>Quantity</th>
+                <th>Sub Total</th>
+                <th>SD</th>
+                <th>VAT</th>
                 <th>Total</th>
             </tr>
         </thead>
@@ -123,14 +126,17 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.InvoiceDateTime</td>
+                        <td>@item.MonthYear</td>
                         <td>@item.Code</td>
                         <td>@item.InvoiceDateTime</td>
                         <td>@item.PurchaseDate</td>
                         <td class="text-right">@item.Quantity</td>
                         <td class="text-right">
-                            <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            @item.SubTotal.ToString("N2", bd)
                         </td>
+                        <td class="text-right">@((item.SDAmount ?? 0).ToString("N2", bd))</td>
+                        <td class="text-right">@((item.VATAmount ?? 0).ToString("N2", bd))</td>
+                        <td class="text-right"><b>@((item.LineTotal ?? 0).ToString("N2", bd))</b></td>
                     </tr>
                 }
 
@@ -141,8 +147,17 @@
                     <td></td>
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
                     <td class="text-right">
-                        @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-                    </td>   
+                        @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
+                    </td>
+                    <td class="text-right">@Model.Sum(x => x.SDAmount ?? 0).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd)</td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9" style="text-align:center;">No data found</td>
                 </tr>
             }
         </tbody>

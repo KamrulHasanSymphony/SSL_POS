@@ -861,6 +861,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                     : "Reports/InvoiceWiseDetails";
             }
 
+            else if (reportType == "Purchase Order List")
+            {
+                viewName = "Reports/PurchaseOrderReport";
+
+            }
+
             else
             {
                 // =========================================
@@ -893,7 +899,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 }
                 else
                 {
-                    viewName = "Reports/DayWiseDetails";
+                    viewName = "Reports/PurchaseOrderReport";
                 }
             }
 

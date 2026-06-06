@@ -1,10 +1,13 @@
 ﻿@model List<ShampanPOS.Models.PurchaseReportVM>
 
 @{
-    ViewBag.Title = "Day Wise Summary Report";
+    ViewBag.Title = "Product Wise Details Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    bool isSummary = true; // fixed because this is summary view
+    //bool isSummary = false;
+}
+@{
+    bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
 }
 
 <style>
@@ -97,7 +100,7 @@
     </div>
 
     <h3 style="text-align:center;border-bottom:1px solid #000;">
-        Day Wise Summary Report
+        Product Wise @ViewBag.ReportTitle
     </h3>
 
     <!-- ================= TABLE ================= -->
@@ -105,14 +108,25 @@
 
         <thead>
             <tr>
-                <th>Invoice Date</th>
-                <th>Purchase Date</th>
-                <th>Total Invoice</th>
-                <th>Quantity</th>
-                <th>Sub Total</th>
-                <th>SD</th>
-                <th>VAT</th>
-                <th>Total</th>
+                @if (isSummary)
+                {
+                    <th>Product</th>
+                    <th>Invoice Date</th>
+                    <th>Purchase Date</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                }
+                else
+                {
+                    <th>Product</th>
+                    <th>Purchase Order Code</th>
+                    <th>Invoice Date</th>
+                    <th>Purchase Date</th>
+                    <th>Quantity</th>
+                    <th>Sub Total</th>
+                    <th>VAT</th>
+                    <th>Total</th>
+                }
             </tr>
         </thead>
 
@@ -120,6 +134,7 @@
         @{
             var bd = new CultureInfo("en-IN");
         }
+
         <tbody>
 
             @if (Model != null && Model.Any())
@@ -127,47 +142,71 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.InvoiceDateTime</td>
-                        <td>@item.PurchaseDate</td>
-                        <td class="text-right">@item.TotalInvoice</td>
-                        <td class="text-right">@item.Quantity</td>
-                        <td class="text-right">
-                            @item.SubTotal.ToString("N2", bd)
-                        </td>
 
-                        <td class="text-right">
-                            @((item.SD ?? 0).ToString("N2", bd))
-                        </td>
-                        <td class="text-right">
-                            @((item.VATAmount ?? 0).ToString("N2", bd))
-                        </td>
-                        <td class="text-right">
-                            <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
-                        </td>
+                        @if (isSummary)
+                        {
+                            <td>@item.ProductName</td>
+                            <td>@item.InvoiceDateTime</td>
+                            <td>@item.PurchaseDate</td>
+                            <td class="text-right">@item.Quantity</td>
+                            <td class="text-right">
+                                <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@item.ProductName</td>
+                            <td>@item.Code</td>
+                            <td>@item.InvoiceDateTime</td>
+                            <td>@item.PurchaseDate</td>
+                            <td class="text-right">@item.Quantity</td>
+                            <td class="text-right">
+                                @item.SubTotal.ToString("N2", bd)
+                            </td>
+
+                            <td class="text-right">
+                                @((item.VATAmount ?? 0).ToString("N2", bd))
+                            </td>
+
+                            <td class="text-right">
+                                <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
+                            </td>
+                        }
+
                     </tr>
                 }
 
-                <!-- TOTAL ROW -->
-        <tr style="font-weight:bold;background:#f1f1f1;">
-            <td>Total</td>
-            <td></td>
+                <tr style="font-weight:bold;background:#f1f1f1;">
+                    <td>Total</td>
 
-            <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
-            <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-            <td class="text-right">
-                @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
-            </td>
+                    @if (isSummary)
+                    {
+                        <td></td>
+                        <td></td>
+                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
+                        </td>
 
-            <td class="text-right">
-                @(Model.Sum(x => x.SD ?? 0).ToString("N2", bd))
-            </td>
-            <td class="text-right">
-                @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
-            </td>
-            <td class="text-right">
-                @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-            </td>
-        </tr>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
+                        </td>
+
+                        <td class="text-right">
+                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                        </td>
+                    }
+                </tr>
             }
             else
             {
