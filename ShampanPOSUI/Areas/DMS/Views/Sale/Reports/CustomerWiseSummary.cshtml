@@ -105,6 +105,9 @@
                 <th>Customer</th>
                 <th>Total Invoice</th>
                 <th>Quantity</th>
+                <th>Sub Total</th>
+                <th>SD Amount</th>
+                <th>VAT Amount</th>
                 <th>Total</th>
             </tr>
         </thead>
@@ -114,7 +117,6 @@
             var bd = new CultureInfo("en-IN");
         }
         <tbody>
-
             @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
@@ -123,9 +125,10 @@
                         <td>@item.CustomerName</td>
                         <td class="text-right">@item.TotalInvoice</td>
                         <td class="text-right">@item.Quantity</td>
-                        <td class="text-right">
-                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-                        </td>
+                        <td class="text-right">@((item.SubTotal).ToString("N2", bd))</td>
+                        <td class="text-right">@((item.SDAmount).ToString("N2", bd))</td>
+                        <td class="text-right">@((item.VATAmount).ToString("N2", bd))</td>
+                        <td class="text-right"><b>@((item.LineTotal ?? 0).ToString("N2", bd))</b></td>
                     </tr>
                 }
 
@@ -134,20 +137,20 @@
                     <td>Total</td>
                     <td class="text-right">@Model.Sum(x => x.TotalInvoice)</td>
                     <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">
-                        @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-                    </td>
+                    <td class="text-right">@Model.Sum(x => x.SubTotal).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.SDAmount).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.VATAmount).ToString("N2", bd)</td>
+                    <td class="text-right">@Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd)</td>
                 </tr>
             }
             else
             {
                 <tr>
-                    <td colspan="4" style="text-align:center;">
+                    <td colspan="7" style="text-align:center;">
                         No data found
                     </td>
                 </tr>
             }
-
         </tbody>
     </table>
 

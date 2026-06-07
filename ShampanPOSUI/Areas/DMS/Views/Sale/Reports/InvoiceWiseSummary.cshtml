@@ -107,6 +107,7 @@
                 <th>Customer</th>
                 <th>Quantity</th>
                 <th>Sub Total</th>
+                <th>SD</th>
                 <th>VAT</th>
                 <th>Total</th>
             </tr>
@@ -128,13 +129,16 @@
                         <td>@item.CustomerName</td>
                         <td class="text-right">@item.Quantity</td>
                         <td class="text-right">
-                            @((item.SubTotal ?? 0).ToString("N2", bd))
+                            @((item.SubTotal).ToString("N2", bd))
                         </td>
 
                         <td class="text-right">
-                            @((item.VATAmount ?? 0).ToString("N2", bd))
+                            @((item.SDAmount).ToString("N2", bd))
                         </td>
 
+                        <td class="text-right">
+                            @((item.VATAmount).ToString("N2", bd))
+                        </td>
                         <td class="text-right">
                             <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
                         </td>
@@ -142,22 +146,24 @@
                 }
 
                 <!-- ================= TOTAL ================= -->
-                <tr style="font-weight:bold;background:#f1f1f1;">
-                    <td>Total</td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-                    <td class="text-right">
-                        @(Model.Sum(x => x.SubTotal ?? 0).ToString("N2", bd))
-                    </td>
-                    <td class="text-right">
-                        @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
-                    </td>
-
-                    <td class="text-right">
-                        @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-                    </td>
-                </tr>
+                    <tr style="font-weight:bold;background:#f1f1f1;">
+                        <td>Total</td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
+                        </td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.SDAmount).ToString("N2", bd))
+                        </td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.VATAmount).ToString("N2", bd))
+                        </td>
+                        <td class="text-right">
+                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                        </td>
+                    </tr>
             }
             else
             {
