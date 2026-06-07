@@ -136,14 +136,25 @@ namespace ShampanPOS.Models
 
         public PeramModel PeramModel { get; set; }
         public List<PurchaseDetailVM> purchaseDetailList { get; set; }
+        public List<PurchasePaymentVM> purchasePaymentList { get; set; }
 
         public PurchaseVM()
         {
             purchaseDetailList = new List<PurchaseDetailVM>();
+            purchasePaymentList = new List<PurchasePaymentVM>();
             PeramModel = new PeramModel();
         }
 
 
+    }
+    public class PurchasePaymentVM
+    {
+        public string? MoneyReceiptNo { get; set; }
+        public string? PaymentDate { get; set; }
+        public bool IsCashTransaction { get; set; }
+        public decimal AmountPaidThisVoucher { get; set; }
+        public string? PaidBankName { get; set; }
+        public string? PaidBankAccountNo { get; set; }
     }
 
 }

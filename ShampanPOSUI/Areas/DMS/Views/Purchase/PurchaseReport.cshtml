@@ -1,5 +1,460 @@
 ﻿@model ShampanPOS.Models.PurchaseVM
 @{
+    ViewBag.Title = "Purchase Invoice Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var bdCulture = new System.Globalization.CultureInfo("en-IN");
+}
+
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #7f8c8d;
+        --border-color: #dcdde1;
+        --table-header-bg: #f8f9fa;
+        --accent-success: #27ae60;
+        --accent-danger: #c0392b;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: #f5f6fa;
+        color: #2f3640;
+        margin: 0;
+        padding: 0;
+    }
+
+    .action-bar {
+        max-width: 950px;
+        margin: 20px auto 0 auto;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn-premium-print {
+        background: var(--primary-color);
+        color: white;
+        padding: 10px 24px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-premium-print:hover {
+            background: #1a252f;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+    .invoice-card {
+        background: white;
+        padding: 40px;
+        max-width: 950px;
+        margin: 15px auto 40px auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border-color);
+        box-sizing: border-box;
+    }
+
+    /* Meta Grid Info Layout */
+    .invoice-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+        margin-top: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f1f2f6;
+    }
+
+    .meta-block h4 {
+        margin: 0 0 8px 0;
+        color: var(--secondary-color);
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .meta-block p {
+        margin: 4px 0;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+        .info-table td {
+            padding: 6px 0;
+            border: none;
+            font-size: 14px;
+        }
+
+            .info-table td.label {
+                color: var(--secondary-color);
+                font-weight: 500;
+                width: 40%;
+            }
+
+    /* Custom Tables Structure */
+    .premium-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        font-size: 13.5px;
+    }
+
+        .premium-table th {
+            background: var(--table-header-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            padding: 12px 10px;
+            border-bottom: 2px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .premium-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #f1f2f6;
+            color: #333;
+        }
+
+        .premium-table tbody tr:hover {
+            background-color: #fcfcfc;
+        }
+
+    .section-title {
+        font-size: 16px;
+        color: var(--primary-color);
+        border-left: 4px solid var(--primary-color);
+        padding-left: 10px;
+        margin: 35px 0 15px 0;
+        font-weight: 600;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Financial Summary Sticky Box */
+    .summary-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .comments-box {
+        width: 50%;
+        font-size: 13px;
+        color: #57606f;
+        line-height: 1.5;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        height: fit-content;
+    }
+
+    .financial-box {
+        width: 40%;
+    }
+
+    .fin-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 14px;
+        color: #2f3640;
+    }
+
+        .fin-row.grand-total {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-color);
+            border-top: 1px solid var(--border-color);
+            margin-top: 5px;
+            padding-top: 12px;
+        }
+
+        .fin-row.due-amount {
+            color: var(--accent-danger);
+            font-weight: 600;
+        }
+
+    /* Signature Line setup */
+    .signature-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 80px;
+        padding: 0 10px;
+    }
+
+    .sig-line {
+        width: 200px;
+        text-align: center;
+        border-top: 1px solid #7f8c8d;
+        font-size: 13px;
+        color: var(--secondary-color);
+        padding-top: 8px;
+    }
+
+    /* 🔥 SYSTEM PRINT ENGINE RESOLUTION */
+    @@media print {
+        body * {
+            visibility: hidden !important;
+        }
+
+        .invoice-card, .invoice-card * {
+            visibility: visible !important;
+        }
+
+        .invoice-card {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .action-bar, .btn-premium-print {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        .premium-table th {
+            background: #f5f5f5 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .comments-box {
+            background: #fff !important;
+            border: 1px solid var(--border-color);
+        }
+    }
+</style>
+
+<div class="action-bar">
+    <button onclick="window.print()" class="btn-premium-print">
+        Print Invoice copy
+    </button>
+</div>
+
+<div class="invoice-card">
+
+    <table style="width:100%; border:none; border-collapse:collapse;">
+        <tr>
+            <td style="width:30%; border:none; padding:0;">
+                <img src="~/Content/AdminLte/dist/img/logo.png" style="max-width:200px; height:auto; display:block;" onerror="this.style.display='none'" />
+            </td>
+            <td style="width:70%; text-align:right; border:none; padding:0; line-height: 1.4;">
+                <h2 style="margin:0 0 5px 0; color:var(--primary-color); font-weight:700; font-size:26px;">@Model.CompanyName</h2>
+                <div style="font-size:14px; font-weight:600; color:#57606f;">@Model.BranchName</div>
+                <div style="font-size:13px; color:#747d8c;">@Model.CompanyAddress</div>
+                <div style="font-size:13px; color:#747d8c;">📞 Phone: 01612264439 | ✉️ Support: symphonysorftech1999@gamil.com</div>
+            </td>
+        </tr>
+    </table>
+
+    <div style="text-align:center; margin: 30px 0 15px 0;">
+        <span style="font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; border-bottom: 3px solid var(--primary-color); padding-bottom: 5px; color: var(--primary-color);">
+            Goods Purchase Invoice
+        </span>
+    </div>
+
+    <div class="invoice-meta-grid">
+        <div class="meta-block">
+            <h4>Supplier / Vendor Details</h4>
+            <p style="font-weight: 600; font-size: 15px; color:#2c3e50;">@Model.SupplierName</p>
+            <p style="color:#57606f;">Challan / B/E No: @(string.IsNullOrEmpty(Model.BENumber) ? "N/A" : Model.BENumber)</p>
+            <p style="color:#747d8c;">Status Matrix: @(Model.IsPost ? "Posted Ledger Locked" : "Draft Order")</p>
+        </div>
+
+        <div class="meta-block">
+            <h4>Invoice Control References</h4>
+            <table class="info-table">
+                <tr>
+                    <td class="label">Purchase Voucher:</td>
+                    <td style="font-weight:600; color:#2c3e50;">@Model.Code</td>
+                </tr>
+                <tr>
+                    <td class="label">Purchase Date:</td>
+                    <td>@Model.PurchaseDate</td>
+                </tr>
+                <tr>
+                    <td class="label">Invoice Date/Time:</td>
+                    <td>@Model.InvoiceDateTime</td>
+                </tr>
+                <tr>
+                    <td class="label">Purchase Order:</td>
+                    <td>@(string.IsNullOrEmpty(Model.PurchaseOrderCode) ? "Direct Procurement" : Model.PurchaseOrderCode)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-title">Purchased Items Breakdown</div>
+    <table class="premium-table">
+        <thead>
+            <tr>
+                <th class="text-center" style="width: 5%;">SL</th>
+                <th>Product Description</th>
+                <th class="text-center" style="width: 15%;">SKU Code</th>
+                <th class="text-right" style="width: 10%;">Qty</th>
+                <th class="text-right" style="width: 12%;">Unit Price</th>
+                <th class="text-right" style="width: 12%;">Sub Total</th>
+                <th class="text-right" style="width: 10%;">SD Amt</th>
+                <th class="text-right" style="width: 10%;">VAT Amt</th>
+                <th class="text-right" style="width: 14%;">Line Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.purchaseDetailList)
+            {
+                <tr>
+                    <td class="text-center" style="color:#747d8c;">@item.Line</td>
+                    <td style="font-weight: 500;">@item.ProductName</td>
+                    <td class="text-center" style="color:#2f3640; font-family: monospace;">@item.ProductCode</td>
+                    <td class="text-right">@item.Quantity</td>
+                    <td class="text-right">@item.UnitPrice.ToString("N2", bdCulture)</td>
+                    <td class="text-right">@item.SubTotal.ToString("N2", bdCulture)</td>
+                    <td class="text-right" style="color:#7f8c8d;">@((item.SDAmount ?? 0).ToString("N2", bdCulture))</td>
+                    <td class="text-right" style="color:#7f8c8d;">@((item.VATAmount ?? 0).ToString("N2", bdCulture))</td>
+                    <td class="text-right" style="font-weight: 600;">@((item.LineTotal ?? 0).ToString("N2", bdCulture))</td>
+                </tr>
+            }
+
+            <tr style="font-weight:600; background: #fafafa;">
+                <td colspan="3" class="text-right" style="padding: 12px 10px; color: var(--primary-color);">Total Matrix Accumulation:</td>
+                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.Quantity)</td>
+                <td></td>
+                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.SubTotal).ToString("N2", bdCulture)</td>
+                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.SDAmount ?? 0).ToString("N2", bdCulture)</td>
+                <td class="text-right">@Model.purchaseDetailList.Sum(x => x.VATAmount ?? 0).ToString("N2", bdCulture)</td>
+                <td class="text-right" style="color:var(--primary-color); font-weight:700;">@Model.purchaseDetailList.Sum(x => x.LineTotal ?? 0).ToString("N2", bdCulture)</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="section-title">Associated Money Receipts & Payment Clearance Ledger</div>
+    @if (Model.purchasePaymentList != null && Model.purchasePaymentList.Count > 0)
+    {
+        <table class="premium-table" style="margin-bottom: 20px;">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Money Receipt No</th>
+                    <th class="text-center" style="width: 15%;">Payment Date</th>
+                    <th class="text-center" style="width: 20%;">Mode of Pay</th>
+                    <th>Bank / Clearing Reference Account</th>
+                    <th class="text-right" style="width: 20%;">Paid Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in Model.purchasePaymentList)
+                {
+                    <tr>
+                        <td style="font-weight: 600; color: #2980b9; font-family:monospace;">@pay.MoneyReceiptNo</td>
+                        <td class="text-center">@pay.PaymentDate</td>
+                        <td class="text-center">
+                            <span style="padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: @(pay.IsCashTransaction ? "#e1f5fe; color:#0288d1;" : "#efebe9; color:#4e342e;")">
+                                @(pay.IsCashTransaction ? "CASH" : "BANK TRANSACTION")
+                            </span>
+                        </td>
+                        <td style="color: #57606f;">
+                            @(pay.IsCashTransaction ? "Internal Cash Ledger Counter" : $"{pay.PaidBankName} (A/C: {pay.PaidBankAccountNo})")
+                        </td>
+                        <td class="text-right" style="font-weight: 600; color: var(--accent-success);">
+                            @pay.AmountPaidThisVoucher.ToString("N2", bdCulture)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div style="padding: 15px; background: #fffde7; color: #f57f17; font-size: 13px; border-radius: 6px; border: 1px solid #fff59d; margin-top: 10px;">
+            ⚠️ No real-time payment history receipts logged against this unique purchase order configuration.
+        </div>
+    }
+
+
+    <div class="summary-wrapper">
+        <div class="comments-box">
+            <b style="color:var(--primary-color); display:block; margin-bottom:5px; font-size:12px; text-transform:uppercase;">Notes / Append Comments:</b>
+            @if (!string.IsNullOrEmpty(Model.Comments))
+            {
+                @Html.Raw(Model.Comments.Replace("\n", "<br/>"))
+            }
+            else
+            {
+                <span style="color:#a4b0be; font-style:italic;">No dynamic internal executive summary comments appended to this asset transaction ledger.</span>
+            }
+        </div>
+
+        <div class="financial-box">
+            <div class="fin-row">
+                <span>Sub-Total Gross Price:</span>
+                <span>@Model.SubTotal.ToString("N2", bdCulture)</span>
+            </div>
+            <div class="fin-row">
+                <span>Total Supplementary Duty (SD):</span>
+                <span>+ @Model.TotalSD.ToString("N2", bdCulture)</span>
+            </div>
+            <div class="fin-row">
+                <span>Value Added Tax (VAT):</span>
+                <span>+ @Model.TotalVAT.ToString("N2", bdCulture)</span>
+            </div>
+            <div class="fin-row grand-total">
+                <span>Invoice Grand Total:</span>
+                <span>@Model.GrandTotal.ToString("N2", bdCulture)</span>
+            </div>
+            <div class="fin-row" style="color: var(--accent-success); font-weight: 500; margin-top:5px;">
+                <span>Total Cleared Paid-Up:</span>
+                <span>- @Model.PaidAmount.ToString("N2", bdCulture)</span>
+            </div>
+            <div class="fin-row grand-total due-amount" style="border-top: 1px dashed var(--border-color); padding-top: 10px;">
+                <span>Net Out-Standing Due:</span>
+                <span>@Model.DueAmount.ToString("N2", bdCulture)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="signature-container">
+        <div class="sig-line">Prepared & Checked By</div>
+        <div class="sig-line">Authorized Approval</div>
+        <div class="sig-line">Vendor Acknowledgement</div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<!--model ShampanPOS.Models.PurchaseVM
+{
     ViewBag.Title = "Purchase Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -32,7 +487,7 @@
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
-       
+
     }
 
         table th, table td {
@@ -50,7 +505,7 @@
     }
 
     /* 🔥 PRINT LIKE SALES REPORT */
-    @@media print {
+    media print {
 
         body * {
             visibility: hidden;
@@ -100,112 +555,106 @@
     <i class="k-icon k-i-print"></i> Print
 </button>
 
-<div class="report-box">
+<div class="report-box">-->
+<!-- HEADER -->
+<!--<table style="border:none;">
+    <tr>
+        <td style="width:140px;border:none;">
+            <img src="~/Content/AdminLte/dist/img/logo.png"
+                 style="width:230px;height:120px;" />
+        </td>
+        <td style="text-align:right;border:none;">
+            <h3 style="margin:0;">Model.CompanyName</h3>
+            <div style="font-size:16px;">Model.BranchName</div>
+            <div>Model.BranchAddress 69/1 Trhidara Tower</div>
+            <div>📞 01612264439</div>
+            <div>✉️ symphonysorftech1999gamil.com</div>
+        </td>
 
-    <!-- HEADER -->
+    </tr>
+</table>
 
-    <table style="border:none;">
+<h2 style="text-align:center;border-bottom:1px solid #000;">
+    PURCHASE
+</h2>-->
+<!-- PURCHASE MASTER INFO -->
+<!--<table>
+    <tr>
+        <th>Purchase No.</th>
+        <td>Model.Code</td>
+        <th>Invoice Date</th>
+        <td style="width:20%!important">Model.InvoiceDateTime</td>
+    </tr>
+    <tr>
+        <th>Supplier</th>
+        <td>Model.SupplierName</td>
+        <th>Purchase Date</th>
+        <td style="width:20%!important">Model.PurchaseDate</td>
+    </tr>
+    <tr>
+        <th>Purchase Order</th>
+        <td>Model.PurchaseOrderCode</td>
+        <th>B/E Number</th>
+        <td style="width:20%!important">Model.BENumber</td>
+    </tr>
+</table>-->
+<!-- PURCHASE DETAILS -->
+<!--<h3 class="mt-4">Purchase Items</h3>
+<table>
+    <thead>
         <tr>
-            <td style="width:140px;border:none;">
-                <img src="~/Content/AdminLte/dist/img/logo.png"
-                     style="width:230px;height:120px;" />
-            </td>
-            <td style="text-align:right;border:none;">
-                <h3 style="margin:0;">@Model.CompanyName</h3>
-                <div style="font-size:16px;">@Model.BranchName</div>
-                <div>@Model.BranchAddress 69/1 Trhidara Tower</div>
-                <div>📞 01612264439</div>
-                <div>✉️ symphonysorftech1999@gamil.com</div>
-            </td>
-
+            <th style="width:5%!important;" class="text-center">SL</th>
+            <th class="text-center">Product</th>
+            <th class="text-center">Code</th>
+            <th class="text-center" style="width:10%!important;">Qty</th>
+            <th class="text-center" style="width:12%!important;">Unit Price</th>
+            <th style="width:10%!important;" class="text-center">Sub Total</th>
+            <th class="text-center" style="width:12%!important;">SD Amt</th>
+            <th class="text-center" style="width:12%!important;">VAT Amt</th>
+            <th class="text-center" style="width:12%!important;">Total</th>
         </tr>
-    </table>
-
-    <h2 style="text-align:center;border-bottom:1px solid #000;">
-        PURCHASE
-    </h2>
-
-    <!-- PURCHASE MASTER INFO -->
-    <table>
-        <tr>
-            <th>Purchase No.</th>
-            <td>@Model.Code</td>
-            <th>Invoice Date</th>
-            <td style="width:20%!important">@Model.InvoiceDateTime</td>
-        </tr>
-        <tr>
-            <th>Supplier</th>
-            <td>@Model.SupplierName</td>
-            <th>Purchase Date</th>
-            <td style="width:20%!important">@Model.PurchaseDate</td>
-        </tr>
-        <tr>
-            <th>Purchase Order</th>
-            <td>@Model.PurchaseOrderCode</td>
-            <th>B/E Number</th>
-            <td style="width:20%!important">@Model.BENumber</td>
-        </tr>
-    </table>
-
-    <!-- PURCHASE DETAILS -->
-    <h3 class="mt-4">Purchase Items</h3>
-    <table>
-        <thead>
+    </thead>
+    <tbody>
+        foreach (var item in Model.purchaseDetailList)
+        {
             <tr>
-                <th style="width:5%!important;" class="text-center">SL</th>
-                <th class="text-center">Product</th>
-                <th class="text-center">Code</th>
-                <th class="text-center" style="width:10%!important;">Qty</th>
-                <th class="text-center" style="width:12%!important;">Unit Price</th>
-                <th style="width:10%!important;" class="text-center">Sub Total</th>
-                <th class="text-center" style="width:12%!important;">SD Amt</th>
-                <th class="text-center" style="width:12%!important;">VAT Amt</th>
-                <th class="text-center" style="width:12%!important;">Total</th>
+                <td>item.Line</td>
+                <td>item.ProductName</td>
+                <td>item.ProductCode</td>
+                <td class="text-right">item.Quantity</td>
+                <td class="text-right">item.UnitPrice.ToString("N2", new System.Globalization.CultureInfo("en-IN"))</td>
+                <td class="text-right">item.SubTotal.ToString("N2", new System.Globalization.CultureInfo("en-IN"))</td>
+                <td class="text-right">((item.SDAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
+                <td class="text-right">((item.VATAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
+                <td class="text-right"><b>((item.LineTotal ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</b></td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.purchaseDetailList)
-            {
-                <tr>
-                    <td>@item.Line</td>
-                    <td>@item.ProductName</td>
-                    <td>@item.ProductCode</td>
-                    <td class="text-right">@item.Quantity</td>
-                    <td class="text-right">@item.UnitPrice.ToString("N2", new System.Globalization.CultureInfo("en-IN"))</td>
-                    <td class="text-right">@item.SubTotal.ToString("N2", new System.Globalization.CultureInfo("en-IN"))</td>
-                    <td class="text-right">@((item.SDAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
-                    <td class="text-right">@((item.VATAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</td>
-                    <td class="text-right"><b>@((item.LineTotal ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</b></td>
-                </tr>
-            }
+        }-->
+<!-- FOOTER ROW -->
+<!--<tr class="purchasetotalrow" style="font-weight:bold;">
+            <td colspan="2" style="text-align: center;">Total :</td>
+            <td></td>
+            <td class="text-right"><span>Model.purchaseDetailList.Sum(x => x.Quantity)</span></td>
+            <td></td>
+            <td class="text-right">
+                <span>Model.purchaseDetailList.Sum(x => x.SubTotal).ToString("N2", new System.Globalization.CultureInfo("en-IN"))</span>
+            </td>
+            <td class="text-right">
+                <span>(Model.purchaseDetailList.Sum(x => x.SDAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
+            </td>
 
-            <!-- FOOTER ROW -->
-            <tr class="purchasetotalrow" style="font-weight:bold;">
-                <td colspan="2" style="text-align: center;">Total :</td>
-                <td></td>
-                <td class="text-right"><span>@Model.purchaseDetailList.Sum(x => x.Quantity)</span></td>
-                <td></td>
-                <td class="text-right">
-                    <span>@Model.purchaseDetailList.Sum(x => x.SubTotal).ToString("N2", new System.Globalization.CultureInfo("en-IN"))</span>
-                </td>
-                <td class="text-right">
-                    <span>@(Model.purchaseDetailList.Sum(x => x.SDAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
-                </td>
+            <td class="text-right">
+                <span>(Model.purchaseDetailList.Sum(x => x.VATAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
+            </td>
 
-                <td class="text-right">
-                    <span>@(Model.purchaseDetailList.Sum(x => x.VATAmount ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
-                </td>
-
-                <td class="text-right">
-                    <span>@(Model.purchaseDetailList.Sum(x => x.LineTotal ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- SUMMARY -->
-    @using System.Globalization
-    @{
+            <td class="text-right">
+                <span>(Model.purchaseDetailList.Sum(x => x.LineTotal ?? 0).ToString("N2", new System.Globalization.CultureInfo("en-IN")))</span>
+            </td>
+        </tr>
+    </tbody>
+</table>-->
+<!-- SUMMARY -->
+<!--using System.Globalization
+    {
         var bd = new CultureInfo("en-IN");
     }
 <div style="width:300px; margin-left:auto;">
@@ -213,28 +662,25 @@
     <div style="display:flex; justify-content:space-between; padding-right: 6px">
         <span>Paid Amount</span>
         <span>
-            @Model.PaidAmount.ToString("N2", bd)
+            Model.PaidAmount.ToString("N2", bd)
         </span>
-    </div>
-    <!-- LINE -->
-    <div style="border-top:1px solid #000; margin:8px 0;"></div>
+    </div>-->
+<!-- LINE -->
+<!--<div style="border-top:1px solid #000; margin:8px 0;"></div>
 
     <div style="display:flex; justify-content:space-between; font-weight:bold;">
         <span>Due Amount</span>
         <span class="double-line">
-            @Model.DueAmount.ToString("N2", bd)
+            Model.DueAmount.ToString("N2", bd)
         </span>
     </div>
 
-</div>
-
-    <!-- COMMENTS  -->
-    <div style="margin-top:20px;">
+</div>-->
+<!-- COMMENTS  -->
+<!--<div style="margin-top:20px;">
         <h5 class="section-title">Comments</h5>
         <div style="margin-top:5px;">
-            @Html.Raw(Model.Comments?.Replace("\n", "<br/>"))
+            Html.Raw(Model.Comments?.Replace("\n", "<br/>"))
         </div>
     </div>
-</div>
-
-
+</div>-->
