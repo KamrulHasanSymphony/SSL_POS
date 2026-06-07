@@ -15,6 +15,11 @@ namespace ShampanPOS.Models
         public string? Code { get; set; }
 
         public string? MonthYear { get; set; }
+        public int? PurchaseId { get; set; }
+
+        public string? PurchaseCode { get; set; }
+        public string? PurchaseNo { get; set; }
+
         public string? UserId { get; set; }
 
         [Display(Name = "Purchase Order Code")]
@@ -94,5 +99,8 @@ namespace ShampanPOS.Models
         [Display(Name = "Total Invoice")]
         [DataType(DataType.Currency)]
         public decimal? TotalInvoice { get; set; }
+        public string? ProductCode { get; set; }
+        public string? SupplierCode { get; set; }
+
     }
 }

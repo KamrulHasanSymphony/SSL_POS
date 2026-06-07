@@ -2796,6 +2796,8 @@
     <Content Include="Areas\DMS\Views\Purchase\Reports\PurchaseReport.cshtml" />
     <Content Include="Areas\DMS\Views\PurchaseOrder\Reports\PurchaseOrderReport.cshtml" />
     <Content Include="Areas\DMS\Views\PurchaseReturn\Reports\PurchaseReturnReport.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\PurchaseOrdervsPurchaseReportIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\Reports\PurchaseOrdervsPurchaseSummary.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\Reports\SaleReport.cshtml" />
     <Content Include="Areas\DMS\Views\SaleOrder\Reports\SaleOrderReport.cshtml" />
     <Content Include="Areas\DMS\Views\SaleReturn\Reports\SaleReturnReport.cshtml" />

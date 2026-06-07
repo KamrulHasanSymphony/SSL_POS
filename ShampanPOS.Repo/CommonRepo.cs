@@ -500,7 +500,7 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-  
+
 
         public ResultVM GetCampaignList(CommonVM model)
         {
@@ -1070,7 +1070,7 @@ namespace ShampanPOS.Repo
                 {
                     token = ClaimNames.token
                 };
-               
+
                 var payload = new { Id = branchId };
                 string jsonPayload = JsonConvert.SerializeObject(payload);
 
@@ -1646,5 +1646,45 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
+
+        public ResultVM GetPurchaseModal(CommonVM param)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/GetPurchaseModal", authModel, JsonConvert.SerializeObject(param));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public ResultVM GetPurchaseOrderModal(CommonVM param)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Common/GetPurchaseOrderModal", authModel, JsonConvert.SerializeObject(param));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion                
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
     }
 }

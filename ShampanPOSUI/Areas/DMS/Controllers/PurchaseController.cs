@@ -1,4 +1,5 @@
-﻿using ExcelDataReader;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using ExcelDataReader;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -102,9 +103,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ResultVM resultVM = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new PurchaseRepo();
 
-            
-                try
-                {
+
+            try
+            {
 
                 var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
                 model.BranchId = Convert.ToInt32(currentBranchId);
@@ -112,89 +113,89 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
                 if (model.Operation.ToLower() == "add")
+                {
+                    model.CreatedBy = Session["UserId"].ToString();
+                    model.UserId = Session["UserHashId"]?.ToString();
+
+                    model.CreatedOn = DateTime.Now.ToString();
+                    model.CreatedFrom = Ordinary.GetLocalIpAddress();
+
+                    resultVM = _repo.Insert(model);
+
+                    if (resultVM.Status == ResultStatus.Success.ToString())
                     {
-                        model.CreatedBy = Session["UserId"].ToString();
-                        model.UserId = Session["UserHashId"]?.ToString();
-
-                        model.CreatedOn = DateTime.Now.ToString();
-                        model.CreatedFrom = Ordinary.GetLocalIpAddress();
-
-                        resultVM = _repo.Insert(model);
-
-                      if (resultVM.Status == ResultStatus.Success.ToString())
+                        model = JsonConvert.DeserializeObject<PurchaseVM>(resultVM.DataVM.ToString());
+                        model.Operation = "add";
+                        Session["result"] = resultVM.Status + "~" + resultVM.Message;
+                        result = new ResultModel<PurchaseVM>()
                         {
-                            model = JsonConvert.DeserializeObject<PurchaseVM>(resultVM.DataVM.ToString());
-                            model.Operation = "add";
-                            Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            result = new ResultModel<PurchaseVM>()
-                            {
-                                Success = true,
-                                Status = Status.Success,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-                        else
-                        {
-                            Session["result"] = "Fail" + "~" + resultVM.Message;
-
-                            result = new ResultModel<PurchaseVM>()
-                            {
-                                Status = Status.Fail,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-
-                    }
-                    else if (model.Operation.ToLower() == "update")
-                    {
-                        model.LastModifiedBy = Session["UserId"].ToString();
-                        model.LastModifiedOn = DateTime.Now.ToString();
-                        model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
-
-                        resultVM = _repo.Update(model);
-
-                        if (resultVM.Status == ResultStatus.Success.ToString())
-                        {
-                            Session["result"] = resultVM.Status + "~" + resultVM.Message;
-                            result = new ResultModel<PurchaseVM>()
-                            {
-                                Success = true,
-                                Status = Status.Success,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
-                        else
-                        {
-                            Session["result"] = "Fail" + "~" + resultVM.Message;
-
-                            result = new ResultModel<PurchaseVM>()
-                            {
-                                Status = Status.Fail,
-                                Message = resultVM.Message,
-                                Data = model
-                            };
-                            return Json(result);
-                        }
+                            Success = true,
+                            Status = Status.Success,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                        return Json(result);
                     }
                     else
                     {
-                        return RedirectToAction("Index");
+                        Session["result"] = "Fail" + "~" + resultVM.Message;
+
+                        result = new ResultModel<PurchaseVM>()
+                        {
+                            Status = Status.Fail,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                        return Json(result);
+                    }
+
+                }
+                else if (model.Operation.ToLower() == "update")
+                {
+                    model.LastModifiedBy = Session["UserId"].ToString();
+                    model.LastModifiedOn = DateTime.Now.ToString();
+                    model.LastUpdateFrom = Ordinary.GetLocalIpAddress();
+
+                    resultVM = _repo.Update(model);
+
+                    if (resultVM.Status == ResultStatus.Success.ToString())
+                    {
+                        Session["result"] = resultVM.Status + "~" + resultVM.Message;
+                        result = new ResultModel<PurchaseVM>()
+                        {
+                            Success = true,
+                            Status = Status.Success,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                        return Json(result);
+                    }
+                    else
+                    {
+                        Session["result"] = "Fail" + "~" + resultVM.Message;
+
+                        result = new ResultModel<PurchaseVM>()
+                        {
+                            Status = Status.Fail,
+                            Message = resultVM.Message,
+                            Data = model
+                        };
+                        return Json(result);
                     }
                 }
-                catch (Exception e)
+                else
                 {
-                    Session["result"] = "Fail" + "~" + e.Message;
-                    Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                    return View("Create", model);
+                    return RedirectToAction("Index");
                 }
-            
-            
+            }
+            catch (Exception e)
+            {
+                Session["result"] = "Fail" + "~" + e.Message;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return View("Create", model);
+            }
+
+
         }
 
         [HttpGet]
@@ -1347,7 +1348,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View(vm);
         }
 
-
         //public ActionResult PurchaseListReport(int? supplierId, string fromDate, string toDate, string invoiceFromDate, string invoiceToDate, int? reportType, bool isSummary)
         //{
         //    List<PurchaseReportVM> vmList = new List<PurchaseReportVM>();
@@ -1387,11 +1387,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
         //}
-
-
-
-
-
 
         public ActionResult ReportList(int? supplierId, string fromDate, string toDate, string purchaseFromDate, string purchaseToDate, string reportType, bool isSummary, int? productId, string supplierCode, string supplierName, string productName)
         {
@@ -1572,6 +1567,97 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View(viewName, vmList);
         }
 
+
+        public ActionResult PurchaseOrdervsPurchaseReportIndex()
+        {
+            var vm = new PurchaseReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+        public ActionResult PurchaseOrdervsPurchaseReportList(int? supplierId, string fromDate, string toDate, string purchaseFromDate, string purchaseToDate, bool isSummary, int? productId, int? purchaseId, int? purchaseOrderId, string supplierCode, string supplierName, string productName)
+        {
+            List<PurchaseReportVM> vmList = new List<PurchaseReportVM>();
+
+            PurchaseReportVM param = new PurchaseReportVM();
+
+            param.SupplierId = supplierId ?? 0;
+            param.ProductId = productId ?? 0;
+
+            param.PurchaseId = purchaseId ?? 0;
+            param.PurchaseOrderId = purchaseOrderId ?? 0;
+            param.ProductName = productName ?? "";
+            param.InvoiceFromDate = string.IsNullOrEmpty(fromDate)
+                ? "2025-01-01"
+                : fromDate;
+
+            param.InvoiceToDate = string.IsNullOrEmpty(toDate)
+                ? DateTime.Now.ToString("yyyy-MM-dd")
+                : toDate;
+
+            param.PurchaseFromDate = string.IsNullOrEmpty(purchaseFromDate)
+                ? "2025-01-01"
+                : purchaseFromDate;
+
+            param.PurchaseToDate = string.IsNullOrEmpty(purchaseToDate)
+                ? DateTime.Now.ToString("yyyy-MM-dd")
+                : purchaseToDate;
+
+            param.IsSummary = isSummary;
+
+            param.Code = string.IsNullOrEmpty(supplierCode)
+                ? ""
+                : supplierCode;
+
+            param.SupplierName = string.IsNullOrEmpty(supplierName)
+                ? ""
+                : supplierName;
+
+            ResultVM result = _repo.GetPurchaseOrdervsPurchaseByList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<PurchaseReportVM>>
+                (
+                    result.DataVM.ToString()
+                );
+            }
+
+            // ViewBag
+            ViewBag.SupplierId = supplierId;
+            ViewBag.SupplierName = supplierName ?? "All";
+
+            ViewBag.ProductId = productId ?? 0;
+            ViewBag.ProductName = productName ?? "All";
+
+            ViewBag.PurchaseId = purchaseId ?? 0;
+            ViewBag.PurchaseOrderId = purchaseOrderId ?? 0;
+
+            ViewBag.InvoiceFromDate = fromDate ?? "All";
+            ViewBag.InvoiceToDate = toDate ?? "All";
+
+            ViewBag.PurchaseFromDate = purchaseFromDate ?? "All";
+            ViewBag.PurchaseToDate = purchaseToDate ?? "All";
+
+            ViewBag.IsSummary = isSummary;
+
+            ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
+            ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
+
+
+            // ==========================
+            // Summary / Details View
+            // ==========================
+
+            string viewName = isSummary
+                ? "Reports/PurchaseOrdervsPurchaseSummary"
+                : "Reports/PurchaseOrdervsPurchaseDetails";
+
+            return View(viewName, vmList);
+
+
+        }
 
 
     }
