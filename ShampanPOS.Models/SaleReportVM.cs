@@ -74,11 +74,11 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Unit Rate")]
         [DataType(DataType.Currency)]
-        public decimal? UnitRate { get; set; }
+        public decimal UnitRate { get; set; }
 
         [Display(Name = "Sub Total")]
         [DataType(DataType.Currency)]
-        public decimal? SubTotal { get; set; }
+        public decimal SubTotal { get; set; }
 
         [Display(Name = "Total Invoice")]
         [DataType(DataType.Currency)]
@@ -89,14 +89,14 @@ namespace ShampanPOS.Models
 
         [Display(Name = "SD Amount")]
         [DataType(DataType.Currency)]
-        public decimal? SDAmount { get; set; }
+        public decimal SDAmount { get; set; }
 
         [Display(Name = "VAT Rate")]
         public decimal? VATRate { get; set; }
 
         [Display(Name = "VAT Amount")]
         [DataType(DataType.Currency)]
-        public decimal? VATAmount { get; set; }
+        public decimal VATAmount { get; set; }
 
         [Display(Name = "Line Total")]
         [DataType(DataType.Currency)]

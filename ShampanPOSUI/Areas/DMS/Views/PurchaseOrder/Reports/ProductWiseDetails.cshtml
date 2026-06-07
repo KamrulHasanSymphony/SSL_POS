@@ -112,6 +112,7 @@
                 <th>Quantity</th>
                 <th>Unit Rate</th>
                 <th>Sub Total</th>
+                <th>SD Amount</th>
                 <th>VAT Amount</th>
 
                 <th>Total</th>
@@ -137,6 +138,7 @@
                         <td class="text-right">@item.UnitPrice</td>
                         <td class="text-right"> @((item.SubTotal ?? 0).ToString("N2", bd))</td>
                         <td class="text-right"><b>@((item.SubTotal ?? 0).ToString("N2", bd))</b></td>
+                        <td class="text-right"> @((item.SDAmount ?? 0).ToString("N2", bd))</td>
                         <td class="text-right"> @((item.VATAmount ?? 0).ToString("N2", bd))</td>
                         <td class="text-right"><b>@((item.LineTotal ?? 0).ToString("N2", bd))</b></td>
                     </tr>
@@ -151,6 +153,7 @@
             <td class="text-right">@Model.Sum(x => x.Quantity)</td>
             <td class="text-right">@(Model.Sum(x => x.UnitPrice ?? 0).ToString("N2", bd))</td>
             <td class="text-right">@(Model.Sum(x => x.SubTotal ?? 0).ToString("N2", bd))</td>
+            <td class="text-right">@(Model.Sum(x => x.SDAmount ?? 0).ToString("N2", bd))</td>
             <td class="text-right">@(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))</td>
             <td class="text-right">@(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))</td>
         </tr>
