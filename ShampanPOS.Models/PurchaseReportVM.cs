@@ -13,12 +13,14 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Code (Auto Generate)")]
         public string? Code { get; set; }
+        public string? Name { get; set; }
 
         public string? MonthYear { get; set; }
         public int? PurchaseId { get; set; }
 
         public string? PurchaseCode { get; set; }
         public string? PurchaseNo { get; set; }
+        public string? PurchaseOrderNo { get; set; }
 
         public string? UserId { get; set; }
 

@@ -2798,6 +2798,7 @@
     <Content Include="Areas\DMS\Views\PurchaseReturn\Reports\PurchaseReturnReport.cshtml" />
     <Content Include="Areas\DMS\Views\Purchase\PurchaseOrdervsPurchaseReportIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Purchase\Reports\PurchaseOrdervsPurchaseSummary.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\Reports\PurchaseOrdervsPurchaseDetails.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

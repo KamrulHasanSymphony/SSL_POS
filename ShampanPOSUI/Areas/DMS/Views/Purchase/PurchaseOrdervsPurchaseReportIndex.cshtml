@@ -293,10 +293,21 @@
         GetSupplierComboBox();
        // GetReportTypeComboBox()
         // Kendo DatePickers
-        $("#PurchaseFromDate").kendoDatePicker();
-        $("#PurchaseToDate").kendoDatePicker();
-        $("#InvoiceFromDate").kendoDatePicker();
-        $("#InvoiceToDate").kendoDatePicker();
+        $("#PurchaseFromDate").kendoDatePicker({
+            format: "yyyy-MM-dd"
+        });
+        $("#PurchaseToDate").kendoDatePicker({
+            format: "yyyy-MM-dd"
+        });
+        //$("#PurchaseToDate").kendoDatePicker();
+        $("#InvoiceFromDate").kendoDatePicker({
+            format: "yyyy-MM-dd"
+        });
+        $("#InvoiceToDate").kendoDatePicker({
+            format: "yyyy-MM-dd"
+        });
+        //$("#InvoiceFromDate").kendoDatePicker();
+        //$("#InvoiceToDate").kendoDatePicker();
 
         var currentDate = new Date();
 
@@ -1003,6 +1014,7 @@
 
     if ($("#chkPurchaseFromDate").is(":checked")) {
         purchaseFromDate = $("#PurchaseFromDate").val();
+
     }
 
     if ($("#chkPurchaseToDate").is(":checked")) {
