@@ -154,5 +154,28 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
+
+
+        public ResultVM GetBankTransactionReportList(BankTransactionReportVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+
+                var data = httpRequestHelper.PostData(
+                    "api/Report/GetBankTransactionReportList",
+                    authModel,
+                    JsonConvert.SerializeObject(model));
+
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

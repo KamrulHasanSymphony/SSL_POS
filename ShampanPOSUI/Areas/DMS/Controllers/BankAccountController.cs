@@ -312,5 +312,78 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+
+        public ActionResult BankTransactionReportIndex() { 
+            var vm = new BankTransactionReportVM(); 
+            vm.IsSummary = false; 
+            return View(vm); 
+        }
+
+        public ActionResult BankTransactionReportList(
+    int? bankId,
+    int? bankAccountId,
+    int? transactionId,
+    int? branchId,
+    int? depositId,     
+    int? withdrawalId,   
+    string transactionType,
+    string fromDate,
+    string toDate,
+    bool isSummary,
+    string bankName,
+    string accountName,
+    string depositCode,  
+    string withdrawalCode) 
+        {
+            List<BankTransactionReportVM> vmList = new List<BankTransactionReportVM>();
+
+            BankTransactionReportVM param = new BankTransactionReportVM();
+            param.BankId = bankId ?? 0;
+            param.BankAccountId = bankAccountId ?? 0;
+            param.TransactionId = transactionId ?? 0;
+            param.BranchId = branchId ?? 0;
+            param.DepositId = depositId ?? 0;    
+            param.WithdrawalId = withdrawalId ?? 0;    
+            param.TransactionType = string.IsNullOrEmpty(transactionType) ? "" : transactionType;
+            param.FromDate = string.IsNullOrEmpty(fromDate) ? "" : fromDate;
+            param.ToDate = string.IsNullOrEmpty(toDate)
+                                        ? DateTime.Now.ToString("yyyy-MM-dd")
+                                        : toDate;
+            param.IsSummary = isSummary;
+
+            ResultVM result = _repo.GetBankTransactionReportList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<BankTransactionReportVM>>(
+                    result.DataVM.ToString());
+            }
+
+            // ViewBag
+            ViewBag.BankId = bankId ?? 0;
+            ViewBag.BankName = bankName ?? "All";
+            ViewBag.BankAccountId = bankAccountId ?? 0;
+            ViewBag.AccountName = accountName ?? "All";
+            ViewBag.TransactionId = transactionId ?? 0;
+            ViewBag.BranchId = branchId ?? 0;
+            ViewBag.DepositId = depositId ?? 0;         
+            ViewBag.DepositCode = depositCode ?? "All";    
+            ViewBag.WithdrawalId = withdrawalId ?? 0;       
+            ViewBag.WithdrawalCode = withdrawalCode ?? "All"; 
+            ViewBag.TransactionType = string.IsNullOrEmpty(transactionType) ? "All" : transactionType;
+            ViewBag.FromDate = fromDate ?? "All";
+            ViewBag.ToDate = toDate ?? "All";
+            ViewBag.IsSummary = isSummary;
+            ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
+            ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
+
+            string viewName = isSummary
+                ? "Reports/BankTransactionSummary"
+                : "Reports/BankTransactionDetails";
+
+            return View(viewName, vmList);
+        }
+
+
     }
 }
