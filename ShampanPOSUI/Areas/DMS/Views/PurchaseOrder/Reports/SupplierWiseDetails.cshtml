@@ -146,12 +146,26 @@
             <td></td>
             <td></td>
             <td></td>
+
             <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-            <td class="text-right">@(Model.Sum(x => x.UnitPrice ?? 0).ToString("N2", bd))</td>
-            <td class="text-right">@(Model.Sum(x => x.SubTotal ?? 0).ToString("N2", bd))</td>
-            <td class="text-right">@(Model.Sum(x => x.SDAmount ?? 0).ToString("N2", bd))</td>
-            <td class="text-right">@(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))</td>
-            <td class="text-right">@(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))</td>
+
+            <td></td> <!-- Unit Rate total দেখানো হবে না -->
+
+            <td class="text-right">
+                @(Model.Sum(x => x.SubTotal ?? 0).ToString("N2", bd))
+            </td>
+
+            <td class="text-right">
+                @(Model.Sum(x => x.SDAmount ?? 0).ToString("N2", bd))
+            </td>
+
+            <td class="text-right">
+                @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
+            </td>
+
+            <td class="text-right">
+                @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+            </td>
         </tr>
             }
             else

@@ -123,6 +123,7 @@
     <Compile Include="PurchaseReturnDetailVM.cs" />
     <Compile Include="PurchaseReturnReportVM.cs" />
     <Compile Include="PurchaseReturnVM.cs" />
+    <Compile Include="RegistrationVM.cs" />
     <Compile Include="SaleCreditCardVM.cs" />
     <Compile Include="SaleDataVM.cs" />
     <Compile Include="SaleDetailVM.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Status.cs" />
     <Compile Include="MasterSupplierVM.cs" />
     <Compile Include="MasterSupplierGroupVM.cs" />
+    <Compile Include="SupplierProductReportVM.cs" />
     <Compile Include="SupplierProductVM.cs" />
     <Compile Include="TableInfoVM.cs" />
     <Compile Include="TableReservationVM.cs" />

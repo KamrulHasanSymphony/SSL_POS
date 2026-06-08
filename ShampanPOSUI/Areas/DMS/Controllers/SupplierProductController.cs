@@ -290,5 +290,85 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
+
+
+        public ActionResult SupplierProductIndex()
+        {
+            var vm = new SupplierProductReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+        public ActionResult ReportList(int? supplierId, bool isSummary, int? productId,/* string supplierCode,*/ string supplierName, string productName, bool productWiseSupplier = true)
+        {
+            List<SupplierProductReportVM> vmList = new List<SupplierProductReportVM>();
+
+            SupplierProductReportVM param = new SupplierProductReportVM();
+
+            param.SupplierId = supplierId ?? 0;
+            param.ProductId = productId ?? 0;
+
+            param.ProductName = productName ?? "";
+          
+
+
+            param.IsSummary = isSummary;
+
+            //param.Code = string.IsNullOrEmpty(supplierCode)
+            //    ? ""
+            //    : supplierCode;
+
+            param.SupplierName = string.IsNullOrEmpty(supplierName)
+                ? ""
+                : supplierName;
+
+            ResultVM result = _repo.GetSupplierProductByList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SupplierProductReportVM>>
+                (
+                    result.DataVM.ToString()
+                );
+            }
+
+            // ViewBag
+            ViewBag.SupplierId = supplierId;
+            ViewBag.SupplierName = supplierName ?? "All";
+
+            ViewBag.ProductId = productId ?? 0;
+            ViewBag.ProductName = productName ?? "All";
+
+            ViewBag.IsSummary = isSummary;
+
+            ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
+            ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
+
+
+            // =====================================
+            // for view selection
+            // =====================================
+            string viewName;
+            if (productWiseSupplier)
+            {
+                viewName = isSummary
+                    ? "Reports/ProductWiseSupplierSummary"
+                    : "Reports/ProductWiseSupplierDetails";
+            }
+            else
+            {
+                viewName = isSummary
+                    ? "Reports/SupplierWiseProductSummary"
+                    : "Reports/SupplierWiseProductDetails";
+            }
+
+            return View(viewName, vmList);
+
+
+        }
+
+
+
     }
 }
