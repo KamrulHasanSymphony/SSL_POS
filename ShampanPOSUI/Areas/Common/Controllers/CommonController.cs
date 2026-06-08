@@ -1678,8 +1678,70 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+        [HttpGet]
+        public ActionResult GetBankAccountModal(string bankId)
+        {
+            try
+            {
+                List<BankAccountDataVM> lst = new List<BankAccountDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = bankId;
+                ResultVM result = _repo.GetBankAccountModal(param);
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<BankAccountDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
+        [HttpGet]
+        public ActionResult GetDepositModal(string bankAccountId)
+        {
+            try
+            {
+                List<DepositDataVM> lst = new List<DepositDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = bankAccountId;
+                ResultVM result = _repo.GetDepositModal(param);
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<DepositDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
-
+        [HttpGet]
+        public ActionResult GetWithdrawalModal(string bankAccountId)
+        {
+            try
+            {
+                List<WithdrawalDataVM> lst = new List<WithdrawalDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = bankAccountId;
+                ResultVM result = _repo.GetWithdrawalModal(param);
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<WithdrawalDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

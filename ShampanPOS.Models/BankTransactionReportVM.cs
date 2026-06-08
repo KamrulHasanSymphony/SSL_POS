@@ -58,4 +58,40 @@ namespace ShampanPOS.Models
         public int? WithdrawalId { get; set; }
         public string? WithdrawalCode { get; set; }
     }
+
+    public class BankAccountDataVM
+    {
+        public int Id { get; set; }
+        public string AccountNo { get; set; }
+        public string AccountName { get; set; }
+        public int BankId { get; set; }
+        public string BankName { get; set; }
+        public string BankCode { get; set; }
+    }
+
+    public class DepositDataVM
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string? TransactionDate { get; set; }
+        public decimal TotalDepositAmount { get; set; }
+        public int ToBankAccountId { get; set; }
+        public string AccountNo { get; set; }
+        public string AccountName { get; set; }
+        public string BankName { get; set; }
+        public string Reference { get; set; }
+    }
+
+    public class WithdrawalDataVM
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string? TransactionDate { get; set; }
+        public decimal TotalDepositAmount { get; set; }
+        public int FromBankAccountId { get; set; }
+        public string AccountNo { get; set; }
+        public string AccountName { get; set; }
+        public string BankName { get; set; }
+        public string Reference { get; set; }
+    }
 }

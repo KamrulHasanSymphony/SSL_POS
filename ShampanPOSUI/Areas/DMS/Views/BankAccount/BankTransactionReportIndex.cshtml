@@ -293,18 +293,79 @@
         }
 
         function LoadPopupBankCombo() {
-            $("#PopupBankId").kendoComboBox({
-                dataTextField: "Name",
-                dataValueField: "Id",
-                placeholder: "Filter by Bank",
-                filter: "contains",
-                dataSource: {
-                    transport: { read: "/Common/Common/GetBankList" }
-                },
-                change: applyPopupBankFilter,
-                select: applyPopupBankFilter
+            $.getJSON("/Common/Common/GetBankAccountModal", function (data) {
+
+                var bankMap = {};
+                $.each(data, function (_, item) {
+                    if (item.BankId && item.BankName && !bankMap[item.BankId]) {
+                        bankMap[item.BankId] = { Id: item.BankId, Name: item.BankName };
+                    }
+                });
+                var bankList = Object.values(bankMap);
+
+                var existing = $("#PopupBankId").data("kendoComboBox");
+                if (existing) existing.destroy();
+
+                $("#PopupBankId").kendoComboBox({
+                    dataTextField: "Name",
+                    dataValueField: "Id",
+                    placeholder: "Filter by Bank",
+                    filter: "contains",
+                    dataSource: bankList,
+                    change: applyPopupBankFilter,
+                    select: applyPopupBankFilter
+                });
             });
         }
+
+        ////function LoadPopupBankCombo() {
+        ////    var existing = $("#PopupBankId").data("kendoComboBox");
+        ////    if (existing) {
+        ////        existing.destroy();
+        ////    }
+
+        ////    $("#PopupBankId").kendoComboBox({
+        ////        dataTextField: "Name",
+        ////        dataValueField: "Id",
+        ////        placeholder: "Filter by Bank",
+        ////        filter: "contains",
+        ////        dataSource: {
+        ////            transport: {
+        ////                read: {
+        ////                    url: "/Common/Common/GetBankAccountModal",
+        ////                    dataType: "json"
+        ////                }
+        ////            },
+        ////            schema: {
+        ////                parse: function (response) {
+        ////                    var bankMap = {};
+        ////                    $.each(response, function (_, item) {
+        ////                        if (item.BankId && item.BankName && !bankMap[item.BankId]) {
+        ////                            bankMap[item.BankId] = { Id: item.BankId, Name: item.BankName };
+        ////                        }
+        ////                    });
+        ////                    return Object.values(bankMap); 
+        ////                }
+        ////            }
+        ////        },
+        ////        change: applyPopupBankFilter,
+        ////        select: applyPopupBankFilter
+        ////    });
+        ////}
+
+        //function LoadPopupBankCombo() {
+        //    $("#PopupBankId").kendoComboBox({
+        //        dataTextField: "Name",
+        //        dataValueField: "Id",
+        //        placeholder: "Filter by Bank",
+        //        filter: "contains",
+        //        dataSource: {
+        //            transport: { read: "/Common/Common/GetBankAccountModal" }
+        //        },
+        //        change: applyPopupBankFilter,
+        //        select: applyPopupBankFilter
+        //    });
+        //}
 
         function applyPopupBankFilter() {
             var combo  = $("#PopupBankId").data("kendoComboBox");
@@ -402,7 +463,7 @@
                 placeholder: "Filter by Account",
                 filter: "contains",
                 dataSource: {
-                    transport: { read: "/Common/Common/GetBankAccountModal" }
+                    transport: { read: "/Common/Common/GetDepositModal" }
                 },
                 change: applyDepositAccountFilter,
                 select: applyDepositAccountFilter
@@ -512,7 +573,7 @@
                 placeholder: "Filter by Account",
                 filter: "contains",
                 dataSource: {
-                    transport: { read: "/Common/Common/GetBankAccountModal" }
+                    transport: { read: "/Common/Common/GetWithdrawalModal" }
                 },
                 change: applyWithdrawalAccountFilter,
                 select: applyWithdrawalAccountFilter
