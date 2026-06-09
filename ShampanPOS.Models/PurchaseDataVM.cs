@@ -24,6 +24,7 @@ namespace ShampanPOS.Models
         public DateTime? PurchaseDate { get; set; }
         public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+        public string? PurchaseDateString { get; set; }
         public PeramModel PeramModel { get; set; }
         public PurchaseDataVM()
         {

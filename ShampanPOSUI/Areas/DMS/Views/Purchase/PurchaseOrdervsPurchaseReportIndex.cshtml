@@ -4,7 +4,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- ================= HEADER ================= -->
+<style>
+    .k-filter-input {
+        height: 23px;
+        padding: 4px 8px;
+        border: 1px solid #c5c5c5;
+        border-radius: 4px;
+        background-color: #ffffff;
+        font-size: 13px;
+        color: #444;
+    }
+
+        .k-filter-input:focus {
+            border-color: #2a9fd6;
+            box-shadow: 0 0 3px rgba(42, 159, 214, 0.4);
+            outline: none;
+        }
+</style>
+ <!-- ================= HEADER ================= -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -91,7 +108,8 @@
                             <input type="text"
                                    id="ProductName"
                                    class="form-control"
-                                   placeholder="Select Product" />
+                                   placeholder="Select Product" 
+                                   readonly/>
 
                             <input type="hidden" id="ProductId" />
 
@@ -123,7 +141,8 @@
                             <input type="text"
                                    id="PurchaseCode"
                                    class="form-control"
-                                   placeholder="Select Purchase" />
+                                   placeholder="Select Purchase"
+                                   readonly />
 
                             <input type="hidden" id="PurchaseId" />
 
@@ -144,8 +163,7 @@
 
                             </div>
 
-                        </div>
-                    </div>
+                        </div>                    </div>
 
                     <div class="col-sm-2">
                         <label>Purchase Order</label>
@@ -155,7 +173,8 @@
                             <input type="text"
                                    id="PurchaseOrderCode"
                                    class="form-control"
-                                   placeholder="Select Purchase Order" />
+                                   placeholder="Select Purchase Order" 
+                                   readonly/>
 
                             <input type="hidden" id="PurchaseOrderId" />
 
@@ -228,50 +247,37 @@
 
 <div id="purchaseDetailsWindow" style="display:none; padding:10px;">
 
-    <!-- 🔽 Product Group Dropdown -->
-    <div style="margin-bottom:10px;">
-        <input id="ProductGroupId" style="width:100%;" />
+    <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <input id="ProductGroupId" style="width:35%;" placeholder="Group" />
+        <input id="FilterProductCode" class="k-filter-input" style="width:20%;" placeholder="Product Code" />
+        <input id="FilterProductName" class="k-filter-input" style="width:45%;" placeholder="Product Name" />
     </div>
 
-    <!-- 🔽 Product Grid -->
     <div id="purchaseDetailsGrid"></div>
 
 </div>
 
-<!--<div id="purchaseWindow" style="display:none; padding:10px;">-->
-
-    <!-- 🔽 Supplier / Filter (optional) -->
-    <!--<div style="margin-bottom:10px;">
-        <input id="SupplierId" style="width:100%;" />
-    </div>-->
-
-    <!-- 🔽 Purchase List Grid -->
-    <!--<div id="purchaseGrid"></div>
-
-</div>-->
-
-
 <div id="purchaseWindow" style="display:none; padding:10px;">
 
-    <!-- Supplier Filter -->
-    <div style="margin-bottom:10px;">
-        <input id="PurchaseSupplierId" style="width:100%;" />
+    <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <input id="PurchaseSupplierId" style="width:35%;" placeholder="Supplier" />
+        <input id="PurCode" class="k-filter-input" style="width:20%;" placeholder="Purchase Code" />
+        <input id="FilterPurchaseDate" class="k-filter-input" style="width:45%;" placeholder="Purchase Date" />
     </div>
 
     <!-- Purchase List Grid -->
     <div id="purchaseGrid"></div>
-
 </div>
 
 
 <div id="purchaseOrderWindow" style="display:none; padding:10px;">
 
-    <!-- 🔽 Supplier / Filter (optional) -->
-    <div style="margin-bottom:10px;">
-        <input id="PurchaseOrderSupplierId" style="width:100%;" />
+    <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <input id="PurchaseOrderSupplierId" style="width:40%;" placeholder="Select Supplier" />
+        <input id="FilterCode" class="k-filter-input" style="width:30%;" placeholder="Purchase Order Code" />
+        <input id="FilterOrderDate" class="k-filter-input" style="width:30%;" placeholder="Order Date" />
     </div>
 
-    <!-- 🔽 Purchase Order List Grid -->
     <div id="purchaseOrderGrid"></div>
 
 </div>
@@ -291,7 +297,6 @@
         $("[data-bootstrap-switch]").bootstrapSwitch();
 
         GetSupplierComboBox();
-       // GetReportTypeComboBox()
         // Kendo DatePickers
         $("#PurchaseFromDate").kendoDatePicker({
             format: "yyyy-MM-dd"
@@ -306,9 +311,6 @@
         $("#InvoiceToDate").kendoDatePicker({
             format: "yyyy-MM-dd"
         });
-        //$("#InvoiceFromDate").kendoDatePicker();
-        //$("#InvoiceToDate").kendoDatePicker();
-
         var currentDate = new Date();
 
         $("#PurchaseFromDate").data("kendoDatePicker").value(currentDate);
@@ -317,9 +319,6 @@
         $("#InvoiceToDate").data("kendoDatePicker").value(currentDate);
 
 
-
-
-        // ================================
         // Purchase Date Validation
         // ================================
 
@@ -361,7 +360,6 @@
         });
 
 
-        // ================================
         // Invoice Date Validation
         // ================================
 
@@ -411,68 +409,96 @@
         OpenProductPopup(null);
     });
 
-        $("#btnProductSearch").on("click", function () {
+     $("#btnProductSearch").on("click", function () {
         OpenProductPopup(null);
     });
 
     function OpenProductPopup(detailRow) {
 
-        var wnd = $("#purchaseDetailsWindow").data("kendoWindow");
+            var wnd = $("#purchaseDetailsWindow").data("kendoWindow");
 
-        if (!wnd) {
-            $("#purchaseDetailsWindow").kendoWindow({
-                width: "700px",
-                height: "500px",
-                title: "Select Product",
-                modal: true,
-                visible: false
+            if (!wnd) {
+                $("#purchaseDetailsWindow").kendoWindow({
+                    width: "700px",
+                    height: "500px",
+                    title: "Select Product",
+                    modal: true,
+                    visible: false
+                });
+                wnd = $("#purchaseDetailsWindow").data("kendoWindow");
+            }
+
+            wnd.center().open();
+
+            // Clear previous filters
+            $("#FilterProductCode").val("");
+            $("#FilterProductName").val("");
+
+            // Load Product Group Combo
+            GetProductGroupComboBox();
+
+            // Rebuild Grid
+            $("#purchaseDetailsGrid").empty();
+
+            $("#purchaseDetailsGrid").kendoGrid({
+
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "/Common/Common/GetProductModal",
+                            dataType: "json"
+                        }
+                    },
+                   pageSize: 10
+                },
+
+                pageable: true,
+                filterable: true,
+                selectable: "row",
+                //toolbar: ["search"],
+                searchable: true,
+
+
+                columns: [
+                    { field: "ProductId", hidden: true },
+                    { field: "ProductCode", title: "Product Code" },
+                    { field: "ProductName", title: "Product Name" },
+                    { field: "UOMName", title: "UOM" },
+                    { field: "ProductGroupName", title: "Group" },
+                    { field: "PurchasePrice", title: "Price" }
+                ]
+
             });
-            wnd = $("#purchaseDetailsWindow").data("kendoWindow");
+
+            // Product Code Search
+            $("#FilterProductCode")
+                .off("input")
+                .on("input", function () {
+                    applyProductGroupFilter();
+                });
+
+            // Product Name Search
+            $("#FilterProductName")
+                .off("input")
+                .on("input", function () {
+                    applyProductGroupFilter();
+                });
+
+            // Select Product
+            $("#purchaseDetailsGrid")
+                .off("dblclick")
+                .on("dblclick", "tr", function () {
+
+                    var grid = $("#purchaseDetailsGrid").data("kendoGrid");
+                    var item = grid.dataItem($(this));
+
+                    if (!item) return;
+
+                    ApplyProductSelection(detailRow, item);
+
+                    wnd.close();
+                });
         }
-
-        wnd.center().open();
-
-        // 🔥 Combo load
-        GetProductGroupComboBox();
-
-        // 🔥 Reset Grid
-        $("#purchaseDetailsGrid").empty();
-
-        $("#purchaseDetailsGrid").kendoGrid({
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "/Common/Common/GetProductModal"
-                    }
-                }
-            },
-            height: 380,
-            sortable: true,
-            filterable: true,
-            pageable: true,
-            pageSizes: [10, 20, 50, "all"],
-            selectable: "row",
-
-            columns: [
-                { field: "ProductId", hidden: true },
-                { field: "ProductCode", title: "ProductCode" },
-                { field: "ProductName", title: "Product Name" },
-                { field: "UOMName", title: "UOM" },
-                { field: "ProductGroupName", title: "Group" },
-                { field: "PurchasePrice", title: "Price" }
-            ]
-        });
-
-        // 🔥 Select product
-        $("#purchaseDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
-
-            var grid = $("#purchaseDetailsGrid").data("kendoGrid");
-            var item = grid.dataItem($(this));
-
-            ApplyProductSelection(detailRow, item);
-            wnd.close();
-        });
-    }
 
     function LoadItemsGrid() {
         $("#items").kendoListView({
@@ -624,10 +650,10 @@
         $("#ProductGroupId").kendoMultiColumnComboBox({
             dataTextField: "Name",
             dataValueField: "Id",
-            height: 400,
+            height: 300,
 
             columns: [
-                { field: "Code", title: "Code", width: 100 },
+                { field: "Code", title: "Code", width: 130 },
                 { field: "Name", title: "Name", width: 150 }
             ],
 
@@ -648,26 +674,56 @@
         });
     }
 
-
     function applyProductGroupFilter() {
+            debugger;
+            var combo = $("#ProductGroupId").data("kendoMultiColumnComboBox");
+            var groupId = combo ? combo.value() : "";
 
-        var combo = $("#ProductGroupId").data("kendoMultiColumnComboBox");
-        var groupId = combo.value();
+            var productCode = $("#FilterProductCode").val().trim();
+            var productName = $("#FilterProductName").val().trim();
 
-        var grid = $("#purchaseDetailsGrid").data("kendoGrid");
+            var grid = $("#purchaseDetailsGrid").data("kendoGrid");
 
-        if (!grid) return;
+            if (!grid) return;
 
-        if (groupId) {
-            grid.dataSource.filter({
-                field: "ProductGroupId",
-                operator: "eq",
-                value: parseInt(groupId)
-            });
-        } else {
-            grid.dataSource.filter({}); // reset
+            var filters = [];
+
+            // Product Group
+            if (groupId && groupId !== "") {
+                filters.push({
+                    field: "ProductGroupId",
+                    operator: "eq",
+                    value: parseInt(groupId)
+                });
+            }
+
+            // Product Code
+            if (productCode && productCode.trim().length >= 3) {
+                filters.push({
+                    field: "ProductCode",
+                    operator: "contains",
+                    value: productCode.trim()
+                });
+            }
+
+            // Product Name
+            if (productName && productName.trim().length >= 3) {
+                filters.push({
+                    field: "ProductName",
+                    operator: "contains",
+                    value: productName.trim()
+                });
+            }
+
+            if (filters.length > 0) {
+                grid.dataSource.filter({
+                    logic: "and",
+                    filters: filters
+                });
+            } else {
+                grid.dataSource.filter({});
+            }
         }
-    }
 
    //Purchase
 
@@ -679,7 +735,7 @@
             OpenPurchasePopup();
         });
 
-        function OpenPurchasePopup() {
+    function OpenPurchasePopup() {
 
             var wnd = $("#purchaseWindow").data("kendoWindow");
 
@@ -697,9 +753,12 @@
 
             wnd.center().open();
 
-            LoadSupplierCombo();
+        LoadSupplierCombo();
+        // Clear previous filters
 
-            //$("#F").empty();
+        $("#PurchaseCode").val("");
+        $("#FilterPurchaseDate").val("");
+
 
             $("#purchaseGrid").kendoGrid({
                 dataSource: {
@@ -707,41 +766,38 @@
                         read: {
                             url: "/Common/Common/GetPurchaseModal",
                             dataType: "json"
-                        }
+                        },
                     },
-                    schema: {
-                        model: {
-                            id: "Id",
-                            fields: {
-                                Id: { type: "number" },
-                                Code: { type: "string" },
-                                SupplierId: { type: "number" },
-                                SupplierName: { type: "string" },
-                                PurchaseDate: { type: "date" },
-                                Quantity: { type: "number" },
-                                UnitPrice: { type: "number" },
-                                GrandTotal: { type: "number" },
-                                PaidAmount: { type: "number" }
-                            }
-                        }
-                    }
+                  pageSize: 10
                 },
 
-                height: 420,
-                sortable: true,
-                filterable: true,
                 pageable: true,
+                filterable: true,
                 selectable: "row",
+                searchable: true,
 
                 columns: [
                     { field: "Code", title: "Purchase Code", width: "150px" },
                     { field: "SupplierName", title: "Supplier", width: "180px" },
-                    { field: "PurchaseDate", title: "Purchase Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "PurchaseDateString", title: "Purchase Date", width: "120px" },
                     { field: "Quantity", title: "Quantity", width: "120px" },
                     { field: "UnitPrice", title: "Unit Price", width: "120px" },
-                    { field: "GrandTotal", title: "Total", width: "120px" },
-                    { field: "PaidAmount", title: "Paid", width: "120px" }
+                    { field: "GrandTotal", title: "Total", width: "120px" }
                 ]
+            });
+
+        // Purchase Code filter
+        $("#PurCode")
+            .off("input")
+            .on("input", function () {
+                applySupplierFilter();
+            });
+
+        // Purchase Date filter
+        $("#FilterPurchaseDate")
+            .off("change")
+            .on("change", function () {
+                applySupplierFilter();
             });
 
             // double click select
@@ -772,48 +828,75 @@
         $("#PaidAmount").val(item.PaidAmount);
     }
 
-        function LoadSupplierCombo() {
+    function LoadSupplierCombo() {
 
-            $("#PurchaseSupplierId").kendoComboBox({
-                dataTextField: "Name",
-                dataValueField: "Id",
-                placeholder: "Select Supplier",
-                filter: "contains",
+        $("#PurchaseSupplierId").kendoComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            placeholder: "Select Supplier",
+            filter: "contains",
 
-                dataSource: {
-                    transport: {
-                        read: "/Common/Common/GetSupplierList"
-                    }
-                },
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetSupplierList"
+                }
+            },
 
-                change: applySupplierFilter,
-                select: applySupplierFilter
-            });
-        }
-
+            change: applySupplierFilter,
+            select: applySupplierFilter
+        });
+    }
 
         function applySupplierFilter() {
 
             var combo = $("#PurchaseSupplierId").data("kendoComboBox");
             var supplierId = combo ? combo.value() : "";
 
+            var purchaseCode = $("#PurCode").val().trim();  
+            var purchaseDate = $("#FilterPurchaseDate").val();
+
             var grid = $("#purchaseGrid").data("kendoGrid");
 
             if (!grid) return;
 
-            if (!supplierId) {
-                grid.dataSource.filter([]);
-                return;
+            var filters = [];
+
+            // Supplier
+            if (supplierId && supplierId !== "") {
+                filters.push({
+                    field: "SupplierId",
+                    operator: "eq",
+                    value: parseInt(supplierId)
+                });
             }
 
-            grid.dataSource.filter({
-                field: "SupplierId",
-                operator: "eq",
-                value: parseInt(supplierId)
-            });
-        }
+            if (purchaseCode && purchaseCode.length >= 3) {
+                filters.push({
+                    field: "Code", 
+                    operator: "contains",
+                    value: purchaseCode
+                });
+            }
 
-        // PurchaseOrder
+            // Purchase Date
+            if (purchaseDate && purchaseDate !== "") {
+                filters.push({
+                    field: "PurchaseDateString",
+                    operator: "eq",
+                    value: purchaseDate
+                });
+            }
+
+            if (filters.length > 0) {
+                grid.dataSource.filter({
+                    logic: "and",
+                    filters: filters
+                });
+            } else {
+                grid.dataSource.filter({});
+            }
+        }    
+
         $("#PurchaseOrderCode").on("click", function () {
             OpenPurchaseOrderPopup();
         });
@@ -840,6 +923,9 @@
 
             wnd.center().open();
 
+            // Clear previous filters
+            $("#FilterCode").val("");
+            $("#FilterOrderDate").val("");
             LoadPurchaseOrderSupplierCombo();
 
             $("#purchaseOrderGrid").kendoGrid({
@@ -878,10 +964,23 @@
                     { field: "SupplierName", title: "Supplier", width: "180px" },
                     { field: "Quantity", title: "Quantity", width: "120px" },
                     { field: "UnitPrice", title: "Unit Price", width: "120px" },
-                    { field: "OrderDate", title: "Order Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "OrderDate", title: "Order Date", format: "{0:yyyy-MM-dd}", width: "160px" },
                     { field: "DeliveryDateTime", title: "Delivery Date", format: "{0:yyyy-MM-dd}", width: "120px" }
                 ]
             });
+            // Purchase Order Code 
+            $("#FilterCode")
+                .off("input")
+                .on("input", function () {
+                    applyPurchaseOrderSupplierFilter();
+                });
+
+            // Order Date 
+            $("#FilterOrderDate")
+                .off("change")
+                .on("change", function () {
+                    applyPurchaseOrderSupplierFilter();
+                });
 
             // double click select
             $("#purchaseOrderGrid").off("dblclick").on("dblclick", "tr", function () {
@@ -933,21 +1032,64 @@
             var combo = $("#PurchaseOrderSupplierId").data("kendoComboBox");
             var supplierId = combo ? combo.value() : "";
 
-            var grid = $("#purchaseOrderGrid").data("kendoGrid");
+            var poCode = $("#FilterCode").val().trim();
+            var orderDate = $("#FilterOrderDate").val();
 
+            var grid = $("#purchaseOrderGrid").data("kendoGrid");
             if (!grid) return;
 
-            if (!supplierId) {
-                grid.dataSource.filter([]);
-                return;
+            var filters = [];
+
+            // ১. 
+            if (supplierId && supplierId !== "") {
+                filters.push({
+                    field: "SupplierId",
+                    operator: "eq",
+                    value: parseInt(supplierId)
+                });
             }
 
-            grid.dataSource.filter({
-                field: "SupplierId",
-                operator: "eq",
-                value: parseInt(supplierId)
-            });
+            // ২. 
+            if (poCode && poCode.length >= 3) {
+                filters.push({
+                    field: "Code",
+                    operator: "contains",
+                    value: poCode
+                });
+            }
+
+            // 
+            if (orderDate && orderDate !== "") {
+                filters.push({
+                    field: "OrderDate", 
+                    operator: "eq",
+                    value: orderDate
+                });
+            }
+
+            // 
+            if (filters.length > 0) {
+                grid.dataSource.filter({
+                    logic: "and",
+                    filters: filters
+                });
+            } else {
+                grid.dataSource.filter({});
+            }
         }
+
+        // 
+        function ClearPurchaseOrder() {
+            $("#PurchaseOrderId").val("");
+            $("#PurchaseOrderCode").val("");
+
+            // 
+            $("#SupplierId").val("");
+            $("#SupplierName").val("");
+            $("#OrderDate").val("");
+            $("#DeliveryDateTime").val("");
+        }
+
         function ClearPurchase() {
             $("#PurchaseId").val("");
             $("#PurchaseCode").val("");

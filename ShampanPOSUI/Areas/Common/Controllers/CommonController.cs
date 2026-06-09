@@ -1634,25 +1634,73 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
         [HttpGet]
+        //public ActionResult GetPurchaseModal(string supplierId)
+        //{
+        //    try
+        //    {
+        //        List<PurchaseDataVM> lst = new List<PurchaseDataVM>();
+        //        CommonVM param = new CommonVM();
+        //        param.Value = supplierId;
+        //        ResultVM result = _repo.GetPurchaseModal(param);
+
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            lst = JsonConvert.DeserializeObject<List<PurchaseDataVM>>(result.DataVM.ToString());
+
+        //            lst.ForEach(x =>
+        //            {
+        //                x.PurchaseDateString = x.PurchaseDate?.ToString("dd-MM-yyyy");
+        //            });
+        //        }
+        //        return Json(lst, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
         public ActionResult GetPurchaseModal(string supplierId)
         {
             try
             {
-                List<PurchaseDataVM> lst = new List<PurchaseDataVM>();
-                CommonVM param = new CommonVM();
-                param.Value = supplierId;
+                CommonVM param = new CommonVM
+                {
+                    Value = supplierId
+                };
+
                 ResultVM result = _repo.GetPurchaseModal(param);
+
+                List<PurchaseDataVM> lst = new List<PurchaseDataVM>();
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
                     lst = JsonConvert.DeserializeObject<List<PurchaseDataVM>>(result.DataVM.ToString());
+
+                    foreach (var item in lst)
+                    {
+                        item.PurchaseDateString = item.PurchaseDate.HasValue
+                            ? item.PurchaseDate.Value.ToString("dd-MM-yyyy")
+                            : "";
+                    }
                 }
-                return Json(lst, JsonRequestBehavior.AllowGet);
+
+                // IMPORTANT: return clean JSON (no /Date(...) format)
+                return Content(
+                    JsonConvert.SerializeObject(lst),
+                    "application/json"
+                );
             }
             catch (Exception e)
             {
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+
+                return Json(new
+                {
+                    Error = true,
+                    Message = e.Message
+                }, JsonRequestBehavior.AllowGet);
             }
         }
 
