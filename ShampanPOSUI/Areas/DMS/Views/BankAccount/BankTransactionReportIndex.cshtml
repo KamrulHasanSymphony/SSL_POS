@@ -29,10 +29,10 @@
 
                 <!-- Bank -->
                 @*<div class="col-sm-2">
-                    <label>Bank</label>
-                    <input type="text" id="BankName" class="form-control form-control-sm" placeholder="Select Bank" />
-                    <input type="hidden" id="BankId" />
-                </div>*@
+            <label>Bank</label>
+            <input type="text" id="BankName" class="form-control form-control-sm" placeholder="Select Bank" />
+            <input type="hidden" id="BankId" />
+        </div>*@
                 <div class="col-sm-2">
                     @Html.LabelFor(model => model.BankId)
                     <div class="input-group ">
@@ -52,6 +52,16 @@
                             <button type="button" id="btnAccountSearch" class="btn btn-primary"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
+                </div>
+
+                <!-- Transaction Type -->
+                <div class="col-sm-2">
+                    <label>Source</label>
+                    <select id="TransactionType" class="form-control form-control-sm">
+                        <option value="">All</option>
+                        <option value="Deposit">Deposit</option>
+                        <option value="Withdrawal">Withdrawal</option>
+                    </select>
                 </div>
 
                 <!-- Deposit -->
@@ -80,15 +90,7 @@
                     </div>
                 </div>
 
-                <!-- Transaction Type -->
-                <div class="col-sm-2">
-                    <label>Transaction Type</label>
-                    <select id="TransactionType" class="form-control form-control-sm">
-                        <option value="">All</option>
-                        <option value="Deposit">Deposit</option>
-                        <option value="Withdrawal">Withdrawal</option>
-                    </select>
-                </div>
+
 
                 <!-- From Date -->
                 <div class="col-sm-2">
@@ -245,7 +247,7 @@
         // =====================
         // Bank Account Popup
         // =====================
-        $("#AccountName").on("click", function () { OpenBankAccountPopup(); });
+        //$("#AccountName").on("click", function () { OpenBankAccountPopup(); });
         $("#btnAccountSearch").on("click", function () { OpenBankAccountPopup(); });
 
         function OpenBankAccountPopup() {
@@ -390,7 +392,7 @@
         // =====================
         // DEPOSIT POPUP
         // =====================
-        $("#DepositCode").on("click", function () { OpenDepositPopup(); });
+        /*$("#DepositCode").on("click", function () { OpenDepositPopup(); });*/
         $("#btnDepositSearch").on("click", function () { OpenDepositPopup(); });
 
         function OpenDepositPopup() {
@@ -500,7 +502,7 @@
         // =====================
         // WITHDRAWAL POPUP
         // =====================
-        $("#WithdrawalCode").on("click", function () { OpenWithdrawalPopup(); });
+     /*   $("#WithdrawalCode").on("click", function () { OpenWithdrawalPopup(); });*/
         $("#btnWithdrawalSearch").on("click", function () { OpenWithdrawalPopup(); });
 
         function OpenWithdrawalPopup() {
