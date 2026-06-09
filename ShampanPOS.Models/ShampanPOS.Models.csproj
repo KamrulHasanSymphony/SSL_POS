@@ -90,6 +90,7 @@
     <Compile Include="Audit.cs" />
     <Compile Include="BankAccountVM.cs" />
     <Compile Include="BankInformationVM.cs" />
+    <Compile Include="BankTransactionReportVM.cs" />
     <Compile Include="BusinessTypeVM.cs" />
     <Compile Include="ClaimNames.cs" />
     <Compile Include="CollectionDetailVM.cs" />
