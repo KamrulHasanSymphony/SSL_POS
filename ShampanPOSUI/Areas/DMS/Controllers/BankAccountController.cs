@@ -374,8 +374,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ViewBag.FromDate = fromDate ?? "All";
             ViewBag.ToDate = toDate ?? "All";
             ViewBag.IsSummary = isSummary;
-            ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
-            ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
+            ViewBag.CompanyName = !string.IsNullOrEmpty(Convert.ToString(Session["CompanyName"])) ? Session["CompanyName"].ToString() : "Shampan POS";
+            ViewBag.BranchName = Session["CurrentBranchName"].ToString();
+            ViewBag.PrintedBy = Session["UserId"].ToString();
 
             string viewName = isSummary
                 ? "Reports/BankTransactionSummary"
