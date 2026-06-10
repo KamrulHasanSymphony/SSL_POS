@@ -20,6 +20,13 @@ namespace ShampanPOS.Models
         public int? BranchId { get; set; }
         [DisplayName("Source")]
         public string? TransactionType { get; set; } // "Deposit", "Withdrawal", or null (All)
+
+        [DisplayName("Type")]
+        public string InOut { get; set; }
+        [DisplayName("Source")]
+        public string? SourceTable { get; set; }
+        public decimal? OpeningBalance { get; set; }
+        public decimal? RunningBalance { get; set; }
         [DisplayName("From Date")]
         public string? FromDate { get; set; }
         [DisplayName("To Date")]

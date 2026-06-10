@@ -350,7 +350,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                                         ? DateTime.Now.ToString("yyyy-MM-dd")
                                         : toDate;
             param.IsSummary = isSummary;
-
+            param.Operation = isSummary ? "SUMMARY" : transactionType == "Statement" ? "STATEMENT" : "DETAILS";
             ResultVM result = _repo.GetBankTransactionReportList(param);
 
             if (result.Status == "Success" && result.DataVM != null)
@@ -379,7 +379,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ViewBag.PrintedBy = Session["UserId"].ToString();
 
             string viewName = isSummary
-                ? "Reports/BankTransactionSummary"
+            ? "Reports/BankTransactionSummary"
+            : transactionType == "Statement"
+                ? "Reports/BankTransactionStatement"
                 : "Reports/BankTransactionDetails";
 
             return View(viewName, vmList);

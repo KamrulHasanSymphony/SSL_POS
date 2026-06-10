@@ -33,6 +33,8 @@
             <input type="text" id="BankName" class="form-control form-control-sm" placeholder="Select Bank" />
             <input type="hidden" id="BankId" />
         </div>*@
+
+
                 <div class="col-sm-2">
                     @Html.LabelFor(model => model.BankId)
                     <div class="input-group ">
@@ -40,6 +42,25 @@
                             new { @class = "required form-control form-control-sm", @style = "width: 100%;" })
                     </div>
                 </div>
+
+                <!-- From Date -->
+                <div class="col-sm-2">
+                    <label>From Date</label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="FromDate" class="form-control form-control-sm kendoDatePicker" />
+                        <input type="checkbox" id="chkFromDate" style="margin-left:6px;" />
+                    </div>
+                </div>
+
+                <!-- To Date -->
+                <div class="col-sm-2">
+                    <label>To Date</label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="ToDate" class="form-control form-control-sm kendoDatePicker" />
+                        <input type="checkbox" id="chkToDate" style="margin-left:6px;" />
+                    </div>
+                </div>
+
 
                 <!-- Bank Account -->
                 <div class="col-sm-2">
@@ -54,15 +75,6 @@
                     </div>
                 </div>
 
-                <!-- Transaction Type -->
-                <div class="col-sm-2">
-                    <label>Source</label>
-                    <select id="TransactionType" class="form-control form-control-sm">
-                        <option value="">All</option>
-                        <option value="Deposit">Deposit</option>
-                        <option value="Withdrawal">Withdrawal</option>
-                    </select>
-                </div>
 
                 <!-- Deposit -->
                 <div class="col-sm-2">
@@ -90,6 +102,17 @@
                     </div>
                 </div>
 
+                <!-- Transaction Type -->
+                <div class="col-sm-2">
+                    <label>Source</label>
+                    <select id="TransactionType" class="form-control form-control-sm">
+                        <option value="">All</option>
+                        <option value="Deposit">Deposit</option>
+                        <option value="Withdrawal">Withdrawal</option>
+                        <option value="Statement">Statement</option>
+                    </select>
+                </div>
+
                 <!-- Summary Toggle -->
                 <div class="col-sm-2 d-flex flex-column">
                     <label>Summary</label>
@@ -110,23 +133,6 @@
                     </div>
                 </div>
 
-                <!-- From Date -->
-                <div class="col-sm-2">
-                    <label>From Date</label>
-                    <div class="d-flex align-items-center">
-                        <input type="text" id="FromDate" class="form-control form-control-sm kendoDatePicker" />
-                        <input type="checkbox" id="chkFromDate" style="margin-left:6px;" />
-                    </div>
-                </div>
-
-                <!-- To Date -->
-                <div class="col-sm-2">
-                    <label>To Date</label>
-                    <div class="d-flex align-items-center">
-                        <input type="text" id="ToDate" class="form-control form-control-sm kendoDatePicker" />
-                        <input type="checkbox" id="chkToDate" style="margin-left:6px;" />
-                    </div>
-                </div>
 
 
 
@@ -215,10 +221,43 @@
 
             // Checkbox toggles
             $("#chkFromDate").change(function () {
-                $("#FromDate").prop("disabled", !this.checked);
+                var isChecked = this.checked;
+                $("#FromDate").prop("disabled", !isChecked);
+
+                if (isChecked) {
+                    var fromPicker = $("#FromDate").data("kendoDatePicker");
+                    var toPicker = $("#ToDate").data("kendoDatePicker");
+                    var from = fromPicker.value();
+                    var to = toPicker.value();
+
+                    if ($("#chkToDate").is(":checked") && from && to && from > to) {
+                        ShowNotification(3, "From Date cannot be greater than To Date");
+                        fromPicker.value(to);
+                    }
+                    if (to) toPicker.min(from);
+                } else {
+                    $("#ToDate").data("kendoDatePicker").min(new Date(1900, 0, 1));
+                }
             });
+
             $("#chkToDate").change(function () {
-                $("#ToDate").prop("disabled", !this.checked);
+                var isChecked = this.checked;
+                $("#ToDate").prop("disabled", !isChecked);
+
+                if (isChecked) {
+                    var fromPicker = $("#FromDate").data("kendoDatePicker");
+                    var toPicker = $("#ToDate").data("kendoDatePicker");
+                    var from = fromPicker.value();
+                    var to = toPicker.value();
+
+                    if ($("#chkFromDate").is(":checked") && from && to && to < from) {
+                        ShowNotification(3, "To Date cannot be less than From Date");
+                        toPicker.value(from);
+                    }
+                    if (from) fromPicker.max(to);
+                } else {
+                    $("#FromDate").data("kendoDatePicker").max(new Date(2099, 11, 31));
+                }
             });
 
         });
