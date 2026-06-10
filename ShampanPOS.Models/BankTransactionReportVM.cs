@@ -25,6 +25,8 @@ namespace ShampanPOS.Models
         public string InOut { get; set; }
         [DisplayName("Source")]
         public string? SourceTable { get; set; }
+        public decimal? OpeningBalance { get; set; }
+        public decimal? RunningBalance { get; set; }
         [DisplayName("From Date")]
         public string? FromDate { get; set; }
         [DisplayName("To Date")]

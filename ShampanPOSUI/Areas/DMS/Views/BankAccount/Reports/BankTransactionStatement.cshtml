@@ -5,10 +5,8 @@
 
     var totalIn = Model?.Where(x => x.InOut == "In").Sum(x => x.Amount) ?? 0;
     var totalOut = Model?.Where(x => x.InOut == "Out").Sum(x => x.Amount) ?? 0;
-    var netBalance = totalIn - totalOut;
     var bd = new System.Globalization.CultureInfo("en-IN");
 
-    // ব্যাংক এবং অ্যাকাউন্ট অনুযায়ী গ্রুপ করা হলো
     var groupedModel = Model?
         .GroupBy(x => new { x.BankName, x.AccountNo, x.AccountName })
         .ToList();
@@ -64,7 +62,6 @@
             font-weight: 600;
         }
 
-    /* গ্রুপ হেডারের সুন্দর স্টাইল */
     .group-header-row {
         background-color: #e9ecef !important;
         font-weight: bold;
@@ -88,7 +85,7 @@
         background-color: #fafafa;
     }
 
-    /* ইন/আউট টেক্সট কালার হাইলাইট */
+
     .badge-in {
         color: #28a745;
         font-weight: bold;
@@ -194,7 +191,7 @@
 
     <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:12px; color: #555;">
         <div>
-            <strong>Report Type:</strong> Multi-Account Statement
+            <strong>Report Type:</strong> Multi-Transactional Statement
         </div>
         <div style="text-align:right;">
             <strong>From Date:</strong> @ViewBag.FromDate &nbsp;|&nbsp; <strong>To Date:</strong> @ViewBag.ToDate
@@ -209,13 +206,12 @@
         <table>
             <thead>
                 <tr>
-                    <th style="width: 5%;">SL</th>
-                    <th style="width: 8%;">In / Out</th>
-                    <th style="width: 12%;">Source</th>
-                    <th style="width: 15%;">Transaction Type</th>
-                    <th style="width: 15%;">Transaction Code</th>
-                    <th style="width: 15%;">Transaction Date</th>
-                    <th style="width: 30%;" class="text-right">Amount</th>
+                    <th style="width: 10%;">Transaction Date</th>
+                    <th style="width: 24%;">Transaction Code</th>
+                    <th style="width: 10%;">Source</th>
+                    <th style="width: 13%;" class="text-right">Withdrawal</th>
+                    <th style="width: 13%;" class="text-right">Deposit</th>
+                    <th style="width: 13%;" class="text-right">Balance</th>
                 </tr>
             </thead>
             <tbody>
@@ -225,60 +221,78 @@
 
                     foreach (var group in groupedModel)
                     {
-                        // প্রতিটি ব্যাংকের হেডার রো
+                        var firstItem = group.First();
+                        var openingBal = firstItem.RunningBalance
+                            - (firstItem.InOut == "In" ? firstItem.Amount : -firstItem.Amount);
+
                         <tr class="group-header-row">
-                            <td colspan="7">
-                                🏦 Bank: @group.Key.BankName |
-                                💳 A/C No: @group.Key.AccountNo |
-                                👤 Name: @group.Key.AccountName
+                            <td colspan="6">
+                                🏦 Bank: @group.Key.BankName &nbsp;|&nbsp;
+                                💳 A/C No: @group.Key.AccountNo &nbsp;|&nbsp;
+                                👤 A/C Name: @group.Key.AccountName
                             </td>
                         </tr>
 
-                        // ওই ব্যাংকের ভেতরের লেনদেনগুলো
+                        <tr style="background-color:#f0f4ff; font-weight:bold;">
+                            <td>-</td>
+                            <td colspan="2">Opening Balance</td>
+                            <td class="text-right">-</td>
+                            <td class="text-right">-</td>
+                            <td class="text-right">@openingBal</td>
+                        </tr>
+
+                        @* Data Rows *@
                         foreach (var item in group)
                         {
                             string rowClass = item.InOut == "In" ? "row-in" : "row-out";
-                            string badgeClass = item.InOut == "In" ? "badge-in" : "badge-out";
-
                             <tr class="@rowClass">
-                                <td class="text-center">@serial</td>
-                                <td class="text-center @badgeClass">@item.InOut</td> <!-- ভুলটি এখানে ঠিক করা হয়েছে -->
-                                <td>@item.SourceTable</td>
-                                <td>@item.TransactionType</td>
-                                <td>@item.TransactionCode</td>
                                 <td>@item.TransactionDate</td>
-                                <td class="text-right">@item.Amount.ToString("N2", bd)</td>
+                                <td>@item.TransactionCode</td>
+                                <td>@item.SourceTable</td>
+                                <td class="text-right @(item.InOut == "Out" ? "badge-out" : "")">
+                                    @(item.InOut == "Out" ? item.Amount.ToString("N2", bd) : "-")
+                                </td>
+                                <td class="text-right @(item.InOut == "In" ? "badge-in" : "")">
+                                    @(item.InOut == "In" ? item.Amount.ToString("N2", bd) : "-")
+                                </td>
+                                <td class="text-right">@item.RunningBalance</td>
                             </tr>
                             serial++;
                         }
 
-                        // এই নির্দিষ্ট ব্যাংকের সাব-টোটাল হিসেব
-                        var subTotalIn = group.Where(x => x.InOut == "In").Sum(x => x.Amount);
-                        var subTotalOut = group.Where(x => x.InOut == "Out").Sum(x => x.Amount);
-                        var subNet = subTotalIn - subTotalOut;
+                        @* Sub Total Row *@
+                        var subIn = group.Where(x => x.InOut == "In").Sum(x => x.Amount);
+                        var subOut = group.Where(x => x.InOut == "Out").Sum(x => x.Amount);
+                        var closingBal = group.Last().RunningBalance;
 
                         <tr class="sub-total-row">
-                            <td colspan="6" class="text-right">Sub Total (In: @subTotalIn.ToString("N2", bd) | Out: @subTotalOut.ToString("N2", bd)):</td>
-                            <td class="text-right">Balance: @subNet.ToString("N2", bd)</td>
+                            <td colspan="3" class="text-right">Totals:</td>
+                            <td class="text-right badge-out">@subOut.ToString("N2", bd)</td>
+                            <td class="text-right badge-in">@subIn.ToString("N2", bd)</td>
+                            <td class="text-right">@closingBal</td>
+                        </tr>
+
+                        @* Grand Total *@
+                        <tr style="background:#dee2e6; color:#000; font-weight:bold;">
+                            <td colspan="5" class="text-right">Total Withdrawal (Out):</td>
+                            <td class="text-right badge-out">@totalOut.ToString("N2", bd)</td>
+                            @*<td colspan="0"></td>*@
+                        </tr>
+                        <tr style="background:#d4edda; color:#000; font-weight:bold;">
+                            <td colspan="5" class="text-right">Total Deposit (In):</td>
+                            @*<td></td>*@
+                            <td class="text-right badge-in">@totalIn.ToString("N2", bd)</td>
+                            @*<td></td>*@
+                        </tr>
+                        <tr class="total-grand">
+                            <td colspan="5" class="text-right">Closing Balance:</td>
+                            <td class="text-right">@(Model.Last().RunningBalance)</td>
                         </tr>
                     }
-
-                    <tr class="total-grand" style="background: #e9ecef; color: #000;">
-                        <td colspan="6" class="text-right">Grand Total In:</td>
-                        <td class="text-right">@totalIn.ToString("N2", bd)</td>
-                    </tr>
-                    <tr class="total-grand" style="background: #dee2e6; color: #000;">
-                        <td colspan="6" class="text-right">Grand Total Out:</td>
-                        <td class="text-right">@totalOut.ToString("N2", bd)</td>
-                    </tr>
-                    <tr class="total-grand">
-                        <td colspan="6" class="text-right">Net Grand Balance:</td>
-                        <td class="text-right">@netBalance.ToString("N2", bd)</td>
-                    </tr>
                 }
                 else
                 {
-                    <tr><td colspan="7" class="text-center">No data found</td></tr>
+                    <tr><td colspan="6" class="text-center">No data found</td></tr>
                 }
             </tbody>
         </table>
