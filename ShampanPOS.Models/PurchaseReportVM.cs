@@ -56,6 +56,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Purchase Order")]
         public int? PurchaseOrderId { get; set; }
+        public int? PurchasesReturnId { get; set; }
 
         public decimal SubTotal { get; set; }
         public decimal TotalSD { get; set; }

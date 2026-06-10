@@ -1634,33 +1634,6 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
         [HttpGet]
-        //public ActionResult GetPurchaseModal(string supplierId)
-        //{
-        //    try
-        //    {
-        //        List<PurchaseDataVM> lst = new List<PurchaseDataVM>();
-        //        CommonVM param = new CommonVM();
-        //        param.Value = supplierId;
-        //        ResultVM result = _repo.GetPurchaseModal(param);
-
-        //        if (result.Status == "Success" && result.DataVM != null)
-        //        {
-        //            lst = JsonConvert.DeserializeObject<List<PurchaseDataVM>>(result.DataVM.ToString());
-
-        //            lst.ForEach(x =>
-        //            {
-        //                x.PurchaseDateString = x.PurchaseDate?.ToString("dd-MM-yyyy");
-        //            });
-        //        }
-        //        return Json(lst, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-        //        return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
         public ActionResult GetPurchaseModal(string supplierId)
         {
             try
@@ -1686,7 +1659,6 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                     }
                 }
 
-                // IMPORTANT: return clean JSON (no /Date(...) format)
                 return Content(
                     JsonConvert.SerializeObject(lst),
                     "application/json"
@@ -1791,5 +1763,29 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpGet]
+        public ActionResult GetPurchaseReturnModal(string supplierId)
+        {
+            try
+            {
+                List<PurchaseReturnDataVM> lst = new List<PurchaseReturnDataVM>();
+                CommonVM param = new CommonVM();
+                param.Value = supplierId;
+                ResultVM result = _repo.GetPurchaseReturnModal(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<PurchaseReturnDataVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 }

@@ -123,6 +123,7 @@
     <Compile Include="PurchaseReportVM.cs" />
     <Compile Include="PurchaseReturnDetailVM.cs" />
     <Compile Include="PurchaseReturnReportVM.cs" />
+    <Compile Include="PurchaseReturnDataVM.cs" />
     <Compile Include="PurchaseReturnVM.cs" />
     <Compile Include="RegistrationVM.cs" />
     <Compile Include="SaleCreditCardVM.cs" />
