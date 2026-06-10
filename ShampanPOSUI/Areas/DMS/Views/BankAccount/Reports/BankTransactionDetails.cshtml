@@ -136,125 +136,137 @@
 
     /* ===================== PRINT STYLES ===================== */
     @@media print {
-        /* Hide everything first */
-        body * {
-            visibility: hidden;
-        }
-        /* Show only report-box and its children */
-        .report-box,
-        .report-box * {
-            visibility: visible;
-        }
-        /* Hide print button inside report-box */
-        .sslPrint {
-            display: none !important;
-        }
-        /* Full-page print box, no side cut */
-        .report-box {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
-            padding: 10px;
-            background: #fff;
-            border: none;
-            border-radius: 0;
-            box-shadow: none;
-            overflow: visible;
-        }
-        /* Scale content to fit page width, no side cut */
-        @@page {
-            size: A4 landscape;
-            margin: 10mm;
-        }
-        /* Table shrinks to fit without side cut */
-        table {
-            font-size: 10px;
-            width: 100%;
-            table-layout: fixed;
-            word-break: break-word;
-        }
-
-            table th, table td {
-                padding: 3px 4px;
-                font-size: 10px;
-            }
-
-        .table-responsive {
-            overflow: visible !important;
-            width: 100%;
-        }
-        /* Keep footer visible */
-        .report-footer {
-            display: flex !important;
-            justify-content: space-between;
-        }
+    body * {
+        visibility: hidden;
     }
+    .report-box,
+    .report-box * {
+        visibility: visible;
+    }
+    .sslPrint {
+        display: none !important;
+    }
+    .report-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 10px;
+        background: #fff;
+        border: none;
+        overflow: visible;
+    }
+
+    /* পেজ সেটিংস এবং পেজ নাম্বার কাউন্টার */
+    @@page {
+        size: A4 landscape;
+        margin: 15mm 10mm 15mm 10mm; /* Top, Right, Bottom, Left */
+    }
+
+    /* ব্রাউজারে পেজ নাম্বার দেখানোর জন্য (Chrome/Edge/Firefox সাপোর্ট করবে) */
+    .page-number::after {
+        content: "Page " counter(page);
+    }
+
+    table {
+        /*font-size: 10px;*/
+        width: 100%;
+        table-layout: fixed;
+        word-break: break-word;
+        border-collapse: collapse; /* বর্ডার সুন্দর দেখানোর জন্য */
+    }
+
+    /* এই কোডটি নিশ্চিত করবে যেন প্রতি পেজে টেবিলের হেডার রিপিট হয় */
+    thead {
+        display: table-header-group;
+    }
+    tr {
+        page-break-inside: avoid; /* যেন একটা রো মাঝখান দিয়ে কেটে দুই পেজে চলে না যায় */
+    }
+
+    table th, table td {
+        padding: 3px 4px;
+        font-size: 10px;
+    }
+
+    .table-responsive {
+        overflow: visible !important;
+        width: 100%;
+    }
+
+    /* ফুটারটি একদম পেজের নিচে ফিক্সড থাকবে */
+    .report-footer {
+        display: flex !important;
+        justify-content: space-between;
+        position: running(footer);
+    }
+}
 </style>
 
 <button onclick="window.print()" class="sslPrint">🖨️ Print</button>
 
 <div class="report-box">
-
-    <!-- ================= HEADER ================= -->
-    <table style="border:none; margin-bottom:10px;">
-        <tr>
-            <td style="width:140px; border:none;">
-                <img src="~/Content/AdminLte/dist/img/logo.png"
-                     style="width:230px; height:120px;" />
-            </td>
-            <td style="text-align:right; border:none;">
-                <h3 style="margin:0;">@ViewBag.CompanyName</h3>
-                <div>@ViewBag.BranchName</div>
-                <div>69/1 Trhidara Tower</div>
-                <div>📞 01612264439</div>
-                <div>✉️ symphonysorftech1999@gmail.com</div>
-            </td>
-        </tr>
-    </table>
-
-    <hr />
-
-    <!-- ================= FILTER INFO ================= -->
-    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-        <div>
-            <strong>Bank:</strong> @ViewBag.BankName <br />
-            <strong>Account:</strong> @ViewBag.AccountName <br />
-            <strong>Transaction Type:</strong> @ViewBag.TransactionType <br />
-            <strong>Deposit Code:</strong> @(ViewBag.DepositCode == "All" || string.IsNullOrEmpty(ViewBag.DepositCode as string) ? "All" : ViewBag.DepositCode)
-        </div>
-        <div style="text-align:right;">
-            <strong>From Date:</strong> @ViewBag.FromDate <br />
-            <strong>To Date:</strong> @ViewBag.ToDate <br />
-            <strong>Withdrawal Code:</strong> @(ViewBag.WithdrawalCode == "All" || string.IsNullOrEmpty(ViewBag.WithdrawalCode as string) ? "All" : ViewBag.WithdrawalCode) <br />
-        </div>
-    </div>
-
-    <!-- ================= TITLE ================= -->
-    <h3 style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px;">
-        @(ViewBag.TransactionType == "Deposit" ? "BANK DEPOSIT REPORT" :
-          ViewBag.TransactionType == "Withdrawal" ? "BANK WITHDRAWAL REPORT" :
-          "BANK TRANSACTION REPORT") (DETAILS)
-    </h3>
-
-    <!-- ================= LEGEND ================= -->
-    @if (string.IsNullOrEmpty(ViewBag.TransactionType as string) || ViewBag.TransactionType == "All")
-    {
-    <div class="legend">
-        <span class="legend-box legend-deposit"></span> Deposit &nbsp;&nbsp;
-        <span class="legend-box legend-withdrawal"></span> Withdrawal
-    </div>
-    }
-
-    @using System.Globalization
-    @{ var bd = new CultureInfo("en-IN"); }
-
-    <!-- ================= TABLE ================= -->
     <div class="table-responsive">
         <table>
             <thead>
+                <tr>
+                    <td colspan="14" style="border:none; padding:0;">
+                        <table style="border:none; margin-bottom:10px; width:100%;">
+                            <tr>
+                                <td style="width:140px; border:none;">
+                                    <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px; height:120px;" />
+                                </td>
+                                <td style="text-align:right; border:none;">
+                                    <h3 style="margin:0;">@ViewBag.CompanyName</h3>
+                                    <div>@ViewBag.BranchName</div>
+                                    <div>69/1 Trhidara Tower</div>
+                                    <div>📞 01612264439</div>
+                                    <div>✉️ symphonysorftech1999@gmail.com</div>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="14" style="border:none; padding:0;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size: 11px;">
+                            <div>
+                                <strong>Bank:</strong> @ViewBag.BankName <br />
+                                <strong>Account:</strong> @ViewBag.AccountName <br />
+                                <strong>Transaction Type:</strong> @ViewBag.TransactionType <br />
+                                <strong>Deposit Code:</strong> @(ViewBag.DepositCode == "All" || string.IsNullOrEmpty(ViewBag.DepositCode as string) ? "All" : ViewBag.DepositCode)
+                            </div>
+                            <div style="text-align:right;">
+                                <strong>From Date:</strong> @ViewBag.FromDate <br />
+                                <strong>To Date:</strong> @ViewBag.ToDate <br />
+                                <strong>Withdrawal Code:</strong> @(ViewBag.WithdrawalCode == "All" || string.IsNullOrEmpty(ViewBag.WithdrawalCode as string) ? "All" : ViewBag.WithdrawalCode) <br />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="14" style="border:none; padding:0;">
+                        <h3 style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px; margin-top:0;">
+                            @(ViewBag.TransactionType == "Deposit" ? "BANK DEPOSIT REPORT" :
+                              ViewBag.TransactionType == "Withdrawal" ? "BANK WITHDRAWAL REPORT" :
+                              "BANK TRANSACTION REPORT") (DETAILS)
+                        </h3>
+
+                        @if (string.IsNullOrEmpty(ViewBag.TransactionType as string) || ViewBag.TransactionType == "All")
+                        {
+                        <div class="legend" style="margin-bottom: 10px;">
+                            <span class="legend-box legend-deposit"></span> Deposit &nbsp;&nbsp;
+                            <span class="legend-box legend-withdrawal"></span> Withdrawal
+                        </div>
+                        }
+                    </td>
+                </tr>
+
                 <tr>
                     <th>SL</th>
                     <th>Type</th>
@@ -273,6 +285,9 @@
                 </tr>
             </thead>
 
+            @using System.Globalization
+            @{ var bd = new CultureInfo("en-IN"); }
+
             <tbody>
                 @if (Model != null && Model.Any())
                 {
@@ -282,9 +297,7 @@
                         ViewBag.TransactionType == "Deposit" ? x.TransactionType == "Deposit" :
                         ViewBag.TransactionType == "Withdrawal" ? x.TransactionType == "Withdrawal" : true))
                     {
-                        string rowClass = item.TransactionType == "Deposit"
-                            ? "row-deposit"
-                            : "row-withdrawal";
+                        string rowClass = item.TransactionType == "Deposit" ? "row-deposit" : "row-withdrawal";
 
                 <tr class="@rowClass">
                     <td class="text-center">@serial</td>
@@ -302,11 +315,9 @@
                     <td>@item.Comments</td>
                     <td class="text-right">@item.Amount.ToString("N2", bd)</td>
                 </tr>
-
                         serial++;
                     }
 
- <!-- ================= TOTAL ROWS ================= -->
                     if (ViewBag.TransactionType == "Deposit")
                     {
                 <tr class="total-deposit">
@@ -347,15 +358,14 @@
         </table>
     </div>
 
-    <!-- ================= REPORT FOOTER ================= -->
-    <div class="report-footer">
+    <div class="report-footer" style="margin-top: 15px; border-top: 1px solid #ccc; padding-top: 5px;">
         <div class="footer-left">
-            <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A")
+            <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") |
             <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
         </div>
         <div class="footer-right">
+            <span class="page-number"></span> |
             <strong>Total Records:</strong> @(Model != null ? Model.Count : 0)
         </div>
     </div>
-
 </div>

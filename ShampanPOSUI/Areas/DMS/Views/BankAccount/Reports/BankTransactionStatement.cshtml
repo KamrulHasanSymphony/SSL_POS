@@ -1,0 +1,291 @@
+﻿@model List<ShampanPOS.Models.BankTransactionReportVM>
+@{
+    ViewBag.Title = "Bank Statement Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var totalIn = Model?.Where(x => x.InOut == "In").Sum(x => x.Amount) ?? 0;
+    var totalOut = Model?.Where(x => x.InOut == "Out").Sum(x => x.Amount) ?? 0;
+    var netBalance = totalIn - totalOut;
+    var bd = new System.Globalization.CultureInfo("en-IN");
+
+    // ব্যাংক এবং অ্যাকাউন্ট অনুযায়ী গ্রুপ করা হলো
+    var groupedModel = Model?
+        .GroupBy(x => new { x.BankName, x.AccountNo, x.AccountName })
+        .ToList();
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1100px;
+        margin: 20px auto;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .sslPrint {
+        background: #007bff;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        float: right;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+        .sslPrint:hover {
+            background: #0056b3;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        table th {
+            background: #f4f6f9;
+            color: #333;
+            text-align: center;
+            font-weight: 600;
+        }
+
+    /* গ্রুপ হেডারের সুন্দর স্টাইল */
+    .group-header-row {
+        background-color: #e9ecef !important;
+        font-weight: bold;
+        font-size: 13px;
+        color: #495057;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .row-in {
+        background-color: #ffffff;
+    }
+
+    .row-out {
+        background-color: #fafafa;
+    }
+
+    /* ইন/আউট টেক্সট কালার হাইলাইট */
+    .badge-in {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .badge-out {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .sub-total-row {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        font-style: italic;
+    }
+
+    .total-grand {
+        background-color: #212529;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .report-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 13px;
+    }
+
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
+        }
+
+        .sslPrint {
+            display: none !important;
+        }
+
+        .report-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+            border: none;
+        }
+
+        @@page {
+            size: A4 landscape;
+            margin: 15mm 10mm;
+        }
+
+        table {
+            font-size: 10px;
+            table-layout: fixed;
+            word-break: break-word;
+        }
+
+            table th, table td {
+                padding: 4px 5px;
+                font-size: 10px;
+                border: 1px solid #000;
+            }
+
+        .group-header-row {
+            background-color: #e2e2e2 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint">🖨️ Print Report</button>
+
+<div class="report-box">
+    <table style="border:none; margin-bottom:10px; width:100%;">
+        <tr>
+            <td style="width:140px; border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px; height:120px;" />
+            </td>
+            <td style="text-align:right; border:none;">
+                <h3 style="margin:0; color:#333;">@ViewBag.CompanyName</h3>
+                <div>@ViewBag.BranchName</div>
+                <div>69/1 Trhidara Tower</div>
+                <div>📞 01612264439</div>
+                <div>✉️ symphonysorftech1999@gmail.com</div>
+            </td>
+        </tr>
+    </table>
+    <hr style="border: 0; border-top: 1px solid #eee;" />
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:12px; color: #555;">
+        <div>
+            <strong>Report Type:</strong> Multi-Account Statement
+        </div>
+        <div style="text-align:right;">
+            <strong>From Date:</strong> @ViewBag.FromDate &nbsp;|&nbsp; <strong>To Date:</strong> @ViewBag.ToDate
+        </div>
+    </div>
+
+    <h3 style="text-align:center; border-bottom:2px solid #333; padding-bottom:6px; margin-top:0; letter-spacing: 1px;">
+        BANK STATEMENT REPORT
+    </h3>
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">SL</th>
+                    <th style="width: 8%;">In / Out</th>
+                    <th style="width: 12%;">Source</th>
+                    <th style="width: 15%;">Transaction Type</th>
+                    <th style="width: 15%;">Transaction Code</th>
+                    <th style="width: 15%;">Transaction Date</th>
+                    <th style="width: 30%;" class="text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (groupedModel != null && groupedModel.Any())
+                {
+                    int serial = 1;
+
+                    foreach (var group in groupedModel)
+                    {
+                        // প্রতিটি ব্যাংকের হেডার রো
+                        <tr class="group-header-row">
+                            <td colspan="7">
+                                🏦 Bank: @group.Key.BankName |
+                                💳 A/C No: @group.Key.AccountNo |
+                                👤 Name: @group.Key.AccountName
+                            </td>
+                        </tr>
+
+                        // ওই ব্যাংকের ভেতরের লেনদেনগুলো
+                        foreach (var item in group)
+                        {
+                            string rowClass = item.InOut == "In" ? "row-in" : "row-out";
+                            string badgeClass = item.InOut == "In" ? "badge-in" : "badge-out";
+
+                            <tr class="@rowClass">
+                                <td class="text-center">@serial</td>
+                                <td class="text-center @badgeClass">@item.InOut</td> <!-- ভুলটি এখানে ঠিক করা হয়েছে -->
+                                <td>@item.SourceTable</td>
+                                <td>@item.TransactionType</td>
+                                <td>@item.TransactionCode</td>
+                                <td>@item.TransactionDate</td>
+                                <td class="text-right">@item.Amount.ToString("N2", bd)</td>
+                            </tr>
+                            serial++;
+                        }
+
+                        // এই নির্দিষ্ট ব্যাংকের সাব-টোটাল হিসেব
+                        var subTotalIn = group.Where(x => x.InOut == "In").Sum(x => x.Amount);
+                        var subTotalOut = group.Where(x => x.InOut == "Out").Sum(x => x.Amount);
+                        var subNet = subTotalIn - subTotalOut;
+
+                        <tr class="sub-total-row">
+                            <td colspan="6" class="text-right">Sub Total (In: @subTotalIn.ToString("N2", bd) | Out: @subTotalOut.ToString("N2", bd)):</td>
+                            <td class="text-right">Balance: @subNet.ToString("N2", bd)</td>
+                        </tr>
+                    }
+
+                    <tr class="total-grand" style="background: #e9ecef; color: #000;">
+                        <td colspan="6" class="text-right">Grand Total In:</td>
+                        <td class="text-right">@totalIn.ToString("N2", bd)</td>
+                    </tr>
+                    <tr class="total-grand" style="background: #dee2e6; color: #000;">
+                        <td colspan="6" class="text-right">Grand Total Out:</td>
+                        <td class="text-right">@totalOut.ToString("N2", bd)</td>
+                    </tr>
+                    <tr class="total-grand">
+                        <td colspan="6" class="text-right">Net Grand Balance:</td>
+                        <td class="text-right">@netBalance.ToString("N2", bd)</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr><td colspan="7" class="text-center">No data found</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-footer" style="border-top:1px solid #ccc; padding-top:5px; color: #666;">
+        <div><strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") | <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")</div>
+        <div><strong>Total Records:</strong> @(Model != null ? Model.Count : 0)</div>
+    </div>
+</div>
