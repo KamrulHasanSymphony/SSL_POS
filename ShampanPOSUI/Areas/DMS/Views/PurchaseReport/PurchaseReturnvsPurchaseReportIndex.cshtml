@@ -1,6 +1,6 @@
 ﻿@model ShampanPOS.Models.PurchaseReportVM
 @{
-    ViewBag.Title = "Purchase Order vs Purchase Report";
+    ViewBag.Title = "Purchase Return vs Purchase Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -21,13 +21,13 @@
             outline: none;
         }
 </style>
- <!-- ================= HEADER ================= -->
+<!-- ================= HEADER ================= -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
 
             <div class="col-sm-6">
-                <h1 class="m-0">Purchase Order vs Purchase Report</h1>
+                <h1 class="m-0">Purchase Return vs Purchase Report</h1>
             </div>
 
             <div class="col-sm-6">
@@ -108,8 +108,8 @@
                             <input type="text"
                                    id="ProductName"
                                    class="form-control"
-                                   placeholder="Select Product" 
-                                   readonly/>
+                                   placeholder="Select Product"
+                                   readonly />
 
                             <input type="hidden" id="ProductId" />
 
@@ -163,32 +163,33 @@
 
                             </div>
 
-                        </div>                    </div>
+                        </div>
+                    </div>
 
                     <div class="col-sm-2">
-                        <label>Purchase Order</label>
+                        <label>Purchase Return</label>
 
                         <div class="input-group input-group-sm">
 
                             <input type="text"
-                                   id="PurchaseOrderCode"
+                                   id="PurchaseReturnCode"
                                    class="form-control"
-                                   placeholder="Select Purchase Order" 
-                                   readonly/>
+                                   placeholder="Select Purchase Return"
+                                   readonly />
 
-                            <input type="hidden" id="PurchaseOrderId" />
+                            <input type="hidden" id="PurchasesReturnId" />
 
                             <div class="input-group-append">
 
                                 <button type="button"
-                                        id="btnClearPurchaseOrder"
+                                        id="btnClearPurchaseReturn"
                                         class="btn btn-warning"
-                                        onclick="ClearPurchaseOrder()">
+                                        onclick="ClearPurchaseReturn()">
                                     ✖
                                 </button>
 
                                 <button type="button"
-                                        id="btnPurchaseOrderSearch"
+                                        id="btnPurchaseReturnSearch"
                                         class="btn btn-primary">
                                     <i class="fa fa-search"></i>
                                 </button>
@@ -270,16 +271,16 @@
 </div>
 
 
-<div id="purchaseOrderWindow" style="display:none; padding:10px;">
+<div id="purchaseReturnWindow" style="display:none; padding:10px;">
 
     <div style="display:flex; gap:10px; margin-bottom:10px;">
-        <input id="PurchaseOrderSupplierId" style="width:40%;" placeholder="Select Supplier" />
-        <input id="FilterCode" class="k-filter-input" style="width:30%;" placeholder="Purchase Order Code" />
-        <input id="FilterOrderDate" class="k-filter-input" style="width:30%;" placeholder="Order Date" />
+        <input id="PurchaseReturnSupplierId" style="width:35%;" placeholder="Supplier" />
+        <input id="ReturnCode" class="k-filter-input" style="width:20%;" placeholder="Return Code" />
+        <input id="FilterPurchaseDate" class="k-filter-input" style="width:45%;" placeholder="Purchase Date" />
     </div>
 
-    <div id="purchaseOrderGrid"></div>
-
+    <!-- Purchase List Grid -->
+    <div id="purchaseReturnGrid"></div>
 </div>
 <!-- ================= SCRIPT ================= -->
 @section scripts{
@@ -405,9 +406,9 @@
     });
 
 
-    //$("#ProductName").on("click", function () {
-    //    OpenProductPopup(null);
-    //});
+    $("#ProductName").on("click", function () {
+        OpenProductPopup(null);
+    });
 
      $("#btnProductSearch").on("click", function () {
         OpenProductPopup(null);
@@ -669,7 +670,7 @@
             placeholder: "Select Product Group",
 
             change: function () {
-                applyProductGroupFilter(); // 🔥 MAIN TRIGGER
+                applyProductGroupFilter(); 
             }
         });
     }
@@ -727,9 +728,9 @@
 
    //Purchase
 
-        //$("#PurchaseCode").on("click", function () {
-        //    OpenPurchasePopup();
-        //});
+        $("#PurchaseCode").on("click", function () {
+            OpenPurchasePopup();
+        });
 
         $("#btnPurchaseSearch").on("click", function () {
             OpenPurchasePopup();
@@ -852,7 +853,7 @@
             var combo = $("#PurchaseSupplierId").data("kendoComboBox");
             var supplierId = combo ? combo.value() : "";
 
-            var purchaseCode = $("#PurCode").val().trim();  
+            var purchaseCode = $("#PurCode").val().trim();
             var purchaseDate = $("#FilterPurchaseDate").val();
 
             var grid = $("#purchaseGrid").data("kendoGrid");
@@ -872,7 +873,7 @@
 
             if (purchaseCode && purchaseCode.length >= 3) {
                 filters.push({
-                    field: "Code", 
+                    field: "Code",
                     operator: "contains",
                     value: purchaseCode
                 });
@@ -895,11 +896,11 @@
             } else {
                 grid.dataSource.filter({});
             }
-        }    
+        }
 
-        //$("#PurchaseOrderCode").on("click", function () {
-        //    OpenPurchaseOrderPopup();
-        //});
+        $("#PurchaseOrderCode").on("click", function () {
+            OpenPurchaseOrderPopup();
+        });
 
         $("#btnPurchaseOrderSearch").on("click", function () {
             OpenPurchaseOrderPopup();
@@ -968,14 +969,14 @@
                     { field: "DeliveryDateTime", title: "Delivery Date", format: "{0:yyyy-MM-dd}", width: "120px" }
                 ]
             });
-            // Purchase Order Code 
+            // Purchase Order Code
             $("#FilterCode")
                 .off("input")
                 .on("input", function () {
                     applyPurchaseOrderSupplierFilter();
                 });
 
-            // Order Date 
+            // Order Date
             $("#FilterOrderDate")
                 .off("change")
                 .on("change", function () {
@@ -1040,7 +1041,7 @@
 
             var filters = [];
 
-            // ১. 
+            // ১.
             if (supplierId && supplierId !== "") {
                 filters.push({
                     field: "SupplierId",
@@ -1049,7 +1050,7 @@
                 });
             }
 
-            // ২. 
+            // ২.
             if (poCode && poCode.length >= 3) {
                 filters.push({
                     field: "Code",
@@ -1058,16 +1059,16 @@
                 });
             }
 
-            // 
+            //
             if (orderDate && orderDate !== "") {
                 filters.push({
-                    field: "OrderDate", 
+                    field: "OrderDate",
                     operator: "eq",
                     value: orderDate
                 });
             }
 
-            // 
+            //
             if (filters.length > 0) {
                 grid.dataSource.filter({
                     logic: "and",
@@ -1078,12 +1079,12 @@
             }
         }
 
-        // 
+        //
         function ClearPurchaseOrder() {
             $("#PurchaseOrderId").val("");
             $("#PurchaseOrderCode").val("");
 
-            // 
+            //
             $("#SupplierId").val("");
             $("#SupplierName").val("");
             $("#OrderDate").val("");
@@ -1093,11 +1094,6 @@
         function ClearPurchase() {
             $("#PurchaseId").val("");
             $("#PurchaseCode").val("");
-        }
-
-        function ClearPurchaseOrder() {
-            $("#PurchaseOrderId").val("");
-            $("#PurchaseOrderCode").val("");
         }
 
     function GetSupplierComboBox() {
@@ -1140,7 +1136,7 @@
     var productName = $("#ProductName").val() || "";
 
     var purchaseId = $("#PurchaseId").val() || 0;
-    var purchaseOrderId = $("#PurchaseOrderId").val() || 0;
+        var PurchasesReturnId = $("#PurchasesReturnId").val() || 0;
 
     var isSummary = $("#IsSummary").is(":checked");
 
@@ -1182,7 +1178,7 @@
     // URL
         // =========================================
 
-var url = '@Url.Action("PurchaseOrdervsPurchaseReportList", "Purchase", new { area = "DMS" })'
+var url = '@Url.Action("PurchaseReturnvsPurchaseReportList", "Purchase", new { area = "DMS" })'
     + '?supplierId=' + supplierId
     + '&supplierName=' + encodeURIComponent(supplierName)
 
@@ -1190,7 +1186,7 @@ var url = '@Url.Action("PurchaseOrdervsPurchaseReportList", "Purchase", new { ar
     + '&productName=' + encodeURIComponent(productName)
 
     + '&purchaseId=' + purchaseId
-    + '&purchaseOrderId=' + purchaseOrderId
+    + '&purchasesReturnId=' + purchasesReturnId
 
     + '&purchaseFromDate=' + purchaseFromDate
     + '&purchaseToDate=' + purchaseToDate
