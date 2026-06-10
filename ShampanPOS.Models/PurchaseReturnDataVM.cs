@@ -32,6 +32,10 @@ namespace ShampanPOS.Models
         [Display(Name = "Supplier Name")]
         public string? SupplierName { get; set; }
         public string? BranchName { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal? UnitPrice { get; set; }
+        public decimal? SubTotal { get; set; }
+
         public PeramModel PeramModel { get; set; }
 
         public PurchaseReturnDataVM()

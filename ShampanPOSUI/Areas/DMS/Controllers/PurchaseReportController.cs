@@ -78,7 +78,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 ? ""
                 : supplierName;
 
-            ResultVM result = _repo.GetPurchaseOrdervsPurchaseByList(param);
+            ResultVM result = _repo.PurchaseReturnvsPurchaseReportList(param);
 
             if (result.Status == "Success" && result.DataVM != null)
             {

@@ -58,6 +58,7 @@
     <Compile Include="MasterSupplierItemRepo.cs" />
     <Compile Include="OverHeadRepo.cs" />
     <Compile Include="PaymentRepo.cs" />
+    <Compile Include="PurchaseReportRepo.cs" />
     <Compile Include="PurchaseReturnRepo.cs" />
     <Compile Include="PurchaseRepo.cs" />
     <Compile Include="PurchaseOrderRepo.cs" />
