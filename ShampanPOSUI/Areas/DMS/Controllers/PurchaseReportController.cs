@@ -27,7 +27,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
     public class PurchaseReportController : Controller
     {
         private readonly ApplicationDbContext _applicationDb;
-        PurchaseRepo _repo = new PurchaseRepo();
+        PurchaseReportRepo _repo = new PurchaseReportRepo();
         CommonRepo _commonRepo = new CommonRepo();
 
         // GET: DMS/Purchase
