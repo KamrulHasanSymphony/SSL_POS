@@ -261,9 +261,9 @@
 <div id="purchaseWindow" style="display:none; padding:10px;">
 
     <div style="display:flex; gap:10px; margin-bottom:10px;">
-        <input id="PurchaseSupplierId" style="width:35%;" placeholder="Supplier" />
-        <input id="PurCode" class="k-filter-input" style="width:20%;" placeholder="Purchase Code" />
-        <input id="FilterPurchaseDate" class="k-filter-input" style="width:45%;" placeholder="Purchase Date" />
+        <input id="PurchaseSupplierId" style="width:40%;" placeholder="Supplier" />
+        <input id="PurCode" class="k-filter-input" style="width:30%;" placeholder="Purchase Code" />
+        <input id="FilterPurchaseDate" class="k-filter-input" style="width:30%;" placeholder="Purchase Date" />
     </div>
 
     <!-- Purchase List Grid -->
@@ -274,12 +274,11 @@
 <div id="purchaseReturnWindow" style="display:none; padding:10px;">
 
     <div style="display:flex; gap:10px; margin-bottom:10px;">
-        <input id="PurchaseReturnSupplierId" style="width:35%;" placeholder="Supplier" />
-        <input id="ReturnCode" class="k-filter-input" style="width:20%;" placeholder="Return Code" />
-        <input id="FilterPurchaseDate" class="k-filter-input" style="width:45%;" placeholder="Purchase Date" />
+        <input id="PurchaseReturnSupplierId" style="width:40%;" placeholder="Supplier" />
+        <input id="FilterCode" class="k-filter-input" style="width:30%;" placeholder="Return Code" />
+        <input id="FilterInvoiceDate" style="width:30%;" placeholder="Invoice Date" />
     </div>
 
-    <!-- Purchase List Grid -->
     <div id="purchaseReturnGrid"></div>
 </div>
 <!-- ================= SCRIPT ================= -->
@@ -403,11 +402,6 @@
 
 
 
-    });
-
-
-    $("#ProductName").on("click", function () {
-        OpenProductPopup(null);
     });
 
      $("#btnProductSearch").on("click", function () {
@@ -728,11 +722,7 @@
 
    //Purchase
 
-        $("#PurchaseCode").on("click", function () {
-            OpenPurchasePopup();
-        });
-
-        $("#btnPurchaseSearch").on("click", function () {
+    $("#btnPurchaseSearch").on("click", function () {
             OpenPurchasePopup();
         });
 
@@ -848,7 +838,7 @@
         });
     }
 
-        function applySupplierFilter() {
+    function applySupplierFilter() {
 
             var combo = $("#PurchaseSupplierId").data("kendoComboBox");
             var supplierId = combo ? combo.value() : "";
@@ -898,203 +888,198 @@
             }
         }
 
-        $("#PurchaseOrderCode").on("click", function () {
-            OpenPurchaseOrderPopup();
+    // Purchase Return
+
+        $("#btnPurchaseReturnSearch").on("click", function () {
+            OpenPurchaseReturnPopup();
         });
 
-        $("#btnPurchaseOrderSearch").on("click", function () {
-            OpenPurchaseOrderPopup();
-        });
+     function OpenPurchaseReturnPopup() {
 
-        function OpenPurchaseOrderPopup() {
-
-            var wnd = $("#purchaseOrderWindow").data("kendoWindow");
+            var wnd = $("#purchaseReturnWindow").data("kendoWindow");
 
             if (!wnd) {
-                $("#purchaseOrderWindow").kendoWindow({
+                $("#purchaseReturnWindow").kendoWindow({
                     width: "900px",
                     height: "550px",
-                    title: "Select Purchase Order",
+                    title: "Select Purchase Return",
                     modal: true,
                     visible: false
                 });
 
-                wnd = $("#purchaseOrderWindow").data("kendoWindow");
+                wnd = $("#purchaseReturnWindow").data("kendoWindow");
             }
 
             wnd.center().open();
 
-            // Clear previous filters
             $("#FilterCode").val("");
-            $("#FilterOrderDate").val("");
-            LoadPurchaseOrderSupplierCombo();
+            //$("#FilterInvoiceDate").val("");
+            $("#FilterInvoiceDate").kendoDatePicker({
+                 format: "yyyy-MM-dd"
+             });
+            LoadPurchaseReturnSupplierCombo();
 
-            $("#purchaseOrderGrid").kendoGrid({
+            $("#purchaseReturnGrid").empty();
+
+            $("#purchaseReturnGrid").kendoGrid({
+
                 dataSource: {
                     transport: {
                         read: {
-                            url: "/Common/Common/GetPurchaseOrderModal",
+                            url: "/Common/Common/GetPurchaseReturnModal",
                             dataType: "json"
                         }
                     },
-                    schema: {
-                        model: {
-                            id: "Id",
-                            fields: {
-                                Id: { type: "number" },
-                                Code: { type: "string" },
-                                SupplierId: { type: "number" },
-                                SupplierName: { type: "string" },
-                                Quantity: { type: "number" },
-                                UnitPrice: { type: "number" },
-                                OrderDate: { type: "date" },
-                                DeliveryDateTime: { type: "date" }
-                            }
-                        }
-                    }
+                    pageSize: 10
                 },
 
-                height: 420,
-                sortable: true,
-                filterable: true,
                 pageable: true,
+                filterable: true,
                 selectable: "row",
+                searchable: true,
 
                 columns: [
-                    { field: "Code", title: "PO Code", width: "150px" },
+                    { field: "Code", title: "Return Code", width: "150px" },
                     { field: "SupplierName", title: "Supplier", width: "180px" },
                     { field: "Quantity", title: "Quantity", width: "120px" },
                     { field: "UnitPrice", title: "Unit Price", width: "120px" },
-                    { field: "OrderDate", title: "Order Date", format: "{0:yyyy-MM-dd}", width: "160px" },
-                    { field: "DeliveryDateTime", title: "Delivery Date", format: "{0:yyyy-MM-dd}", width: "120px" }
+                    { field: "LineTotal", title: "Total", width: "120px" },
+                    {
+                        field: "InvoiceDateTime",
+                        title: "Invoice Date",
+                        width: "150px",
+                        format: "{0:yyyy-MM-dd}"
+                    }
                 ]
             });
-            // Purchase Order Code
+
+            // Return Code Search
+
             $("#FilterCode")
                 .off("input")
                 .on("input", function () {
-                    applyPurchaseOrderSupplierFilter();
+                    applyPurchaseReturnSupplierFilter();
                 });
 
-            // Order Date
-            $("#FilterOrderDate")
-                .off("change")
-                .on("change", function () {
-                    applyPurchaseOrderSupplierFilter();
+
+         // Purchase Date filter
+         $("#FilterInvoiceDate")
+             .off("change")
+             .on("change", function () {
+                 applyPurchaseReturnSupplierFilter();
+             });
+
+            // Select Purchase Return
+
+            $("#purchaseReturnGrid")
+                .off("dblclick")
+                .on("dblclick", "tr", function () {
+
+                    var grid = $("#purchaseReturnGrid").data("kendoGrid");
+                    var item = grid.dataItem($(this));
+
+                    if (!item) return;
+
+                    ApplyPurchaseReturnSelection(item);
+
+                    wnd.close();
                 });
-
-            // double click select
-            $("#purchaseOrderGrid").off("dblclick").on("dblclick", "tr", function () {
-
-                var grid = $("#purchaseOrderGrid").data("kendoGrid");
-                var item = grid.dataItem($(this));
-
-                ApplyPurchaseOrderSelection(item);
-
-                wnd.close();
-            });
         }
 
-        function ApplyPurchaseOrderSelection(item) {
+     function ApplyPurchaseReturnSelection(item) {
 
             console.log(item);
 
-            $("#PurchaseOrderId").val(item.Id);
-            $("#PurchaseOrderCode").val(item.Code);
+            $("#PurchasesReturnId").val(item.Id);
+            $("#PurchaseReturnCode").val(item.Code);
 
-            $("#SupplierId").val(item.SupplierId);
             $("#SupplierName").val(item.SupplierName);
 
-            $("#OrderDate").val(kendo.toString(item.OrderDate, "yyyy-MM-dd"));
-            $("#DeliveryDateTime").val(kendo.toString(item.DeliveryDateTime, "yyyy-MM-dd"));
+            $("#InvoiceDateTime").val(kendo.toString(item.InvoiceDateTime, "yyyy-MM-dd"));
+
+
+            $("#LineTotal").val(item.LineTotal);
         }
 
-        function LoadPurchaseOrderSupplierCombo() {
+    function LoadPurchaseReturnSupplierCombo() {
+        $("#PurchaseReturnSupplierId").kendoComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            placeholder: "Select Supplier",
+            filter: "contains",
+            dataSource: {
+                transport: {
+                    read: "/Common/Common/GetSupplierList"
+                }
+            },
+            change: applyPurchaseReturnSupplierFilter,
+            select: applyPurchaseReturnSupplierFilter
+        });
+    }
 
-            $("#PurchaseOrderSupplierId").kendoComboBox({
-                dataTextField: "Name",
-                dataValueField: "Id",
-                placeholder: "Select Supplier",
-                filter: "contains",
+    function applyPurchaseReturnSupplierFilter() {
+        var combo = $("#PurchaseReturnSupplierId").data("kendoComboBox");
+        var supplierId = combo ? combo.value() : "";
 
-                dataSource: {
-                    transport: {
-                        read: "/Common/Common/GetSupplierList"
-                    }
-                },
+        var returnCode = $("#FilterCode").val().trim();
+        var invoiceDate = $("#FilterInvoiceDate").val();
+        var grid = $("#purchaseReturnGrid").data("kendoGrid");
+        if (!grid) return;
 
-                change: applyPurchaseOrderSupplierFilter,
-                select: applyPurchaseOrderSupplierFilter
+        var filters = [];
+
+        // Supplier Filter
+        if (supplierId && supplierId !== "") {
+            filters.push({
+                field: "SupplierId",
+                operator: "eq",
+                value: parseInt(supplierId)
             });
         }
 
-        function applyPurchaseOrderSupplierFilter() {
-
-            var combo = $("#PurchaseOrderSupplierId").data("kendoComboBox");
-            var supplierId = combo ? combo.value() : "";
-
-            var poCode = $("#FilterCode").val().trim();
-            var orderDate = $("#FilterOrderDate").val();
-
-            var grid = $("#purchaseOrderGrid").data("kendoGrid");
-            if (!grid) return;
-
-            var filters = [];
-
-            // ১.
-            if (supplierId && supplierId !== "") {
-                filters.push({
-                    field: "SupplierId",
-                    operator: "eq",
-                    value: parseInt(supplierId)
-                });
-            }
-
-            // ২.
-            if (poCode && poCode.length >= 3) {
-                filters.push({
-                    field: "Code",
-                    operator: "contains",
-                    value: poCode
-                });
-            }
-
-            //
-            if (orderDate && orderDate !== "") {
-                filters.push({
-                    field: "OrderDate",
-                    operator: "eq",
-                    value: orderDate
-                });
-            }
-
-            //
-            if (filters.length > 0) {
-                grid.dataSource.filter({
-                    logic: "and",
-                    filters: filters
-                });
-            } else {
-                grid.dataSource.filter({});
-            }
+        // Return Code Filter 
+        if (returnCode && returnCode.length >= 3) {
+            filters.push({
+                field: "Code",
+                operator: "contains",
+                value: returnCode
+            });
         }
 
-        //
-        function ClearPurchaseOrder() {
-            $("#PurchaseOrderId").val("");
-            $("#PurchaseOrderCode").val("");
-
-            //
-            $("#SupplierId").val("");
-            $("#SupplierName").val("");
-            $("#OrderDate").val("");
-            $("#DeliveryDateTime").val("");
+        // Return Date Filter
+        if (invoiceDate && invoiceDate !== "") {
+            filters.push({
+                field: "InvoiceDateTime",
+                operator: "eq",
+                value: invoiceDate
+            });
         }
 
-        function ClearPurchase() {
-            $("#PurchaseId").val("");
-            $("#PurchaseCode").val("");
+        if (filters.length > 0) {
+            grid.dataSource.filter({
+                logic: "and",
+                filters: filters
+            });
+        } else {
+            grid.dataSource.filter({});
         }
+    }
+
+     //
+    function ClearPurchaseReturn() {
+
+        $("#PurchasesReturnId").val("");
+        $("#PurchaseReturnCode").val("");
+
+        $("#SupplierName").val("");
+        $("#InvoiceDateTime").val("");
+        $("#LineTotal").val("");
+    }
+
+    function ClearPurchase() {
+        $("#PurchaseId").val("");
+        $("#PurchaseCode").val("");
+    }
 
     function GetSupplierComboBox() {
 
@@ -1126,7 +1111,7 @@
 
 
     function PrintPurchaseReport() {
-        debugger;
+    debugger;
     var supplierCombo = $("#SupplierId").data("kendoMultiColumnComboBox");
 
     var supplierId = supplierCombo ? supplierCombo.value() : 0;
