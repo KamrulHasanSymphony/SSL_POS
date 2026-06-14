@@ -1,0 +1,204 @@
+﻿@model List<ShampanPOS.Models.BankTransactionReportVM>
+@{
+    ViewBag.Title = "Bank Collection Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var totalAmount = Model?.Sum(x => x.Amount) ?? 0;
+    var bd = new System.Globalization.CultureInfo("en-IN");
+}
+
+<style>
+    body {
+        font-family: Arial;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1200px;
+        margin: 20px auto;
+        border-radius: 6px;
+    }
+
+    .sslPrint {
+        background: #555;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        float: right;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+        table th, table td {
+            border: 1px solid #555;
+            padding: 6px;
+        }
+
+        table th {
+            background: #d0d0d0;
+            color: #000;
+            text-align: center;
+        }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .total-grand {
+        background-color: #333;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .report-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 13px;
+    }
+
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
+        }
+
+        .sslPrint {
+            display: none !important;
+        }
+
+        .report-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+            border: none;
+        }
+
+        @@page {
+            size: A4 landscape;
+            margin: 15mm 10mm;
+        }
+
+        table th, table td {
+            padding: 3px 4px;
+            font-size: 10px;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint">🖨️ Print</button>
+
+<div class="report-box">
+    <table style="border:none; margin-bottom:10px; width:100%;">
+        <tr>
+            <td style="width:140px; border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px; height:120px;" />
+            </td>
+            <td style="text-align:right; border:none;">
+                <h3 style="margin:0;">@ViewBag.CompanyName</h3>
+                <div>@ViewBag.BranchName</div>
+                <div>📞 01612264439</div>
+                <div>✉️ symphonysorftech1999@gmail.com</div>
+            </td>
+        </tr>
+    </table>
+    <hr />
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px;">
+        <div>
+            <strong>Bank:</strong> @ViewBag.BankName <br />
+            <strong>Account:</strong> @ViewBag.AccountName
+        </div>
+        <div style="text-align:right;">
+            <strong>From Date:</strong> @ViewBag.FromDate <br />
+            <strong>To Date:</strong> @ViewBag.ToDate
+        </div>
+    </div>
+
+    <h3 style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px; margin-top:0;">
+        BANK COLLECTION REPORT
+    </h3>
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>SL</th>
+                    <th>Payment Code</th>
+                    <th>Date</th>
+                    <th>Bank Name</th>
+                    <th>Account No</th>
+                    <th>Account Name</th>
+                    <th>Branch</th>
+                    <th>Customer / Party</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int serial = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@serial</td>
+                            <td>@item.TransactionCode</td>
+                            <td>@item.TransactionDate</td>
+                            <td>@item.BankName</td>
+                            <td>@item.AccountNo</td>
+                            <td>@item.AccountName</td>
+                            <td>@item.BankBranchName</td>
+                            <td>@item.PartyName</td>
+                            <td class="text-right">@item.Amount.ToString("N2", bd)</td>
+                        </tr>
+                        serial++;
+                    }
+            <tr class="total-grand">
+                <td colspan="8" class="text-right">Total Collection:</td>
+                <td class="text-right">@totalAmount.ToString("N2", bd)</td>
+            </tr>
+                }
+                else
+                {
+                    <tr><td colspan="9" class="text-center">No data found</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-footer" style="border-top:1px solid #ccc; padding-top:5px;">
+        <div>
+            <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") |
+            <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
+        </div>
+        <div><strong>Total Records:</strong> @(Model != null ? Model.Count : 0)</div>
+    </div>
+</div>

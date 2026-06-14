@@ -997,31 +997,6 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
 
-
-        [HttpGet]
-        public ActionResult GetBankIdList(string value)
-        {
-            try
-            {
-                List<BankInformationVM> lst = new List<BankInformationVM>();
-                CommonVM param = new CommonVM();
-                param.Value = value;
-                ResultVM result = _repo.GetBankIdList(param);
-
-                if (result.Status == "Success" && result.DataVM != null)
-                {
-                    lst = JsonConvert.DeserializeObject<List<BankInformationVM>>(result.DataVM.ToString());
-                }
-                return Json(lst, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-
         [HttpGet]
         public ActionResult GetSectionList(string value)
         {
@@ -1699,6 +1674,29 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             }
         }
         [HttpGet]
+        public ActionResult GetBankIdList(string value)
+        {
+            try
+            {
+                List<BankInformationVM> lst = new List<BankInformationVM>();
+                CommonVM param = new CommonVM();
+                param.Value = value;
+                ResultVM result = _repo.GetBankIdList(param);
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    lst = JsonConvert.DeserializeObject<List<BankInformationVM>>(result.DataVM.ToString());
+                }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
         public ActionResult GetBankAccountModal(string bankId)
         {
             try
@@ -1706,6 +1704,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 List<BankAccountDataVM> lst = new List<BankAccountDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = bankId;
+                param.Value2 = null;
                 ResultVM result = _repo.GetBankAccountModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                 {
@@ -1721,13 +1720,14 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetDepositModal(string bankAccountId)
+        public ActionResult GetDepositModal(string bankId, string bankAccountId)
         {
             try
             {
                 List<DepositDataVM> lst = new List<DepositDataVM>();
                 CommonVM param = new CommonVM();
-                param.Value = bankAccountId;
+                param.Value = bankId;
+                param.Value2 = bankAccountId;
                 ResultVM result = _repo.GetDepositModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                 {
@@ -1743,13 +1743,14 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetWithdrawalModal(string bankAccountId)
+        public ActionResult GetWithdrawalModal(string bankId, string bankAccountId)
         {
             try
             {
                 List<WithdrawalDataVM> lst = new List<WithdrawalDataVM>();
                 CommonVM param = new CommonVM();
-                param.Value = bankAccountId;
+                param.Value = bankId;
+                param.Value2 = bankAccountId;
                 ResultVM result = _repo.GetWithdrawalModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                 {
