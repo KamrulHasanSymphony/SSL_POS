@@ -3,7 +3,11 @@
     ViewBag.Title = "Bank Transaction Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    .k-autocomplete, .k-dropdown-wrap.k-state-default, .k-numeric-wrap.k-state-default, .k-picker-wrap.k-state-default {
+        width: initial;
+    }
+</style>
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -102,6 +106,9 @@
                         <option value="Deposit">Deposit</option>
                         <option value="Withdrawal">Withdrawal</option>
                         <option value="Statement">Statement</option>
+                        <option value="Payment">Payment</option>
+                        <option value="Collection">Collection</option>
+                        <option value="OutstandingBalance">Outstanding Balance</option>
                     </select>
                 </div>
 
@@ -247,6 +254,79 @@
                 }
             });
 
+            // TransactionType change handler
+            $("#TransactionType").change(function () {
+                ApplyTransactionTypeRestrictions($(this).val());
+            });
+
+            function ApplyTransactionTypeRestrictions(type) {
+
+                // সব আগে enable করো
+                // Summary toggle
+                $("#IsSummary").bootstrapSwitch("disabled", false);
+
+                // Deposit
+                $("#DepositCode").prop("disabled", false);
+                $("#btnDepositSearch").prop("disabled", false);
+                $("#btnClearDeposit").prop("disabled", false);
+
+                // Withdrawal
+                $("#WithdrawalCode").prop("disabled", false);
+                $("#btnWithdrawalSearch").prop("disabled", false);
+                $("#btnClearWithdrawal").prop("disabled", false);
+
+                // Bank Account
+                $("#AccountName").prop("disabled", false);
+                $("#btnAccountSearch").prop("disabled", false);
+                $("#btnClearAccount").prop("disabled", false);
+
+                // FromDate / ToDate checkbox + DatePicker enable
+                $("#chkFromDate").prop("disabled", false);
+                $("#chkToDate").prop("disabled", false);
+                $("#FromDate").data("kendoDatePicker").enable(true);
+                $("#ToDate").data("kendoDatePicker").enable(true);
+
+                if (type === "Payment" || type === "Collection" || type === "Statement") {
+                    // Summary disable
+                    $("#IsSummary").bootstrapSwitch("disabled", true);
+
+                    // Deposit disable
+                    $("#DepositCode").prop("disabled", true);
+                    $("#btnDepositSearch").prop("disabled", true);
+                    $("#btnClearDeposit").prop("disabled", true);
+
+                    // Withdrawal disable
+                    $("#WithdrawalCode").prop("disabled", true);
+                    $("#btnWithdrawalSearch").prop("disabled", true);
+                    $("#btnClearWithdrawal").prop("disabled", true);
+
+                } else if (type === "OutstandingBalance") {
+                    // Summary disable
+                    $("#IsSummary").bootstrapSwitch("disabled", true);
+
+                    // Deposit disable
+                    $("#DepositCode").prop("disabled", true);
+                    $("#btnDepositSearch").prop("disabled", true);
+                    $("#btnClearDeposit").prop("disabled", true);
+
+                    // Withdrawal disable
+                    $("#WithdrawalCode").prop("disabled", true);
+                    $("#btnWithdrawalSearch").prop("disabled", true);
+                    $("#btnClearWithdrawal").prop("disabled", true);
+
+                    // Bank Account disable
+                    $("#AccountName").prop("disabled", true);
+                    $("#btnAccountSearch").prop("disabled", true);
+                    $("#btnClearAccount").prop("disabled", true);
+
+                    // FromDate / ToDate checkbox + DatePicker disable
+                    $("#chkFromDate").prop("disabled", true);
+                    $("#chkToDate").prop("disabled", true);
+                    $("#FromDate").data("kendoDatePicker").enable(false);
+                    $("#ToDate").data("kendoDatePicker").enable(false);
+                }
+            }
+
         });
 
         // =====================
@@ -273,10 +353,12 @@
         // =====================
         // Bank Account Popup
         // =====================
-        //$("#AccountName").on("click", function () { OpenBankAccountPopup(); });
         $("#btnAccountSearch").on("click", function () { OpenBankAccountPopup(); });
 
         function OpenBankAccountPopup() {
+            var bankId = $("#BankId").data("kendoMultiColumnComboBox")
+                ? $("#BankId").data("kendoMultiColumnComboBox").value()
+                : $("#BankId").val();
 
             var wnd = $("#bankAccountWindow").data("kendoWindow");
 
@@ -297,7 +379,11 @@
             $("#bankAccountGrid").kendoGrid({
                 dataSource: {
                     transport: {
-                        read: { url: "/Common/Common/GetBankAccountModal", dataType: "json" }
+                        read: {
+                            url: "/Common/Common/GetBankAccountModal",
+                            dataType: "json",
+                            data: { bankId: bankId }
+                        }
                     }
                 },
                 height: 350,
@@ -346,55 +432,6 @@
             });
         }
 
-        ////function LoadPopupBankCombo() {
-        ////    var existing = $("#PopupBankId").data("kendoComboBox");
-        ////    if (existing) {
-        ////        existing.destroy();
-        ////    }
-
-        ////    $("#PopupBankId").kendoComboBox({
-        ////        dataTextField: "Name",
-        ////        dataValueField: "Id",
-        ////        placeholder: "Filter by Bank",
-        ////        filter: "contains",
-        ////        dataSource: {
-        ////            transport: {
-        ////                read: {
-        ////                    url: "/Common/Common/GetBankAccountModal",
-        ////                    dataType: "json"
-        ////                }
-        ////            },
-        ////            schema: {
-        ////                parse: function (response) {
-        ////                    var bankMap = {};
-        ////                    $.each(response, function (_, item) {
-        ////                        if (item.BankId && item.BankName && !bankMap[item.BankId]) {
-        ////                            bankMap[item.BankId] = { Id: item.BankId, Name: item.BankName };
-        ////                        }
-        ////                    });
-        ////                    return Object.values(bankMap); 
-        ////                }
-        ////            }
-        ////        },
-        ////        change: applyPopupBankFilter,
-        ////        select: applyPopupBankFilter
-        ////    });
-        ////}
-
-        //function LoadPopupBankCombo() {
-        //    $("#PopupBankId").kendoComboBox({
-        //        dataTextField: "Name",
-        //        dataValueField: "Id",
-        //        placeholder: "Filter by Bank",
-        //        filter: "contains",
-        //        dataSource: {
-        //            transport: { read: "/Common/Common/GetBankAccountModal" }
-        //        },
-        //        change: applyPopupBankFilter,
-        //        select: applyPopupBankFilter
-        //    });
-        //}
-
         function applyPopupBankFilter() {
             var combo  = $("#PopupBankId").data("kendoComboBox");
             var bankId = combo ? combo.value() : "";
@@ -418,10 +455,13 @@
         // =====================
         // DEPOSIT POPUP
         // =====================
-        /*$("#DepositCode").on("click", function () { OpenDepositPopup(); });*/
         $("#btnDepositSearch").on("click", function () { OpenDepositPopup(); });
 
         function OpenDepositPopup() {
+            var bankId = $("#BankId").data("kendoMultiColumnComboBox")
+                ? $("#BankId").data("kendoMultiColumnComboBox").value()
+                : $("#BankId").val();
+            var bankAccountId = $("#BankAccountId").val();
 
             var wnd = $("#depositWindow").data("kendoWindow");
 
@@ -442,7 +482,11 @@
             $("#depositGrid").kendoGrid({
                 dataSource: {
                     transport: {
-                        read: { url: "/Common/Common/GetDepositModal", dataType: "json" }
+                        read: {
+                            url: "/Common/Common/GetDepositModal",
+                            dataType: "json",
+                            data: { bankId: bankId, bankAccountId: bankAccountId }
+                        }
                     },
                     schema: {
                         model: {
@@ -512,11 +556,7 @@
         function ApplyDepositSelection(item) {
             $("#DepositId").val(item.Id);
             $("#DepositCode").val(item.Code);
-
-            // ✅ Auto-set TransactionType to Deposit
             $("#TransactionType").val("Deposit");
-
-            // ✅ Clear Withdrawal since they are mutually exclusive
             ClearWithdrawal();
         }
 
@@ -528,10 +568,13 @@
         // =====================
         // WITHDRAWAL POPUP
         // =====================
-     /*   $("#WithdrawalCode").on("click", function () { OpenWithdrawalPopup(); });*/
         $("#btnWithdrawalSearch").on("click", function () { OpenWithdrawalPopup(); });
 
         function OpenWithdrawalPopup() {
+            var bankId = $("#BankId").data("kendoMultiColumnComboBox")
+                ? $("#BankId").data("kendoMultiColumnComboBox").value()
+                : $("#BankId").val();
+            var bankAccountId = $("#BankAccountId").val();
 
             var wnd = $("#withdrawalWindow").data("kendoWindow");
 
@@ -552,7 +595,11 @@
             $("#withdrawalGrid").kendoGrid({
                 dataSource: {
                     transport: {
-                        read: { url: "/Common/Common/GetWithdrawalModal", dataType: "json" }
+                        read: {
+                            url: "/Common/Common/GetWithdrawalModal",
+                            dataType: "json",
+                            data: { bankId: bankId, bankAccountId: bankAccountId }
+                        }
                     },
                     schema: {
                         model: {
@@ -622,11 +669,7 @@
         function ApplyWithdrawalSelection(item) {
             $("#WithdrawalId").val(item.Id);
             $("#WithdrawalCode").val(item.Code);
-
-            // ✅ Auto-set TransactionType to Withdrawal
             $("#TransactionType").val("Withdrawal");
-
-            // ✅ Clear Deposit since they are mutually exclusive
             ClearDeposit();
         }
 

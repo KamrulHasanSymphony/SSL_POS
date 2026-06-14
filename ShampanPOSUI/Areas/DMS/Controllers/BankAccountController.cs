@@ -379,10 +379,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ViewBag.PrintedBy = Session["UserId"].ToString();
 
             string viewName = isSummary
-            ? "Reports/BankTransactionSummary"
-            : transactionType == "Statement"
-                ? "Reports/BankTransactionStatement"
-                : "Reports/BankTransactionDetails";
+                ? "Reports/BankTransactionSummary"
+                : transactionType == "Statement"
+                    ? "Reports/BankTransactionStatement"
+                    : transactionType == "OutstandingBalance"
+                        ? "Reports/BankTransactionOutstanding"
+                        : transactionType == "Payment"
+                            ? "Reports/BankTransactionPayment"
+                            : transactionType == "Collection"
+                                ? "Reports/BankTransactionCollection"
+                                : "Reports/BankTransactionDetails";
 
             return View(viewName, vmList);
         }

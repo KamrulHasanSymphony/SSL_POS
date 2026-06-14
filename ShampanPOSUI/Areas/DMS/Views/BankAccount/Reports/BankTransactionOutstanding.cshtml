@@ -1,0 +1,276 @@
+﻿@model List<ShampanPOS.Models.BankTransactionReportVM>
+@{
+    ViewBag.Title = "Bank Outstanding Balance Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var bd = new System.Globalization.CultureInfo("en-IN");
+    var totalBalance = Model?.Sum(x => x.RunningBalance) ?? 0;
+
+    var bankGroups = Model?
+        .GroupBy(x => new { x.BankId, x.BankName, x.BankCode })
+        .OrderBy(g => g.Key.BankName)
+        .ToList();
+}
+
+<style>
+    body {
+        font-family: Arial;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1100px;
+        margin: 20px auto;
+        border-radius: 6px;
+    }
+
+    .sslPrint {
+        background: #28a745;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        float: right;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+        table th, table td {
+            border: 1px solid #555;
+            padding: 7px;
+        }
+
+        table th {
+            background: #d0d0d0;
+            color: #000;
+            text-align: center;
+        }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .group-bank-header td {
+        background: #333;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .row-positive {
+        background-color: #f0fff0;
+    }
+
+    .row-negative {
+        background-color: #fff0f0;
+    }
+
+    .subtotal-row td {
+        background: #e8e8e8;
+        font-weight: bold;
+    }
+
+    .total-grand {
+        background-color: #212529;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .badge-positive {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .badge-negative {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .report-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 13px;
+    }
+
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
+        }
+
+        .sslPrint {
+            display: none !important;
+        }
+
+        .report-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+            border: none;
+        }
+
+        @@page {
+            size: A4 landscape;
+            margin: 15mm 10mm;
+        }
+
+        table th, table td {
+            padding: 4px 5px;
+            font-size: 10px;
+            border: 1px solid #000;
+        }
+
+        .group-bank-header td {
+            background: #333 !important;
+            color: #fff !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint">🖨️ Print</button>
+
+<div class="report-box">
+    <table style="border:none; margin-bottom:10px; width:100%;">
+        <tr>
+            <td style="width:140px; border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px; height:120px;" />
+            </td>
+            <td style="text-align:right; border:none;">
+                <h3 style="margin:0;">@ViewBag.CompanyName</h3>
+                <div>@ViewBag.BranchName</div>
+                <div>📞 01612264439</div>
+                <div>✉️ symphonysorftech1999@gmail.com</div>
+            </td>
+        </tr>
+    </table>
+    <hr />
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px; color:#555;">
+        <div>
+            <strong>Bank:</strong> @ViewBag.BankName &nbsp;|&nbsp;
+            <strong>Account:</strong> @ViewBag.AccountName
+        </div>
+        <div style="text-align:right;">
+            <strong>As of Date:</strong> @DateTime.Now.ToString("dd MMM yyyy")
+        </div>
+    </div>
+
+    <h3 style="text-align:center; border-bottom:2px solid #333;
+        padding-bottom:6px; margin-top:0; letter-spacing:1px;">
+        BANK OUTSTANDING BALANCE REPORT
+    </h3>
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:5%;">SL</th>
+                    <th style="width:12%;">Bank Code</th>
+                    <th style="width:22%;">Bank Name</th>
+                    <th style="width:15%;">Account No</th>
+                    <th style="width:22%;">Account Name</th>
+                    <th style="width:24%;" class="text-right">Outstanding Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (bankGroups != null && bankGroups.Any())
+                {
+                    int serial = 1;
+                    foreach (var bankGroup in bankGroups)
+                    {
+                        <tr class="group-bank-header">
+                            <td colspan="6">
+                                🏦 @bankGroup.Key.BankCode — @bankGroup.Key.BankName
+                            </td>
+                        </tr>
+
+                        decimal bankTotal = 0;
+
+                        foreach (var item in bankGroup)
+                        {
+                            decimal bal = item.RunningBalance ?? 0;
+                            bankTotal += bal;
+                            string rowClass = bal >= 0 ? "row-positive" : "row-negative";
+                            string balClass = bal >= 0 ? "badge-positive" : "badge-negative";
+
+                            <tr class="@rowClass">
+                                <td class="text-center">@serial</td>
+                                <td>@bankGroup.Key.BankCode</td>
+                                <td>@bankGroup.Key.BankName</td>
+                                <td>@item.AccountNo</td>
+                                <td>@item.AccountName</td>
+                                <td class="text-right @balClass">
+                                    @bal.ToString("N2", bd)
+                                </td>
+                            </tr>
+                            serial++;
+                        }
+
+                        <tr class="subtotal-row">
+                            <td colspan="5" class="text-right">
+                                Subtotal — @bankGroup.Key.BankName:
+                            </td>
+                            <td class="text-right @(bankTotal >= 0 ? "badge-positive" : "badge-negative")">
+                                @bankTotal.ToString("N2", bd)
+                            </td>
+                        </tr>
+                    }
+
+                    <tr class="total-grand">
+                        <td colspan="5" class="text-right">
+                            Total Outstanding Balance (All Banks):
+                        </td>
+                        <td class="text-right">
+                            @totalBalance.ToString("N2", bd)
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No data found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-footer" style="border-top:1px solid #ccc; padding-top:5px; color:#666;">
+        <div>
+            <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") |
+            <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
+        </div>
+        <div>
+            <strong>Total Accounts:</strong> @(Model != null ? Model.Count : 0)
+        </div>
+    </div>
+</div>

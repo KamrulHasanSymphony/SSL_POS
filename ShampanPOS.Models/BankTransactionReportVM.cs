@@ -63,6 +63,11 @@ namespace ShampanPOS.Models
         [DisplayName("Account Name")]
         public string? AccountName { get; set; }
 
+        [DisplayName("Customer / Party")]
+        public string? PartyName { get; set; }
+        [DisplayName("Bank Branch")]
+        public string? BankBranchName { get; set; }
+
         // Bank
         [DisplayName("Bank Name")]
         public string? BankName { get; set; }
