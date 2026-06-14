@@ -2809,6 +2809,8 @@
     <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionDetails.cshtml" />
     <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionStatement.cshtml" />
     <Content Include="Areas\DMS\Views\PurchaseReport\PurchaseReturnvsPurchaseReportIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseReport\Reports\PurchaseReturnvsPurchaseDetails.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseReport\Reports\PurchaseReturnvsPurchaseSummary.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

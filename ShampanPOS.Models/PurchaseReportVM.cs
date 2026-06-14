@@ -21,6 +21,8 @@ namespace ShampanPOS.Models
         public string? PurchaseCode { get; set; }
         public string? PurchaseNo { get; set; }
         public string? PurchaseOrderNo { get; set; }
+        public string? PurchaseReturnNo { get; set; }
+        public string? PurchaseReturnId { get; set; }
 
         public string? UserId { get; set; }
 

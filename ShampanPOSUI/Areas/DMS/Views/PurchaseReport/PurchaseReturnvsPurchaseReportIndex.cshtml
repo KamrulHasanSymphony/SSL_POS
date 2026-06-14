@@ -177,7 +177,7 @@
                                    placeholder="Select Purchase Return"
                                    readonly />
 
-                            <input type="hidden" id="PurchasesReturnId" />
+                            <input type="hidden" id="purchasesReturnId" />
 
                             <div class="input-group-append">
 
@@ -970,20 +970,33 @@
              });
 
             // Select Purchase Return
+         $("#purchaseReturnGrid")
+             .off("dblclick")
+             .on("dblclick", "tr", function () {
+                 var grid = $("#purchaseReturnGrid").data("kendoGrid");
+                 var item = grid.dataItem($(this));
 
-            $("#purchaseReturnGrid")
-                .off("dblclick")
-                .on("dblclick", "tr", function () {
+                 if (item) {
+                     // Apply the selected data into your hidden field and search box
+                     $("#purchasesReturnId").val(item.Id || item.PurchaseReturnId);
+                     $("#PurchaseReturnCode").val(item.Code);
+                 }
 
-                    var grid = $("#purchaseReturnGrid").data("kendoGrid");
-                    var item = grid.dataItem($(this));
+                 wnd.close();
+             });
+            //$("#purchaseReturnGrid")
+            //    .off("dblclick")
+            //    .on("dblclick", "tr", function () {
 
-                    if (!item) return;
+            //        var grid = $("#purchaseReturnGrid").data("kendoGrid");
+            //        var item = grid.dataItem($(this));
 
-                    ApplyPurchaseReturnSelection(item);
+            //        if (!item) return;
 
-                    wnd.close();
-                });
+            //        ApplyPurchaseReturnSelection(item);
+
+            //        wnd.close();
+            //    });
         }
 
      function ApplyPurchaseReturnSelection(item) {
@@ -1121,7 +1134,7 @@
     var productName = $("#ProductName").val() || "";
 
     var purchaseId = $("#PurchaseId").val() || 0;
-        var PurchasesReturnId = $("#PurchasesReturnId").val() || 0;
+        var purchasesReturnId = $("#purchasesReturnId").val() || 0;
 
     var isSummary = $("#IsSummary").is(":checked");
 
@@ -1163,7 +1176,7 @@
     // URL
         // =========================================
 
-var url = '@Url.Action("PurchaseReturnvsPurchaseReportList", "Purchase", new { area = "DMS" })'
+var url = '@Url.Action("PurchaseReturnvsPurchaseReportList", "PurchaseReport", new { area = "DMS" })'
     + '?supplierId=' + supplierId
     + '&supplierName=' + encodeURIComponent(supplierName)
 
