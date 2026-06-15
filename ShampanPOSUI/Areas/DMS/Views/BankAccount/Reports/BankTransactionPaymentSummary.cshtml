@@ -1,9 +1,10 @@
 ﻿@model List<ShampanPOS.Models.BankTransactionReportVM>
 @{
-    ViewBag.Title = "Bank Collection Details Report";
+    ViewBag.Title = "Bank Payment Summary";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var totalAmount = Model?.Sum(x => x.Amount) ?? 0;
+    var totalCount = Model?.Sum(x => x.TransactionCount) ?? 0;
     var bd = new System.Globalization.CultureInfo("en-IN");
 }
 
@@ -17,7 +18,7 @@
         background: white;
         padding: 20px;
         border: 1px solid #ccc;
-        max-width: 1200px;
+        max-width: 1100px;
         margin: 20px auto;
         border-radius: 6px;
     }
@@ -134,8 +135,9 @@
 
     <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px;">
         <div>
-            <strong>Bank:</strong> @ViewBag.BankName <br />
-            <strong>Account:</strong> @ViewBag.AccountName
+            <strong>Bank:</strong> @ViewBag.BankName &nbsp;|&nbsp;
+            <strong>Account:</strong> @ViewBag.AccountName &nbsp;|&nbsp;
+            <strong>Supplier:</strong> @ViewBag.SupplierName
         </div>
         <div style="text-align:right;">
             <strong>From Date:</strong> @ViewBag.FromDate <br />
@@ -144,7 +146,7 @@
     </div>
 
     <h3 style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px; margin-top:0;">
-        BANK COLLECTION DETAILS REPORT
+        BANK PAYMENT SUMMARY REPORT
     </h3>
 
     <div style="overflow-x:auto;">
@@ -152,14 +154,11 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>Payment Code</th>
-                    <th>Date</th>
-                    <th>Bank Name</th>
-                    <th>Account No</th>
-                    <th>Account Name</th>
-                    <th>Branch</th>
-                    <th>Customer / Party</th>
-                    <th>Amount</th>
+                    <th>Supplier Code</th>
+                    <th>Supplier Name</th>
+                    <th>Payment Count</th>
+                    <th>Last Payment Date</th>
+                    <th>Total Paid</th>
                 </tr>
             </thead>
             <tbody>
@@ -170,25 +169,24 @@
                     {
                         <tr>
                             <td class="text-center">@serial</td>
-                            <td>@item.TransactionCode</td>
-                            <td>@item.TransactionDate</td>
-                            <td>@item.BankName</td>
-                            <td>@item.AccountNo</td>
-                            <td>@item.AccountName</td>
-                            <td>@item.BankBranchName</td>
+                            <td>@item.SupplierCode</td>
                             <td>@item.PartyName</td>
+                            <td class="text-center">@item.TransactionCount</td>
+                            <td class="text-center">@item.LastTransactionDate</td>
                             <td class="text-right">@item.Amount.ToString("N2", bd)</td>
                         </tr>
                         serial++;
                     }
-            <tr class="total-grand">
-                <td colspan="8" class="text-right">Total Collection:</td>
-                <td class="text-right">@totalAmount.ToString("N2", bd)</td>
-            </tr>
+                    <tr class="total-grand">
+                        <td colspan="3" class="text-right">Grand Total:</td>
+                        <td class="text-center">@totalCount</td>
+                        <td></td>
+                        <td class="text-right">@totalAmount.ToString("N2", bd)</td>
+                    </tr>
                 }
                 else
                 {
-                    <tr><td colspan="9" class="text-center">No data found</td></tr>
+                    <tr><td colspan="6" class="text-center">No data found</td></tr>
                 }
             </tbody>
         </table>
@@ -199,6 +197,6 @@
             <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") |
             <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
         </div>
-        <div><strong>Total Records:</strong> @(Model != null ? Model.Count : 0)</div>
+        <div><strong>Total Suppliers:</strong> @(Model != null ? Model.Count : 0)</div>
     </div>
 </div>

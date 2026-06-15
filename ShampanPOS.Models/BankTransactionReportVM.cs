@@ -101,6 +101,16 @@ namespace ShampanPOS.Models
 
         [DisplayName("Withdrawal")]
         public int? WithdrawalId { get; set; }
+        [DisplayName("Customer")]
+        public int? CustomerId { get; set; }
+        [DisplayName("Supplier")]
+        public int? SupplierId { get; set; }
+        [DisplayName("Transaction Count")]
+        public int? TransactionCount { get; set; }
+        [DisplayName("Last Transaction Date")]  
+        public string? LastTransactionDate { get; set; }
+        [DisplayName("Supplier Code")]
+        public string? SupplierCode { get; set; }
         [DisplayName("Withdrawal Code")]
         public string? WithdrawalCode { get; set; }
     }
