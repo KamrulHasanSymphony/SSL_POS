@@ -615,6 +615,7 @@
 
                                 // Refresh the grid to update footer aggregates
                                 grid.refresh();
+                                updateSaleSummary();
                             }
                         });
                     }
@@ -695,6 +696,8 @@
                                 options.model.set("LineTotal", lineTotal);
 
                                 grid.refresh();
+
+                                updateSaleSummary();
                             }
                         });
                     }
@@ -755,6 +758,8 @@
                                 options.model.set("LineTotal", lineTotal);
 
                                 grid.refresh();
+
+                                updateSaleSummary();
                             }
                         });
                     }
