@@ -438,11 +438,14 @@
                         var exists = grid.dataSource.data().some(function (g) {
                             return g.ProductId === item.ProductId;
                         });
-
+                        debugger;
                         if (!exists) {
 
                             grid.dataSource.add({
                                 Id: item.Id,
+                                PurchaseOrderId: purchaseOrderId,
+
+                                PurchaseOrderDetailId: item.Id,
                                 ProductId: item.ProductId,
                                 ProductName: item.ProductName,
 
@@ -485,6 +488,15 @@
                         Id: { type: "number", defaultValue: 0 },
                         ProductId: { type: "number", defaultValue: null },
                         ProductName: { type: "string", defaultValue: "" },
+                        PurchaseOrderId: {
+                            type: "number",
+                            defaultValue: 0
+                        },
+
+                        PurchaseOrderDetailId: {
+                            type: "number",
+                            defaultValue: 0
+                        },
                         Quantity: { type: "number", defaultValue: 0 },
                         UnitPrice: { type: "number", defaultValue: 0 },
                         SubTotal: { type: "number", defaultValue: 0 },
@@ -1994,6 +2006,9 @@
                 details.push({
 
                     Id: item.Id,
+                    PurchaseOrderId: item.PurchaseOrderId,
+
+                    PurchaseOrderDetailId: item.Id,
 
                     ProductId: item.ProductId,
                     ProductName: item.ProductName,
