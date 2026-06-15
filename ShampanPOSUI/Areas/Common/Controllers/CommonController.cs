@@ -1766,6 +1766,47 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
         [HttpGet]
+        public ActionResult GetCustomerModal(string groupId)
+        {
+            try
+            {
+                List<CustomerVM> lst = new List<CustomerVM>();
+                CommonVM param = new CommonVM();
+                param.Value = groupId;
+                ResultVM result = _repo.GetCustomerModal(param);
+                if (result.Status == "Success" && result.DataVM != null)
+                    lst = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetSupplierModal(string groupId)
+        {
+            try
+            {
+                List<SupplierVM> lst = new List<SupplierVM>();
+                CommonVM param = new CommonVM();
+                param.Value = groupId;
+                ResultVM result = _repo.GetSupplierModal(param);
+                if (result.Status == "Success" && result.DataVM != null)
+                    lst = JsonConvert.DeserializeObject<List<SupplierVM>>(result.DataVM.ToString());
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpGet]
         public ActionResult GetPurchaseReturnModal(string supplierId)
         {
             try

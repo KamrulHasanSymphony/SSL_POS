@@ -102,6 +102,7 @@
     <Compile Include="CustomerCategoryVM.cs" />
     <Compile Include="CustomerData.cs" />
     <Compile Include="CustomerDataVM.cs" />
+    <Compile Include="CustomerSaleCollectionReportVM.cs" />
     <Compile Include="DepositVM.cs" />
     <Compile Include="MasterItemGroupVM.cs" />
     <Compile Include="MasterItemProductVM.cs" />

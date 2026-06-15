@@ -456,5 +456,24 @@ namespace ShampanPOS.Repo
             }
         }
 
+        public ResultVM GetCustomerSaleCollectionReportList(CustomerSaleCollectionReportVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                var data = httpRequestHelper.PostData(
+                    "api/Report/GetCustomerSaleCollectionReportList",
+                    authModel,
+                    JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }
