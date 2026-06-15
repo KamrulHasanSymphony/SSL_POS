@@ -13,12 +13,16 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Code (Auto Generate)")]
         public string? Code { get; set; }
+        public string? Name { get; set; }
 
         public string? MonthYear { get; set; }
         public int? PurchaseId { get; set; }
 
         public string? PurchaseCode { get; set; }
         public string? PurchaseNo { get; set; }
+        public string? PurchaseOrderNo { get; set; }
+        public string? PurchaseReturnNo { get; set; }
+        public string? PurchaseReturnId { get; set; }
 
         public string? UserId { get; set; }
 
@@ -54,6 +58,7 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Purchase Order")]
         public int? PurchaseOrderId { get; set; }
+        public int? PurchasesReturnId { get; set; }
 
         public decimal SubTotal { get; set; }
         public decimal TotalSD { get; set; }

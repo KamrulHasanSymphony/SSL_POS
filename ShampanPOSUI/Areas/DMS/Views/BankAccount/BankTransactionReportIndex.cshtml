@@ -1,0 +1,727 @@
+﻿@model ShampanPOS.Models.BankTransactionReportVM
+@{
+    ViewBag.Title = "Bank Transaction Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .k-autocomplete, .k-dropdown-wrap.k-state-default, .k-numeric-wrap.k-state-default, .k-picker-wrap.k-state-default {
+        width: initial;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Bank Transaction Report</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack">
+                        <img src="~/Content/css/ButtonsIcons/back-icon.png" title="Click for Go Back" />
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body p-2">
+
+            <div class="form-group row">
+
+                <!-- Bank -->
+                @*<div class="col-sm-2">
+            <label>Bank</label>
+            <input type="text" id="BankName" class="form-control form-control-sm" placeholder="Select Bank" />
+            <input type="hidden" id="BankId" />
+        </div>*@
+
+
+                <div class="col-sm-2">
+                    @Html.LabelFor(model => model.BankId)
+                    <div class="input-group ">
+                        @Html.TextBoxFor(model => model.BankId,
+                            new { @class = "required form-control form-control-sm", @style = "width: 100%;" })
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>From Date</label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="FromDate" class="form-control form-control-sm kendoDatePicker" />
+                        <input type="checkbox" id="chkFromDate" style="margin-left:6px;" />
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>To Date</label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="ToDate" class="form-control form-control-sm kendoDatePicker" />
+                        <input type="checkbox" id="chkToDate" style="margin-left:6px;" />
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>Bank Account</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="AccountName" class="form-control" placeholder="Select Account" />
+                        <input type="hidden" id="BankAccountId" />
+                        <div class="input-group-append">
+                            <button type="button" id="btnClearAccount" class="btn btn-warning" onclick="ClearAccount()">✖</button>
+                            <button type="button" id="btnAccountSearch" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>Deposit</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="DepositCode" class="form-control" placeholder="Select Deposit" />
+                        <input type="hidden" id="DepositId" />
+                        <div class="input-group-append">
+                            <button type="button" id="btnClearDeposit" class="btn btn-warning" onclick="ClearDeposit()">✖</button>
+                            <button type="button" id="btnDepositSearch" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>Withdrawal</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="WithdrawalCode" class="form-control" placeholder="Select Withdrawal" />
+                        <input type="hidden" id="WithdrawalId" />
+                        <div class="input-group-append">
+                            <button type="button" id="btnClearWithdrawal" class="btn btn-warning" onclick="ClearWithdrawal()">✖</button>
+                            <button type="button" id="btnWithdrawalSearch" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>Source</label>
+                    <select id="TransactionType" class="form-control form-control-sm">
+                        <option value="">All</option>
+                        <option value="Deposit">Deposit</option>
+                        <option value="Withdrawal">Withdrawal</option>
+                        <option value="Statement">Statement</option>
+                        <option value="Payment">Payment</option>
+                        <option value="Collection">Collection</option>
+                        <option value="OutstandingBalance">Outstanding Balance</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-2 d-flex flex-column">
+                    <label>Summary</label>
+                    <div class="Onoffbtn">
+                        <div class="input-group" style="width:78%;">
+                            <input type="hidden" name="IsSummary" value="false" />
+                            <input id="IsSummary"
+                                   name="IsSummary"
+                                   type="checkbox"
+                                   value="true"
+                                   @(Model.IsSummary ? "checked=\"checked\"" : "")
+                                   data-bootstrap-switch
+                                   data-off-color="danger"
+                                   data-on-color="success"
+                                   data-on-text="True"
+                                   data-off-text="False" />
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2 pt-2">
+                    <button type="button" class="btn btn-success btn-sm" onclick="PrintBankTransactionReport()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="bankAccountWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;">
+        <input id="PopupBankId" style="width:100%;" />
+    </div>
+    <div id="bankAccountGrid"></div>
+</div>
+
+<div id="depositWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;">
+        <input id="DepositBankAccountId" style="width:100%;" />
+    </div>
+    <div id="depositGrid"></div>
+</div>
+
+<div id="withdrawalWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;">
+        <input id="WithdrawalBankAccountId" style="width:100%;" />
+    </div>
+    <div id="withdrawalGrid"></div>
+</div>
+
+@section scripts {
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("[data-bootstrap-switch]").bootstrapSwitch();
+
+            GetBankComboBox();
+
+            // Date Pickers
+            $("#FromDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+            $("#ToDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+
+            var currentDate = new Date();
+            $("#FromDate").data("kendoDatePicker").value(currentDate);
+            $("#ToDate").data("kendoDatePicker").value(currentDate);
+
+            // Date Validation
+            var fromPicker = $("#FromDate").data("kendoDatePicker");
+            var toPicker   = $("#ToDate").data("kendoDatePicker");
+
+            fromPicker.bind("change", function () {
+                var from = fromPicker.value();
+                var to   = toPicker.value();
+                if (from) toPicker.min(from);
+                if (from && to && from > to) {
+                    toPicker.value(from);
+                    ShowNotification(3, "From Date cannot be greater than To Date");
+                }
+            });
+
+            toPicker.bind("change", function () {
+                var from = fromPicker.value();
+                var to   = toPicker.value();
+                if (to) fromPicker.max(to);
+                if (from && to && from > to) {
+                    fromPicker.value(to);
+                    ShowNotification(3, "From Date cannot be greater than To Date");
+                }
+            });
+
+            // Checkbox toggles
+            $("#chkFromDate").change(function () {
+                var isChecked = this.checked;
+                $("#FromDate").prop("disabled", !isChecked);
+
+                if (isChecked) {
+                    var fromPicker = $("#FromDate").data("kendoDatePicker");
+                    var toPicker = $("#ToDate").data("kendoDatePicker");
+                    var from = fromPicker.value();
+                    var to = toPicker.value();
+
+                    if ($("#chkToDate").is(":checked") && from && to && from > to) {
+                        ShowNotification(3, "From Date cannot be greater than To Date");
+                        fromPicker.value(to);
+                    }
+                    if (to) toPicker.min(from);
+                } else {
+                    $("#ToDate").data("kendoDatePicker").min(new Date(1900, 0, 1));
+                }
+            });
+
+            $("#chkToDate").change(function () {
+                var isChecked = this.checked;
+                $("#ToDate").prop("disabled", !isChecked);
+
+                if (isChecked) {
+                    var fromPicker = $("#FromDate").data("kendoDatePicker");
+                    var toPicker = $("#ToDate").data("kendoDatePicker");
+                    var from = fromPicker.value();
+                    var to = toPicker.value();
+
+                    if ($("#chkFromDate").is(":checked") && from && to && to < from) {
+                        ShowNotification(3, "To Date cannot be less than From Date");
+                        toPicker.value(from);
+                    }
+                    if (from) fromPicker.max(to);
+                } else {
+                    $("#FromDate").data("kendoDatePicker").max(new Date(2099, 11, 31));
+                }
+            });
+
+            // TransactionType change handler
+            $("#TransactionType").change(function () {
+                ApplyTransactionTypeRestrictions($(this).val());
+            });
+
+            function ApplyTransactionTypeRestrictions(type) {
+
+                // সব আগে enable করো
+                // Summary toggle
+                $("#IsSummary").bootstrapSwitch("disabled", false);
+
+                // Deposit
+                $("#DepositCode").prop("disabled", false);
+                $("#btnDepositSearch").prop("disabled", false);
+                $("#btnClearDeposit").prop("disabled", false);
+
+                // Withdrawal
+                $("#WithdrawalCode").prop("disabled", false);
+                $("#btnWithdrawalSearch").prop("disabled", false);
+                $("#btnClearWithdrawal").prop("disabled", false);
+
+                // Bank Account
+                $("#AccountName").prop("disabled", false);
+                $("#btnAccountSearch").prop("disabled", false);
+                $("#btnClearAccount").prop("disabled", false);
+
+                // FromDate / ToDate checkbox + DatePicker enable
+                $("#chkFromDate").prop("disabled", false);
+                $("#chkToDate").prop("disabled", false);
+                $("#FromDate").data("kendoDatePicker").enable(true);
+                $("#ToDate").data("kendoDatePicker").enable(true);
+
+                if (type === "Payment" || type === "Collection" || type === "Statement") {
+                    // Summary disable
+                    $("#IsSummary").bootstrapSwitch("disabled", true);
+
+                    // Deposit disable
+                    $("#DepositCode").prop("disabled", true);
+                    $("#btnDepositSearch").prop("disabled", true);
+                    $("#btnClearDeposit").prop("disabled", true);
+
+                    // Withdrawal disable
+                    $("#WithdrawalCode").prop("disabled", true);
+                    $("#btnWithdrawalSearch").prop("disabled", true);
+                    $("#btnClearWithdrawal").prop("disabled", true);
+
+                } else if (type === "OutstandingBalance") {
+                    // Summary disable
+                    $("#IsSummary").bootstrapSwitch("disabled", true);
+
+                    // Deposit disable
+                    $("#DepositCode").prop("disabled", true);
+                    $("#btnDepositSearch").prop("disabled", true);
+                    $("#btnClearDeposit").prop("disabled", true);
+
+                    // Withdrawal disable
+                    $("#WithdrawalCode").prop("disabled", true);
+                    $("#btnWithdrawalSearch").prop("disabled", true);
+                    $("#btnClearWithdrawal").prop("disabled", true);
+
+                    // Bank Account disable
+                    $("#AccountName").prop("disabled", true);
+                    $("#btnAccountSearch").prop("disabled", true);
+                    $("#btnClearAccount").prop("disabled", true);
+
+                    // FromDate / ToDate checkbox + DatePicker disable
+                    $("#chkFromDate").prop("disabled", true);
+                    $("#chkToDate").prop("disabled", true);
+                    $("#FromDate").data("kendoDatePicker").enable(false);
+                    $("#ToDate").data("kendoDatePicker").enable(false);
+                }
+            }
+
+        });
+
+        // =====================
+        // Bank ComboBox
+        // =====================
+        function GetBankComboBox() {
+            $("#BankId").kendoMultiColumnComboBox({
+                dataTextField: "Name",
+                dataValueField: "Id",
+                height: 400,
+                columns: [
+                    { field: "Code", title: "Code", width: 100 },
+                    { field: "Name", title: "Name", width: 150 }
+                ],
+                filter: "contains",
+                filterFields: ["Code", "Name"],
+                dataSource: {
+                    transport: { read: "/Common/Common/GetBankIdList" }
+                },
+                placeholder: "Select Bank"
+            });
+        }
+
+        // =====================
+        // Bank Account Popup
+        // =====================
+        $("#btnAccountSearch").on("click", function () { OpenBankAccountPopup(); });
+
+        function OpenBankAccountPopup() {
+            var bankId = $("#BankId").data("kendoMultiColumnComboBox")
+                ? $("#BankId").data("kendoMultiColumnComboBox").value()
+                : $("#BankId").val();
+
+            var wnd = $("#bankAccountWindow").data("kendoWindow");
+
+            if (!wnd) {
+                $("#bankAccountWindow").kendoWindow({
+                    width: "700px",
+                    height: "450px",
+                    title: "Select Bank Account",
+                    modal: true,
+                    visible: false
+                });
+                wnd = $("#bankAccountWindow").data("kendoWindow");
+            }
+
+            wnd.center().open();
+            LoadPopupBankCombo();
+
+            $("#bankAccountGrid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "/Common/Common/GetBankAccountModal",
+                            dataType: "json",
+                            data: { bankId: bankId }
+                        }
+                    }
+                },
+                height: 350,
+                sortable: true,
+                filterable: true,
+                pageable: true,
+                selectable: "row",
+                columns: [
+                    { field: "AccountNo",   title: "Account No",   width: "150px" },
+                    { field: "AccountName", title: "Account Name", width: "180px" },
+                    { field: "BankName",    title: "Bank",         width: "150px" }
+                ]
+            });
+
+            $("#bankAccountGrid").off("dblclick").on("dblclick", "tr", function () {
+                var grid = $("#bankAccountGrid").data("kendoGrid");
+                var item = grid.dataItem($(this));
+                ApplyBankAccountSelection(item);
+                wnd.close();
+            });
+        }
+
+        function LoadPopupBankCombo() {
+            $.getJSON("/Common/Common/GetBankAccountModal", function (data) {
+
+                var bankMap = {};
+                $.each(data, function (_, item) {
+                    if (item.BankId && item.BankName && !bankMap[item.BankId]) {
+                        bankMap[item.BankId] = { Id: item.BankId, Name: item.BankName };
+                    }
+                });
+                var bankList = Object.values(bankMap);
+
+                var existing = $("#PopupBankId").data("kendoComboBox");
+                if (existing) existing.destroy();
+
+                $("#PopupBankId").kendoComboBox({
+                    dataTextField: "Name",
+                    dataValueField: "Id",
+                    placeholder: "Filter by Bank",
+                    filter: "contains",
+                    dataSource: bankList,
+                    change: applyPopupBankFilter,
+                    select: applyPopupBankFilter
+                });
+            });
+        }
+
+        function applyPopupBankFilter() {
+            var combo  = $("#PopupBankId").data("kendoComboBox");
+            var bankId = combo ? combo.value() : "";
+            var grid   = $("#bankAccountGrid").data("kendoGrid");
+            if (!grid) return;
+            if (!bankId) { grid.dataSource.filter([]); return; }
+            grid.dataSource.filter({ field: "BankId", operator: "eq", value: parseInt(bankId) });
+        }
+
+        function ApplyBankAccountSelection(item) {
+            $("#BankAccountId").val(item.Id);
+            $("#AccountName").val(item.AccountName);
+        }
+
+        function ClearAccount() {
+            $("#BankAccountId").val("");
+            $("#AccountName").val("");
+        }
+
+
+        // =====================
+        // DEPOSIT POPUP
+        // =====================
+        $("#btnDepositSearch").on("click", function () { OpenDepositPopup(); });
+
+        function OpenDepositPopup() {
+            var bankId = $("#BankId").data("kendoMultiColumnComboBox")
+                ? $("#BankId").data("kendoMultiColumnComboBox").value()
+                : $("#BankId").val();
+            var bankAccountId = $("#BankAccountId").val();
+
+            var wnd = $("#depositWindow").data("kendoWindow");
+
+            if (!wnd) {
+                $("#depositWindow").kendoWindow({
+                    width: "900px",
+                    height: "500px",
+                    title: "Select Deposit",
+                    modal: true,
+                    visible: false
+                });
+                wnd = $("#depositWindow").data("kendoWindow");
+            }
+
+            wnd.center().open();
+            LoadDepositBankAccountCombo();
+
+            $("#depositGrid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "/Common/Common/GetDepositModal",
+                            dataType: "json",
+                            data: { bankId: bankId, bankAccountId: bankAccountId }
+                        }
+                    },
+                    schema: {
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Id: { type: "number" },
+                                Code: { type: "string" },
+                                TransactionDate: { type: "date" },
+                                TotalDepositAmount: { type: "number" },
+                                AccountNo: { type: "string" },
+                                AccountName: { type: "string" },
+                                BankName: { type: "string" },
+                                Reference: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                height: 380,
+                sortable: true,
+                filterable: true,
+                pageable: true,
+                selectable: "row",
+                columns: [
+                    { field: "Code", title: "Deposit Code", width: "150px" },
+                    { field: "TransactionDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "AccountNo", title: "Account No", width: "130px" },
+                    { field: "AccountName", title: "Account Name", width: "160px" },
+                    { field: "BankName", title: "Bank", width: "140px" },
+                    { field: "TotalDepositAmount", title: "Amount", width: "120px" },
+                    { field: "Reference", title: "Reference", width: "130px" }
+                ]
+            });
+
+            $("#depositGrid").off("dblclick").on("dblclick", "tr", function () {
+                var grid = $("#depositGrid").data("kendoGrid");
+                var item = grid.dataItem($(this));
+                ApplyDepositSelection(item);
+                wnd.close();
+            });
+        }
+
+        function LoadDepositBankAccountCombo() {
+            $("#DepositBankAccountId").kendoComboBox({
+                dataTextField: "AccountName",
+                dataValueField: "Id",
+                placeholder: "Filter by Account",
+                filter: "contains",
+                dataSource: {
+                    transport: { read: "/Common/Common/GetDepositModal" }
+                },
+                change: applyDepositAccountFilter,
+                select: applyDepositAccountFilter
+            });
+        }
+
+        function applyDepositAccountFilter() {
+            var combo = $("#DepositBankAccountId").data("kendoComboBox");
+            var accountId = combo ? combo.value() : "";
+            var grid = $("#depositGrid").data("kendoGrid");
+            if (!grid) return;
+            if (!accountId) { grid.dataSource.filter([]); return; }
+            grid.dataSource.filter({
+                field: "ToBankAccountId", operator: "eq", value: parseInt(accountId)
+            });
+        }
+
+        function ApplyDepositSelection(item) {
+            $("#DepositId").val(item.Id);
+            $("#DepositCode").val(item.Code);
+            $("#TransactionType").val("Deposit");
+            ClearWithdrawal();
+        }
+
+        function ClearDeposit() {
+            $("#DepositId").val("");
+            $("#DepositCode").val("");
+        }
+
+        // =====================
+        // WITHDRAWAL POPUP
+        // =====================
+        $("#btnWithdrawalSearch").on("click", function () { OpenWithdrawalPopup(); });
+
+        function OpenWithdrawalPopup() {
+            var bankId = $("#BankId").data("kendoMultiColumnComboBox")
+                ? $("#BankId").data("kendoMultiColumnComboBox").value()
+                : $("#BankId").val();
+            var bankAccountId = $("#BankAccountId").val();
+
+            var wnd = $("#withdrawalWindow").data("kendoWindow");
+
+            if (!wnd) {
+                $("#withdrawalWindow").kendoWindow({
+                    width: "900px",
+                    height: "500px",
+                    title: "Select Withdrawal",
+                    modal: true,
+                    visible: false
+                });
+                wnd = $("#withdrawalWindow").data("kendoWindow");
+            }
+
+            wnd.center().open();
+            LoadWithdrawalBankAccountCombo();
+
+            $("#withdrawalGrid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "/Common/Common/GetWithdrawalModal",
+                            dataType: "json",
+                            data: { bankId: bankId, bankAccountId: bankAccountId }
+                        }
+                    },
+                    schema: {
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Id: { type: "number" },
+                                Code: { type: "string" },
+                                TransactionDate: { type: "date" },
+                                TotalDepositAmount: { type: "number" },
+                                AccountNo: { type: "string" },
+                                AccountName: { type: "string" },
+                                BankName: { type: "string" },
+                                Reference: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                height: 380,
+                sortable: true,
+                filterable: true,
+                pageable: true,
+                selectable: "row",
+                columns: [
+                    { field: "Code", title: "Withdrawal Code", width: "150px" },
+                    { field: "TransactionDate", title: "Date", format: "{0:yyyy-MM-dd}", width: "120px" },
+                    { field: "AccountNo", title: "Account No", width: "130px" },
+                    { field: "AccountName", title: "Account Name", width: "160px" },
+                    { field: "BankName", title: "Bank", width: "140px" },
+                    { field: "TotalDepositAmount", title: "Amount", width: "120px" },
+                    { field: "Reference", title: "Reference", width: "130px" }
+                ]
+            });
+
+            $("#withdrawalGrid").off("dblclick").on("dblclick", "tr", function () {
+                var grid = $("#withdrawalGrid").data("kendoGrid");
+                var item = grid.dataItem($(this));
+                ApplyWithdrawalSelection(item);
+                wnd.close();
+            });
+        }
+
+        function LoadWithdrawalBankAccountCombo() {
+            $("#WithdrawalBankAccountId").kendoComboBox({
+                dataTextField: "AccountName",
+                dataValueField: "Id",
+                placeholder: "Filter by Account",
+                filter: "contains",
+                dataSource: {
+                    transport: { read: "/Common/Common/GetWithdrawalModal" }
+                },
+                change: applyWithdrawalAccountFilter,
+                select: applyWithdrawalAccountFilter
+            });
+        }
+
+        function applyWithdrawalAccountFilter() {
+            var combo = $("#WithdrawalBankAccountId").data("kendoComboBox");
+            var accountId = combo ? combo.value() : "";
+            var grid = $("#withdrawalGrid").data("kendoGrid");
+            if (!grid) return;
+            if (!accountId) { grid.dataSource.filter([]); return; }
+            grid.dataSource.filter({
+                field: "FromBankAccountId", operator: "eq", value: parseInt(accountId)
+            });
+        }
+
+        function ApplyWithdrawalSelection(item) {
+            $("#WithdrawalId").val(item.Id);
+            $("#WithdrawalCode").val(item.Code);
+            $("#TransactionType").val("Withdrawal");
+            ClearDeposit();
+        }
+
+        function ClearWithdrawal() {
+            $("#WithdrawalId").val("");
+            $("#WithdrawalCode").val("");
+        }
+
+
+        // =====================
+        // Print / Open Report
+        // =====================
+        function PrintBankTransactionReport() {
+
+    var bankCombo = $("#BankId").data("kendoMultiColumnComboBox");
+    var bankId    = bankCombo ? bankCombo.value() : 0;
+    var bankName  = bankCombo ? bankCombo.text()  : "";
+
+    var bankAccountId   = $("#BankAccountId").val()   || 0;
+    var accountName     = $("#AccountName").val()     || "";
+
+    var depositId       = $("#DepositId").val()       || 0;  
+    var depositCode     = $("#DepositCode").val()     || ""; 
+
+    var withdrawalId    = $("#WithdrawalId").val()    || 0;  
+    var withdrawalCode  = $("#WithdrawalCode").val()  || ""; 
+
+    var transactionType = $("#TransactionType").val() || "";
+    var isSummary       = $("#IsSummary").is(":checked");
+
+    var fromDate = "";
+    var toDate   = "";
+
+    if ($("#chkFromDate").is(":checked")) fromDate = $("#FromDate").val();
+    if ($("#chkToDate").is(":checked"))   toDate   = $("#ToDate").val();
+
+    var url = '@Url.Action("BankTransactionReportList", "BankAccount", new { area = "DMS" })'
+        + '?bankId='          + (bankId || 0)
+        + '&bankName='        + encodeURIComponent(bankName)
+        + '&bankAccountId='   + (bankAccountId || 0)
+        + '&accountName='     + encodeURIComponent(accountName)
+        + '&depositId='       + (depositId || 0)                    
+        + '&depositCode='     + encodeURIComponent(depositCode)     
+        + '&withdrawalId='    + (withdrawalId || 0)                 
+        + '&withdrawalCode='  + encodeURIComponent(withdrawalCode)  
+        + '&transactionType=' + encodeURIComponent(transactionType)
+        + '&fromDate='        + fromDate
+        + '&toDate='          + toDate
+        + '&isSummary='       + isSummary;
+
+    window.open(url, "_blank");
+}
+
+    </script>
+}

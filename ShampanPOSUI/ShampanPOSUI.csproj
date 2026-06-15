@@ -347,6 +347,7 @@
     <Compile Include="Areas\DMS\Controllers\MasterSupplierProductController.cs" />
     <Compile Include="Areas\DMS\Controllers\OverHeadController.cs" />
     <Compile Include="Areas\DMS\Controllers\PaymentController.cs" />
+    <Compile Include="Areas\DMS\Controllers\PurchaseReportController.cs" />
     <Compile Include="Areas\DMS\Controllers\SaleReturnController.cs" />
     <Compile Include="Areas\DMS\Controllers\SaleController.cs" />
     <Compile Include="Areas\DMS\Controllers\SaleOrderController.cs" />
@@ -2804,6 +2805,17 @@
     <Content Include="Areas\DMS\Views\SaleOrder\Reports\SaleOrderReport.cshtml" />
     <Content Include="Areas\DMS\Views\SaleReturn\Reports\SaleReturnReport.cshtml" />
     <Content Include="Areas\DMS\Views\SupplierProduct\SupplierProductIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Purchase\Reports\PurchaseOrdervsPurchaseDetails.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\BankTransactionReportIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionSummary.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionDetails.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionStatement.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseReport\PurchaseReturnvsPurchaseReportIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionPayment.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionCollection.cshtml" />
+    <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionOutstanding.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseReport\Reports\PurchaseReturnvsPurchaseDetails.cshtml" />
+    <Content Include="Areas\DMS\Views\PurchaseReport\Reports\PurchaseReturnvsPurchaseSummary.cshtml" />
     <Content Include="Areas\SetUp\Views\Registration\RegistrationCreate.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />

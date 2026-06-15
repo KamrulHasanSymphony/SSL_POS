@@ -1,0 +1,384 @@
+﻿@model List<ShampanPOS.Models.BankTransactionReportVM>
+
+@{
+    ViewBag.Title = "Bank Transaction Summary Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var totalDeposit = Model.Where(x => x.TransactionType == "Deposit").Sum(x => x.Amount);
+    var totalWithdrawal = Model.Where(x => x.TransactionType == "Withdrawal").Sum(x => x.Amount);
+    var grandTotal = totalDeposit - totalWithdrawal;
+
+    var bankGroups = Model
+        .GroupBy(x => new { x.BankName, x.BankCode })
+        .OrderBy(g => g.Key.BankName);
+}
+
+<style>
+    body {
+        font-family: Arial;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1000px;
+        margin: 20px auto;
+        border-radius: 6px;
+    }
+
+    .sslPrint {
+        background: #555;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        table-layout: auto;
+        white-space: nowrap;
+        margin-bottom: 18px;
+    }
+
+        table th, table td {
+            border: 1px solid #555;
+            padding: 6px;
+        }
+
+        table th {
+            background: #d0d0d0;
+            color: #000;
+            text-align: center;
+        }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Group Headers - B&W */
+    .group-bank-header td {
+        background-color: #333;
+        color: #fff;
+        font-weight: bold;
+        padding: 5px 6px;
+    }
+
+    .group-account-header td {
+        background-color: #e8e8e8;
+        color: #000;
+        font-weight: bold;
+        padding: 4px 6px;
+    }
+
+    /* Row Colors - B&W */
+    .row-deposit {
+        background-color: #f5f5f5;
+    }
+
+    .row-withdrawal {
+        background-color: #e0e0e0;
+    }
+
+    /* Subtotal - B&W */
+    .subtotal-net td {
+        background-color: #c8c8c8;
+        color: #000;
+        font-weight: bold;
+    }
+
+    /* Footer Totals - B&W */
+    .total-deposit {
+        background-color: #d8d8d8;
+        color: #000;
+        font-weight: bold;
+    }
+
+    .total-withdrawal {
+        background-color: #c0c0c0;
+        color: #000;
+        font-weight: bold;
+    }
+
+    .total-grand {
+        background-color: #333;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Report Footer (below table) */
+    .report-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 10px;
+        font-size: 13px;
+    }
+
+        .report-footer .footer-left {
+            text-align: left;
+        }
+
+        .report-footer .footer-right {
+            text-align: right;
+        }
+
+    /* ===================== PRINT STYLES ===================== */
+    @@media print {
+        /* Hide everything first */
+        body * {
+            visibility: hidden;
+        }
+        /* Show only report-box and its children */
+        .report-box,
+        .report-box * {
+            visibility: visible;
+        }
+        /* Hide print button */
+        .sslPrint {
+            display: none !important;
+        }
+        /* Full-page print box, no side cut */
+        .report-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 10px;
+            background: #fff;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: visible;
+        }
+        /* A4 landscape, no side cut */
+        @@page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+        /* Table shrinks to fit without side cut */
+        table {
+            font-size: 10px;
+            width: 100%;
+            table-layout: fixed;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+            table th, table td {
+                padding: 3px 4px;
+                font-size: 10px;
+            }
+
+        .table-responsive {
+            overflow: visible !important;
+            width: 100%;
+        }
+        /* Keep footer visible */
+        .report-footer {
+            display: flex !important;
+            justify-content: space-between;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint" style="float:right; margin:20px;">
+    🖨️ Print
+</button>
+
+<div class="report-box">
+
+    <!-- ================= HEADER ================= -->
+    <table style="border:none; margin-bottom:10px;">
+        <tr>
+            <td style="width:140px; border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png"
+                     style="width:230px; height:120px;" />
+            </td>
+            <td style="text-align:right; border:none;">
+                <h3 style="margin:0;">@ViewBag.CompanyName</h3>
+                <div>@ViewBag.BranchName</div>
+                <div>69/1 Trhidara Tower</div>
+                <div>📞 01612264439</div>
+                <div>✉️ symphonysorftech1999@gmail.com</div>
+            </td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <!-- ================= FILTER INFO ================= -->
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <div>
+            <strong>Bank:</strong> @ViewBag.BankName <br />
+            <strong>Account:</strong> @ViewBag.AccountName <br />
+            <strong>Source:</strong> @ViewBag.TransactionType <br />
+            <strong>Deposit Code:</strong> @(ViewBag.DepositCode == "All" || string.IsNullOrEmpty(ViewBag.DepositCode as string) ? "All" : ViewBag.DepositCode)
+        </div>
+        <div style="text-align:right;">
+            <strong>From Date:</strong> @ViewBag.FromDate <br />
+            <strong>To Date:</strong> @ViewBag.ToDate <br />
+            <strong>Withdrawal Code:</strong> @(ViewBag.WithdrawalCode == "All" || string.IsNullOrEmpty(ViewBag.WithdrawalCode as string) ? "All" : ViewBag.WithdrawalCode) <br />
+        </div>
+    </div>
+
+    <!-- ================= TITLE ================= -->
+    <h2 style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px;">
+        @(ViewBag.TransactionType == "Deposit" ? "BANK DEPOSIT REPORT" :
+          ViewBag.TransactionType == "Withdrawal" ? "BANK WITHDRAWAL REPORT" :
+          "BANK TRANSACTION REPORT") (SUMMARY)
+    </h2>
+
+    <!-- ================= TABLE ================= -->
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>SL</th>
+                    <th>Type</th>
+                    <th>Bank Code</th>
+                    <th>Bank Name</th>
+                    <th>Account No</th>
+                    <th>Account Name</th>
+                    <th>Transaction Count</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int serial = 1;
+
+                    foreach (var bankGroup in bankGroups)
+                    {
+                        <!-- Bank Group Header -->
+                        <tr class="group-bank-header">
+                            <td colspan="8">
+                                🏦 Bank: @bankGroup.Key.BankCode — @bankGroup.Key.BankName
+                            </td>
+                        </tr>
+
+                        var accountGroups = bankGroup
+                            .GroupBy(x => new { x.AccountNo, x.AccountName })
+                            .OrderBy(g => g.Key.AccountNo);
+
+                        foreach (var accountGroup in accountGroups)
+                        {
+                            var accDeposits = accountGroup.Where(x => x.TransactionType == "Deposit").ToList();
+                            var accWithdrawals = accountGroup.Where(x => x.TransactionType == "Withdrawal").ToList();
+                            var accDepTotal = accDeposits.Sum(x => x.Amount);
+                            var accWitTotal = accWithdrawals.Sum(x => x.Amount);
+                            var accNet = accDepTotal - accWitTotal;
+
+                            <!-- Account Group Header -->
+                            <tr class="group-account-header">
+                                <td colspan="8">
+                                    &nbsp;&nbsp;&nbsp;Account: @accountGroup.Key.AccountNo — @accountGroup.Key.AccountName
+                                </td>
+                            </tr>
+
+                            <!-- Deposit Row -->
+                            if (accDeposits.Any() && (ViewBag.TransactionType == "Deposit" || ViewBag.TransactionType == "All" || string.IsNullOrEmpty(ViewBag.TransactionType as string)))
+                            {
+                                <tr class="row-deposit">
+                                    <td class="text-center">@serial</td>
+                                    <td>Deposit</td>
+                                    <td>@bankGroup.Key.BankCode</td>
+                                    <td>@bankGroup.Key.BankName</td>
+                                    <td>@accountGroup.Key.AccountNo</td>
+                                    <td>@accountGroup.Key.AccountName</td>
+                                    <td class="text-right">@accDeposits.Count</td>
+                                    <td class="text-right">@accDepTotal.ToString("N2")</td>
+                                </tr>
+                                serial++;
+                            }
+
+                            <!-- Withdrawal Row -->
+                            if (accWithdrawals.Any() && (ViewBag.TransactionType == "Withdrawal" || ViewBag.TransactionType == "All" || string.IsNullOrEmpty(ViewBag.TransactionType as string)))
+                            {
+                                <tr class="row-withdrawal">
+                                    <td class="text-center">@serial</td>
+                                    <td>Withdrawal</td>
+                                    <td>@bankGroup.Key.BankCode</td>
+                                    <td>@bankGroup.Key.BankName</td>
+                                    <td>@accountGroup.Key.AccountNo</td>
+                                    <td>@accountGroup.Key.AccountName</td>
+                                    <td class="text-right">@accWithdrawals.Count</td>
+                                    <td class="text-right">@accWitTotal.ToString("N2")</td>
+                                </tr>
+                                serial++;
+                            }
+
+                            <!-- Account Net Subtotal -->
+                            <tr class="subtotal-net">
+                                <td colspan="7" class="text-right">
+                                    Net Balance for @accountGroup.Key.AccountName:
+                                </td>
+                                <td class="text-right">@accNet.ToString("N2")</td>
+                            </tr>
+                        }
+                    }
+
+                    <!-- ================= GRAND TOTAL ROWS ================= -->
+                    if (ViewBag.TransactionType == "Deposit" || ViewBag.TransactionType == "All" || string.IsNullOrEmpty(ViewBag.TransactionType as string))
+                    {
+                        <tr class="total-deposit">
+                            <td colspan="7" class="text-right">Total Deposit:</td>
+                            <td class="text-right">@totalDeposit.ToString("N2")</td>
+                        </tr>
+                    }
+
+                    if (ViewBag.TransactionType == "Withdrawal" || ViewBag.TransactionType == "All" || string.IsNullOrEmpty(ViewBag.TransactionType as string))
+                    {
+                        <tr class="total-withdrawal">
+                            <td colspan="7" class="text-right">Total Withdrawal:</td>
+                            <td class="text-right">@totalWithdrawal.ToString("N2")</td>
+                        </tr>
+                    }
+
+                    if (string.IsNullOrEmpty(ViewBag.TransactionType as string) || ViewBag.TransactionType == "All")
+                    {
+                        <tr class="total-grand">
+                            <td colspan="7" class="text-right">Net Balance (Deposit - Withdrawal):</td>
+                            <td class="text-right">@grandTotal.ToString("N2")</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">No data found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ================= REPORT FOOTER ================= -->
+    <div class="report-footer">
+        <div class="footer-left">
+            <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") 
+            <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
+        </div>
+        <div class="footer-right">
+            <strong>Total Records:</strong> @(Model != null ? Model.Count : 0)
+        </div>
+    </div>
+
+</div>

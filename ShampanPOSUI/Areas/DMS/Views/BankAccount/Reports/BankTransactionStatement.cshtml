@@ -1,0 +1,305 @@
+﻿@model List<ShampanPOS.Models.BankTransactionReportVM>
+@{
+    ViewBag.Title = "Bank Statement Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var totalIn = Model?.Where(x => x.InOut == "In").Sum(x => x.Amount) ?? 0;
+    var totalOut = Model?.Where(x => x.InOut == "Out").Sum(x => x.Amount) ?? 0;
+    var bd = new System.Globalization.CultureInfo("en-IN");
+
+    var groupedModel = Model?
+        .GroupBy(x => new { x.BankName, x.AccountNo, x.AccountName })
+        .ToList();
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1100px;
+        margin: 20px auto;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .sslPrint {
+        background: #007bff;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        float: right;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+        .sslPrint:hover {
+            background: #0056b3;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        table th {
+            background: #f4f6f9;
+            color: #333;
+            text-align: center;
+            font-weight: 600;
+        }
+
+    .group-header-row {
+        background-color: #e9ecef !important;
+        font-weight: bold;
+        font-size: 13px;
+        color: #495057;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .row-in {
+        background-color: #ffffff;
+    }
+
+    .row-out {
+        background-color: #fafafa;
+    }
+
+
+    .badge-in {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .badge-out {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .sub-total-row {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        font-style: italic;
+    }
+
+    .total-grand {
+        background-color: #212529;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .report-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 13px;
+    }
+
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
+        }
+
+        .sslPrint {
+            display: none !important;
+        }
+
+        .report-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+            border: none;
+        }
+
+        @@page {
+            size: A4 landscape;
+            margin: 15mm 10mm;
+        }
+
+        table {
+            font-size: 10px;
+            table-layout: fixed;
+            word-break: break-word;
+        }
+
+            table th, table td {
+                padding: 4px 5px;
+                font-size: 10px;
+                border: 1px solid #000;
+            }
+
+        .group-header-row {
+            background-color: #e2e2e2 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint">🖨️ Print Report</button>
+
+<div class="report-box">
+    <table style="border:none; margin-bottom:10px; width:100%;">
+        <tr>
+            <td style="width:140px; border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px; height:120px;" />
+            </td>
+            <td style="text-align:right; border:none;">
+                <h3 style="margin:0; color:#333;">@ViewBag.CompanyName</h3>
+                <div>@ViewBag.BranchName</div>
+                <div>69/1 Trhidara Tower</div>
+                <div>📞 01612264439</div>
+                <div>✉️ symphonysorftech1999@gmail.com</div>
+            </td>
+        </tr>
+    </table>
+    <hr style="border: 0; border-top: 1px solid #eee;" />
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:12px; color: #555;">
+        <div>
+            <strong>Report Type:</strong> Multi-Transactional Statement
+        </div>
+        <div style="text-align:right;">
+            <strong>From Date:</strong> @ViewBag.FromDate &nbsp;|&nbsp; <strong>To Date:</strong> @ViewBag.ToDate
+        </div>
+    </div>
+
+    <h3 style="text-align:center; border-bottom:2px solid #333; padding-bottom:6px; margin-top:0; letter-spacing: 1px;">
+        BANK STATEMENT REPORT
+    </h3>
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Transaction Date</th>
+                    <th style="width: 24%;">Transaction Code</th>
+                    <th style="width: 10%;">Source</th>
+                    <th style="width: 13%;" class="text-right">Withdrawal</th>
+                    <th style="width: 13%;" class="text-right">Deposit</th>
+                    <th style="width: 13%;" class="text-right">Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (groupedModel != null && groupedModel.Any())
+                {
+                    int serial = 1;
+
+                    foreach (var group in groupedModel)
+                    {
+                        var firstItem = group.First();
+                        var openingBal = firstItem.RunningBalance
+                            - (firstItem.InOut == "In" ? firstItem.Amount : -firstItem.Amount);
+
+                        <tr class="group-header-row">
+                            <td colspan="6">
+                                🏦 Bank: @group.Key.BankName &nbsp;|&nbsp;
+                                💳 A/C No: @group.Key.AccountNo &nbsp;|&nbsp;
+                                👤 A/C Name: @group.Key.AccountName
+                            </td>
+                        </tr>
+
+                        <tr style="background-color:#f0f4ff; font-weight:bold;">
+                            <td>-</td>
+                            <td colspan="2">Opening Balance</td>
+                            <td class="text-right">-</td>
+                            <td class="text-right">-</td>
+                            <td class="text-right">@openingBal</td>
+                        </tr>
+
+                        @* Data Rows *@
+                        foreach (var item in group)
+                        {
+                            string rowClass = item.InOut == "In" ? "row-in" : "row-out";
+                            <tr class="@rowClass">
+                                <td>@item.TransactionDate</td>
+                                <td>@item.TransactionCode</td>
+                                <td>@item.SourceTable</td>
+                                <td class="text-right @(item.InOut == "Out" ? "badge-out" : "")">
+                                    @(item.InOut == "Out" ? item.Amount.ToString("N2", bd) : "-")
+                                </td>
+                                <td class="text-right @(item.InOut == "In" ? "badge-in" : "")">
+                                    @(item.InOut == "In" ? item.Amount.ToString("N2", bd) : "-")
+                                </td>
+                                <td class="text-right">@item.RunningBalance</td>
+                            </tr>
+                            serial++;
+                        }
+
+                        @* Sub Total Row *@
+                        var subIn = group.Where(x => x.InOut == "In").Sum(x => x.Amount);
+                        var subOut = group.Where(x => x.InOut == "Out").Sum(x => x.Amount);
+                        var closingBal = group.Last().RunningBalance;
+
+                        <tr class="sub-total-row">
+                            <td colspan="3" class="text-right">Totals:</td>
+                            <td class="text-right badge-out">@subOut.ToString("N2", bd)</td>
+                            <td class="text-right badge-in">@subIn.ToString("N2", bd)</td>
+                            <td class="text-right">@closingBal</td>
+                        </tr>
+
+                        @* Grand Total *@
+                        <tr style="background:#dee2e6; color:#000; font-weight:bold;">
+                            <td colspan="5" class="text-right">Total Withdrawal (Out):</td>
+                            <td class="text-right badge-out">@totalOut.ToString("N2", bd)</td>
+                            @*<td colspan="0"></td>*@
+                        </tr>
+                        <tr style="background:#d4edda; color:#000; font-weight:bold;">
+                            <td colspan="5" class="text-right">Total Deposit (In):</td>
+                            @*<td></td>*@
+                            <td class="text-right badge-in">@totalIn.ToString("N2", bd)</td>
+                            @*<td></td>*@
+                        </tr>
+                        <tr class="total-grand">
+                            <td colspan="5" class="text-right">Closing Balance:</td>
+                            <td class="text-right">@(Model.Last().RunningBalance)</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="6" class="text-center">No data found</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-footer" style="border-top:1px solid #ccc; padding-top:5px; color: #666;">
+        <div><strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") | <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")</div>
+        <div><strong>Total Records:</strong> @(Model != null ? Model.Count : 0)</div>
+    </div>
+</div>

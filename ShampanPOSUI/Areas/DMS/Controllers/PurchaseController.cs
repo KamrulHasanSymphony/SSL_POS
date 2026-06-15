@@ -1568,15 +1568,15 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             param.PurchaseOrderId = purchaseOrderId ?? 0;
             param.ProductName = productName ?? "";
             param.InvoiceFromDate = string.IsNullOrEmpty(fromDate)
-                ? "2025-01-01"
+                ? ""
                 : fromDate;
 
             param.InvoiceToDate = string.IsNullOrEmpty(toDate)
-                ? DateTime.Now.ToString("yyyy-MM-dd")
+                ? ""
                 : toDate;
 
             param.PurchaseFromDate = string.IsNullOrEmpty(purchaseFromDate)
-                ? "2025-01-01"
+                ? ""
                 : purchaseFromDate;
 
             param.PurchaseToDate = string.IsNullOrEmpty(purchaseToDate)
