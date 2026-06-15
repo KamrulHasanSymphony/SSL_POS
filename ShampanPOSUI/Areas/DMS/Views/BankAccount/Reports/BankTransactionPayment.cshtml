@@ -1,6 +1,6 @@
 ﻿@model List<ShampanPOS.Models.BankTransactionReportVM>
 @{
-    ViewBag.Title = "Bank Payment Report";
+    ViewBag.Title = "Bank Payment Details Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var totalAmount = Model?.Sum(x => x.Amount) ?? 0;
@@ -144,7 +144,7 @@
     </div>
 
     <h3 style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px; margin-top:0;">
-        BANK PAYMENT REPORT
+        BANK PAYMENT DETAILS REPORT
     </h3>
 
     <div style="overflow-x:auto;">

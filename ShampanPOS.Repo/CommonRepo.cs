@@ -1725,6 +1725,33 @@ namespace ShampanPOS.Repo
             catch (Exception e) { throw e; }
         }
 
+        public ResultVM GetCustomerModal(CommonVM param)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                var data = httpRequestHelper.PostData("api/Common/GetCustomerModal", authModel, JsonConvert.SerializeObject(param));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                return result;
+            }
+            catch (Exception e) { throw e; }
+        }
+
+        public ResultVM GetSupplierModal(CommonVM param)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                var data = httpRequestHelper.PostData("api/Common/GetSupplierModal", authModel, JsonConvert.SerializeObject(param));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                return result;
+            }
+            catch (Exception e) { throw e; }
+        }
+
+
         public ResultVM GetPurchaseReturnModal(CommonVM param)
         {
             try

@@ -112,6 +112,31 @@
                     </select>
                 </div>
 
+
+                <div class="col-sm-2" id="divCustomer">
+                    <label>Customer</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="CustomerName" class="form-control" placeholder="Select Customer" />
+                        <input type="hidden" id="CustomerId" />
+                        <div class="input-group-append">
+                            <button type="button" id="btnClearCustomer" class="btn btn-warning" onclick="ClearCustomer()">✖</button>
+                            <button type="button" id="btnCustomerSearch" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2" id="divSupplier">
+                    <label>Supplier</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="SupplierName" class="form-control" placeholder="Select Supplier" />
+                        <input type="hidden" id="SupplierId" />
+                        <div class="input-group-append">
+                            <button type="button" id="btnClearSupplier" class="btn btn-warning" onclick="ClearSupplier()">✖</button>
+                            <button type="button" id="btnSupplierSearch" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-sm-2 d-flex flex-column">
                     <label>Summary</label>
                     <div class="Onoffbtn">
@@ -130,7 +155,6 @@
                         </div>
                     </div>
                 </div>
-
 
 
 
@@ -160,6 +184,20 @@
         <input id="DepositBankAccountId" style="width:100%;" />
     </div>
     <div id="depositGrid"></div>
+</div>
+
+<div id="customerWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;">
+        <input id="CustomerGroupFilter" style="width:100%;" />
+    </div>
+    <div id="customerGrid"></div>
+</div>
+
+<div id="supplierWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;">
+        <input id="SupplierGroupFilter" style="width:100%;" />
+    </div>
+    <div id="supplierGrid"></div>
 </div>
 
 <div id="withdrawalWindow" style="display:none; padding:10px;">
@@ -259,23 +297,22 @@
                 ApplyTransactionTypeRestrictions($(this).val());
             });
 
+            // Page load এ initial state apply করো
+            ApplyTransactionTypeRestrictions($("#TransactionType").val());
+
             function ApplyTransactionTypeRestrictions(type) {
 
-                // সব আগে enable করো
-                // Summary toggle
+                // সব আগে enable/show করো
                 $("#IsSummary").bootstrapSwitch("disabled", false);
 
-                // Deposit
                 $("#DepositCode").prop("disabled", false);
                 $("#btnDepositSearch").prop("disabled", false);
                 $("#btnClearDeposit").prop("disabled", false);
 
-                // Withdrawal
                 $("#WithdrawalCode").prop("disabled", false);
                 $("#btnWithdrawalSearch").prop("disabled", false);
                 $("#btnClearWithdrawal").prop("disabled", false);
 
-                // Bank Account
                 $("#AccountName").prop("disabled", false);
                 $("#btnAccountSearch").prop("disabled", false);
                 $("#btnClearAccount").prop("disabled", false);
@@ -286,47 +323,74 @@
                 $("#FromDate").data("kendoDatePicker").enable(true);
                 $("#ToDate").data("kendoDatePicker").enable(true);
 
-                if (type === "Payment" || type === "Collection" || type === "Statement") {
-                    // Summary disable
-                    $("#IsSummary").bootstrapSwitch("disabled", true);
+                // Customer/Supplier hide by default
+                //$("#divCustomer").hide();
+                //$("#divSupplier").hide();
+                $("#CustomerName, #btnClearCustomer, #btnCustomerSearch").prop("disabled", true);
+                $("#SupplierName, #btnClearSupplier, #btnSupplierSearch").prop("disabled", true);
+                ClearCustomer();
+                ClearSupplier();
 
-                    // Deposit disable
+                if (type === "Collection") {
+                    //$("#IsSummary").bootstrapSwitch("disabled", true);
                     $("#DepositCode").prop("disabled", true);
                     $("#btnDepositSearch").prop("disabled", true);
                     $("#btnClearDeposit").prop("disabled", true);
-
-                    // Withdrawal disable
                     $("#WithdrawalCode").prop("disabled", true);
                     $("#btnWithdrawalSearch").prop("disabled", true);
                     $("#btnClearWithdrawal").prop("disabled", true);
+
+                    // Customer show
+                    //$("#divCustomer").show();
+                    //$("#divCustomer").prop("disabled", false);
+                    $("#CustomerName, #btnClearCustomer, #btnCustomerSearch").prop("disabled", false);
+                    $("#SupplierName, #btnClearSupplier, #btnSupplierSearch").prop("disabled", true);
+
+                } else if (type === "Payment") {
+                    //$("#IsSummary").bootstrapSwitch("disabled", true);
+                    $("#DepositCode").prop("disabled", true);
+                    $("#btnDepositSearch").prop("disabled", true);
+                    $("#btnClearDeposit").prop("disabled", true);
+                    $("#WithdrawalCode").prop("disabled", true);
+                    $("#btnWithdrawalSearch").prop("disabled", true);
+                    $("#btnClearWithdrawal").prop("disabled", true);
+
+                    // Supplier show
+                    //$("#divSupplier").show();
+                    $("#CustomerName, #btnClearCustomer, #btnCustomerSearch").prop("disabled", true);
+                    $("#SupplierName, #btnClearSupplier, #btnSupplierSearch").prop("disabled", false);
+                    //$("#divSupplier").prop("disabled", false);
+
+                } else if (type === "Statement") {
+                    $("#IsSummary").bootstrapSwitch("disabled", true);
+                    $("#DepositCode").prop("disabled", true);
+                    $("#btnDepositSearch").prop("disabled", true);
+                    $("#btnClearDeposit").prop("disabled", true);
+                    $("#WithdrawalCode").prop("disabled", true);
+                    $("#btnWithdrawalSearch").prop("disabled", true);
+                    $("#btnClearWithdrawal").prop("disabled", true);
+                    $("#CustomerName, #btnClearCustomer, #btnCustomerSearch").prop("disabled", true);
+                    $("#SupplierName, #btnClearSupplier, #btnSupplierSearch").prop("disabled", true);
 
                 } else if (type === "OutstandingBalance") {
-                    // Summary disable
                     $("#IsSummary").bootstrapSwitch("disabled", true);
-
-                    // Deposit disable
                     $("#DepositCode").prop("disabled", true);
                     $("#btnDepositSearch").prop("disabled", true);
                     $("#btnClearDeposit").prop("disabled", true);
-
-                    // Withdrawal disable
                     $("#WithdrawalCode").prop("disabled", true);
                     $("#btnWithdrawalSearch").prop("disabled", true);
                     $("#btnClearWithdrawal").prop("disabled", true);
-
-                    // Bank Account disable
                     $("#AccountName").prop("disabled", true);
                     $("#btnAccountSearch").prop("disabled", true);
                     $("#btnClearAccount").prop("disabled", true);
-
-                    // FromDate / ToDate checkbox + DatePicker disable
                     $("#chkFromDate").prop("disabled", true);
                     $("#chkToDate").prop("disabled", true);
                     $("#FromDate").data("kendoDatePicker").enable(false);
                     $("#ToDate").data("kendoDatePicker").enable(false);
+                    $("#CustomerName, #btnClearCustomer, #btnCustomerSearch").prop("disabled", true);
+                    $("#SupplierName, #btnClearSupplier, #btnSupplierSearch").prop("disabled", true);
                 }
             }
-
         });
 
         // =====================
@@ -680,6 +744,162 @@
 
 
         // =====================
+        // CUSTOMER POPUP
+        // =====================
+        $("#btnCustomerSearch").on("click", function () { OpenCustomerPopup(); });
+
+        function OpenCustomerPopup() {
+            var wnd = $("#customerWindow").data("kendoWindow");
+            if (!wnd) {
+                $("#customerWindow").kendoWindow({
+                    width: "700px", height: "450px",
+                    title: "Select Customer", modal: true, visible: false
+                });
+                wnd = $("#customerWindow").data("kendoWindow");
+            }
+            wnd.center().open();
+            LoadCustomerGroupCombo();
+
+            $("#customerGrid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: { url: "/Common/Common/GetCustomerModal", dataType: "json" }
+                    }
+                },
+                height: 350, sortable: true, filterable: true, pageable: true, selectable: "row",
+                columns: [
+                    { field: "Code", title: "Code", width: "120px" },
+                    { field: "Name", title: "Name", width: "200px" },
+                    { field: "GroupName", title: "Group", width: "150px" }
+                ]
+            });
+
+            $("#customerGrid").off("dblclick").on("dblclick", "tr", function () {
+                var grid = $("#customerGrid").data("kendoGrid");
+                var item = grid.dataItem($(this));
+                ApplyCustomerSelection(item);
+                wnd.close();
+            });
+        }
+
+        function LoadCustomerGroupCombo() {
+            $.getJSON("/Common/Common/GetCustomerModal", function (data) {
+                var groupMap = {};
+                $.each(data, function (_, item) {
+                    if (item.CustomerGroupId && item.GroupName && !groupMap[item.CustomerGroupId])
+                        groupMap[item.CustomerGroupId] = { Id: item.CustomerGroupId, Name: item.GroupName };
+                });
+                var groupList = Object.values(groupMap);
+                var existing = $("#CustomerGroupFilter").data("kendoComboBox");
+                if (existing) existing.destroy();
+                $("#CustomerGroupFilter").kendoComboBox({
+                    dataTextField: "Name", dataValueField: "Id",
+                    placeholder: "Filter by Group", filter: "contains",
+                    dataSource: groupList,
+                    change: applyCustomerGroupFilter,
+                    select: applyCustomerGroupFilter
+                });
+            });
+        }
+
+        function applyCustomerGroupFilter() {
+            var combo = $("#CustomerGroupFilter").data("kendoComboBox");
+            var groupId = combo ? combo.value() : "";
+            var grid = $("#customerGrid").data("kendoGrid");
+            if (!grid) return;
+            if (!groupId) { grid.dataSource.filter([]); return; }
+            grid.dataSource.filter({ field: "CustomerGroupId", operator: "eq", value: parseInt(groupId) });
+        }
+
+        function ApplyCustomerSelection(item) {
+            $("#CustomerId").val(item.Id);
+            $("#CustomerName").val(item.Code + " - " + item.Name);
+        }
+
+        function ClearCustomer() {
+            $("#CustomerId").val("");
+            $("#CustomerName").val("");
+        }
+
+        // =====================
+        // SUPPLIER POPUP
+        // =====================
+        $("#btnSupplierSearch").on("click", function () { OpenSupplierPopup(); });
+
+        function OpenSupplierPopup() {
+            var wnd = $("#supplierWindow").data("kendoWindow");
+            if (!wnd) {
+                $("#supplierWindow").kendoWindow({
+                    width: "700px", height: "450px",
+                    title: "Select Supplier", modal: true, visible: false
+                });
+                wnd = $("#supplierWindow").data("kendoWindow");
+            }
+            wnd.center().open();
+            LoadSupplierGroupCombo();
+
+            $("#supplierGrid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: { url: "/Common/Common/GetSupplierModal", dataType: "json" }
+                    }
+                },
+                height: 350, sortable: true, filterable: true, pageable: true, selectable: "row",
+                columns: [
+                    { field: "Code", title: "Code", width: "120px" },
+                    { field: "Name", title: "Name", width: "200px" },
+                    { field: "GroupName", title: "Group", width: "150px" }
+                ]
+            });
+
+            $("#supplierGrid").off("dblclick").on("dblclick", "tr", function () {
+                var grid = $("#supplierGrid").data("kendoGrid");
+                var item = grid.dataItem($(this));
+                ApplySupplierSelection(item);
+                wnd.close();
+            });
+        }
+
+        function LoadSupplierGroupCombo() {
+            $.getJSON("/Common/Common/GetSupplierModal", function (data) {
+                var groupMap = {};
+                $.each(data, function (_, item) {
+                    if (item.SupplierGroupId && item.GroupName && !groupMap[item.SupplierGroupId])
+                        groupMap[item.SupplierGroupId] = { Id: item.SupplierGroupId, Name: item.GroupName };
+                });
+                var groupList = Object.values(groupMap);
+                var existing = $("#SupplierGroupFilter").data("kendoComboBox");
+                if (existing) existing.destroy();
+                $("#SupplierGroupFilter").kendoComboBox({
+                    dataTextField: "Name", dataValueField: "Id",
+                    placeholder: "Filter by Group", filter: "contains",
+                    dataSource: groupList,
+                    change: applySupplierGroupFilter,
+                    select: applySupplierGroupFilter
+                });
+            });
+        }
+
+        function applySupplierGroupFilter() {
+            var combo = $("#SupplierGroupFilter").data("kendoComboBox");
+            var groupId = combo ? combo.value() : "";
+            var grid = $("#supplierGrid").data("kendoGrid");
+            if (!grid) return;
+            if (!groupId) { grid.dataSource.filter([]); return; }
+            grid.dataSource.filter({ field: "SupplierGroupId", operator: "eq", value: parseInt(groupId) });
+        }
+
+        function ApplySupplierSelection(item) {
+            $("#SupplierId").val(item.Id);
+            $("#SupplierName").val(item.Code + " - " + item.Name);
+        }
+
+        function ClearSupplier() {
+            $("#SupplierId").val("");
+            $("#SupplierName").val("");
+        }
+
+        // =====================
         // Print / Open Report
         // =====================
         function PrintBankTransactionReport() {
@@ -691,11 +911,17 @@
     var bankAccountId   = $("#BankAccountId").val()   || 0;
     var accountName     = $("#AccountName").val()     || "";
 
-    var depositId       = $("#DepositId").val()       || 0;  
-    var depositCode     = $("#DepositCode").val()     || ""; 
+    var depositId       = $("#DepositId").val()       || 0;
+    var depositCode     = $("#DepositCode").val()     || "";
 
-    var withdrawalId    = $("#WithdrawalId").val()    || 0;  
-    var withdrawalCode  = $("#WithdrawalCode").val()  || ""; 
+    var withdrawalId    = $("#WithdrawalId").val()    || 0;
+    var withdrawalCode  = $("#WithdrawalCode").val()  || "";
+
+    var customerId      = $("#CustomerId").val()      || 0;
+    var customerName    = $("#CustomerName").val()    || "";
+
+    var supplierId      = $("#SupplierId").val()      || 0;
+    var supplierName    = $("#SupplierName").val()    || "";
 
     var transactionType = $("#TransactionType").val() || "";
     var isSummary       = $("#IsSummary").is(":checked");
@@ -711,10 +937,14 @@
         + '&bankName='        + encodeURIComponent(bankName)
         + '&bankAccountId='   + (bankAccountId || 0)
         + '&accountName='     + encodeURIComponent(accountName)
-        + '&depositId='       + (depositId || 0)                    
-        + '&depositCode='     + encodeURIComponent(depositCode)     
-        + '&withdrawalId='    + (withdrawalId || 0)                 
-        + '&withdrawalCode='  + encodeURIComponent(withdrawalCode)  
+        + '&depositId='       + (depositId || 0)
+        + '&depositCode='     + encodeURIComponent(depositCode)
+        + '&withdrawalId='    + (withdrawalId || 0)
+        + '&withdrawalCode='  + encodeURIComponent(withdrawalCode)
+        + '&customerId='      + (customerId || 0)
+        + '&customerName='    + encodeURIComponent(customerName)
+        + '&supplierId='      + (supplierId || 0)
+        + '&supplierName='    + encodeURIComponent(supplierName)
         + '&transactionType=' + encodeURIComponent(transactionType)
         + '&fromDate='        + fromDate
         + '&toDate='          + toDate

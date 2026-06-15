@@ -324,26 +324,31 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
     int? bankAccountId,
     int? transactionId,
     int? branchId,
-    int? depositId,     
-    int? withdrawalId,   
+    int? depositId,
+    int? withdrawalId,
+    int? customerId,
+    int? supplierId,
     string transactionType,
     string fromDate,
     string toDate,
     bool isSummary,
     string bankName,
     string accountName,
-    string depositCode,  
-    string withdrawalCode) 
+    string depositCode,
+    string withdrawalCode,
+    string customerName,
+    string supplierName)
         {
             List<BankTransactionReportVM> vmList = new List<BankTransactionReportVM>();
-
             BankTransactionReportVM param = new BankTransactionReportVM();
             param.BankId = bankId ?? 0;
             param.BankAccountId = bankAccountId ?? 0;
             param.TransactionId = transactionId ?? 0;
             param.BranchId = branchId ?? 0;
-            param.DepositId = depositId ?? 0;    
-            param.WithdrawalId = withdrawalId ?? 0;    
+            param.DepositId = depositId ?? 0;
+            param.WithdrawalId = withdrawalId ?? 0;
+            param.CustomerId = customerId ?? 0;
+            param.SupplierId = supplierId ?? 0;
             param.TransactionType = string.IsNullOrEmpty(transactionType) ? "" : transactionType;
             param.FromDate = string.IsNullOrEmpty(fromDate) ? "" : fromDate;
             param.ToDate = string.IsNullOrEmpty(toDate)
@@ -367,9 +372,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ViewBag.TransactionId = transactionId ?? 0;
             ViewBag.BranchId = branchId ?? 0;
             ViewBag.DepositId = depositId ?? 0;         
-            ViewBag.DepositCode = depositCode ?? "All";    
-            ViewBag.WithdrawalId = withdrawalId ?? 0;       
-            ViewBag.WithdrawalCode = withdrawalCode ?? "All"; 
+            ViewBag.DepositCode = depositCode ?? "All";
+            ViewBag.WithdrawalId = withdrawalId ?? 0;
+            ViewBag.WithdrawalCode = withdrawalCode ?? "All";
+            ViewBag.CustomerId = customerId ?? 0;
+            ViewBag.CustomerName = customerName ?? "All";
+            ViewBag.SupplierId = supplierId ?? 0;
+            ViewBag.SupplierName = supplierName ?? "All";
             ViewBag.TransactionType = string.IsNullOrEmpty(transactionType) ? "All" : transactionType;
             ViewBag.FromDate = fromDate ?? "All";
             ViewBag.ToDate = toDate ?? "All";
@@ -378,17 +387,21 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ViewBag.BranchName = Session["CurrentBranchName"].ToString();
             ViewBag.PrintedBy = Session["UserId"].ToString();
 
-            string viewName = isSummary
-                ? "Reports/BankTransactionSummary"
-                : transactionType == "Statement"
-                    ? "Reports/BankTransactionStatement"
-                    : transactionType == "OutstandingBalance"
-                        ? "Reports/BankTransactionOutstanding"
-                        : transactionType == "Payment"
-                            ? "Reports/BankTransactionPayment"
-                            : transactionType == "Collection"
-                                ? "Reports/BankTransactionCollection"
-                                : "Reports/BankTransactionDetails";
+            string viewName = isSummary && transactionType == "Payment"
+                ? "Reports/BankTransactionPaymentSummary"
+                : isSummary && transactionType == "Collection"
+                    ? "Reports/BankTransactionCollectionSummary"
+                    : isSummary
+                        ? "Reports/BankTransactionSummary"
+                        : transactionType == "Statement"
+                            ? "Reports/BankTransactionStatement"
+                            : transactionType == "OutstandingBalance"
+                                ? "Reports/BankTransactionOutstanding"
+                                : transactionType == "Payment"
+                                    ? "Reports/BankTransactionPayment"
+                                    : transactionType == "Collection"
+                                        ? "Reports/BankTransactionCollection"
+                                        : "Reports/BankTransactionDetails";
 
             return View(viewName, vmList);
         }
