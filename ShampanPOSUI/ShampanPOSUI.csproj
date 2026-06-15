@@ -398,6 +398,7 @@
     <Content Include="Areas\DMS\js\Controllers\TableSectionController.js" />
     <Content Include="Areas\DMS\js\Controllers\TableReservationController.js" />
     <Compile Include="Areas\SetUp\Controllers\CompanyCreateController.cs" />
+    <Compile Include="Areas\SetUp\Controllers\RegistrationController.cs" />
     <Compile Include="Areas\SetUp\Controllers\SettingsController.cs" />
     <Compile Include="Areas\DMS\Controllers\PaymentTypeController.cs" />
     <Compile Include="Areas\DMS\Controllers\CustomerAdvanceController.cs" />
@@ -410,6 +411,7 @@
     <Compile Include="Areas\SetUp\Controllers\CompanyProfileController.cs" />
     <Compile Include="Areas\SetUp\Controllers\MenuAuthorizationController.cs" />
     <Content Include="Areas\SetUp\js\Controller\CompanyCreateController.js" />
+    <Content Include="Areas\SetUp\js\Controller\RegistrationController.js" />
     <Content Include="Areas\SetUp\js\Controller\SignUpController.js" />
     <Compile Include="Areas\SetUp\SetUpAreaRegistration.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -2816,6 +2818,7 @@
     <Content Include="Areas\DMS\Views\PurchaseReport\Reports\PurchaseReturnvsPurchaseSummary.cshtml" />
     <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionPaymentSummary.cshtml" />
     <Content Include="Areas\DMS\Views\BankAccount\Reports\BankTransactionCollectionSummary.cshtml" />
+    <Content Include="Areas\SetUp\Views\Registration\RegistrationCreate.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />

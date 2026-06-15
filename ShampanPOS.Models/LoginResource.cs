@@ -16,7 +16,7 @@ namespace ShampanPOS.Models
         [DisplayName("User Name")]
 
         // Only letters allowed (A-Z, a-z)
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "User Name can contain only letters (A-Z, a-z)")]
+        //[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "User Name can contain only letters (A-Z, a-z)")]
         public string UserName { get; set; }
 
         [Required]
