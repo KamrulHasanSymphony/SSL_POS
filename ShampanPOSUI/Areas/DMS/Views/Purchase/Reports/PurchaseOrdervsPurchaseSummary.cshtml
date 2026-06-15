@@ -125,32 +125,27 @@
     @{
         var bd = new CultureInfo("en-IN");
     }
+
     <div class="table-responsive">
         <table class="table table-bordered">
 
             <thead>
                 <tr>
-                    <th>Purchase No</th>
-                    <th>Purchase Order No</th>
+                    <th>Supplier Code</th>
+                    <th>Supplier Name</th>
 
                     <th>Product Code</th>
                     <th>Product Name</th>
 
-                    <th>Invoice Date</th>
-                    <th>Purchase Date</th>
-                    <th>Order Date</th>
+                    <th>Purchase Order No</th>
 
-                    <th>Quantity</th>
+                    <th>PO Qty</th>
+                    <th>PO Amount</th>
 
-                    @if (!isSummary)
-                    {
-                        <th>Unit Price</th>
-                        <th>SD</th>
-                    }
+                    <th>Purchase Qty</th>
+                    <th>Purchase Amount</th>
 
-                    <th>Sub Total</th>
-                    <th>VAT Amount</th>
-                    <th>Line Total</th>
+                    <th>Remain Qty</th>
                 </tr>
             </thead>
 
@@ -162,83 +157,60 @@
                     {
                         <tr>
                             <td>@item.Code</td>
-                            <td>@item.Code</td>
-
-                            <td>@item.SupplierCode</td>
                             <td>@item.SupplierName</td>
 
                             <td>@item.Code</td>
                             <td>@item.ProductName</td>
 
-                            <td>@item.InvoiceDateTime</td>
-                            <td>@item.PurchaseDate</td>
-                            <td>@item.OrderDate</td>
+                            <td>@item.PurchaseOrderNo</td>
 
-                            <td class="text-right">@item.Quantity</td>
-
-                            @if (!isSummary)
-                            {
-                                <td class="text-right">
-                                    @(Model.Sum(x => x.UnitPrice).ToString("N2", bd))
-                                </td>
-                                <td class="text-right">
-                                    @(Model.Sum(x => x.SD ?? 0).ToString("N2", bd))
-                                </td>
-                            }
+                            <td class="text-right">@item.PurchaseOrderQty</td>
 
                             <td class="text-right">
-                                @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
-                            </td>
-                            <td class="text-right">
-                                @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
+                                @item.PurchaseOrderTotalAmount.ToString("N2", bd)
                             </td>
 
+                            <td class="text-right">@item.PurchaseQty</td>
+
                             <td class="text-right">
-                                @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                                @item.PurchaseTotalAmount.ToString("N2", bd)
                             </td>
+
+                            <td class="text-right">@item.RemainQty</td>
                         </tr>
                     }
 
-                    <!-- ================= TOTAL ROW (PERFECT ALIGNMENT) ================= -->
-            <tr style="font-weight:bold;background:#f1f1f1;">
+                    <!-- TOTAL ROW -->
+                    <tr style="font-weight:bold;background:#f1f1f1;">
 
-                @{
-                    int colBeforeQty = 9; // ALL columns before Quantity
+                        <td colspan="5">Total</td>
 
-                    if (!isSummary)
-                    {
-                        colBeforeQty += 2;
-                    }
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseOrderQty)
+                        </td>
 
-                    int colAfterQty = 3; // SubTotal, VAT, LineTotal
-                }
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseOrderTotalAmount).ToString("N2", bd)
+                        </td>
 
-                <td colspan="@colBeforeQty">Total</td>
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseQty)
+                        </td>
 
-                <td class="text-right">@Model.Sum(x => x.Quantity)</td>
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseTotalAmount).ToString("N2", bd)
+                        </td>
 
-                @if (!isSummary)
-                {
-                    <td></td>
-                    <td></td>
-                }
+                        <td class="text-right">
+                            @Model.Sum(x => x.RemainQty)
+                        </td>
 
-                <td class="text-right">
-                    @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
-                </td>
-                <td class="text-right">
-                    @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
-                </td>
-
-                <td class="text-right">
-                    @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-                </td>
-            </tr>
+                    </tr>
                 }
                 else
                 {
                     <tr>
-                        <td colspan="@(9 + (isSummary ? 0 : 2) + 4)" style="text-align:center;">
+                        <td colspan="10" style="text-align:center;">
                             No purchase data found
                         </td>
                     </tr>
@@ -248,8 +220,4 @@
 
         </table>
     </div>
-
-    @*<div style="text-align:right;margin-top:10px;">
-            <strong>Total Row:</strong> @(Model != null ? Model.Count : 0)
-        </div>*@
 </div>
