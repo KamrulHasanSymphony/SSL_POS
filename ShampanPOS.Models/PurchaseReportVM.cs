@@ -106,6 +106,12 @@ namespace ShampanPOS.Models
         public decimal? TotalInvoice { get; set; }
         public string? ProductCode { get; set; }
         public string? SupplierCode { get; set; }
+        public decimal PurchaseQty { get; set; }
+        public decimal RemainQty { get; set; }
+        public decimal PurchaseOrderQty { get; set; }
+        public decimal PurchaseTotalAmount { get; set; }
+        public decimal PurchaseOrderTotalAmount { get; set; }
+
 
     }
 }
