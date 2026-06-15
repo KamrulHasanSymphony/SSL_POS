@@ -1071,97 +1071,145 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         }
 
-            //public ActionResult SaleListReport(int? customerId, string fromDate, string toDate, string reportType, bool isSummary, int? productId, string customerCode, string customerName, string productName)
-            //{
-            //    string byGroup = customerId?.ToString() ?? "All";
+        //public ActionResult SaleListReport(int? customerId, string fromDate, string toDate, string reportType, bool isSummary, int? productId, string customerCode, string customerName, string productName)
+        //{
+        //    string byGroup = customerId?.ToString() ?? "All";
 
-            //    List<SaleReportVM> vmList = new List<SaleReportVM>();
+        //    List<SaleReportVM> vmList = new List<SaleReportVM>();
 
-            //    SaleReportVM param = new SaleReportVM();
+        //    SaleReportVM param = new SaleReportVM();
 
-            //    param.CustomerId = customerId ?? 0;
-            //    param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "2025-01-01" : fromDate;
-            //    param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("yyyy-MM-dd") : toDate;
-            //    param.IsSummary = isSummary;
-            //    param.ReportType = reportType ?? "";
-            //    param.ProductId = productId ?? 0;
+        //    param.CustomerId = customerId ?? 0;
+        //    param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "2025-01-01" : fromDate;
+        //    param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? DateTime.Now.ToString("yyyy-MM-dd") : toDate;
+        //    param.IsSummary = isSummary;
+        //    param.ReportType = reportType ?? "";
+        //    param.ProductId = productId ?? 0;
 
-            //    // Setting customer code and name
-            //    param.Code = string.IsNullOrEmpty(customerCode) ? "" : customerCode;
-            //    param.CustomerName = string.IsNullOrEmpty(customerName) ? "" : customerName;
+        //    // Setting customer code and name
+        //    param.Code = string.IsNullOrEmpty(customerCode) ? "" : customerCode;
+        //    param.CustomerName = string.IsNullOrEmpty(customerName) ? "" : customerName;
 
-            //    ResultVM result = _repo.GetSaleByList(param);
+        //    ResultVM result = _repo.GetSaleByList(param);
 
-            //    if (result.Status == "Success" && result.DataVM != null)
-            //    {
-            //        vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
-            //    }
+        //    if (result.Status == "Success" && result.DataVM != null)
+        //    {
+        //        vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
+        //    }
 
-            //    // Pass the selected filters to the view
-            //    ViewBag.CustomerId = customerId;
-            //    ViewBag.CustomerName = customerName ?? "All";
-            //    ViewBag.ProductId = productId ?? 0;
-            //    ViewBag.ProductName = productName ?? "All";
-            //    ViewBag.InvoiceFromDate = fromDate ?? "All";
-            //    ViewBag.InvoiceToDate = toDate ?? "All";
-            //    ViewBag.IsSummary = isSummary;
-            //    ViewBag.ReportType = reportType;
+        //    // Pass the selected filters to the view
+        //    ViewBag.CustomerId = customerId;
+        //    ViewBag.CustomerName = customerName ?? "All";
+        //    ViewBag.ProductId = productId ?? 0;
+        //    ViewBag.ProductName = productName ?? "All";
+        //    ViewBag.InvoiceFromDate = fromDate ?? "All";
+        //    ViewBag.InvoiceToDate = toDate ?? "All";
+        //    ViewBag.IsSummary = isSummary;
+        //    ViewBag.ReportType = reportType;
 
-            //    ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
-            //    ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
-
-
-            //    return View("SaleListReport", vmList);
-            //}
+        //    ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
+        //    ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
 
 
+        //    return View("SaleListReport", vmList);
+        //}
 
 
-            //public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,string reportType,bool isSummary,int? productId,string reportMode = "")
-
-            //{
-            //    List<SaleReportVM> vmList = new List<SaleReportVM>();
-
-            //    SaleReportVM param = new SaleReportVM();
-
-            //    param.CustomerId = customerId ?? 0;
-            //    param.ProductId = productId ?? 0;
-
-            //    param.InvoiceFromDate = string.IsNullOrEmpty(fromDate)? "2025-01-01": fromDate;
-
-            //    param.InvoiceToDate = string.IsNullOrEmpty(toDate)? DateTime.Now.ToString("yyyy-MM-dd"): toDate;
-
-            //    param.IsSummary = isSummary;
-
-            //    param.ReportType = reportType ?? "";
-
-            //    // 🔥 IMPORTANT: if you later use custom mode in repo
-            //    param.ReportMode = reportMode ?? "";
-
-            //    ResultVM result = _repo.GetSaleByList(param);
-
-            //    if (result.Status == "Success" && result.DataVM != null)
-            //    {
-            //        vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
-            //    }
-
-            //    // ✅ View flags
-            //    ViewBag.IsSummary = isSummary;
-            //    ViewBag.ReportType = reportType ?? "";
-            //    ViewBag.IsCustomReport = (reportMode == "CustomFilter");
-
-            //    string viewName = "SaleListReport";
-
-            //    return View(viewName, vmList);
-            //}
 
 
+        //public ActionResult SaleListReport(int? customerId,string fromDate,string toDate,string reportType,bool isSummary,int? productId,string reportMode = "")
+
+        //{
+        //    List<SaleReportVM> vmList = new List<SaleReportVM>();
+
+        //    SaleReportVM param = new SaleReportVM();
+
+        //    param.CustomerId = customerId ?? 0;
+        //    param.ProductId = productId ?? 0;
+
+        //    param.InvoiceFromDate = string.IsNullOrEmpty(fromDate)? "2025-01-01": fromDate;
+
+        //    param.InvoiceToDate = string.IsNullOrEmpty(toDate)? DateTime.Now.ToString("yyyy-MM-dd"): toDate;
+
+        //    param.IsSummary = isSummary;
+
+        //    param.ReportType = reportType ?? "";
+
+        //    // 🔥 IMPORTANT: if you later use custom mode in repo
+        //    param.ReportMode = reportMode ?? "";
+
+        //    ResultVM result = _repo.GetSaleByList(param);
+
+        //    if (result.Status == "Success" && result.DataVM != null)
+        //    {
+        //        vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
+        //    }
+
+        //    // ✅ View flags
+        //    ViewBag.IsSummary = isSummary;
+        //    ViewBag.ReportType = reportType ?? "";
+        //    ViewBag.IsCustomReport = (reportMode == "CustomFilter");
+
+        //    string viewName = "SaleListReport";
+
+        //    return View(viewName, vmList);
+        //}
 
 
 
 
 
-
-
+        public ActionResult CustomerSaleCollectionReportIndex()
+        {
+            var vm = new CustomerSaleCollectionReportVM();
+            vm.IsSummary = false;
+            return View(vm);
         }
+
+        public ActionResult CustomerSaleCollectionReportList(
+            int? customerId,
+            string customerName,
+            string fromDate,
+            string toDate,
+            bool isSummary)
+        {
+            List<CustomerSaleCollectionReportVM> vmList = new List<CustomerSaleCollectionReportVM>();
+
+            CustomerSaleCollectionReportVM param = new CustomerSaleCollectionReportVM();
+            param.CustomerId = customerId ?? 0;
+            param.FromDate = string.IsNullOrEmpty(fromDate) ? "" : fromDate;
+            param.ToDate = string.IsNullOrEmpty(toDate)
+                                    ? DateTime.Now.ToString("yyyy-MM-dd") : toDate;
+            param.IsSummary = isSummary;
+            param.Operation = isSummary ? "SUMMARY" : "DETAILS";
+
+            ResultVM result = _repo.GetCustomerSaleCollectionReportList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<CustomerSaleCollectionReportVM>>(
+                    result.DataVM.ToString());
+            }
+
+            // ViewBag
+            ViewBag.CustomerId = customerId ?? 0;
+            ViewBag.CustomerName = customerName ?? "All";
+            ViewBag.FromDate = fromDate ?? "All";
+            ViewBag.ToDate = toDate ?? "All";
+            ViewBag.IsSummary = isSummary;
+            ViewBag.CompanyName = Session["CompanyName"] != null
+                                       ? Session["CompanyName"].ToString() : "Shampan POS";
+            ViewBag.BranchName = Session["CurrentBranchName"].ToString();
+            ViewBag.PrintedBy = Session["UserId"].ToString();
+
+            string viewName = isSummary
+                ? "Reports/CustomerSaleCollectionSummary"
+                : "Reports/CustomerSaleCollectionDetails";
+
+            return View(viewName, vmList);
+        }
+
+
+
+    }
 }

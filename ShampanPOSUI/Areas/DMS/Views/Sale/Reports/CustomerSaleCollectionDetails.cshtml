@@ -1,0 +1,279 @@
+﻿@model List<ShampanPOS.Models.CustomerSaleCollectionReportVM>
+@{
+    ViewBag.Title = "Customer Sale & Collection Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var bd = new System.Globalization.CultureInfo("en-IN");
+
+    var totalSale = Model.Where(x => x.TransactionType == "Sale")
+                               .Sum(x => x.SaleAmount);
+    var totalCollection = Model.Where(x => x.TransactionType == "Collection")
+                               .Sum(x => x.CollectionAmount);
+    var outstanding = totalSale - totalCollection;
+}
+<style>
+    body {
+        font-family: Arial;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1300px;
+        margin: 20px auto;
+        border-radius: 6px;
+    }
+
+    .sslPrint {
+        background: #555;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        float: right;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+        table th, table td {
+            border: 1px solid #555;
+            padding: 6px;
+        }
+
+        table th {
+            background: #d0d0d0;
+            text-align: center;
+        }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .row-sale {
+        background: #f5f5f5;
+    }
+
+    .row-collection {
+        background: #e0e0e0;
+    }
+
+    .group-header td {
+        background: #333;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .total-sale {
+        background: #d8d8d8;
+        font-weight: bold;
+    }
+
+    .total-collection {
+        background: #c0c0c0;
+        font-weight: bold;
+    }
+
+    .total-grand {
+        background: #333;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .report-footer {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
+        }
+
+        .sslPrint {
+            display: none !important;
+        }
+
+        .report-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 10px;
+            border: none;
+        }
+
+        @@page {
+            size: A4 landscape;
+            margin: 15mm 10mm;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+
+        table th, table td {
+            font-size: 10px;
+            padding: 3px 4px;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint">🖨️ Print</button>
+
+<div class="report-box">
+    <table style="border:none; margin-bottom:10px;">
+        <tr>
+            <td style="width:140px; border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px;height:120px;" />
+            </td>
+            <td style="text-align:right; border:none;">
+                <h3 style="margin:0;">@ViewBag.CompanyName</h3>
+                <div>@ViewBag.BranchName</div>
+                <div>📞 01612264439</div>
+            </td>
+        </tr>
+    </table>
+    <hr />
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:11px;">
+        <div>
+            <strong>Customer:</strong> @ViewBag.CustomerName <br />
+            <strong>From Date:</strong> @ViewBag.FromDate
+        </div>
+        <div style="text-align:right;">
+            <strong>To Date:</strong> @ViewBag.ToDate <br />
+        </div>
+    </div>
+
+    <h3 style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px;">
+        CUSTOMER SALE & COLLECTION REPORT (DETAILS)
+    </h3>
+
+    <div style="margin-bottom:8px; font-size:12px;">
+        <span style="display:inline-block;width:14px;height:14px;background:#f5f5f5;
+                     border:1px solid #555;margin-right:4px;vertical-align:middle;"></span> Sale &nbsp;&nbsp;
+        <span style="display:inline-block;width:14px;height:14px;background:#e0e0e0;
+                     border:1px solid #555;margin-right:4px;vertical-align:middle;"></span> Collection
+    </div>
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    @*<th>SL</th>
+                    <th>Type</th>
+                    <th>Customer Code</th>
+                    <th>Customer Name</th>*@
+                    <th>Sale Code</th>
+                    <th>Invoice Date</th>
+                    <th>Sale Amount</th>
+                    <th>Collection Code</th>
+                    <th>Collection Date</th>
+                    <th>Collection Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int sl = 1;
+                    var customerGroups = Model.GroupBy(x => new { x.CustomerId, x.CustomerCode, x.CustomerName })
+                                             .OrderBy(g => g.Key.CustomerName);
+
+                    foreach (var custGroup in customerGroups)
+                    {
+                        <tr class="group-header">
+                            <td colspan="10">
+                                👤 Customer: @custGroup.Key.CustomerCode — @custGroup.Key.CustomerName
+                            </td>
+                        </tr>
+
+                        foreach (var item in custGroup.OrderBy(x => x.SaleId).ThenBy(x => x.TransactionType))
+                        {
+                            string rowCss = item.TransactionType == "Sale" ? "row-sale" : "row-collection";
+                            <tr class="@rowCss">
+                                @*<td class="text-center">@sl</td>
+                                <td>@item.TransactionType</td>
+                                <td>@item.CustomerCode</td>
+                                <td>@item.CustomerName</td>*@
+                                <td>@item.SaleCode</td>
+                                <td>@item.InvoiceDate</td>
+                                <td class="text-right">
+                                    @(item.TransactionType == "Sale" && item.SaleAmount != null
+                                    ? item.SaleAmount.Value.ToString("N2", bd) : "-")
+                                </td>
+                                <td>@item.CollectionCode</td>
+                                <td>@item.CollectionDate</td>
+                                <td class="text-right">
+                                    @(item.TransactionType == "Collection" && item.CollectionAmount != null
+                                    ? item.CollectionAmount.Value.ToString("N2", bd) : "-")
+                                </td>
+                            </tr>
+                            sl++;
+                        }
+
+                        var custSale = custGroup.Where(x => x.TransactionType == "Sale").Sum(x => x.SaleAmount);
+                        var custColl = custGroup.Where(x => x.TransactionType == "Collection").Sum(x => x.CollectionAmount);
+                        <tr style="background:#c8c8c8; font-weight:bold;">
+                            <td colspan="2" class="text-right">
+                                Subtotal — @custGroup.Key.CustomerName:
+                            </td>
+                            <td class="text-right">@custSale</td>
+                            <td colspan="2" class="text-right">Outstanding:</td>
+                            <td class="text-right">@((custSale - custColl))</td>
+                        </tr>
+                    }
+
+                    <tr class="total-sale">
+                        <td colspan="2" class="text-right">Total Sale:</td>
+                        <td class="text-right">@totalSale</td>
+                        <td colspan="1"></td>
+                    </tr>
+                    <tr class="total-collection">
+                        <td colspan="5" class="text-right">Total Collection:</td>
+                        <td colspan="1" class="text-right">@totalCollection</td>
+                    </tr>
+                    <tr class="total-grand">
+                        <td colspan="5" class="text-right">Total Outstanding:</td>
+                        <td colspan="1" class="text-right">@outstanding</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr><td colspan="6" class="text-center">No data found</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-footer" style="border-top:1px solid #ccc; padding-top:5px;">
+        <div>
+            <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") |
+            <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
+        </div>
+        <div><strong>Total Records:</strong> @(Model?.Count ?? 0)</div>
+    </div>
+</div>
