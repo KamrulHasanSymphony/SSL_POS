@@ -1209,6 +1209,73 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View(viewName, vmList);
         }
 
+        public ActionResult SalevsSaleReturnReportIndex()
+        {
+            var vm = new SaleReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+        public ActionResult SalevsSaleReturnReportList(int? customerId,
+            string customerName, string fromDate, string toDate, bool isSummary, int? productId, int? saleId, int? saleReturnId, string productName, int? companyId)
+        {
+            List<SaleReportVM> vmList = new List<SaleReportVM>();
+            var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
+            SaleReportVM param = new SaleReportVM();
+
+            param.ProductId = productId ?? 0;
+            param.CompanyId = Convert.ToInt32(company);
+
+            param.SaleId = saleId ?? 0;
+            param.SaleReturnId = saleReturnId ?? 0;
+            param.ProductName = productName ?? "";
+            param.InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "": fromDate;
+
+            param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? "": toDate;
+            param.IsSummary = isSummary;
+
+
+            ResultVM result = _repo.SalevsSaleReturnReportList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>
+                (
+                    result.DataVM.ToString()
+                );
+            }
+
+            // ViewBag
+
+            ViewBag.ProductId = productId ?? 0;
+            ViewBag.ProductName = productName ?? "All";
+
+            ViewBag.PurchaseId = saleId ?? 0;
+            ViewBag.PurchaseOrderId = saleReturnId ?? 0;
+
+            ViewBag.InvoiceFromDate = fromDate ?? "All";
+            ViewBag.InvoiceToDate = toDate ?? "All";
+
+            ViewBag.IsSummary = isSummary;
+
+            ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
+            ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
+
+
+            // ==========================
+            // Summary / Details View
+            // ==========================
+
+            string viewName = isSummary
+                ? "Reports/PurchaseOrdervsPurchaseSummary"
+                : "Reports/PurchaseOrdervsPurchaseDetails";
+
+            return View(viewName, vmList);
+
+
+        }
+
 
 
     }

@@ -2822,6 +2822,7 @@
     <Content Include="Areas\DMS\Views\Sale\CustomerSaleCollectionReportIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\Reports\CustomerSaleCollectionDetails.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\Reports\CustomerSaleCollectionSummary.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\SalevsSaleReturnReportIndex.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />
