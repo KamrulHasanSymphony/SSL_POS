@@ -35,7 +35,7 @@ namespace ShampanPOS.Models
         [DisplayName("Transaction Type")]
         public string? TransactionType { get; set; }
         [DisplayName("Summary")]
-        public bool IsSummary { get; set; }
+        public bool? IsSummary { get; set; }
         [DisplayName("From Date")]
         public string? FromDate { get; set; }
         [DisplayName("To Date")]

@@ -146,43 +146,44 @@
                     @*<th>SL</th>
                     <th>Customer Code</th>*@
                     <th>Customer Name</th>
-                    <th>Sale Count</th>
+                    @*<th>Sale Count</th>*@
                     <th>Total Sale Amount</th>
-                    <th>Collection Count</th>
+                    @*<th>Collection Count</th>*@
                     <th>Total Collection Amount</th>
                     <th>Outstanding Amount</th>
-                    <th>Last Collection Date</th>
-                    <th>Last Collection Amount</th>
+                    @*<th>Last Collection Date</th>*@
+                    @*<th>Last Collection Amount</th>*@
                 </tr>
             </thead>
             <tbody>
                 @if (Model != null && Model.Any())
                 {
                     int sl = 1;
-                    foreach (var item in Model)
+                    foreach (var item in Model.Where(x => x.SaleCount > 0))
                     {
                         <tr>
                             @*<td class="text-center">@sl</td>
-                            <td>@item.CustomerCode</td>*@
-                            <td>@item.CustomerName</td>
-                            <td class="text-center">@item.SaleCount</td>
+                    <td>@item.CustomerCode</td>*@
+                            <td>@item.CustomerName (@item.CustomerCode)</td>
+                            @*<td class="text-center">@item.SaleCount</td>*@
                             <td class="text-right">@item.TotalSaleAmount</td>
-                            <td class="text-center">@item.CollectionCount</td>
+                            @*<td class="text-center">@item.CollectionCount</td>*@
                             <td class="text-right">@item.TotalCollectionAmount</td>
                             <td class="text-right">@item.OutstandingAmount</td>
-                            <td class="text-center">@item.LastCollectionDate</td>
-                            <td class="text-right">@item.LastCollectionAmount</td>
+                            @*<td class="text-center">@item.LastCollectionDate</td>*@
+                            @*<td class="text-right">@item.LastCollectionAmount</td>*@
                         </tr>
                         sl++;
                     }
 
                     <tr class="total-grand">
-                        <td colspan="4" class="text-right">Grand Total:</td>
+                        @*<td colspan="4" class="text-right">Grand Total:</td>*@
+                        <td class="text-right">Grand Total:</td>
                         <td class="text-right">@grandSale</td>
-                        <td></td>
+                        @*<td></td>*@
                         <td class="text-right">@grandCollection</td>
                         <td class="text-right">@grandOutstanding</td>
-                        <td colspan="2"></td>
+                        @*<td colspan="2"></td>*@
                     </tr>
                 }
                 else
@@ -198,6 +199,6 @@
             <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") |
             <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
         </div>
-        <div><strong>Total Records:</strong> @(Model?.Count ?? 0)</div>
+        @*<div><strong>Total Records:</strong> @(Model?.Count ?? 0)</div>*@
     </div>
 </div>
