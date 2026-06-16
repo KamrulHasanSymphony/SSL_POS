@@ -158,6 +158,7 @@
     <Compile Include="MasterSupplierGroupVM.cs" />
     <Compile Include="SupplierProductReportVM.cs" />
     <Compile Include="SupplierProductVM.cs" />
+    <Compile Include="SupplierPurchasePaymentReportVM.cs" />
     <Compile Include="TableInfoVM.cs" />
     <Compile Include="TableReservationVM.cs" />
     <Compile Include="TableSectionVm.cs" />
