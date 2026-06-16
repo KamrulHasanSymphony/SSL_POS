@@ -1555,14 +1555,15 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View(vm);
         }
 
-        public ActionResult PurchaseOrdervsPurchaseReportList(int? supplierId, string fromDate, string toDate, string purchaseFromDate, string purchaseToDate, bool isSummary, int? productId, int? purchaseId, int? purchaseOrderId, string supplierCode, string supplierName, string productName)
+        public ActionResult PurchaseOrdervsPurchaseReportList(int? supplierId, string fromDate, string toDate, string purchaseFromDate, string purchaseToDate, bool isSummary, int? productId, int? purchaseId, int? purchaseOrderId, string supplierCode, string supplierName, string productName, int? companyId)
         {
             List<PurchaseReportVM> vmList = new List<PurchaseReportVM>();
-
+            var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
             PurchaseReportVM param = new PurchaseReportVM();
 
             param.SupplierId = supplierId ?? 0;
             param.ProductId = productId ?? 0;
+            param.CompanyId = Convert.ToInt32(company);
 
             param.PurchaseId = purchaseId ?? 0;
             param.PurchaseOrderId = purchaseOrderId ?? 0;

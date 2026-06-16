@@ -105,104 +105,108 @@
         var bd = new CultureInfo("en-IN");
     }
 
-    <table>
-        <thead>
-            <tr>
-                <th>Supplier Code</th>
-                <th>Supplier Name</th>
+<table>
+    <thead>
+        <tr>
+            <th>Supplier</th>
 
-                <th>Product Code</th>
-                <th>Product Name</th>
+            <th>PO No</th>
 
-                <th>Purchase No</th>
-                <th>Purchase Order No</th>
+            <th>Purchase No</th>
+            <th>Product</th>
 
-                <th>Invoice Date</th>
-                <th>Order Date</th>
-                <th>Purchase Date</th>
+            @*<th>Invoice Date</th>*@
+            <th>Order Date</th>
+            <th>Purchase Date</th>
 
-                <th>PO Qty</th>
-                <th>PO Amount</th>
+            <th>PO Qty</th>
+            <th>PO Amount</th>
 
-                <th>Purchase Qty</th>
-                <th>Purchase Amount</th>
+            <th>Purchase Qty</th>
+            <th>Purchase Amount</th>
 
-                <th>Remain Qty</th>
-            </tr>
-        </thead>
+            <th>Remain Qty</th>
+        </tr>
+    </thead>
 
-        <tbody>
+    <tbody>
 
-            @if (Model != null && Model.Any())
-            {
-                foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.SupplierCode</td>
-                        <td>@item.SupplierName</td>
-
-                        <td>@item.ProductCode</td>
-                        <td>@item.ProductName</td>
-
-                        <td>@item.Code</td>
-                        <td>@item.PurchaseOrderNo</td>
-
-                        <td>@item.InvoiceDateTime</td>
-                        <td>@item.OrderDate</td>
-                        <td>@item.PurchaseDate</td>
-
-                        <td class="text-right">@item.PurchaseOrderQty</td>
-
-                        <td class="text-right">
-                            @((item.PurchaseOrderTotalAmount).ToString("N2", bd))
-                        </td>
-
-                        <td class="text-right">@item.PurchaseQty</td>
-
-                        <td class="text-right">
-                            @((item.PurchaseTotalAmount).ToString("N2", bd))
-                        </td>
-
-                        <td class="text-right">@item.RemainQty</td>
-                    </tr>
-                }
-
-                <!-- TOTAL ROW -->
-                <tr style="font-weight:bold;background:#f1f1f1;">
-
-                    <td colspan="9">Total</td>
-
-                    <td class="text-right">
-                        @Model.Sum(x => x.PurchaseOrderQty)
-                    </td>
-
-                    <td class="text-right">
-                        @Model.Sum(x => x.PurchaseOrderTotalAmount).ToString("N2", bd)
-                    </td>
-
-                    <td class="text-right">
-                        @Model.Sum(x => x.PurchaseQty)
-                    </td>
-
-                    <td class="text-right">
-                        @Model.Sum(x => x.PurchaseTotalAmount).ToString("N2", bd)
-                    </td>
-
-                    <td class="text-right">
-                        @Model.Sum(x => x.RemainQty)
-                    </td>
-
-                </tr>
-            }
-            else
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
             {
                 <tr>
-                    <td colspan="14" style="text-align:center;">
-                        No data found
+                    <td> @item.SupplierName (@item.SupplierCode) </td>
+
+                    <td>@item.PurchaseOrderNo</td>
+
+                    <td>@item.Code</td>
+                    <td> @item.ProductName (@item.ProductCode) </td>
+
+                    @*<td>@item.InvoiceDateTime</td>*@
+                    <td>@item.OrderDate</td>
+                    <td>@item.PurchaseDate</td>
+
+                    <td class="text-right">
+                        @item.PurchaseOrderQty
+                    </td>
+
+                    <td class="text-right">
+                        @item.PurchaseOrderTotalAmount.ToString("N2", bd)
+                    </td>
+
+                    <td class="text-right">
+                        @item.PurchaseQty
+                    </td>
+
+                    <td class="text-right">
+                        @item.PurchaseTotalAmount.ToString("N2", bd)
+                    </td>
+
+                    <td class="text-right">
+                        @item.RemainQty
                     </td>
                 </tr>
             }
 
-        </tbody>
-    </table>
+            <!-- TOTAL ROW -->
+            <tr style="font-weight:bold;background:#f1f1f1;">
+
+                <td colspan="6">
+                    Total
+                </td>
+
+                <td class="text-right">
+                    @Model.Sum(x => x.PurchaseOrderQty)
+                </td>
+
+                <td class="text-right">
+                    @Model.Sum(x => x.PurchaseOrderTotalAmount).ToString("N2", bd)
+                </td>
+
+                <td class="text-right">
+                    @Model.Sum(x => x.PurchaseQty)
+                </td>
+
+                <td class="text-right">
+                    @Model.Sum(x => x.PurchaseTotalAmount).ToString("N2", bd)
+                </td>
+
+                <td class="text-right">
+                    @Model.Sum(x => x.RemainQty)
+                </td>
+
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="11" style="text-align:center;">
+                    No data found
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
 </div>
