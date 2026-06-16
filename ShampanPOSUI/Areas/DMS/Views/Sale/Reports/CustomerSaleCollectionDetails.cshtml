@@ -199,13 +199,18 @@
                         .GroupBy(x => new { x.CustomerId, x.CustomerCode, x.CustomerName })
                         .OrderBy(g => g.Key.CustomerName);
 
+                    bool isMultipleCustomers = customerGroups.Count() > 1;
+
                     foreach (var custGroup in customerGroups)
                     {
-                        <tr class="group-header">
-                            <td colspan="6">
-                                👤 Customer: @custGroup.Key.CustomerCode — @custGroup.Key.CustomerName
-                            </td>
-                        </tr>
+                        if (isMultipleCustomers)
+                        {
+                            <tr class="group-header">
+                                <td colspan="6">
+                                    👤 Customer: @custGroup.Key.CustomerCode — @custGroup.Key.CustomerName
+                                </td>
+                            </tr>
+                        }
 
                         var saleItems = custGroup
                             .Where(x => x.TransactionType == "Sale")
@@ -279,14 +284,17 @@
                             </tr>
                         }
 
-                        <tr style="background:#c8c8c8; font-weight:bold;">
-                            <td colspan="2" class="text-right">
-                                Subtotal — @custGroup.Key.CustomerName:
-                            </td>
-                            <td class="text-right">@custSaleTotal.ToString("N2", bd)</td>
-                            <td colspan="2" class="text-right">Outstanding:</td>
-                            <td class="text-right">@((custSaleTotal - custCollTotal).ToString("N2", bd))</td>
-                        </tr>
+                        if (isMultipleCustomers)
+                        {
+                            <tr style="background:#c8c8c8; font-weight:bold;">
+                                <td colspan="2" class="text-right">
+                                    Subtotal — @custGroup.Key.CustomerName:
+                                </td>
+                                <td class="text-right">@custSaleTotal.ToString("N2", bd)</td>
+                                <td colspan="2" class="text-right">Outstanding:</td>
+                                <td class="text-right">@((custSaleTotal - custCollTotal).ToString("N2", bd))</td>
+                            </tr>
+                        }
                     }
 
                     <tr class="total-sale">

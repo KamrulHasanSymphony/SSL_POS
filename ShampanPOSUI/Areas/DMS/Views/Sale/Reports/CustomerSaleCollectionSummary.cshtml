@@ -159,11 +159,11 @@
                 @if (Model != null && Model.Any())
                 {
                     int sl = 1;
-                    foreach (var item in Model)
+                    foreach (var item in Model.Where(x => x.SaleCount > 0))
                     {
                         <tr>
                             @*<td class="text-center">@sl</td>
-                            <td>@item.CustomerCode</td>*@
+                    <td>@item.CustomerCode</td>*@
                             <td>@item.CustomerName</td>
                             <td class="text-center">@item.SaleCount</td>
                             <td class="text-right">@item.TotalSaleAmount</td>
