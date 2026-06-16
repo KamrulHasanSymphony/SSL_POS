@@ -1,0 +1,214 @@
+﻿@model ShampanPOS.Models.SupplierPurchasePaymentReportVM
+
+@{
+    ViewBag.Title = "Supplier Purchase & Payment Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Supplier Purchase &amp; Payment Report</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack">
+                        <img src="~/Content/css/ButtonsIcons/back-icon.png" title="Go Back" />
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="form-group row">
+
+                <!-- Supplier -->
+                <div class="col-sm-2">
+                    <label>Supplier</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="SupplierName" class="form-control" placeholder="Select Supplier" />
+                        <input type="hidden" id="SupplierId" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-warning" onclick="ClearSupplier()">✖</button>
+                            <button type="button" id="btnSupplierSearch" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- From Date -->
+                <div class="col-sm-2">
+                    <label>From Date</label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="FromDate" class="form-control form-control-sm kendoDatePicker" />
+                        <input type="checkbox" id="chkFromDate" style="margin-left:6px;" />
+                    </div>
+                </div>
+
+                <!-- To Date -->
+                <div class="col-sm-2">
+                    <label>To Date</label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="ToDate" class="form-control form-control-sm kendoDatePicker" />
+                        <input type="checkbox" id="chkToDate" style="margin-left:6px;" />
+                    </div>
+                </div>
+
+                <!-- Summary Toggle -->
+                <div class="col-sm-2 d-flex flex-column">
+                    <label>Summary</label>
+                    <div class="Onoffbtn">
+                        <div class="input-group" style="width:78%;">
+                            <input type="hidden" name="IsSummary" value="false" />
+                            <input id="IsSummary" name="IsSummary" type="checkbox" value="true"
+                                   data-bootstrap-switch
+                                   data-off-color="danger" data-on-color="success"
+                                   data-on-text="True" data-off-text="False" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print Button -->
+                <div class="col-sm-2 pt-4">
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="PrintSupplierPurchasePaymentReport()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Supplier Popup -->
+<div id="supplierWindow" style="display:none; padding:10px;">
+    <div id="supplierGrid"></div>
+</div>
+
+@section scripts {
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+    <script>
+    $(document).ready(function () {
+
+        $("[data-bootstrap-switch]").bootstrapSwitch();
+
+        $("#FromDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+        $("#ToDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+
+        var currentDate = new Date();
+        $("#FromDate").data("kendoDatePicker").value(currentDate);
+        $("#ToDate").data("kendoDatePicker").value(currentDate);
+
+        var fromPicker = $("#FromDate").data("kendoDatePicker");
+        var toPicker   = $("#ToDate").data("kendoDatePicker");
+
+        fromPicker.bind("change", function () {
+            var from = fromPicker.value(), to = toPicker.value();
+            if (from) toPicker.min(from);
+            if (from && to && from > to) {
+                toPicker.value(from);
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+        toPicker.bind("change", function () {
+            var from = fromPicker.value(), to = toPicker.value();
+            if (to) fromPicker.max(to);
+            if (from && to && from > to) {
+                fromPicker.value(to);
+                ShowNotification(3, "From Date cannot be greater than To Date");
+            }
+        });
+
+        $("#chkFromDate").change(function () {
+            var dp = $("#FromDate").data("kendoDatePicker");
+            dp.enable(this.checked);
+            if (!this.checked) {
+                dp.value(new Date());
+                $("#ToDate").data("kendoDatePicker").min(new Date(1900, 0, 1));
+            }
+        });
+
+        $("#chkToDate").change(function () {
+            var dp = $("#ToDate").data("kendoDatePicker");
+            dp.enable(this.checked);
+            if (!this.checked) {
+                dp.value(new Date());
+                $("#FromDate").data("kendoDatePicker").max(new Date(2099, 11, 31));
+            }
+        });
+
+        // Initially disable date pickers
+        $("#FromDate").data("kendoDatePicker").enable(false);
+        $("#ToDate").data("kendoDatePicker").enable(false);
+    });
+
+    // Supplier Popup
+    $("#btnSupplierSearch").on("click", function () { OpenSupplierPopup(); });
+
+    function OpenSupplierPopup() {
+        var wnd = $("#supplierWindow").data("kendoWindow");
+        if (!wnd) {
+            $("#supplierWindow").kendoWindow({
+                width: "600px", height: "400px",
+                title: "Select Supplier", modal: true, visible: false
+            });
+            wnd = $("#supplierWindow").data("kendoWindow");
+        }
+        wnd.center().open();
+
+        $("#supplierGrid").kendoGrid({
+            dataSource: {
+                transport: { read: { url: "/Common/Common/GetSupplierModal", dataType: "json" } }
+            },
+            height: 320, sortable: true, filterable: true, pageable: true, selectable: "row",
+            columns: [
+                { field: "Code", title: "Code", width: "120px" },
+                { field: "Name", title: "Name", width: "250px" }
+            ]
+        });
+
+        $("#supplierGrid").off("dblclick").on("dblclick", "tr", function () {
+            var grid = $("#supplierGrid").data("kendoGrid");
+            var item = grid.dataItem($(this));
+            ApplySupplierSelection(item);
+            wnd.close();
+        });
+    }
+
+    function ApplySupplierSelection(item) {
+        $("#SupplierId").val(item.Id);
+        $("#SupplierName").val(item.Code + " - " + item.Name);
+    }
+
+    function ClearSupplier() {
+        $("#SupplierId").val("");
+        $("#SupplierName").val("");
+    }
+
+    function PrintSupplierPurchasePaymentReport() {
+        var supplierId   = $("#SupplierId").val() || 0;
+        var supplierName = $("#SupplierName").val() || "";
+        var isSummary    = $("#IsSummary").is(":checked");
+        var fromDate     = $("#chkFromDate").is(":checked") ? $("#FromDate").val() : "";
+        var toDate       = $("#chkToDate").is(":checked")   ? $("#ToDate").val()   : "";
+
+        var url = '@Url.Action("SupplierPurchasePaymentReportList", "Purchase", new { area = "DMS" })'
+            + '?supplierId='   + supplierId
+            + '&supplierName=' + encodeURIComponent(supplierName)
+            + '&fromDate='     + fromDate
+            + '&toDate='       + toDate
+            + '&isSummary='    + isSummary;
+
+        window.open(url, "_blank");
+    }
+    </script>
+}

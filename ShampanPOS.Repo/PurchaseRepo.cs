@@ -432,7 +432,24 @@ namespace ShampanPOS.Repo
             }
         }
 
-
+        public ResultVM GetSupplierPurchasePaymentReportList(SupplierPurchasePaymentReportVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                var data = httpRequestHelper.PostData(
+                    "api/Report/GetSupplierPurchasePaymentReportList",
+                    authModel,
+                    JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
 
