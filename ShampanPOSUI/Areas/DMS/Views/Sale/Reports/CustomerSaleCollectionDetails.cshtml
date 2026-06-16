@@ -4,10 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var bd = new System.Globalization.CultureInfo("en-IN");
 
-    var totalSale = Model.Where(x => x.TransactionType == "Sale")
-                               .Sum(x => x.SaleAmount);
-    var totalCollection = Model.Where(x => x.TransactionType == "Collection")
-                               .Sum(x => x.CollectionAmount);
+    var totalSale = Model.Where(x => x.TransactionType == "Sale").Sum(x => x.SaleAmount ?? 0);
+    var totalCollection = Model.Where(x => x.TransactionType == "Collection").Sum(x => x.CollectionAmount ?? 0);
     var outstanding = totalSale - totalCollection;
 }
 <style>
@@ -184,10 +182,6 @@
         <table>
             <thead>
                 <tr>
-                    @*<th>SL</th>
-                    <th>Type</th>
-                    <th>Customer Code</th>
-                    <th>Customer Name</th>*@
                     <th>Sale Code</th>
                     <th>Invoice Date</th>
                     <th>Sale Amount</th>
@@ -199,66 +193,114 @@
             <tbody>
                 @if (Model != null && Model.Any())
                 {
-                    int sl = 1;
-                    var customerGroups = Model.GroupBy(x => new { x.CustomerId, x.CustomerCode, x.CustomerName })
-                                             .OrderBy(g => g.Key.CustomerName);
+                    decimal runningOutstanding = 0;
+
+                    var customerGroups = Model
+                        .GroupBy(x => new { x.CustomerId, x.CustomerCode, x.CustomerName })
+                        .OrderBy(g => g.Key.CustomerName);
 
                     foreach (var custGroup in customerGroups)
                     {
                         <tr class="group-header">
-                            <td colspan="10">
+                            <td colspan="6">
                                 👤 Customer: @custGroup.Key.CustomerCode — @custGroup.Key.CustomerName
                             </td>
                         </tr>
 
-                        foreach (var item in custGroup.OrderBy(x => x.SaleId).ThenBy(x => x.TransactionType))
+                        var saleItems = custGroup
+                            .Where(x => x.TransactionType == "Sale")
+                            .OrderBy(x => x.SaleId)
+                            .ToList();
+
+                        var collByKey = custGroup
+                            .Where(x => x.TransactionType == "Collection")
+                            .GroupBy(x => x.SaleId ?? 0)
+                            .ToDictionary(g => g.Key, g => g.ToList());
+
+                        decimal custSaleTotal = 0;
+                        decimal custCollTotal = 0;
+
+                        foreach (var sale in saleItems)
                         {
-                            string rowCss = item.TransactionType == "Sale" ? "row-sale" : "row-collection";
-                            <tr class="@rowCss">
-                                @*<td class="text-center">@sl</td>
-                                <td>@item.TransactionType</td>
-                                <td>@item.CustomerCode</td>
-                                <td>@item.CustomerName</td>*@
-                                <td>@item.SaleCode</td>
-                                <td>@item.InvoiceDate</td>
-                                <td class="text-right">
-                                    @(item.TransactionType == "Sale" && item.SaleAmount != null
-                                    ? item.SaleAmount.Value.ToString("N2", bd) : "-")
-                                </td>
-                                <td>@item.CollectionCode</td>
-                                <td>@item.CollectionDate</td>
-                                <td class="text-right">
-                                    @(item.TransactionType == "Collection" && item.CollectionAmount != null
-                                    ? item.CollectionAmount.Value.ToString("N2", bd) : "-")
-                                </td>
+                            custSaleTotal += sale.SaleAmount ?? 0;
+                            runningOutstanding += sale.SaleAmount ?? 0;
+
+                            int saleIdKey = sale.SaleId ?? 0;
+                            var colls = collByKey.ContainsKey(saleIdKey)
+                                        ? collByKey[saleIdKey]
+                                        : new List<ShampanPOS.Models.CustomerSaleCollectionReportVM>();
+
+                            var firstColl = colls.FirstOrDefault();
+                            decimal firstAmt = firstColl?.CollectionAmount ?? 0;
+                            custCollTotal += firstAmt;
+                            runningOutstanding -= firstAmt;
+
+                            <tr class="row-sale">
+                                <td>@sale.SaleCode</td>
+                                <td>@sale.InvoiceDate</td>
+                                <td class="text-right">@((sale.SaleAmount ?? 0).ToString("N2", bd))</td>
+                                <td>@(firstColl != null ? firstColl.CollectionCode : "-")</td>
+                                <td>@(firstColl != null ? firstColl.CollectionDate : "")</td>
+                                <td class="text-right">@(firstColl != null ? firstAmt.ToString("N2", bd) : "-")</td>
                             </tr>
-                            sl++;
+
+                            foreach (var coll in colls.Skip(1))
+                            {
+                                custCollTotal += coll.CollectionAmount ?? 0;
+                                runningOutstanding -= coll.CollectionAmount ?? 0;
+
+                                <tr class="row-collection">
+                                    <td style="color:#666; font-size:11px; padding-left:14px;">↳ @sale.SaleCode</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>@coll.CollectionCode</td>
+                                    <td>@coll.CollectionDate</td>
+                                    <td class="text-right">@((coll.CollectionAmount ?? 0).ToString("N2", bd))</td>
+                                </tr>
+                            }
                         }
 
-                        var custSale = custGroup.Where(x => x.TransactionType == "Sale").Sum(x => x.SaleAmount);
-                        var custColl = custGroup.Where(x => x.TransactionType == "Collection").Sum(x => x.CollectionAmount);
+                        var standaloneColls = collByKey.ContainsKey(0)
+                                             ? collByKey[0]
+                                             : new List<ShampanPOS.Models.CustomerSaleCollectionReportVM>();
+
+                        foreach (var coll in standaloneColls)
+                        {
+                            custCollTotal += coll.CollectionAmount ?? 0;
+                            runningOutstanding -= coll.CollectionAmount ?? 0;
+
+                            <tr class="row-collection">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@coll.CollectionCode</td>
+                                <td>@coll.CollectionDate</td>
+                                <td class="text-right">@((coll.CollectionAmount ?? 0).ToString("N2", bd))</td>
+                            </tr>
+                        }
+
                         <tr style="background:#c8c8c8; font-weight:bold;">
                             <td colspan="2" class="text-right">
                                 Subtotal — @custGroup.Key.CustomerName:
                             </td>
-                            <td class="text-right">@custSale</td>
+                            <td class="text-right">@custSaleTotal.ToString("N2", bd)</td>
                             <td colspan="2" class="text-right">Outstanding:</td>
-                            <td class="text-right">@((custSale - custColl))</td>
+                            <td class="text-right">@((custSaleTotal - custCollTotal).ToString("N2", bd))</td>
                         </tr>
                     }
 
                     <tr class="total-sale">
                         <td colspan="2" class="text-right">Total Sale:</td>
-                        <td class="text-right">@totalSale</td>
-                        <td colspan="1"></td>
+                        <td class="text-right">@totalSale.ToString("N2", bd)</td>
+                        <td colspan="3"></td>
                     </tr>
                     <tr class="total-collection">
                         <td colspan="5" class="text-right">Total Collection:</td>
-                        <td colspan="1" class="text-right">@totalCollection</td>
+                        <td class="text-right">@totalCollection.ToString("N2", bd)</td>
                     </tr>
                     <tr class="total-grand">
                         <td colspan="5" class="text-right">Total Outstanding:</td>
-                        <td colspan="1" class="text-right">@outstanding</td>
+                        <td class="text-right">@outstanding.ToString("N2", bd)</td>
                     </tr>
                 }
                 else
