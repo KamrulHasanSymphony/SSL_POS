@@ -284,19 +284,18 @@
                             </tr>
                         }
 
-                        if (isMultipleCustomers)
-                        {
-                            <tr style="background:#c8c8c8; font-weight:bold;">
-                                <td colspan="2" class="text-right">
-                                    Subtotal — @custGroup.Key.CustomerName:
-                                </td>
-                                <td class="text-right">@custSaleTotal.ToString("N2", bd)</td>
-                                <td colspan="2" class="text-right">Outstanding:</td>
-                                <td class="text-right">@((custSaleTotal - custCollTotal).ToString("N2", bd))</td>
-                            </tr>
-                        }
+                        
+                        <tr style="background:#c8c8c8; font-weight:bold;">
+                            <td class="text-right">Sale Total:</td>
+                            <td class="text-right">@custSaleTotal.ToString("N2", bd)</td>
+                            <td class="text-right">Pay Total:</td>
+                            <td class="text-right">@custCollTotal.ToString("N2", bd)</td>
+                            <td class="text-right">Due:</td>
+                            <td class="text-right">@((custSaleTotal - custCollTotal).ToString("N2", bd))</td>
+                        </tr>
                     }
-
+                    if (isMultipleCustomers)
+                    {
                     <tr class="total-sale">
                         <td colspan="2" class="text-right">Total Sale:</td>
                         <td class="text-right">@totalSale.ToString("N2", bd)</td>
@@ -310,6 +309,7 @@
                         <td colspan="5" class="text-right">Total Outstanding:</td>
                         <td class="text-right">@outstanding.ToString("N2", bd)</td>
                     </tr>
+                    }
                 }
                 else
                 {
@@ -324,6 +324,6 @@
             <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") |
             <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
         </div>
-        <div><strong>Total Records:</strong> @(Model?.Count ?? 0)</div>
+        @*<div><strong>Total Records:</strong> @(Model?.Count ?? 0)</div>*@
     </div>
 </div>
