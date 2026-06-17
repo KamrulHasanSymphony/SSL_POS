@@ -1555,14 +1555,15 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View(vm);
         }
 
-        public ActionResult PurchaseOrdervsPurchaseReportList(int? supplierId, string fromDate, string toDate, string purchaseFromDate, string purchaseToDate, bool isSummary, int? productId, int? purchaseId, int? purchaseOrderId, string supplierCode, string supplierName, string productName)
+        public ActionResult PurchaseOrdervsPurchaseReportList(int? supplierId, string fromDate, string toDate, string purchaseFromDate, string purchaseToDate, bool isSummary, int? productId, int? purchaseId, int? purchaseOrderId, string supplierCode, string supplierName, string productName, int? companyId)
         {
             List<PurchaseReportVM> vmList = new List<PurchaseReportVM>();
-
+            var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
             PurchaseReportVM param = new PurchaseReportVM();
 
             param.SupplierId = supplierId ?? 0;
             param.ProductId = productId ?? 0;
+            param.CompanyId = Convert.ToInt32(company);
 
             param.PurchaseId = purchaseId ?? 0;
             param.PurchaseOrderId = purchaseOrderId ?? 0;
@@ -1638,6 +1639,52 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         }
 
+
+        public ActionResult SupplierPurchasePaymentReportIndex()
+        {
+            var vm = new SupplierPurchasePaymentReportVM();
+            vm.IsSummary = false;
+            return View(vm);
+        }
+
+        public ActionResult SupplierPurchasePaymentReportList(
+            int? supplierId,
+            string supplierName,
+            string fromDate,
+            string toDate,
+            bool isSummary)
+        {
+            List<SupplierPurchasePaymentReportVM> vmList = new List<SupplierPurchasePaymentReportVM>();
+            SupplierPurchasePaymentReportVM param = new SupplierPurchasePaymentReportVM();
+            param.SupplierId = supplierId ?? 0;
+            param.FromDate = string.IsNullOrEmpty(fromDate) ? "" : fromDate;
+            param.ToDate = string.IsNullOrEmpty(toDate) ? "" : toDate;
+            param.IsSummary = isSummary;
+            param.Operation = isSummary ? "SUMMARY" : "DETAILS";
+
+            ResultVM result = _repo.GetSupplierPurchasePaymentReportList(param);
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SupplierPurchasePaymentReportVM>>(
+                    result.DataVM.ToString());
+            }
+
+            ViewBag.SupplierId = supplierId ?? 0;
+            ViewBag.SupplierName = supplierName ?? "All";
+            ViewBag.FromDate = string.IsNullOrEmpty(fromDate) ? "All" : fromDate;
+            ViewBag.ToDate = string.IsNullOrEmpty(toDate) ? "All" : toDate;
+            ViewBag.IsSummary = isSummary;
+            ViewBag.CompanyName = Session["CompanyName"] != null
+                                        ? Session["CompanyName"].ToString() : "Shampan POS";
+            ViewBag.BranchName = Session["CurrentBranchName"].ToString();
+            ViewBag.PrintedBy = Session["UserId"].ToString();
+
+            string viewName = isSummary
+                ? "Reports/SupplierPurchasePaymentSummary"
+                : "Reports/SupplierPurchasePaymentDetails";
+
+            return View(viewName, vmList);
+        }
 
     }
 }

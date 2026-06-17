@@ -6,7 +6,6 @@
 
     bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
 }
-
 <style>
     body {
         font-family: Arial;
@@ -17,28 +16,15 @@
         background: white;
         padding: 20px;
         border: 1px solid #ccc;
-        max-width: 1000px;
+        max-width: 1100px;
         margin: 20px auto;
         border-radius: 6px;
-        overflow-x: auto;
     }
 
-    .sslPrint {
-        background: #17a2b8;
-        color: white;
-        padding: 8px 20px;
-        border-radius: 4px;
-        border: none;
-    }
-
-    /* ================= TABLE ================= */
     table {
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
-        table-layout: auto;
-        white-space: nowrap;
-        margin-bottom: 18px;
     }
 
         table th, table td {
@@ -55,44 +41,17 @@
         text-align: right;
     }
 
-    /* ================= SCROLL SUPPORT ================= */
-    .table-responsive {
-        overflow-x: auto;
-    }
-
-    /* ================= PRINT STYLE ================= */
-    @@media print {
-
-        body * {
-            visibility: hidden;
-        }
-
-        .report-box, .report-box * {
-            visibility: visible;
-        }
-
-        .report-box {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1000px; /* same as screen */
-            margin: 0;
-            padding: 20px;
-            background: #fff;
-            border: none;
-            overflow: visible;
-        }
-
-        .sslPrint {
-            display: none !important;
-        }
-        /* Optional: remove scroll effect in print */
-        .table-responsive {
-            overflow: visible !important;
-        }
+    .sslPrint {
+        background: #17a2b8;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        float: right;
+        margin-bottom: 10px;
     }
 </style>
+
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
     Print
 </button>
@@ -128,26 +87,21 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>Supplier</th>
+
                     <th>Purchase No</th>
-                    <th>Purchase Return No</th>
-                    <th>Supplier Code</th>
-                    <th>Supplier Name</th>
-                    <th>Product Code</th>
-                    <th>Product Name</th>
+                    <th>Product</th>
+
+                    <th>PR No</th>
+
                     <th>Invoice Date</th>
                     <th>Purchase Date</th>
 
-                    <th>Quantity</th>
+                    <th>Purchase Qty</th>
+                    <th>Purchase Amount</th>
 
-                    @if (!isSummary)
-                    {
-                        <th>Unit Price</th>
-                        <th>SD</th>
-                    }
-
-                    <th>Sub Total</th>
-                    <th>VAT Amount</th>
-                    <th>Line Total</th>
+                    <th>Return Qty</th>
+                    <th>Return Amount</th>
                 </tr>
             </thead>
 
@@ -157,76 +111,65 @@
                     foreach (var item in Model)
                     {
                         <tr>
+                            <td> @item.SupplierName (@item.SupplierCode) </td>
+
                             <td>@item.Code</td>
+                            <td> @item.ProductName (@item.ProductCode) </td>
+
                             <td>@item.PurchaseReturnNo</td>
-                            <td>@item.SupplierCode</td>
-                            <td>@item.SupplierName</td>
-                            <td>@item.ProductCode</td>
-                            <td>@item.ProductName</td>
+
                             <td>@item.InvoiceDateTime</td>
                             <td>@item.PurchaseDate</td>
-                            <td class="text-right">@item.Quantity</td>
-
-                            @if (!isSummary)
-                            {
-                                <td class="text-right">
-                                    @(Model.Sum(x => x.UnitPrice).ToString("N2", bd))
-                                </td>
-                                <td class="text-right">
-                                    @(Model.Sum(x => x.SD ?? 0).ToString("N2", bd))
-                                </td>
-                            }
 
                             <td class="text-right">
-                                @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
-                            </td>
-                            <td class="text-right">
-                                @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
+                                @item.PurchaseQty
                             </td>
 
                             <td class="text-right">
-                                @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                                @item.PurchaseTotalAmount.ToString("N2", bd)
+                            </td>
+
+                            <td class="text-right">
+                                @item.PurchaseReturnQty
+                            </td>
+
+                            <td class="text-right">
+                                @item.PurchaseReturnTotalAmount.ToString("N2", bd)
                             </td>
                         </tr>
                     }
 
                     <tr style="font-weight:bold; background:#f1f1f1;">
-                        <td colspan="8" style="text-align:left;">Total</td>
-
-                        <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-
-                        @if (!isSummary)
-                        {
-                            <td></td>
-                            <td></td>
-                        }
+                        <td colspan="6">Total</td>
 
                         <td class="text-right">
-                            @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
-                        </td>
-                        <td class="text-right">
-                            @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
+                            @Model.Sum(x => x.PurchaseQty)
                         </td>
 
                         <td class="text-right">
-                            @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                            @Model.Sum(x => x.PurchaseTotalAmount).ToString("N2", bd)
+                        </td>
+
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseReturnQty)
+                        </td>
+
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseReturnTotalAmount).ToString("N2", bd)
                         </td>
                     </tr>
-                }
+ }
                 else
                 {
-                    int totalColumns = isSummary ? 12 : 14;
                     <tr>
-                        <td colspan="@totalColumns" style="text-align:center; padding: 20px;">
+                        <td colspan="12" style="text-align:center; padding:20px;">
                             No purchase data found
                         </td>
                     </tr>
                 }
             </tbody>
-
         </table>
     </div>
-
     @*<div style="text-align:right;margin-top:10px;">
             <strong>Total Row:</strong> @(Model != null ? Model.Count : 0)
         </div>*@

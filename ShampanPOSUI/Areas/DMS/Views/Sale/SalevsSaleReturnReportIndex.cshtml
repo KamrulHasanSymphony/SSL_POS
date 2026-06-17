@@ -1,0 +1,474 @@
+﻿@model ShampanPOS.Models.SaleReportVM
+@{
+    ViewBag.Title = "Sale vs SaleReturn Report";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+
+    <div class="container-fluid">
+
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+
+                <h1 class="m-0">Customer Sale & Collection Report</h1>
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <ol class="breadcrumb float-sm-right">
+
+                    <li id="btnBack">
+
+                        <img src="~/Content/css/ButtonsIcons/back-icon.png" title="Go Back" />
+
+                    </li>
+
+                </ol>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="container-fluid">
+
+    <div class="card">
+
+        <div class="card-body p-2">
+
+            <div class="form-group row">
+
+
+
+                <!-- Customer -->
+
+                <div class="col-sm-2">
+
+                    <label>Customer</label>
+
+                    <div class="input-group input-group-sm">
+
+                        <input type="text" id="CustomerName" class="form-control" placeholder="Select Customer" />
+
+                        <input type="hidden" id="CustomerId" />
+
+                        <div class="input-group-append">
+
+                            <button type="button" class="btn btn-warning" onclick="ClearCustomer()">✖</button>
+
+                            <button type="button" id="btnCustomerSearch" class="btn btn-primary">
+
+                                <i class="fa fa-search"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- From Date -->
+
+                <div class="col-sm-2">
+
+                    <label>From Date</label>
+
+                    <div class="d-flex align-items-center">
+
+                        <input type="text" id="FromDate" class="form-control form-control-sm kendoDatePicker" />
+
+                        <input type="checkbox" id="chkFromDate" style="margin-left:6px;" />
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- To Date -->
+
+                <div class="col-sm-2">
+
+                    <label>To Date</label>
+
+                    <div class="d-flex align-items-center">
+
+                        <input type="text" id="ToDate" class="form-control form-control-sm kendoDatePicker" />
+
+                        <input type="checkbox" id="chkToDate" style="margin-left:6px;" />
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Summary Toggle -->
+
+                <div class="col-sm-2 d-flex flex-column">
+
+                    <label>Summary</label>
+
+                    <div class="Onoffbtn">
+
+                        <div class="input-group" style="width:78%;">
+
+                            <input type="hidden" name="IsSummary" value="false" />
+
+                            <input id="IsSummary" name="IsSummary" type="checkbox" value="true"
+                                   data-bootstrap-switch
+                                   data-off-color="danger" data-on-color="success"
+                                   data-on-text="True" data-off-text="False" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Print Button -->
+
+                <div class="col-sm-2 pt-4">
+
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="PrintCustomerSaleCollectionReport()">
+
+                        <i class="fas fa-print"></i> Print
+
+                    </button>
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Customer Popup Window -->
+
+<div id="customerWindow" style="display:none; padding:10px;">
+
+    <div style="margin-bottom:10px;">
+
+        <input id="CustomerGroupFilter" style="width:100%;" />
+
+    </div>
+
+    <div id="customerGrid"></div>
+
+</div>
+
+
+
+@section scripts {
+
+    <script src="~/Areas/Common/js/Services/CommonService.js"></script>
+
+    <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
+
+    <script>
+
+    $(document).ready(function () {
+
+
+
+        $("[data-bootstrap-switch]").bootstrapSwitch();
+
+
+
+        // Date Pickers
+
+        $("#FromDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+
+        $("#ToDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+
+
+
+        var currentDate = new Date();
+
+        $("#FromDate").data("kendoDatePicker").value(currentDate);
+
+        $("#ToDate").data("kendoDatePicker").value(currentDate);
+
+
+
+        // Date validation
+
+        var fromPicker = $("#FromDate").data("kendoDatePicker");
+
+        var toPicker = $("#ToDate").data("kendoDatePicker");
+
+
+
+        fromPicker.bind("change", function () {
+
+            var from = fromPicker.value(), to = toPicker.value();
+
+            if (from) toPicker.min(from);
+
+            if (from && to && from > to) {
+
+                toPicker.value(from);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+
+            }
+
+        });
+
+
+
+        toPicker.bind("change", function () {
+
+            var from = fromPicker.value(), to = toPicker.value();
+
+            if (to) fromPicker.max(to);
+
+            if (from && to && from > to) {
+
+                fromPicker.value(to);
+
+                ShowNotification(3, "From Date cannot be greater than To Date");
+
+            }
+
+        });
+
+
+
+        // Checkbox toggles
+
+        $("#chkFromDate").change(function () {
+
+            $("#FromDate").data("kendoDatePicker").enable(this.checked);
+
+            if (!this.checked)
+
+                $("#ToDate").data("kendoDatePicker").min(new Date(1900, 0, 1));
+
+        });
+
+
+
+        $("#chkToDate").change(function () {
+
+            $("#ToDate").data("kendoDatePicker").enable(this.checked);
+
+            if (!this.checked)
+
+                $("#FromDate").data("kendoDatePicker").max(new Date(2099, 11, 31));
+
+        });
+
+    });
+
+
+
+    // =====================
+
+    // Customer Popup
+
+    // =====================
+
+    $("#btnCustomerSearch").on("click", function () { OpenCustomerPopup(); });
+
+
+
+    function OpenCustomerPopup() {
+
+        var wnd = $("#customerWindow").data("kendoWindow");
+
+        if (!wnd) {
+
+            $("#customerWindow").kendoWindow({
+
+                width: "700px", height: "450px",
+
+                title: "Select Customer", modal: true, visible: false
+
+            });
+
+            wnd = $("#customerWindow").data("kendoWindow");
+
+        }
+
+        wnd.center().open();
+
+        LoadCustomerGroupCombo();
+
+
+
+        $("#customerGrid").kendoGrid({
+
+            dataSource: {
+
+                transport: { read: { url: "/Common/Common/GetCustomerModal", dataType: "json" } }
+
+            },
+
+            height: 350, sortable: true, filterable: true, pageable: true, selectable: "row",
+
+            columns: [
+
+                { field: "Code", title: "Code", width: "120px" },
+
+                { field: "Name", title: "Name", width: "200px" },
+
+                { field: "CustomerGroupName", title: "Group", width: "150px" }
+
+            ]
+
+        });
+
+
+
+        $("#customerGrid").off("dblclick").on("dblclick", "tr", function () {
+
+            var grid = $("#customerGrid").data("kendoGrid");
+
+            var item = grid.dataItem($(this));
+
+            ApplyCustomerSelection(item);
+
+            wnd.close();
+
+        });
+
+    }
+
+
+
+    function LoadCustomerGroupCombo() {
+
+        $.getJSON("/Common/Common/GetCustomerModal", function (data) {
+
+            var groupMap = {};
+
+            $.each(data, function (_, item) {
+
+                if (item.CustomerGroupId && item.CustomerGroupName && !groupMap[item.CustomerGroupId])
+
+                    groupMap[item.CustomerGroupId] = { Id: item.CustomerGroupId, Name: item.CustomerGroupName };
+
+            });
+
+            var existing = $("#CustomerGroupFilter").data("kendoComboBox");
+
+            if (existing) existing.destroy();
+
+            $("#CustomerGroupFilter").kendoComboBox({
+
+                dataTextField: "Name", dataValueField: "Id",
+
+                placeholder: "Filter by Group", filter: "contains",
+
+                dataSource: Object.values(groupMap),
+
+                change: applyCustomerGroupFilter, select: applyCustomerGroupFilter
+
+            });
+
+        });
+
+    }
+
+
+
+    function applyCustomerGroupFilter() {
+
+        var groupId = $("#CustomerGroupFilter").data("kendoComboBox").value();
+
+        var grid = $("#customerGrid").data("kendoGrid");
+
+        if (!grid) return;
+
+        if (!groupId) { grid.dataSource.filter([]); return; }
+
+        grid.dataSource.filter({ field: "CustomerGroupId", operator: "eq", value: parseInt(groupId) });
+
+    }
+
+
+
+    function ApplyCustomerSelection(item) {
+
+        $("#CustomerId").val(item.Id);
+
+        $("#CustomerName").val(item.Code + " - " + item.Name);
+
+    }
+
+
+
+    function ClearCustomer() {
+
+        $("#CustomerId").val("");
+
+        $("#CustomerName").val("");
+
+    }
+
+
+
+    // =====================
+
+    // Print
+
+    // =====================
+
+    function PrintCustomerSaleCollectionReport() {
+
+        var customerId   = $("#CustomerId").val() || 0;
+
+        var customerName = $("#CustomerName").val() || "";
+
+        var isSummary    = $("#IsSummary").is(":checked");
+
+        var fromDate     = $("#chkFromDate").is(":checked") ? $("#FromDate").val() : "";
+
+        var toDate       = $("#chkToDate").is(":checked") ? $("#ToDate").val() : "";
+
+
+
+        var url = '@Url.Action("CustomerSaleCollectionReportList", "Sale", new { area = "DMS" })'
+
+            + '?customerId='   + customerId
+
+            + '&customerName=' + encodeURIComponent(customerName)
+
+            + '&fromDate='     + fromDate
+
+            + '&toDate='       + toDate
+
+            + '&isSummary='    + isSummary;
+
+
+
+        window.open(url, "_blank");
+
+    }
+
+    </script>
+
+}

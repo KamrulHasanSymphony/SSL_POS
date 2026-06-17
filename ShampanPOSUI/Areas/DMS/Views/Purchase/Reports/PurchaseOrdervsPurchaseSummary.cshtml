@@ -17,10 +17,29 @@
         background: white;
         padding: 20px;
         border: 1px solid #ccc;
-        max-width: 1000px;
+        max-width: 1100px;
         margin: 20px auto;
         border-radius: 6px;
-        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        table th, table td {
+            border: 1px solid #777;
+            padding: 6px;
+        }
+
+        table th {
+            background: #e9e9e9;
+            text-align: center;
+        }
+
+    .text-right {
+        text-align: right;
     }
 
     .sslPrint {
@@ -29,69 +48,8 @@
         padding: 8px 20px;
         border-radius: 4px;
         border: none;
-    }
-
-    /* ================= TABLE ================= */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-        table-layout: auto;
-        white-space: nowrap;
-        margin-bottom: 18px;
-    }
-
-    table th, table td {
-        border: 1px solid #777;
-        padding: 6px;
-    }
-
-    table th {
-        background: #e9e9e9;
-        text-align: center;
-    }
-
-    .text-right {
-        text-align: right;
-    }
-
-    /* ================= SCROLL SUPPORT ================= */
-    .table-responsive {
-        overflow-x: auto;
-    }
-
-    /* ================= PRINT STYLE ================= */
-    @@media print {
-
-        body * {
-            visibility: hidden;
-        }
-
-        .report-box, .report-box * {
-            visibility: visible;
-        }
-
-        .report-box {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1000px;   /* same as screen */
-            margin: 0;
-            padding: 20px;
-            background: #fff;
-            border: none;
-            overflow: visible;
-        }
-
-        .sslPrint {
-            display: none !important;
-        }
-
-        /* Optional: remove scroll effect in print */
-        .table-responsive {
-            overflow: visible !important;
-        }
+        float: right;
+        margin-bottom: 10px;
     }
 </style>
 <button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
@@ -125,131 +83,90 @@
     @{
         var bd = new CultureInfo("en-IN");
     }
+
     <div class="table-responsive">
         <table class="table table-bordered">
 
             <thead>
                 <tr>
-                    <th>Purchase No</th>
-                    <th>Purchase Order No</th>
+                    <th>Supplier</th>
 
-                    <th>Product Code</th>
-                    <th>Product Name</th>
+                    <th>Product</th>
 
-                    <th>Invoice Date</th>
-                    <th>Purchase Date</th>
-                    <th>Order Date</th>
+                    <th>PO No</th>
 
-                    <th>Quantity</th>
+                    <th>PO Qty</th>
+                    <th>PO Amount</th>
 
-                    @if (!isSummary)
-                    {
-                        <th>Unit Price</th>
-                        <th>SD</th>
-                    }
+                    <th>Purchase Qty</th>
+                    <th>Purchase Amount</th>
 
-                    <th>Sub Total</th>
-                    <th>VAT Amount</th>
-                    <th>Line Total</th>
+                    <th>Remain Qty</th>
                 </tr>
             </thead>
 
             <tbody>
-
                 @if (Model != null && Model.Any())
                 {
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Code</td>
-                            <td>@item.Code</td>
+                            <td>@item.SupplierName (@item.SupplierCode)</td>
 
-                            <td>@item.SupplierCode</td>
-                            <td>@item.SupplierName</td>
+                            <td>@item.ProductName (@item.ProductCode)</td>
 
-                            <td>@item.Code</td>
-                            <td>@item.ProductName</td>
+                            <td>@item.PurchaseOrderNo</td>
 
-                            <td>@item.InvoiceDateTime</td>
-                            <td>@item.PurchaseDate</td>
-                            <td>@item.OrderDate</td>
-
-                            <td class="text-right">@item.Quantity</td>
-
-                            @if (!isSummary)
-                            {
-                                <td class="text-right">
-                                    @(Model.Sum(x => x.UnitPrice).ToString("N2", bd))
-                                </td>
-                                <td class="text-right">
-                                    @(Model.Sum(x => x.SD ?? 0).ToString("N2", bd))
-                                </td>
-                            }
+                            <td class="text-right">@item.PurchaseOrderQty</td>
 
                             <td class="text-right">
-                                @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
-                            </td>
-                            <td class="text-right">
-                                @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
+                                @item.PurchaseOrderTotalAmount.ToString("N2", bd)
                             </td>
 
+                            <td class="text-right">@item.PurchaseQty</td>
+
                             <td class="text-right">
-                                @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
+                                @item.PurchaseTotalAmount.ToString("N2", bd)
                             </td>
+
+                            <td class="text-right">@item.RemainQty</td>
                         </tr>
                     }
 
-                    <!-- ================= TOTAL ROW (PERFECT ALIGNMENT) ================= -->
-            <tr style="font-weight:bold;background:#f1f1f1;">
+                    <!-- TOTAL ROW -->
+                    <tr style="font-weight:bold;background:#f1f1f1;">
+                        <td colspan="3">Total</td>
 
-                @{
-                    int colBeforeQty = 9; // ALL columns before Quantity
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseOrderQty)
+                        </td>
 
-                    if (!isSummary)
-                    {
-                        colBeforeQty += 2;
-                    }
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseOrderTotalAmount).ToString("N2", bd)
+                        </td>
 
-                    int colAfterQty = 3; // SubTotal, VAT, LineTotal
-                }
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseQty)
+                        </td>
 
-                <td colspan="@colBeforeQty">Total</td>
+                        <td class="text-right">
+                            @Model.Sum(x => x.PurchaseTotalAmount).ToString("N2", bd)
+                        </td>
 
-                <td class="text-right">@Model.Sum(x => x.Quantity)</td>
-
-                @if (!isSummary)
-                {
-                    <td></td>
-                    <td></td>
-                }
-
-                <td class="text-right">
-                    @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
-                </td>
-                <td class="text-right">
-                    @(Model.Sum(x => x.VATAmount ?? 0).ToString("N2", bd))
-                </td>
-
-                <td class="text-right">
-                    @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
-                </td>
-            </tr>
+                        <td class="text-right">
+                            @Model.Sum(x => x.RemainQty)
+                        </td>
+                    </tr>
                 }
                 else
                 {
                     <tr>
-                        <td colspan="@(9 + (isSummary ? 0 : 2) + 4)" style="text-align:center;">
+                        <td colspan="8" style="text-align:center;">
                             No purchase data found
                         </td>
                     </tr>
                 }
-
             </tbody>
-
         </table>
     </div>
-
-    @*<div style="text-align:right;margin-top:10px;">
-            <strong>Total Row:</strong> @(Model != null ? Model.Count : 0)
-        </div>*@
 </div>
