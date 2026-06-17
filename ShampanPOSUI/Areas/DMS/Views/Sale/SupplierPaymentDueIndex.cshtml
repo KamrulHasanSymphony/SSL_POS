@@ -1,0 +1,178 @@
+﻿@model ShampanPOS.Models.SupplierPaymentDueVM
+@{
+    ViewBag.Title = "Supplier Payment Due";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Supplier Payment Due</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack">
+                        <img src="~/Content/css/ButtonsIcons/back-icon.png"
+                             title="Click for Go Back" />
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="form-group row">
+
+                <!-- Supplier -->
+                <div class="col-sm-2">
+                    <label>Supplier</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="SupplierName"
+                               class="form-control" placeholder="Select Supplier" />
+                        <input type="hidden" id="SupplierId" />
+                        <input type="hidden" id="SupplierCode" />
+                        <div class="input-group-append">
+                            <button type="button" id="btnClearSupplier"
+                                    class="btn btn-warning" onclick="ClearSupplier()">
+                                ✖
+                            </button>
+                            <button type="button" id="btnSupplierSearch"
+                                    class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2 pt-2">
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="PrintSupplierPaymentDue()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Supplier Popup -->
+<div id="supplierWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;">
+        <input id="SupplierGroupFilter" style="width:100%;" />
+    </div>
+    <div id="supplierGrid"></div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#btnSupplierSearch").on("click", function () {
+                OpenSupplierPopup();
+            });
+        });
+
+        function OpenSupplierPopup() {
+            var wnd = $("#supplierWindow").data("kendoWindow");
+            if (!wnd) {
+                $("#supplierWindow").kendoWindow({
+                    width: "700px", height: "450px",
+                    title: "Select Supplier", modal: true, visible: false
+                });
+                wnd = $("#supplierWindow").data("kendoWindow");
+            }
+            wnd.center().open();
+            LoadSupplierGroupCombo();
+
+            $("#supplierGrid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: { url: "/Common/Common/GetSupplierModal", dataType: "json" }
+                    }
+                },
+                height: 350, sortable: true, filterable: true,
+                pageable: true, selectable: "row",
+                columns: [
+                    { field: "Code", title: "Code",  width: "120px" },
+                    { field: "Name", title: "Name",  width: "200px" },
+                    { field: "GroupName", title: "Group", width: "150px" }
+                ]
+            });
+
+            $("#supplierGrid").off("dblclick").on("dblclick", "tr", function () {
+                var grid = $("#supplierGrid").data("kendoGrid");
+                var item = grid.dataItem($(this));
+                ApplySupplierSelection(item);
+                wnd.close();
+            });
+        }
+
+        function LoadSupplierGroupCombo() {
+            $.getJSON("/Common/Common/GetSupplierModal", function (data) {
+                var groupMap = {};
+                $.each(data, function (_, item) {
+                    if (item.SupplierGroupId && item.GroupName && !groupMap[item.SupplierGroupId])
+                        groupMap[item.SupplierGroupId] = {
+                            Id: item.SupplierGroupId, Name: item.GroupName
+                        };
+                });
+                var groupList = Object.values(groupMap);
+                var existing = $("#SupplierGroupFilter").data("kendoComboBox");
+                if (existing) existing.destroy();
+                $("#SupplierGroupFilter").kendoComboBox({
+                    dataTextField: "Name", dataValueField: "Id",
+                    placeholder: "Filter by Group", filter: "contains",
+                    dataSource: groupList,
+                    change: applySupplierGroupFilter,
+                    select: applySupplierGroupFilter
+                });
+            });
+        }
+
+        function applySupplierGroupFilter() {
+            var combo   = $("#SupplierGroupFilter").data("kendoComboBox");
+            var groupId = combo ? combo.value() : "";
+            var grid    = $("#supplierGrid").data("kendoGrid");
+            if (!grid) return;
+            if (!groupId) { grid.dataSource.filter([]); return; }
+            grid.dataSource.filter({
+                field: "SupplierGroupId", operator: "eq", value: parseInt(groupId)
+            });
+        }
+
+        function ApplySupplierSelection(item) {
+            $("#SupplierId").val(item.Id);
+            $("#SupplierCode").val(item.Code);
+            $("#SupplierName").val(item.Code + " - " + item.Name);
+        }
+
+        function ClearSupplier() {
+            $("#SupplierId").val("");
+            $("#SupplierCode").val("");
+            $("#SupplierName").val("");
+        }
+
+        function PrintSupplierPaymentDue() {
+            var supplierId   = $("#SupplierId").val()   || 0;
+            var supplierCode = $("#SupplierCode").val() || "";
+            var supplierName = $("#SupplierName").val() || "";
+            var branchCode   = '@(Session["CurrentBranchCode"] ?? "")';
+            var branchName   = '@(Session["CurrentBranchName"] ?? "")';
+
+            var url = '@Url.Action("SupplierPaymentDueList", "Sale", new { area = "DMS" })'
+                + '?supplierId='   + supplierId
+                + '&supplierCode=' + encodeURIComponent(supplierCode)
+                + '&supplierName=' + encodeURIComponent(supplierName)
+                + '&branchCode='   + encodeURIComponent(branchCode)
+                + '&branchName='   + encodeURIComponent(branchName);
+
+            window.open(url, "_blank");
+        }
+    </script>
+}
