@@ -156,6 +156,7 @@
     <Compile Include="Status.cs" />
     <Compile Include="MasterSupplierVM.cs" />
     <Compile Include="MasterSupplierGroupVM.cs" />
+    <Compile Include="SupplierPaymentDueVM.cs" />
     <Compile Include="SupplierProductReportVM.cs" />
     <Compile Include="SupplierProductVM.cs" />
     <Compile Include="SupplierPurchasePaymentReportVM.cs" />

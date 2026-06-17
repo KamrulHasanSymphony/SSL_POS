@@ -3,6 +3,11 @@
 @{
     var currentBranchName = Session["CurrentBranchName"] != null ? Session["CurrentBranchName"].ToString() : "";
     var UserId = Session["UserId"] != null ? Session["UserId"].ToString() : "";
+    //var compnay = Session["CompanyName"] != null ? Session["CompanyName"].ToString() : "";
+
+    var companyName = Session["CompanyName"] != null
+    ? Session["CompanyName"].ToString()
+    : "";
 }
 
 <!DOCTYPE html>
@@ -443,9 +448,14 @@
 
         <footer class="main-footer">
             <div class=" d-none d-sm-inline-block">
+        @*<strong>
+            Copyright &copy; 2024 - @DateTimeOffset.Now.ToString("yyyy")
+            Symphony Softtech Ltd.
+        </strong>*@
+
                 <strong>
-                    Copyright &copy; 2024 - @DateTimeOffset.Now.ToString("yyyy")
-                    Symphony Softtech Ltd.
+                    Copyright © 2024 - @DateTimeOffset.Now.ToString("yyyy")
+                    @companyName
                 </strong>
                 All rights reserved. &nbsp;&nbsp;
             </div>

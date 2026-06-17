@@ -18,6 +18,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using static ShampanPOS.Models.CommonModel;
 using static ShampanPOSUI.App_Start.IdentityConfig;
+using System.Security.Claims;
 
 namespace ShampanPOSUI.Controllers
 {
@@ -74,7 +75,7 @@ namespace ShampanPOSUI.Controllers
                 _companyRepo = new CompanyProfileRepo();
                 CommonVM commonVM = new CommonVM();
                 CompanyInfo companyInfo = new CompanyInfo();
-                SessionClear();
+                //SessionClear();
 
                 var result = _companyRepo.List(commonVM);
 
@@ -122,6 +123,7 @@ namespace ShampanPOSUI.Controllers
 
         [HttpPost]
         public async Task<ActionResult> Index(LoginResource model)
+        
         {
             _companyRepo = new CompanyProfileRepo();
             _userRepo = new UserProfileRepo();
@@ -137,6 +139,7 @@ namespace ShampanPOSUI.Controllers
                 var userName = model.UserName;
                 commonVM.Name = userName;
 
+
                 var userResult = _userRepo.LList(commonVM);
                 if (userResult != null && userResult.Status == "Success" && userResult.DataVM != null)
                 {
@@ -148,16 +151,41 @@ namespace ShampanPOSUI.Controllers
                         userInfo.Id = item.Id;
                         userInfo.UserName = item.UserName;
                         userInfo.ImagePath = item.ImagePath;
+
+                        userInfo.CompanyId = item.CompanyId;
+                        userInfo.CompanyName = item.CompanyName;
+
+                        userInfo.BranchId = item.BranchId;
+                        userInfo.BranchName = item.BranchName;
                         userInfos.Add(userInfo);
                     }
                 }
 
-                model.UserInfos = userInfos;
-                var currentUserImage = model.UserInfos.FirstOrDefault(x => x.UserName == model.UserName)?.ImagePath;
-                Session["UserImage"] = currentUserImage;
-                var userHashId = model.UserInfos .FirstOrDefault(x => x.UserName == model.UserName)?.Id;
+                //model.UserInfos = userInfos;
+                //var currentUserImage = model.UserInfos.FirstOrDefault(x => x.UserName == model.UserName)?.ImagePath;
+                //Session["UserImage"] = currentUserImage;
+                //var userHashId = model.UserInfos .FirstOrDefault(x => x.UserName == model.UserName)?.Id;
 
-                Session["UserHashId"] = userHashId;
+                //Session["UserHashId"] = userHashId;
+
+                model.UserInfos = userInfos;
+
+                var currentUser = model.UserInfos
+                    .FirstOrDefault(x => x.UserName == model.UserName);
+
+                if (currentUser != null)
+                {
+                    Session["UserImage"] = currentUser.ImagePath;
+                    Session["UserHashId"] = currentUser.Id;
+
+                    // Company Information
+                    Session["CompanyId"] = currentUser.CompanyId;
+                    Session["CompanyName"] = currentUser.CompanyName;
+
+                    // Branch (NEW)
+                    Session["BranchId"] = currentUser.BranchId;
+                    Session["BranchName"] = currentUser.BranchName;
+                }
 
 
                 var companyResult = _companyRepo.List(commonVM);
@@ -171,11 +199,12 @@ namespace ShampanPOSUI.Controllers
                         companyInfo = new CompanyInfo();
                         companyInfo.CompanyId = item.Id;
                         companyInfo.CompanyName = item.CompanyName;
+                        //companyInfo.CompanyName = "Bata";
                         companyInfos.Add(companyInfo);
                     }
                 }
 
-                model.CompanyInfos = companyInfos;
+               model.CompanyInfos = companyInfos;
 
                 //if (string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
                 //{
@@ -200,12 +229,12 @@ namespace ShampanPOSUI.Controllers
                 }
 
 
-                if (model.CompanyId == 0)
-                {
-                    model.Message = "Please Select Company.";
-                    ModelState.AddModelError("Message", "Please Select Company.");
-                    return View(model);
-                }
+                //if (model.CompanyId == 0)
+                //{
+                //    model.Message = "Please Select Company.";
+                //    ModelState.AddModelError("Message", "Please Select Company.");
+                //    return View(model);
+                //}
 
                 var result = _repo.SignInAuthentication(model);
 
@@ -223,25 +252,50 @@ namespace ShampanPOSUI.Controllers
 
                     ClaimNames.token = tokens.token.ToString();
 
-                    var companyName = model.CompanyInfos
-                        .FirstOrDefault(x => x.CompanyId == model.CompanyId)?.CompanyName;
+                    //var companyName = model.CompanyInfos
+                    //    .FirstOrDefault(x => x.CompanyId == model.CompanyId)?.CompanyName;
 
+                    var companyName = Session["CompanyName"]?.ToString() ?? "";
+                    var companyId = Session["CompanyId"]?.ToString() ?? "0";
+
+                    var branchId = Session["BranchId"]?.ToString()
+                       ?? currentUser?.BranchId?.ToString()
+                       ?? "0";
+
+                    var branchName = Session["BranchName"]?.ToString()
+                                     ?? currentUser?.BranchName
+                                     ?? "";
                     // Create a new ClaimsIdentity
                     var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                     identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName));
                     identity.AddClaim(new Claim(ClaimNames.UserId, model.UserName));
-                    identity.AddClaim(new Claim(ClaimNames.CompanyId, model.CompanyId.ToString()));
-                    identity.AddClaim(new Claim(ClaimNames.CompanyName, companyName ?? ""));
+                    //identity.AddClaim(new Claim(ClaimNames.CompanyId, model.CompanyId.ToString()));
+                    //identity.AddClaim(new Claim(ClaimNames.CompanyName, companyName ?? ""));
+                    identity.AddClaim(new Claim(ClaimNames.CompanyId, companyId));
+                    identity.AddClaim(new Claim(ClaimNames.CompanyName, companyName));
+
+
+                    identity.AddClaim(new Claim(ClaimNames.BranchId, branchId));
+                    identity.AddClaim(new Claim(ClaimNames.BranchName, branchName));
 
 
                     var authenticationManager = HttpContext.GetOwinContext().Authentication;
                     authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
 
                     // ✅ Store values in Session
+                    //Session["UserId"] = model.UserName;
+                    //Session["UserName"] = model.UserName;
+                    //Session["CompanyId"] = model.CompanyId.ToString();
+
                     Session["UserId"] = model.UserName;
                     Session["UserName"] = model.UserName;
-                    Session["CompanyId"] = model.CompanyId.ToString();
 
+                    Session["CompanyId"] = companyId;
+                    Session["CompanyName"] = companyName;
+
+
+                    Session["BranchId"] = branchId;
+                    Session["BranchName"] = branchName;
                     return RedirectToAction("Index", "Home", new { area = "Common", branchChange = false });
                 }
                 //else

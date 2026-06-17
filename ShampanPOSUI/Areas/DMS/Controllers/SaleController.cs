@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
-using OfficeOpenXml.Style;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Newtonsoft.Json;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using ShampanPOS.Models;
 using ShampanPOS.Models.KendoCommon;
 using ShampanPOS.Repo;
@@ -1209,6 +1210,45 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View(viewName, vmList);
         }
 
+        public ActionResult SupplierPaymentDueIndex()
+        {
+            var vm = new SupplierPaymentDueVM();
+            return View(vm);
+        }
+
+        public ActionResult SupplierPaymentDueList(
+    int? supplierId,
+    string supplierCode,
+    string supplierName,
+    string branchCode,
+    string branchName)
+        {
+            List<SupplierPaymentDueVM> vmList = new List<SupplierPaymentDueVM>();
+
+            SupplierPaymentDueVM param = new SupplierPaymentDueVM();
+            param.SupplierId = supplierId ?? 0;
+            param.BranchId = Convert.ToInt32(Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0");
+            param.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0");
+
+            ResultVM result = _repo.GetSupplierPaymentDueList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SupplierPaymentDueVM>>(
+                    result.DataVM.ToString());
+            }
+
+            ViewBag.SupplierId = supplierId ?? 0;
+            ViewBag.SupplierCode = supplierCode ?? "All";
+            ViewBag.SupplierName = supplierName ?? "All";
+            ViewBag.BranchCode = branchCode ?? "";
+            ViewBag.BranchName = branchName ?? "";
+            ViewBag.CompanyName = !string.IsNullOrEmpty(Convert.ToString(Session["CompanyName"]))
+                                    ? Session["CompanyName"].ToString()
+                                    : "Shampan POS";
+            ViewBag.PrintedBy = Session["UserId"].ToString(); 
+            return View("Reports/SupplierPaymentDueReport", vmList);
+        }
         public ActionResult SalevsSaleReturnReportIndex()
         {
             var vm = new SaleReportVM();
@@ -1280,6 +1320,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+            
 
     }
 }

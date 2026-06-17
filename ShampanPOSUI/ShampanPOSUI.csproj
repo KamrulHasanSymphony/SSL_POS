@@ -2825,6 +2825,8 @@
     <Content Include="Areas\DMS\Views\Purchase\SupplierPurchasePaymentReportIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Purchase\Reports\SupplierPurchasePaymentSummary.cshtml" />
     <Content Include="Areas\DMS\Views\Purchase\Reports\SupplierPurchasePaymentDetails.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\SupplierPaymentDueIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\Reports\SupplierPaymentDueReport.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\SalevsSaleReturnReportIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\Reports\SalevsSaleReturnSummary.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\Reports\SalevsSaleReturnDetails.cshtml" />
