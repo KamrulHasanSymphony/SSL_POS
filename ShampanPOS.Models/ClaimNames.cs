@@ -11,6 +11,8 @@
         public static string UserId { get; set; } = "CurrentUserId";
         public static string CompanyId { get; set; } = "1";
 
+        public const string BranchName = "BranchName";   
+        public const string BranchId = "BranchId";
         public static string token { get; set; } = "token";
         public static string Token_type { get; set; } = "Token_type";
         public static string Expires_in { get; set; } = "Expires_in";

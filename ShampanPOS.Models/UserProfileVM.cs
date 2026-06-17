@@ -95,6 +95,8 @@ namespace ShampanPOS.Models
 
         public int? BranchId { get; set; }
 
+        [Display(Name = "Branch Name")]
+        public string? BranchName { get; set; }
         public int? CompanyId { get; set; }
     }
 

@@ -42,6 +42,7 @@ namespace ShampanPOS.Models
         public string? EmailAsLoginId { get; set; }
 
         [Display(Name = "Password")]
+        [MinLength(6, ErrorMessage = "The password must be at least 6 characters long.")]
         //[StringLength(200, ErrorMessage = "Password cannot exceed 200 characters.")]
         [EmailAddress(ErrorMessage = "Invalid Password.")]
         public string? Password { get; set; }
