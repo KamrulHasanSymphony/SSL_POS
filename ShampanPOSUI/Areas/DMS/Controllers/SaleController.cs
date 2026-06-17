@@ -1246,7 +1246,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             ViewBag.CompanyName = !string.IsNullOrEmpty(Convert.ToString(Session["CompanyName"]))
                                     ? Session["CompanyName"].ToString()
                                     : "Shampan POS";
-            ViewBag.PrintedBy = Session["UserId"].ToString();
+            ViewBag.PrintedBy = Session["UserId"].ToString(); 
+            return View("Reports/SupplierPaymentDueReport", vmList);
+        }
         public ActionResult SalevsSaleReturnReportIndex()
         {
             var vm = new SaleReportVM();
@@ -1315,8 +1317,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
-            return View("Reports/SupplierPaymentDueReport", vmList);
-        }
+            
 
     }
 }
