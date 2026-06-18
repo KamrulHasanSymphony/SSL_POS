@@ -72,7 +72,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 {
                 var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
                 model.BranchId = Convert.ToInt32(currentBranchId);
+
                 model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
+                //model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
                 if (file != null && file.ContentLength > 0)
                     {
                         string uploadsFolder = Server.MapPath("~/Content/Products");
@@ -304,6 +307,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //this
+
                 result = _repo.GetGridData(options);
 
                 if (result.Status == "Success" && result.DataVM != null)
