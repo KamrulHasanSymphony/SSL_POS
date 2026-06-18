@@ -1,0 +1,330 @@
+﻿@model ShampanPOS.Models.SaleOrderStatusVM
+@{
+    ViewBag.Title = "Sale Order Status";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6"><h1 class="m-0">Sale Order Status Report</h1></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack">
+                        <img src="~/Content/css/ButtonsIcons/back-icon.png" title="Go Back" />
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="form-group row">
+
+                <!-- Customer -->
+                <div class="col-sm-2">
+                    <label>Customer</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="CustomerName" class="form-control" placeholder="Select Customer" />
+                        <input type="hidden" id="CustomerId" />
+                        <input type="hidden" id="CustomerCode" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-warning" onclick="ClearCustomer()">✖</button>
+                            <button type="button" id="btnCustomerSearch" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product -->
+                <div class="col-sm-2">
+                    <label>Product</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="ProductName" class="form-control" placeholder="Select Product" />
+                        <input type="hidden" id="ProductId" />
+                        <input type="hidden" id="ProductCode" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-warning" onclick="ClearProduct()">✖</button>
+                            <button type="button" id="btnProductSearch" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sale Order -->
+                <div class="col-sm-2">
+                    <label>Sale Order</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="SaleOrderCode" class="form-control" placeholder="Select Sale Order" />
+                        <input type="hidden" id="SaleOrderId" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-warning" onclick="ClearSaleOrder()">✖</button>
+                            <button type="button" id="btnSaleOrderSearch" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- From Date -->
+                <div class="col-sm-2">
+                    <label>From Date</label>
+                    <input type="text" id="FromDate" class="form-control form-control-sm" />
+                </div>
+
+                <!-- To Date -->
+                <div class="col-sm-2">
+                    <label>To Date</label>
+                    <input type="text" id="ToDate" class="form-control form-control-sm" />
+                </div>
+
+            </div>
+
+            <!-- Status Radio -->
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <label class="mr-3"><strong>Status:</strong></label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="StatusFilter"
+                               id="statusAll" value="All" checked />
+                        <label class="form-check-label" for="statusAll">All</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="StatusFilter"
+                               id="statusCompleted" value="Completed" />
+                        <label class="form-check-label" for="statusCompleted">Completed</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="StatusFilter"
+                               id="statusRemaining" value="Remaining" />
+                        <label class="form-check-label" for="statusRemaining">Remaining</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2 pt-2">
+                    <button type="button" class="btn btn-success btn-sm" onclick="PrintSaleOrderStatus()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Customer Popup -->
+<div id="customerWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;"><input id="CustomerGroupFilter" style="width:100%;" /></div>
+    <div id="customerGrid"></div>
+</div>
+
+<!-- Product Popup -->
+<div id="productWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;"><input id="ProductGroupFilter" style="width:100%;" /></div>
+    <div id="productGrid"></div>
+</div>
+
+<!-- Sale Order Popup -->
+<div id="saleOrderWindow" style="display:none; padding:10px;">
+    <div id="saleOrderGrid"></div>
+</div>
+
+@section scripts {
+    <script>
+    $(document).ready(function () {
+        $("#FromDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+        $("#ToDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+
+        $("#btnCustomerSearch").on("click",  OpenCustomerPopup);
+        $("#btnProductSearch").on("click",   OpenProductPopup);
+        $("#btnSaleOrderSearch").on("click", OpenSaleOrderPopup);
+    });
+
+    // ── Customer ──────────────────────────────────────────
+    function OpenCustomerPopup() {
+        var wnd = $("#customerWindow").data("kendoWindow");
+        if (!wnd) {
+            $("#customerWindow").kendoWindow({
+                width: "700px", height: "450px",
+                title: "Select Customer", modal: true, visible: false
+            });
+            wnd = $("#customerWindow").data("kendoWindow");
+        }
+        wnd.center().open();
+        LoadCustomerGroupCombo();
+        $("#customerGrid").kendoGrid({
+            dataSource: { transport: { read: { url: "/Common/Common/GetCustomerModal", dataType: "json" } } },
+            height: 350, sortable: true, filterable: true, pageable: true, selectable: "row",
+            columns: [
+                { field: "Code", title: "Code", width: "120px" },
+                { field: "Name", title: "Name", width: "200px" },
+                { field: "GroupName", title: "Group", width: "150px" }
+            ]
+        });
+        $("#customerGrid").off("dblclick").on("dblclick", "tr", function () {
+            var item = $("#customerGrid").data("kendoGrid").dataItem($(this));
+            $("#CustomerId").val(item.Id);
+            $("#CustomerCode").val(item.Code);
+            $("#CustomerName").val(item.Code + " - " + item.Name);
+            wnd.close();
+        });
+    }
+
+    function LoadCustomerGroupCombo() {
+        $.getJSON("/Common/Common/GetCustomerModal", function (data) {
+            var groupMap = {};
+            $.each(data, function (_, item) {
+                if (item.CustomerGroupId && !groupMap[item.CustomerGroupId])
+                    groupMap[item.CustomerGroupId] = { Id: item.CustomerGroupId, Name: item.GroupName };
+            });
+            var existing = $("#CustomerGroupFilter").data("kendoComboBox");
+            if (existing) existing.destroy();
+            $("#CustomerGroupFilter").kendoComboBox({
+                dataTextField: "Name", dataValueField: "Id",
+                placeholder: "Filter by Group", filter: "contains",
+                dataSource: Object.values(groupMap),
+                change: function () {
+                    var v = this.value();
+                    var grid = $("#customerGrid").data("kendoGrid");
+                    if (!grid) return;
+                    v ? grid.dataSource.filter({ field: "CustomerGroupId", operator: "eq", value: parseInt(v) })
+                      : grid.dataSource.filter([]);
+                }
+            });
+        });
+    }
+
+    function ClearCustomer() {
+        $("#CustomerId").val(""); $("#CustomerCode").val(""); $("#CustomerName").val("");
+    }
+
+    // ── Product ───────────────────────────────────────────
+    function OpenProductPopup() {
+        var wnd = $("#productWindow").data("kendoWindow");
+        if (!wnd) {
+            $("#productWindow").kendoWindow({
+                width: "700px", height: "450px",
+                title: "Select Product", modal: true, visible: false
+            });
+            wnd = $("#productWindow").data("kendoWindow");
+        }
+        wnd.center().open();
+        LoadProductGroupCombo();
+        $("#productGrid").kendoGrid({
+            dataSource: { transport: { read: { url: "/Common/Common/GetProductModal", dataType: "json" } } },
+            height: 350, sortable: true, filterable: true, pageable: true, selectable: "row",
+            columns: [
+                { field: "Code", title: "Code", width: "120px" },
+                { field: "Name", title: "Name", width: "200px" },
+                { field: "GroupName", title: "Group", width: "150px" }
+            ]
+        });
+        $("#productGrid").off("dblclick").on("dblclick", "tr", function () {
+            var item = $("#productGrid").data("kendoGrid").dataItem($(this));
+            $("#ProductId").val(item.Id);
+            $("#ProductCode").val(item.Code);
+            $("#ProductName").val(item.Code + " - " + item.Name);
+            wnd.close();
+        });
+    }
+
+    function LoadProductGroupCombo() {
+        $.getJSON("/Common/Common/GetProductModal", function (data) {
+            var groupMap = {};
+            $.each(data, function (_, item) {
+                if (item.ProductGroupId && !groupMap[item.ProductGroupId])
+                    groupMap[item.ProductGroupId] = { Id: item.ProductGroupId, Name: item.GroupName };
+            });
+            var existing = $("#ProductGroupFilter").data("kendoComboBox");
+            if (existing) existing.destroy();
+            $("#ProductGroupFilter").kendoComboBox({
+                dataTextField: "Name", dataValueField: "Id",
+                placeholder: "Filter by Group", filter: "contains",
+                dataSource: Object.values(groupMap),
+                change: function () {
+                    var v = this.value();
+                    var grid = $("#productGrid").data("kendoGrid");
+                    if (!grid) return;
+                    v ? grid.dataSource.filter({ field: "ProductGroupId", operator: "eq", value: parseInt(v) })
+                      : grid.dataSource.filter([]);
+                }
+            });
+        });
+    }
+
+    function ClearProduct() {
+        $("#ProductId").val(""); $("#ProductCode").val(""); $("#ProductName").val("");
+    }
+
+    // ── Sale Order ────────────────────────────────────────
+    function OpenSaleOrderPopup() {
+        var wnd = $("#saleOrderWindow").data("kendoWindow");
+        if (!wnd) {
+            $("#saleOrderWindow").kendoWindow({
+                width: "700px", height: "400px",
+                title: "Select Sale Order", modal: true, visible: false
+            });
+            wnd = $("#saleOrderWindow").data("kendoWindow");
+        }
+        wnd.center().open();
+        $("#saleOrderGrid").kendoGrid({
+            dataSource: { transport: { read: { url: "/Common/Common/GetSaleOrderModal", dataType: "json" } } },
+            height: 330, sortable: true, filterable: true, pageable: true, selectable: "row",
+            columns: [
+                { field: "Code",         title: "Order No",   width: "140px" },
+                { field: "CustomerName", title: "Customer",   width: "200px" },
+                { field: "OrderDate",    title: "Order Date", width: "120px" }
+            ]
+        });
+        $("#saleOrderGrid").off("dblclick").on("dblclick", "tr", function () {
+            var item = $("#saleOrderGrid").data("kendoGrid").dataItem($(this));
+            $("#SaleOrderId").val(item.Id);
+            $("#SaleOrderCode").val(item.Code);
+            wnd.close();
+        });
+    }
+
+    function ClearSaleOrder() {
+        $("#SaleOrderId").val(""); $("#SaleOrderCode").val("");
+    }
+
+    // ── Print ─────────────────────────────────────────────
+    function PrintSaleOrderStatus() {
+        var fromDate = "";
+        var toDate   = "";
+        var dpFrom   = $("#FromDate").data("kendoDatePicker");
+        var dpTo     = $("#ToDate").data("kendoDatePicker");
+        if (dpFrom && dpFrom.value()) {
+            var d = dpFrom.value();
+            fromDate = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+        }
+        if (dpTo && dpTo.value()) {
+            var d = dpTo.value();
+            toDate = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+        }
+
+        var url = '@Url.Action("SaleOrderStatusReport", "SaleOrder", new { area = "DMS" })'
+            + '?customerId='   + ($("#CustomerId").val()   || 0)
+            + '&customerCode=' + encodeURIComponent($("#CustomerCode").val() || "")
+            + '&customerName=' + encodeURIComponent($("#CustomerName").val() || "")
+            + '&productId='    + ($("#ProductId").val()    || 0)
+            + '&productCode='  + encodeURIComponent($("#ProductCode").val()  || "")
+            + '&productName='  + encodeURIComponent($("#ProductName").val()  || "")
+            + '&saleOrderId='  + ($("#SaleOrderId").val()  || 0)
+            + '&saleOrderCode='+ encodeURIComponent($("#SaleOrderCode").val()|| "")
+            + '&fromDate='     + encodeURIComponent(fromDate)
+            + '&toDate='       + encodeURIComponent(toDate)
+            + '&statusFilter=' + $("input[name='StatusFilter']:checked").val()
+            + '&branchCode='   + encodeURIComponent('@(Session["CurrentBranchCode"] ?? "")')
+            + '&branchName='   + encodeURIComponent('@(Session["CurrentBranchName"] ?? "")');
+
+        window.open(url, "_blank");
+    }
+    </script>
+}

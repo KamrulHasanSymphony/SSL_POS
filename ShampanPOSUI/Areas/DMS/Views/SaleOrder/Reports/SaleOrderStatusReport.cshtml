@@ -1,0 +1,313 @@
+﻿@model List<ShampanPOS.Models.SaleOrderStatusVM>
+@{
+    ViewBag.Title = "Sale Order Status Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string companyName = ViewBag.CompanyName ?? "Shampan POS";
+    string branchName = Model != null && Model.Any() ? Model.First().BranchName : (ViewBag.BranchName ?? "");
+    string branchAddress = Model != null && Model.Any() ? Model.First().BranchAddress : "";
+    string statusFilter = ViewBag.StatusFilter ?? "All";
+
+    var grouped = Model != null
+        ? Model.GroupBy(x => new { x.OrderId, x.OrderCode, x.OrderDate, x.DeliveryDate, x.CustomerCode, x.CustomerName })
+        : null;
+}
+
+<style>
+    body {
+        font-family: Arial;
+        background: #f2f2f2;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 1100px;
+        margin: 20px auto;
+        border-radius: 6px;
+    }
+
+    .sslPrint {
+        background: #555;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 14px;
+    }
+
+        table th, table td {
+            border: 1px solid #555;
+            padding: 6px;
+        }
+
+        table th {
+            background: #d0d0d0;
+            color: #000;
+            text-align: center;
+        }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .order-header {
+        background: #2c3e50;
+        color: white;
+        font-weight: bold;
+        padding: 6px 8px;
+        margin-top: 14px;
+        border-radius: 4px 4px 0 0;
+        font-size: 13px;
+    }
+
+    .badge-completed {
+        background: #27ae60;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+    }
+
+    .badge-remaining {
+        background: #e67e22;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+    }
+
+    .subtotal-row {
+        background: #ecf0f1;
+        font-weight: bold;
+    }
+
+    .total-row {
+        background: #333;
+        color: white;
+        font-weight: bold;
+    }
+
+    .report-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 13px;
+    }
+
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .report-box, .report-box * {
+            visibility: visible;
+        }
+
+        .sslPrint {
+            display: none !important;
+        }
+
+        .report-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 10px;
+            border: none;
+        }
+
+        @@page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+
+        table {
+            font-size: 10px;
+        }
+
+            table th, table td {
+                padding: 3px 4px;
+                font-size: 10px;
+            }
+
+        .order-header {
+            font-size: 10px;
+            padding: 4px 6px;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="sslPrint" style="float:right; margin:20px;">
+    🖨️ Print
+</button>
+
+<div class="report-box">
+
+    <!-- Header -->
+    <table style="border:none; margin-bottom:10px;">
+        <tr>
+            <td style="width:140px; border:none;">
+                <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px; height:120px;" />
+            </td>
+            <td style="text-align:right; border:none;">
+                <h3 style="margin:0;">@companyName</h3>
+                <div>@branchName</div>
+                <div>@branchAddress</div>
+            </td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <!-- Filter Info -->
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <div>
+            <strong>Branch:</strong> @branchName &nbsp;|&nbsp;
+            <strong>Customer:</strong> @(ViewBag.CustomerName ?? "All") &nbsp;|&nbsp;
+            <strong>Product:</strong> @(ViewBag.ProductName ?? "All") &nbsp;|&nbsp;
+            <strong>Sale Order:</strong> @(ViewBag.SaleOrderCode ?? "All")
+            <br />
+            <strong>From:</strong> @(string.IsNullOrEmpty(ViewBag.FromDate as string) ? "—" : ViewBag.FromDate) &nbsp;|&nbsp;
+            <strong>To:</strong> @(string.IsNullOrEmpty(ViewBag.ToDate as string) ? "—" : ViewBag.ToDate) &nbsp;|&nbsp;
+            <strong>Status:</strong> @statusFilter
+        </div>
+    </div>
+
+    <!-- Title -->
+    <h2 style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px;">
+        SALE ORDER STATUS REPORT
+    </h2>
+
+    @if (grouped != null && grouped.Any())
+    {
+        int orderSerial = 1;
+        decimal grandOrderedQty = 0;
+        decimal grandCompletedQty = 0;
+        decimal grandRemainQty = 0;
+        decimal grandLineTotal = 0;
+
+        foreach (var grp in grouped)
+        {
+            decimal subOrderedQty = grp.Sum(x => x.OrderedQty);
+            decimal subCompletedQty = grp.Sum(x => x.CompletedQty);
+            decimal subRemainQty = grp.Sum(x => x.RemainQty);
+            decimal subLineTotal = grp.Sum(x => x.LineTotal);
+
+            grandOrderedQty += subOrderedQty;
+            grandCompletedQty += subCompletedQty;
+            grandRemainQty += subRemainQty;
+            grandLineTotal += subLineTotal;
+
+            <!-- Order Header Bar -->
+            <div class="order-header">
+                #@orderSerial &nbsp;|&nbsp;
+                Order No: @grp.Key.OrderCode &nbsp;|&nbsp;
+                Customer: @grp.Key.CustomerCode - @grp.Key.CustomerName &nbsp;|&nbsp;
+                Order Date: @grp.Key.OrderDate &nbsp;|&nbsp;
+                Delivery Date: @grp.Key.DeliveryDate
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Product Code</th>
+                        <th>Product Name</th>
+                        <th>Ordered Qty</th>
+                        <th>Completed Qty</th>
+                        <th>Remaining Qty</th>
+                        <th>Unit Rate</th>
+                        <th>Line Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int detailSerial = 1;
+                        foreach (var item in grp)
+                        {
+                            <tr>
+                                <td class="text-center">@detailSerial</td>
+                                <td>@item.ProductCode</td>
+                                <td>@item.ProductName</td>
+                                <td class="text-right">@item.OrderedQty.ToString("N2")</td>
+                                <td class="text-right">@item.CompletedQty.ToString("N2")</td>
+                                <td class="text-right">@item.RemainQty.ToString("N2")</td>
+                                <td class="text-right">@item.UnitRate.ToString("N2")</td>
+                                <td class="text-right">@item.LineTotal.ToString("N2")</td>
+                                <td class="text-center">
+                                    @if (item.IsCompleted)
+                                    {
+                                        <span class="badge-completed">Completed</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-remaining">Remaining</span>
+                                    }
+                                </td>
+                            </tr>
+                            detailSerial++;
+                        }
+                    }
+                    <tr class="subtotal-row">
+                        <td colspan="3" class="text-right">Sub Total:</td>
+                        <td class="text-right">@subOrderedQty.ToString("N2")</td>
+                        <td class="text-right">@subCompletedQty.ToString("N2")</td>
+                        <td class="text-right">@subRemainQty.ToString("N2")</td>
+                        <td></td>
+                        <td class="text-right">@subLineTotal.ToString("N2")</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            orderSerial++;
+        }
+
+        <!-- Grand Total -->
+        <table>
+            <tbody>
+                <tr class="total-row">
+                    <td style="width:40%" class="text-right">Grand Total:</td>
+                    <td style="width:12%" class="text-right">@grandOrderedQty.ToString("N2")</td>
+                    <td style="width:12%" class="text-right">@grandCompletedQty.ToString("N2")</td>
+                    <td style="width:12%" class="text-right">@grandRemainQty.ToString("N2")</td>
+                    <td style="width:12%"></td>
+                    <td style="width:12%" class="text-right">@grandLineTotal.ToString("N2")</td>
+                    <td style="width:10%"></td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p style="text-align:center; padding:20px;">No data found.</p>
+    }
+
+    <!-- Footer -->
+    <div class="report-footer">
+        <div>
+            <strong>Printed By:</strong> @(ViewBag.PrintedBy ?? "N/A") |
+            <strong>Printed On:</strong> @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")
+        </div>
+        <div>
+            <strong>Total Orders:</strong> @(grouped != null ? grouped.Count() : 0)
+        </div>
+    </div>
+
+</div>

@@ -134,6 +134,7 @@
     <Compile Include="SaleOrderDetailVM.cs" />
     <Compile Include="SaleOrderReportVM.cs" />
     <Compile Include="SaleOrderStatusModelVM.cs" />
+    <Compile Include="SaleOrderStatusVM.cs" />
     <Compile Include="SaleOrderVM.cs" />
     <Compile Include="PurchaseVM.cs" />
     <Compile Include="PurchaseOrderVM.cs" />

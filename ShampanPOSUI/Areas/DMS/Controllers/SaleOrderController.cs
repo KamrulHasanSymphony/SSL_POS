@@ -1065,7 +1065,60 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+        public ActionResult SaleOrderStatusIndex()
+        {
+            var vm = new SaleOrderStatusVM();
+            return View(vm);
+        }
 
+        public ActionResult SaleOrderStatusReport(
+            int? customerId,
+            string customerCode,
+            string customerName,
+            int? productId,
+            string productCode,
+            string productName,
+            int? saleOrderId,
+            string saleOrderCode,
+            string fromDate,
+            string toDate,
+            string statusFilter,
+            string branchCode,
+            string branchName)
+        {
+            List<SaleOrderStatusVM> vmList = new List<SaleOrderStatusVM>();
+
+            SaleOrderStatusVM param = new SaleOrderStatusVM();
+            param.BranchId = Convert.ToInt32(Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0");
+            param.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0");
+            param.CustomerId = customerId ?? 0;
+            param.ProductId = productId ?? 0;
+            param.SaleOrderId = saleOrderId ?? 0;
+            param.FromDate = fromDate ?? "";
+            param.ToDate = toDate ?? "";
+            param.StatusFilter = statusFilter ?? "All";
+
+            ResultVM result = _repo.GetSaleOrderStatusList(param);
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SaleOrderStatusVM>>(
+                    result.DataVM.ToString());
+            }
+
+            ViewBag.CustomerName = customerName ?? "All";
+            ViewBag.ProductName = productName ?? "All";
+            ViewBag.SaleOrderCode = saleOrderCode ?? "All";
+            ViewBag.FromDate = fromDate ?? "";
+            ViewBag.ToDate = toDate ?? "";
+            ViewBag.StatusFilter = statusFilter ?? "All";
+            ViewBag.BranchCode = branchCode ?? "";
+            ViewBag.BranchName = branchName ?? "";
+            ViewBag.CompanyName = !string.IsNullOrEmpty(Convert.ToString(Session["CompanyName"]))
+                                     ? Session["CompanyName"].ToString() : "Shampan POS";
+            ViewBag.PrintedBy = Session["UserId"]?.ToString();
+
+            return View("Reports/SaleOrderStatusReport", vmList);
+        }
 
     }
 }
