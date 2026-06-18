@@ -1304,6 +1304,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
             SaleReportVM param = new SaleReportVM();
 
+            param.CustomerId = customerId ?? 0;
             param.ProductId = productId ?? 0;
             param.CompanyId = Convert.ToInt32(company);
 
@@ -1327,12 +1328,14 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
 
             // ViewBag
+            ViewBag.CustomerId = customerId ?? 0;
+            ViewBag.CustomerName = customerName ?? "All";
 
             ViewBag.ProductId = productId ?? 0;
             ViewBag.ProductName = productName ?? "All";
 
-            ViewBag.PurchaseId = saleId ?? 0;
-            ViewBag.PurchaseOrderId = saleReturnId ?? 0;
+            ViewBag.SaleId = saleId ?? 0;
+            ViewBag.SaleReturnId = saleReturnId ?? 0;
 
             ViewBag.InvoiceFromDate = fromDate ?? "All";
             ViewBag.InvoiceToDate = toDate ?? "All";
@@ -1348,8 +1351,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             // ==========================
 
             string viewName = isSummary
-                ? "Reports/PurchaseOrdervsPurchaseSummary"
-                : "Reports/PurchaseOrdervsPurchaseDetails";
+                ? "Reports/SalevsSaleReturnSummary"
+                : "Reports/SalevsSaleReturnDetails";
 
             return View(viewName, vmList);
 
