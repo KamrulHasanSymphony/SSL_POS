@@ -5,7 +5,11 @@ using ShampanPOS.Models.KendoCommon;
 using ShampanPOS.Repo.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using static ShampanPOS.Models.CommonModel;
 
 namespace ShampanPOS.Repo
@@ -484,6 +488,24 @@ namespace ShampanPOS.Repo
                 AuthModel authModel = new AuthModel { token = ClaimNames.token };
                 var data = httpRequestHelper.PostData(
                     "api/Report/GetSupplierPaymentDueList",
+                    authModel,
+                    JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public ResultVM GetCustomerCollectionDueList(CustomerCollectionDueVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                var data = httpRequestHelper.PostData(
+                    "api/Report/GetCustomerCollectionDueList",
                     authModel,
                     JsonConvert.SerializeObject(model));
                 ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);

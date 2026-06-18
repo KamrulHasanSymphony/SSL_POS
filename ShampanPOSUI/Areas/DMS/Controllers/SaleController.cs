@@ -1257,6 +1257,46 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View(vm);
         }
 
+        public ActionResult CustomerCollectionDueIndex()
+        {
+            var vm = new CustomerCollectionDueVM();
+            return View(vm);
+        }
+
+        public ActionResult CustomerCollectionDueList(
+            int? customerId,
+            string customerCode,
+            string customerName,
+            string branchCode,
+            string branchName)
+        {
+            List<CustomerCollectionDueVM> vmList = new List<CustomerCollectionDueVM>();
+
+            CustomerCollectionDueVM param = new CustomerCollectionDueVM();
+            param.CustomerId = customerId ?? 0;
+            param.BranchId = Convert.ToInt32(Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0");
+            //param.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0");
+
+            ResultVM result = _repo.GetCustomerCollectionDueList(param);
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<CustomerCollectionDueVM>>(
+                    result.DataVM.ToString());
+            }
+
+            ViewBag.CustomerId = customerId ?? 0;
+            ViewBag.CustomerCode = customerCode ?? "All";
+            ViewBag.CustomerName = customerName ?? "All";
+            ViewBag.BranchCode = branchCode ?? "";
+            ViewBag.BranchName = branchName ?? "";
+            ViewBag.CompanyName = !string.IsNullOrEmpty(Convert.ToString(Session["CompanyName"]))
+                                    ? Session["CompanyName"].ToString()
+                                    : "Shampan POS";
+            ViewBag.PrintedBy = Session["UserId"]?.ToString();
+
+            return View("Reports/CustomerCollectionDueReport", vmList);
+        }
+
         public ActionResult SalevsSaleReturnReportList(int? customerId,
             string customerName, string fromDate, string toDate, bool isSummary, int? productId, int? saleId, int? saleReturnId, string productName, int? companyId)
         {
