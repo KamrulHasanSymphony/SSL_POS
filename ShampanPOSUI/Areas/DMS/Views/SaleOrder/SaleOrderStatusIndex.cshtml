@@ -164,7 +164,7 @@
             columns: [
                 { field: "Code", title: "Code", width: "120px" },
                 { field: "Name", title: "Name", width: "200px" },
-                { field: "GroupName", title: "Group", width: "150px" }
+                { field: "ProductGroupName", title: "Group", width: "150px" }
             ]
         });
         $("#customerGrid").off("dblclick").on("dblclick", "tr", function () {
@@ -217,12 +217,12 @@
         wnd.center().open();
         LoadProductGroupCombo();
         $("#productGrid").kendoGrid({
-            dataSource: { transport: { read: { url: "/Common/Common/GetProductModal", dataType: "json" } } },
+            dataSource: { transport: { read: { url: "/Common/Common/GetNewProductModal", dataType: "json" } } },
             height: 350, sortable: true, filterable: true, pageable: true, selectable: "row",
             columns: [
                 { field: "Code", title: "Code", width: "120px" },
                 { field: "Name", title: "Name", width: "200px" },
-                { field: "GroupName", title: "Group", width: "150px" }
+                { field: "ProductGroupName", title: "Group", width: "150px" }
             ]
         });
         $("#productGrid").off("dblclick").on("dblclick", "tr", function () {
@@ -235,11 +235,11 @@
     }
 
     function LoadProductGroupCombo() {
-        $.getJSON("/Common/Common/GetProductModal", function (data) {
+        $.getJSON("/Common/Common/GetNewProductModal", function (data) {
             var groupMap = {};
             $.each(data, function (_, item) {
                 if (item.ProductGroupId && !groupMap[item.ProductGroupId])
-                    groupMap[item.ProductGroupId] = { Id: item.ProductGroupId, Name: item.GroupName };
+                    groupMap[item.ProductGroupId] = { Id: item.ProductGroupId, Name: item.ProductGroupName };
             });
             var existing = $("#ProductGroupFilter").data("kendoComboBox");
             if (existing) existing.destroy();
