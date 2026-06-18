@@ -23,6 +23,10 @@ namespace ShampanPOS.Models
         [StringLength(300, ErrorMessage = "Product Name cannot exceed 300 characters.")]
         public string Name { get; set; }
 
+        [Display(Name = "Barcode")]
+        public string? BarCode { get; set; }
+
+
         [Required(ErrorMessage = "Product Group is required.")]
         [Display(Name = "Product Group")]
         public int? ProductGroupId { get; set; }

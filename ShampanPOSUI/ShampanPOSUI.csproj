@@ -2828,6 +2828,8 @@
     <Content Include="Areas\DMS\Views\Sale\SupplierPaymentDueIndex.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\Reports\SupplierPaymentDueReport.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\SalevsSaleReturnReportIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\CustomerCollectionDueIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\Reports\CustomerCollectionDueReport.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\Reports\SalevsSaleReturnSummary.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\Reports\SalevsSaleReturnDetails.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />

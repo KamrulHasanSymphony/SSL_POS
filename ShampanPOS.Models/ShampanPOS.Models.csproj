@@ -100,6 +100,7 @@
     <Compile Include="CommonVM.cs" />
     <Compile Include="CompanyInfo.cs" />
     <Compile Include="CustomerCategoryVM.cs" />
+    <Compile Include="CustomerCollectionDueVM.cs" />
     <Compile Include="CustomerData.cs" />
     <Compile Include="CustomerDataVM.cs" />
     <Compile Include="CustomerSaleCollectionReportVM.cs" />
