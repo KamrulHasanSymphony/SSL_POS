@@ -1858,11 +1858,11 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
-                string branchId = Session["CurrentBranchId"]?.ToString();
+                int branchId = Convert.ToInt32(Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0");
 
                 List<SaleOrderVM> lst = new List<SaleOrderVM>();
                 CommonVM param = new CommonVM();
-                param.Value = branchId; // BranchId pass করছি
+                param.Value = branchId.ToString(); // BranchId pass করছি
                 ResultVM result = _repo.GetSaleOrderModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                     lst = JsonConvert.DeserializeObject<List<SaleOrderVM>>(result.DataVM.ToString());
