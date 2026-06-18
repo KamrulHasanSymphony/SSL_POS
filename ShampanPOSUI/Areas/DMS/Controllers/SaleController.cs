@@ -1261,12 +1261,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             string customerName, string fromDate, string toDate, bool isSummary, int? productId, int? saleId, int? saleReturnId, string productName, int? companyId)
         {
             List<SaleReportVM> vmList = new List<SaleReportVM>();
-            var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
+            //var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
             SaleReportVM param = new SaleReportVM();
 
             param.CustomerId = customerId ?? 0;
             param.ProductId = productId ?? 0;
-            param.CompanyId = Convert.ToInt32(company);
+            //param.CompanyId = Convert.ToInt32(company);
+            param.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0");
 
             param.SaleId = saleId ?? 0;
             param.SaleReturnId = saleReturnId ?? 0;
