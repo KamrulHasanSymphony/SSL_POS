@@ -1786,6 +1786,29 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         }
 
         [HttpGet]
+        public ActionResult GetNewProductModal(string groupId)
+        {
+            try
+            {
+                int branchId = Convert.ToInt32(Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0");
+
+                List<ProductVM> lst = new List<ProductVM>();
+                CommonVM param = new CommonVM();
+                param.Value = groupId;   // group filter (optional)
+                param.Value2 = branchId.ToString();  // BranchId — Session থেকে
+                ResultVM result = _repo.GetNewProductModal(param);
+                if (result.Status == "Success" && result.DataVM != null)
+                    lst = JsonConvert.DeserializeObject<List<ProductVM>>(result.DataVM.ToString());
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
         public ActionResult GetSupplierModal(string groupId)
         {
             try
@@ -1820,6 +1843,29 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 {
                     lst = JsonConvert.DeserializeObject<List<PurchaseReturnDataVM>>(result.DataVM.ToString());
                 }
+                return Json(lst, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult GetSaleOrderModal()
+        {
+            try
+            {
+                int branchId = Convert.ToInt32(Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0");
+
+                List<SaleOrderVM> lst = new List<SaleOrderVM>();
+                CommonVM param = new CommonVM();
+                param.Value = branchId.ToString(); // BranchId pass করছি
+                ResultVM result = _repo.GetSaleOrderModal(param);
+                if (result.Status == "Success" && result.DataVM != null)
+                    lst = JsonConvert.DeserializeObject<List<SaleOrderVM>>(result.DataVM.ToString());
                 return Json(lst, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
