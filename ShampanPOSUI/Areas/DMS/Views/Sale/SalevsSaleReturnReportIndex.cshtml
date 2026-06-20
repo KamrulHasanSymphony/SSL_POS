@@ -148,26 +148,27 @@
 
 
                 <!-- Summary Toggle -->
-
                 <div class="col-sm-2 d-flex flex-column">
-
                     <label>Summary</label>
-
                     <div class="Onoffbtn">
-
                         <div class="input-group" style="width:78%;">
-
                             <input type="hidden" name="IsSummary" value="false" />
-
                             <input id="IsSummary" name="IsSummary" type="checkbox" value="true"
                                    data-bootstrap-switch
                                    data-off-color="danger" data-on-color="success"
                                    data-on-text="True" data-off-text="False" />
-
                         </div>
-
                     </div>
+                </div>
 
+                <!-- Report Type (only needed when neither Product nor Customer selected, in Summary mode) -->
+                <div class="col-sm-2" id="reportTypeWrapper" style="display:none;">
+                    <label>Report Type</label>
+                    <select id="ReportType" class="form-control form-control-sm">
+                        <option value="">-- Select --</option>
+                        <option value="1">Product Wise</option>
+                        <option value="2">Customer Wise</option>
+                    </select>
                 </div>
 
 
@@ -237,6 +238,7 @@
 
 
         $("[data-bootstrap-switch]").bootstrapSwitch();
+        toggleReportTypeVisibility();
 
 
 
@@ -453,24 +455,18 @@
     }
 
 
-
-    function ApplyCustomerSelection(item) {
-
-        $("#CustomerId").val(item.Id);
-
-        $("#CustomerName").val(item.Code + " - " + item.Name);
-
-    }
+        function ApplyCustomerSelection(item) {
+            $("#CustomerId").val(item.Id);
+            $("#CustomerName").val(item.Code + " - " + item.Name);
+            toggleReportTypeVisibility();
+        }
 
 
-
-    function ClearCustomer() {
-
-        $("#CustomerId").val("");
-
-        $("#CustomerName").val("");
-
-    }
+        function ClearCustomer() {
+            $("#CustomerId").val("");
+            $("#CustomerName").val("");
+            toggleReportTypeVisibility();
+        }
         //Product
         $("#btnProductSearch").on("click", function () {
             OpenProductPopup(null);
@@ -796,46 +792,57 @@
     // Print
 
     // =====================
+    function PrintSalevsSaleReturnReport() {
 
-        function PrintSalevsSaleReturnReport() {
-            debugger;
-        var customerId   = $("#CustomerId").val() || 0;
+    var customerId   = $("#CustomerId").val() || 0;
+    var customerName = $("#CustomerName").val() || "";
+    var productId = $("#ProductId").val() || 0;
+    var productName = $("#ProductName").val() || "";
+    var saleReturnId = $("#SaleReturnId").val() || 0;
+    var saleId = $("#SaleId").val() || 0;
 
-        var customerName = $("#CustomerName").val() || "";
-        var productId = $("#ProductId").val() || 0;
+    var isSummary    = $("#IsSummary").is(":checked");
+    var reportType   = $("#ReportType").val() || "";
 
-        var productName = $("#ProductName").val() || "";
-        var saleReturnId = $("#SaleReturnId").val() || 0;
-        var saleId = $("#SaleId").val() || 0;
+    var fromDate     = $("#chkFromDate").is(":checked") ? $("#FromDate").val() : "";
+    var toDate       = $("#chkToDate").is(":checked") ? $("#ToDate").val() : "";
 
-        var isSummary    = $("#IsSummary").is(":checked");
-
-        var fromDate     = $("#chkFromDate").is(":checked") ? $("#FromDate").val() : "";
-
-        var toDate       = $("#chkToDate").is(":checked") ? $("#ToDate").val() : "";
-
-
-
-        var url = '@Url.Action("SalevsSaleReturnReportList", "Sale", new { area = "DMS" })'
-
-            + '?customerId='   + customerId
-            + '&customerName=' + encodeURIComponent(customerName)
-            + '&productId=' + productId
-            + '&productName=' + encodeURIComponent(productName)
-            + '&saleId=' + saleId
-            + '&saleReturnId=' + saleReturnId
-            + '&fromDate='     + fromDate
-
-            + '&toDate='       + toDate
-
-            + '&isSummary='    + isSummary;
-
-
-
-        window.open(url, "_blank");
-
+    // VALIDATION: Summary mode + neither Product nor Customer selected => ReportType required
+    if (isSummary && parseInt(customerId) <= 0 && parseInt(productId) <= 0 && !reportType) {
+        ShowNotification(3, "Please select Report Type: Product Wise or Customer Wise.");
+        return;
     }
 
+    var url = '@Url.Action("SalevsSaleReturnReportList", "Sale", new { area = "DMS" })'
+        + '?customerId='   + customerId
+        + '&customerName=' + encodeURIComponent(customerName)
+        + '&productId=' + productId
+        + '&productName=' + encodeURIComponent(productName)
+        + '&saleId=' + saleId
+        + '&saleReturnId=' + saleReturnId
+        + '&fromDate='     + fromDate
+        + '&toDate='       + toDate
+        + '&isSummary='    + isSummary
+        + '&reportType='   + reportType;
+
+    window.open(url, "_blank");
+}
+
+// Show/hide Report Type dropdown based on selections
+function toggleReportTypeVisibility() {
+    var isSummary = $("#IsSummary").is(":checked");
+    var hasProduct = parseInt($("#ProductId").val() || 0) > 0;
+    var hasCustomer = parseInt($("#CustomerId").val() || 0) > 0;
+
+    if (isSummary && !hasProduct && !hasCustomer) {
+        $("#reportTypeWrapper").show();
+    } else {
+        $("#reportTypeWrapper").hide();
+        $("#ReportType").val("");
+    }
+}
+
+        $(document).on("switchChange.bootstrapSwitch change", "#IsSummary", toggleReportTypeVisibility);
     </script>
 
 }
