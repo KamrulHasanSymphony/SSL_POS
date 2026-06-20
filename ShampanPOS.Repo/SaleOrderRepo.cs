@@ -5,8 +5,12 @@ using ShampanPOS.Models.KendoCommon;
 using ShampanPOS.Repo.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text;
 using static ShampanPOS.Models.CommonModel;
 
 namespace ShampanPOS.Repo
@@ -381,6 +385,25 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
+        public ResultVM GetSaleOrderStatusList(SaleOrderStatusVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                #region Invoke API
+                var data = httpRequestHelper.PostData("api/Report/GetSaleOrderStatusList", authModel, JsonConvert.SerializeObject(model));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                #endregion
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
 
 
     }

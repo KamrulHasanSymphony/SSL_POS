@@ -1,0 +1,178 @@
+﻿@model ShampanPOS.Models.CustomerCollectionDueVM
+@{
+    ViewBag.Title = "Customer Collection Due";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Customer Collection Due</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li id="btnBack">
+                        <img src="~/Content/css/ButtonsIcons/back-icon.png"
+                             title="Click for Go Back" />
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="form-group row">
+
+                <!-- Customer -->
+                <div class="col-sm-2">
+                    <label>Customer</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="CustomerName"
+                               class="form-control" placeholder="Select Customer" />
+                        <input type="hidden" id="CustomerId" />
+                        <input type="hidden" id="CustomerCode" />
+                        <div class="input-group-append">
+                            <button type="button" id="btnClearCustomer"
+                                    class="btn btn-warning" onclick="ClearCustomer()">
+                                ✖
+                            </button>
+                            <button type="button" id="btnCustomerSearch"
+                                    class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2 pt-2">
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="PrintCustomerCollectionDue()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Customer Popup -->
+<div id="customerWindow" style="display:none; padding:10px;">
+    <div style="margin-bottom:10px;">
+        <input id="CustomerGroupFilter" style="width:100%;" />
+    </div>
+    <div id="customerGrid"></div>
+</div>
+
+@section scripts {
+    <script>
+    $(document).ready(function () {
+        $("#btnCustomerSearch").on("click", function () {
+            OpenCustomerPopup();
+        });
+    });
+
+    function OpenCustomerPopup() {
+        var wnd = $("#customerWindow").data("kendoWindow");
+        if (!wnd) {
+            $("#customerWindow").kendoWindow({
+                width: "700px", height: "450px",
+                title: "Select Customer", modal: true, visible: false
+            });
+            wnd = $("#customerWindow").data("kendoWindow");
+        }
+        wnd.center().open();
+        LoadCustomerGroupCombo();
+
+        $("#customerGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: { url: "/Common/Common/GetCustomerModal", dataType: "json" }
+                }
+            },
+            height: 350, sortable: true, filterable: true,
+            pageable: true, selectable: "row",
+            columns: [
+                { field: "Code",      title: "Code",  width: "120px" },
+                { field: "Name",      title: "Name",  width: "200px" },
+                { field: "GroupName", title: "Group", width: "150px" }
+            ]
+        });
+
+        $("#customerGrid").off("dblclick").on("dblclick", "tr", function () {
+            var grid = $("#customerGrid").data("kendoGrid");
+            var item = grid.dataItem($(this));
+            ApplyCustomerSelection(item);
+            wnd.close();
+        });
+    }
+
+    function LoadCustomerGroupCombo() {
+        $.getJSON("/Common/Common/GetCustomerModal", function (data) {
+            var groupMap = {};
+            $.each(data, function (_, item) {
+                if (item.CustomerGroupId && item.GroupName && !groupMap[item.CustomerGroupId])
+                    groupMap[item.CustomerGroupId] = {
+                        Id: item.CustomerGroupId, Name: item.GroupName
+                    };
+            });
+            var groupList = Object.values(groupMap);
+            var existing = $("#CustomerGroupFilter").data("kendoComboBox");
+            if (existing) existing.destroy();
+            $("#CustomerGroupFilter").kendoComboBox({
+                dataTextField: "Name", dataValueField: "Id",
+                placeholder: "Filter by Group", filter: "contains",
+                dataSource: groupList,
+                change: applyCustomerGroupFilter,
+                select: applyCustomerGroupFilter
+            });
+        });
+    }
+
+    function applyCustomerGroupFilter() {
+        var combo   = $("#CustomerGroupFilter").data("kendoComboBox");
+        var groupId = combo ? combo.value() : "";
+        var grid    = $("#customerGrid").data("kendoGrid");
+        if (!grid) return;
+        if (!groupId) { grid.dataSource.filter([]); return; }
+        grid.dataSource.filter({
+            field: "CustomerGroupId", operator: "eq", value: parseInt(groupId)
+        });
+    }
+
+    function ApplyCustomerSelection(item) {
+        $("#CustomerId").val(item.Id);
+        $("#CustomerCode").val(item.Code);
+        $("#CustomerName").val(item.Code + " - " + item.Name);
+    }
+
+    function ClearCustomer() {
+        $("#CustomerId").val("");
+        $("#CustomerCode").val("");
+        $("#CustomerName").val("");
+    }
+
+    function PrintCustomerCollectionDue() {
+        var customerId   = $("#CustomerId").val()   || 0;
+        var customerCode = $("#CustomerCode").val() || "";
+        var customerName = $("#CustomerName").val() || "";
+        var branchCode   = '@(Session["CurrentBranchCode"] ?? "")';
+        var branchName   = '@(Session["CurrentBranchName"] ?? "")';
+
+        var url = '@Url.Action("CustomerCollectionDueList", "Sale", new { area = "DMS" })'
+            + '?customerId='   + customerId
+            + '&customerCode=' + encodeURIComponent(customerCode)
+            + '&customerName=' + encodeURIComponent(customerName)
+            + '&branchCode='   + encodeURIComponent(branchCode)
+            + '&branchName='   + encodeURIComponent(branchName);
+
+        window.open(url, "_blank");
+    }
+    </script>
+}

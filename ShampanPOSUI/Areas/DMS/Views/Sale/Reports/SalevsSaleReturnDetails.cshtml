@@ -157,9 +157,7 @@
                         @item.InvoiceDateTime
                     </td>
 
-                    <td class="text-right">
-                        @item.UnitRate.ToString("N2", bd)
-                    </td>
+                    <td class="text-right">@((Model.Sum(x => x.UnitRate) ?? 0).ToString("N2", bd))</td>
 
                     <td class="text-right">
                         @item.SaleQty

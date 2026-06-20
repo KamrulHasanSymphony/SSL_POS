@@ -1257,8 +1257,48 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View(vm);
         }
 
+        public ActionResult CustomerCollectionDueIndex()
+        {
+            var vm = new CustomerCollectionDueVM();
+            return View(vm);
+        }
+
+        public ActionResult CustomerCollectionDueList(
+            int? customerId,
+            string customerCode,
+            string customerName,
+            string branchCode,
+            string branchName)
+        {
+            List<CustomerCollectionDueVM> vmList = new List<CustomerCollectionDueVM>();
+
+            CustomerCollectionDueVM param = new CustomerCollectionDueVM();
+            param.CustomerId = customerId ?? 0;
+            param.BranchId = Convert.ToInt32(Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0");
+            //param.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0");
+
+            ResultVM result = _repo.GetCustomerCollectionDueList(param);
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<CustomerCollectionDueVM>>(
+                    result.DataVM.ToString());
+            }
+
+            ViewBag.CustomerId = customerId ?? 0;
+            ViewBag.CustomerCode = customerCode ?? "All";
+            ViewBag.CustomerName = customerName ?? "All";
+            ViewBag.BranchCode = branchCode ?? "";
+            ViewBag.BranchName = branchName ?? "";
+            ViewBag.CompanyName = !string.IsNullOrEmpty(Convert.ToString(Session["CompanyName"]))
+                                    ? Session["CompanyName"].ToString()
+                                    : "Shampan POS";
+            ViewBag.PrintedBy = Session["UserId"]?.ToString();
+
+            return View("Reports/CustomerCollectionDueReport", vmList);
+        }
+
         public ActionResult SalevsSaleReturnReportList(int? customerId,
-            string customerName, string fromDate, string toDate, bool isSummary, int? productId, int? saleId, int? saleReturnId, string productName, int? companyId)
+    string customerName, string fromDate, string toDate, bool isSummary, int? productId, int? saleId, int? saleReturnId, string productName, int? companyId, int? reportType)
         {
             List<SaleReportVM> vmList = new List<SaleReportVM>();
             var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
@@ -1267,6 +1307,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             param.CustomerId = customerId ?? 0;
             param.ProductId = productId ?? 0;
             param.CompanyId = Convert.ToInt32(company);
+            //param.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0");
 
             param.SaleId = saleId ?? 0;
             param.SaleReturnId = saleReturnId ?? 0;
@@ -1275,9 +1316,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             param.InvoiceToDate = string.IsNullOrEmpty(toDate) ? "": toDate;
             param.IsSummary = isSummary;
-
-
+            param.ReportTypeEnum = reportType.HasValue ? (SaleReportTypeEnum?)reportType.Value : null;
             ResultVM result = _repo.SalevsSaleReturnReportList(param);
+
+            if (result.Status == "Fail")
+            {
+                ViewBag.ErrorMessage = result.Message;
+            }
 
             if (result.Status == "Success" && result.DataVM != null)
             {
@@ -1320,7 +1365,68 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
-            
+        public ActionResult SaleOrdervsSaleReportIndex()
+        {
+            var vm = new SaleReportVM();
+            vm.IsSummary = false;
+
+            return View(vm);
+        }
+
+        public ActionResult SaleOrdervsSaleReportList(
+         int? customerId,
+         string fromDate,
+         string toDate,
+         bool isSummary,
+         int? productId,
+         int? saleId,
+         int? saleOrderId,
+         string customerName,
+         string productName,
+         int? companyId)
+        {
+            List<SaleReportVM> vmList = new List<SaleReportVM>();
+
+            var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
+
+            SaleReportVM param = new SaleReportVM
+            {
+                CustomerId = customerId ?? 0,
+                ProductId = productId ?? 0,
+                SaleId = saleId ?? 0,
+                SaleOrderId = saleOrderId ?? 0,
+                CompanyId = Convert.ToInt32(company),
+
+                InvoiceFromDate = string.IsNullOrEmpty(fromDate) ? "" : fromDate,
+                InvoiceToDate = string.IsNullOrEmpty(toDate) ? "" : toDate,
+
+                IsSummary = isSummary,
+                CustomerName = customerName ?? "",
+                ProductName = productName ?? ""
+            };
+
+            ResultVM result = _repo.GetSaleOrdervsSaleByList(param);
+
+            if (result.Status == "Success" && result.DataVM != null)
+            {
+                vmList = JsonConvert.DeserializeObject<List<SaleReportVM>>(result.DataVM.ToString());
+            }
+
+            ViewBag.CustomerName = customerName ?? "All";
+            ViewBag.ProductName = productName ?? "All";
+            ViewBag.InvoiceFromDate = fromDate ?? "All";
+            ViewBag.InvoiceToDate = toDate ?? "All";
+            ViewBag.IsSummary = isSummary;
+
+            ViewBag.CompanyName = vmList.FirstOrDefault()?.CompanyName ?? "N/A";
+            ViewBag.BranchName = vmList.FirstOrDefault()?.BranchName ?? "N/A";
+
+            string viewName = isSummary
+                ? "Reports/SaleOrdervsSaleSummary"
+                : "Reports/SaleOrdervsSaleDetails";
+
+            return View(viewName, vmList);
+        }
 
     }
 }

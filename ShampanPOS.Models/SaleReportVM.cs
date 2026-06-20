@@ -74,11 +74,11 @@ namespace ShampanPOS.Models
 
         [Display(Name = "Unit Rate")]
         [DataType(DataType.Currency)]
-        public decimal UnitRate { get; set; }
+        public decimal? UnitRate { get; set; }
 
         [Display(Name = "Sub Total")]
         [DataType(DataType.Currency)]
-        public decimal SubTotal { get; set; }
+        public decimal? SubTotal { get; set; }
 
         [Display(Name = "Total Invoice")]
         [DataType(DataType.Currency)]
@@ -89,14 +89,14 @@ namespace ShampanPOS.Models
 
         [Display(Name = "SD Amount")]
         [DataType(DataType.Currency)]
-        public decimal SDAmount { get; set; }
+        public decimal? SDAmount { get; set; }
 
         [Display(Name = "VAT Rate")]
         public decimal? VATRate { get; set; }
 
         [Display(Name = "VAT Amount")]
         [DataType(DataType.Currency)]
-        public decimal VATAmount { get; set; }
+        public decimal? VATAmount { get; set; }
 
         [Display(Name = "Line Total")]
         [DataType(DataType.Currency)]
@@ -126,6 +126,7 @@ namespace ShampanPOS.Models
         public string? CompanyName { get; set; }
 
         public bool IsSummary { get; set; }
+        public SaleReportTypeEnum? ReportTypeEnum { get; set; }
 
 
         [Display(Name = "Posted")]
@@ -176,7 +177,11 @@ namespace ShampanPOS.Models
         public decimal? SaleReturnQty { get; set; }
         public decimal? SaleReturnAmount { get; set; }
         public int? SaleReturnId { get; set; }
-
+        public string? SaleNo { get; set; }
+        public string? SaleOrderNo { get; set; }
+        public decimal? SaleOrderQty { get; set; }
+        public decimal? SaleOrderTotalAmount { get; set; }
+        public decimal? RemainQty { get; set; }
         public int? SaleId { get; set; }
 
         public List<SaleDetailVM> saleDetailsList { get; set; }
@@ -188,5 +193,11 @@ namespace ShampanPOS.Models
             SaleCreditCardList = new List<SaleCreditCardVM>();
 
         }
+    }
+
+    public enum SaleReportTypeEnum
+    {
+        ProductWise = 1,
+        CustomerWise = 2
     }
 }

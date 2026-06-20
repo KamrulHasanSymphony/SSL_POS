@@ -1,56 +1,58 @@
 ﻿@model ShampanPOS.Models.SaleReportVM
-@{
-    ViewBag.Title = "Sale vs SaleReturn Report";
 
+@{
+    ViewBag.Title = "SaleOrdervsSaleReportIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
+<style>
+    .k-filter-input {
+        height: 23px;
+        padding: 4px 8px;
+        border: 1px solid #c5c5c5;
+        border-radius: 4px;
+        background-color: #ffffff;
+        font-size: 13px;
+        color: #444;
+    }
+
+        .k-filter-input:focus {
+            border-color: #2a9fd6;
+            box-shadow: 0 0 3px rgba(42, 159, 214, 0.4);
+            outline: none;
+        }
+</style>
+<!-- ================= HEADER ================= -->
 <div class="content-header">
-
     <div class="container-fluid">
-
         <div class="row mb-2">
 
             <div class="col-sm-6">
-
-                <h1 class="m-0">Sale vs Sale Return Report</h1>
-
+                <h1 class="m-0">Sale Order vs Sale Report</h1>
             </div>
 
             <div class="col-sm-6">
-
                 <ol class="breadcrumb float-sm-right">
-
                     <li id="btnBack">
-
-                        <img src="~/Content/css/ButtonsIcons/back-icon.png" title="Go Back" />
-
+                        <img src="~/Content/css/ButtonsIcons/back-icon.png"
+                             title="Click for Go Back" />
                     </li>
-
                 </ol>
-
             </div>
 
         </div>
-
     </div>
-
 </div>
-
-
 
 <div class="container-fluid">
 
     <div class="card">
+        <div class="card-body">
 
-        <div class="card-body p-2">
-
-            <div class="form-group row">
-
-
+            <div class="row">
 
                 <!-- Customer -->
-
                 <div class="col-sm-2">
 
                     <label>Customer</label>
@@ -111,16 +113,11 @@
                 </div>
 
 
-                <!-- From Date -->
-
+                <!-- Date -->
                 <div class="col-sm-2">
-
                     <label>From Date</label>
-
                     <div class="d-flex align-items-center">
-
                         <input type="text" id="FromDate" class="form-control form-control-sm kendoDatePicker" />
-
                         <input type="checkbox" id="chkFromDate" style="margin-left:6px;" />
 
                     </div>
@@ -128,47 +125,47 @@
                 </div>
 
 
-
-                <!-- To Date -->
-
                 <div class="col-sm-2">
-
                     <label>To Date</label>
-
                     <div class="d-flex align-items-center">
-
                         <input type="text" id="ToDate" class="form-control form-control-sm kendoDatePicker" />
-
                         <input type="checkbox" id="chkToDate" style="margin-left:6px;" />
 
                     </div>
 
                 </div>
 
-
-
-                <!-- Summary Toggle -->
                 <div class="col-sm-2 d-flex flex-column">
-                    <label>Summary</label>
+
+                    <!-- ✅ Custom Label -->
+                    <label for="IsSummary">Summary</label>
+
                     <div class="Onoffbtn">
-                        <div class="input-group" style="width:78%;">
+                        <div class="input-group" style="width: 78%;">
                             <input type="hidden" name="IsSummary" value="false" />
-                            <input id="IsSummary" name="IsSummary" type="checkbox" value="true"
+
+                            <!-- Bootstrap Switch Checkbox -->
+                            <input id="IsSummary"
+                                   name="IsSummary"
+                                   type="checkbox"
+                                   value="true"
+                                   @(Model.IsSummary ? "checked=\"checked\"" : "")
                                    data-bootstrap-switch
-                                   data-off-color="danger" data-on-color="success"
-                                   data-on-text="True" data-off-text="False" />
+                                   data-off-color="danger"
+                                   data-on-color="success"
+                                   data-on-text="True"
+                                   data-off-text="False" />
+
                         </div>
                     </div>
+
                 </div>
 
-
-
                 <!-- Print Button -->
-
                 <div class="col-sm-2 pt-4">
 
                     <button type="button" class="btn btn-success btn-sm"
-                            onclick="PrintSalevsSaleReturnReport()">
+                            onclick="PrintSaleReport()">
 
                         <i class="fas fa-print"></i> Print
 
@@ -176,30 +173,18 @@
 
                 </div>
 
-                <!-- Report Type (only needed when neither Product nor Customer selected, in Summary mode) -->
-                <div class="col-sm-2" id="reportTypeWrapper" style="display:none;">
-                    <label>Report Type</label>
-                    <select id="ReportType" class="form-control form-control-sm">
-                        <option value="">-- Select --</option>
-                        <option value="1">Product Wise</option>
-                        <option value="2">Customer Wise</option>
-                    </select>
-                </div>
+
+            </div>
+
 
 
 
             </div>
 
         </div>
-
     </div>
 
-</div>
-
-
-
 <!-- Customer Popup Window -->
-
 <div id="customerWindow" style="display:none; padding:10px;">
 
     <div style="margin-bottom:10px;">
@@ -211,7 +196,6 @@
     <div id="customerGrid"></div>
 
 </div>
-
 <div id="ProductWindow" style="display:none; padding:10px;">
 
     <div style="display:flex; gap:10px; margin-bottom:10px;">
@@ -233,239 +217,244 @@
 
     <script>
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
 
 
-        $("[data-bootstrap-switch]").bootstrapSwitch();
-        toggleReportTypeVisibility();
+            $("[data-bootstrap-switch]").bootstrapSwitch();
 
 
 
-        // Date Pickers
+            // Date Pickers
 
-        $("#FromDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+            $("#FromDate").kendoDatePicker({ format: "yyyy-MM-dd" });
 
-        $("#ToDate").kendoDatePicker({ format: "yyyy-MM-dd" });
+            $("#ToDate").kendoDatePicker({ format: "yyyy-MM-dd" });
 
 
 
-        var currentDate = new Date();
+            var currentDate = new Date();
 
-        $("#FromDate").data("kendoDatePicker").value(currentDate);
+            $("#FromDate").data("kendoDatePicker").value(currentDate);
 
-        $("#ToDate").data("kendoDatePicker").value(currentDate);
+            $("#ToDate").data("kendoDatePicker").value(currentDate);
 
 
 
-        // Date validation
+            // Date validation
 
-        var fromPicker = $("#FromDate").data("kendoDatePicker");
+            var fromPicker = $("#FromDate").data("kendoDatePicker");
 
-        var toPicker = $("#ToDate").data("kendoDatePicker");
+            var toPicker = $("#ToDate").data("kendoDatePicker");
 
 
 
-        fromPicker.bind("change", function () {
+            fromPicker.bind("change", function () {
 
-            var from = fromPicker.value(), to = toPicker.value();
+                var from = fromPicker.value(), to = toPicker.value();
 
-            if (from) toPicker.min(from);
+                if (from) toPicker.min(from);
 
-            if (from && to && from > to) {
+                if (from && to && from > to) {
 
-                toPicker.value(from);
+                    toPicker.value(from);
 
-                ShowNotification(3, "From Date cannot be greater than To Date");
+                    ShowNotification(3, "From Date cannot be greater than To Date");
 
-            }
-
-        });
-
-
-
-        toPicker.bind("change", function () {
-
-            var from = fromPicker.value(), to = toPicker.value();
-
-            if (to) fromPicker.max(to);
-
-            if (from && to && from > to) {
-
-                fromPicker.value(to);
-
-                ShowNotification(3, "From Date cannot be greater than To Date");
-
-            }
-
-        });
-
-
-
-        // Checkbox toggles
-
-        $("#chkFromDate").change(function () {
-
-            $("#FromDate").data("kendoDatePicker").enable(this.checked);
-
-            if (!this.checked)
-
-                $("#ToDate").data("kendoDatePicker").min(new Date(1900, 0, 1));
-
-        });
-
-
-
-        $("#chkToDate").change(function () {
-
-            $("#ToDate").data("kendoDatePicker").enable(this.checked);
-
-            if (!this.checked)
-
-                $("#FromDate").data("kendoDatePicker").max(new Date(2099, 11, 31));
-
-        });
-
-    });
-
-
-
-    // =====================
-
-    // Customer Popup
-
-    // =====================
-
-    $("#btnCustomerSearch").on("click", function () { OpenCustomerPopup(); });
-
-
-
-    function OpenCustomerPopup() {
-
-        var wnd = $("#customerWindow").data("kendoWindow");
-
-        if (!wnd) {
-
-            $("#customerWindow").kendoWindow({
-
-                width: "700px", height: "450px",
-
-                title: "Select Customer", modal: true, visible: false
+                }
 
             });
 
-            wnd = $("#customerWindow").data("kendoWindow");
-
-        }
-
-        wnd.center().open();
-
-        LoadCustomerGroupCombo();
 
 
+            toPicker.bind("change", function () {
 
-        $("#customerGrid").kendoGrid({
+                var from = fromPicker.value(), to = toPicker.value();
 
-            dataSource: {
+                if (to) fromPicker.max(to);
 
-                transport: { read: { url: "/Common/Common/GetCustomerModal", dataType: "json" } }
+                if (from && to && from > to) {
 
-            },
+                    fromPicker.value(to);
 
-            height: 350, sortable: true, filterable: true, pageable: true, selectable: "row",
+                    ShowNotification(3, "From Date cannot be greater than To Date");
 
-            columns: [
+                }
 
-                { field: "Code", title: "Code", width: "120px" },
+            });
 
-                { field: "Name", title: "Name", width: "200px" },
 
-                { field: "CustomerGroupName", title: "Group", width: "150px" }
 
-            ]
+            // Checkbox toggles
+
+            $("#chkFromDate").change(function () {
+
+                $("#FromDate").data("kendoDatePicker").enable(this.checked);
+
+                if (!this.checked)
+
+                    $("#ToDate").data("kendoDatePicker").min(new Date(1900, 0, 1));
+
+            });
+
+
+
+            $("#chkToDate").change(function () {
+
+                $("#ToDate").data("kendoDatePicker").enable(this.checked);
+
+                if (!this.checked)
+
+                    $("#FromDate").data("kendoDatePicker").max(new Date(2099, 11, 31));
+
+            });
 
         });
 
 
 
-        $("#customerGrid").off("dblclick").on("dblclick", "tr", function () {
+        // =====================
+
+        // Customer Popup
+
+        // =====================
+
+        $("#btnCustomerSearch").on("click", function () { OpenCustomerPopup(); });
+
+
+
+        function OpenCustomerPopup() {
+
+            var wnd = $("#customerWindow").data("kendoWindow");
+
+            if (!wnd) {
+
+                $("#customerWindow").kendoWindow({
+
+                    width: "700px", height: "450px",
+
+                    title: "Select Customer", modal: true, visible: false
+
+                });
+
+                wnd = $("#customerWindow").data("kendoWindow");
+
+            }
+
+            wnd.center().open();
+
+            LoadCustomerGroupCombo();
+
+
+
+            $("#customerGrid").kendoGrid({
+
+                dataSource: {
+
+                    transport: { read: { url: "/Common/Common/GetCustomerModal", dataType: "json" } }
+
+                },
+
+                height: 350, sortable: true, filterable: true, pageable: true, selectable: "row",
+
+                columns: [
+
+                    { field: "Code", title: "Code", width: "120px" },
+
+                    { field: "Name", title: "Name", width: "200px" },
+
+                    { field: "CustomerGroupName", title: "Group", width: "150px" }
+
+                ]
+
+            });
+
+
+
+            $("#customerGrid").off("dblclick").on("dblclick", "tr", function () {
+
+                var grid = $("#customerGrid").data("kendoGrid");
+
+                var item = grid.dataItem($(this));
+
+                ApplyCustomerSelection(item);
+
+                wnd.close();
+
+            });
+
+        }
+
+
+
+        function LoadCustomerGroupCombo() {
+
+            $.getJSON("/Common/Common/GetCustomerModal", function (data) {
+
+                var groupMap = {};
+
+                $.each(data, function (_, item) {
+
+                    if (item.CustomerGroupId && item.CustomerGroupName && !groupMap[item.CustomerGroupId])
+
+                        groupMap[item.CustomerGroupId] = { Id: item.CustomerGroupId, Name: item.CustomerGroupName };
+
+                });
+
+                var existing = $("#CustomerGroupFilter").data("kendoComboBox");
+
+                if (existing) existing.destroy();
+
+                $("#CustomerGroupFilter").kendoComboBox({
+
+                    dataTextField: "Name", dataValueField: "Id",
+
+                    placeholder: "Filter by Group", filter: "contains",
+
+                    dataSource: Object.values(groupMap),
+
+                    change: applyCustomerGroupFilter, select: applyCustomerGroupFilter
+
+                });
+
+            });
+
+        }
+
+
+
+        function applyCustomerGroupFilter() {
+
+            var groupId = $("#CustomerGroupFilter").data("kendoComboBox").value();
 
             var grid = $("#customerGrid").data("kendoGrid");
 
-            var item = grid.dataItem($(this));
+            if (!grid) return;
 
-            ApplyCustomerSelection(item);
+            if (!groupId) { grid.dataSource.filter([]); return; }
 
-            wnd.close();
+            grid.dataSource.filter({ field: "CustomerGroupId", operator: "eq", value: parseInt(groupId) });
 
-        });
-
-    }
-
-
-
-    function LoadCustomerGroupCombo() {
-
-        $.getJSON("/Common/Common/GetCustomerModal", function (data) {
-
-            var groupMap = {};
-
-            $.each(data, function (_, item) {
-
-                if (item.CustomerGroupId && item.CustomerGroupName && !groupMap[item.CustomerGroupId])
-
-                    groupMap[item.CustomerGroupId] = { Id: item.CustomerGroupId, Name: item.CustomerGroupName };
-
-            });
-
-            var existing = $("#CustomerGroupFilter").data("kendoComboBox");
-
-            if (existing) existing.destroy();
-
-            $("#CustomerGroupFilter").kendoComboBox({
-
-                dataTextField: "Name", dataValueField: "Id",
-
-                placeholder: "Filter by Group", filter: "contains",
-
-                dataSource: Object.values(groupMap),
-
-                change: applyCustomerGroupFilter, select: applyCustomerGroupFilter
-
-            });
-
-        });
-
-    }
-
-
-
-    function applyCustomerGroupFilter() {
-
-        var groupId = $("#CustomerGroupFilter").data("kendoComboBox").value();
-
-        var grid = $("#customerGrid").data("kendoGrid");
-
-        if (!grid) return;
-
-        if (!groupId) { grid.dataSource.filter([]); return; }
-
-        grid.dataSource.filter({ field: "CustomerGroupId", operator: "eq", value: parseInt(groupId) });
-
-    }
-
-
-        function ApplyCustomerSelection(item) {
-            $("#CustomerId").val(item.Id);
-            $("#CustomerName").val(item.Code + " - " + item.Name);
-            toggleReportTypeVisibility();
         }
 
 
+
+        function ApplyCustomerSelection(item) {
+
+            $("#CustomerId").val(item.Id);
+
+            $("#CustomerName").val(item.Code + " - " + item.Name);
+
+        }
+
+
+
         function ClearCustomer() {
+
             $("#CustomerId").val("");
+
             $("#CustomerName").val("");
-            toggleReportTypeVisibility();
+
         }
         //Product
         $("#btnProductSearch").on("click", function () {
@@ -571,39 +560,39 @@
                 },
 
                 template: `
-        <div class="item-card">
+                <div class="item-card">
 
-            <h5>#: Name #</h5>
+                    <h5>#: Name #</h5>
 
-            <div class="item-image">
-                <img src="#: Image #" alt="#: Name #" />
-            </div>
+                    <div class="item-image">
+                        <img src="#: Image #" alt="#: Name #" />
+                    </div>
 
-            <div class="item-info">
-                <div><b>UOM:</b> #: UomName #</div>
-                <div><b>Cost:</b> #: kendo.toString(PurchasePrice,'n2') #</div>
-                <div><b>VAT:</b> #: VATRate # %</div>
-                <div><b>SD:</b> #: SDRate # %</div>
-            </div>
+                    <div class="item-info">
+                        <div><b>UOM:</b> #: UomName #</div>
+                        <div><b>Cost:</b> #: kendo.toString(PurchasePrice,'n2') #</div>
+                        <div><b>VAT:</b> #: VATRate # %</div>
+                        <div><b>SD:</b> #: SDRate # %</div>
+                    </div>
 
 
-            <div class="card-actions">
-                <input type='number' class='qty' value='1' min='1' />
-                <button class='addToCart'
-                        data-id='#: Id #'
-                        data-code='#: Code #'
-                        data-name='#: Name #'
-                        data-uom='#: UomName #'
-                        data-uomid='#: UomId #'
-                        data-price='#: PurchasePrice #'
-                        data-vat='#: VATRate #'
-                        data-sd='#: SDRate #'>
-                    Add
-                </button>
-            </div>
+                    <div class="card-actions">
+                        <input type='number' class='qty' value='1' min='1' />
+                        <button class='addToCart'
+                                data-id='#: Id #'
+                                data-code='#: Code #'
+                                data-name='#: Name #'
+                                data-uom='#: UomName #'
+                                data-uomid='#: UomId #'
+                                data-price='#: PurchasePrice #'
+                                data-vat='#: VATRate #'
+                                data-sd='#: SDRate #'>
+                            Add
+                        </button>
+                    </div>
 
-        </div>
-        `,
+                </div>
+                `,
 
                 dataBound: function () {
                     $(".addToCart").off("click").on("click", function () {
@@ -784,65 +773,35 @@
             }
         }
 
+    function PrintSaleReport() {
 
-
-
-    // =====================
-
-    // Print
-
-    // =====================
-    function PrintSalevsSaleReturnReport() {
-
-    var customerId   = $("#CustomerId").val() || 0;
+    var customerId = $("#CustomerId").val() || 0;
     var customerName = $("#CustomerName").val() || "";
+
     var productId = $("#ProductId").val() || 0;
     var productName = $("#ProductName").val() || "";
-    var saleReturnId = $("#SaleReturnId").val() || 0;
+
     var saleId = $("#SaleId").val() || 0;
+    var saleOrderId = $("#SaleOrderId").val() || 0;
 
-    var isSummary    = $("#IsSummary").is(":checked");
-    var reportType   = $("#ReportType").val() || "";
+    var fromDate = $("#FromDate").val() || "";
+    var toDate = $("#ToDate").val() || "";
 
-    var fromDate     = $("#chkFromDate").is(":checked") ? $("#FromDate").val() : "";
-    var toDate       = $("#chkToDate").is(":checked") ? $("#ToDate").val() : "";
+    var isSummary = $("#IsSummary").is(":checked");
 
-    // VALIDATION: Summary mode + neither Product nor Customer selected => ReportType required
-    if (isSummary && parseInt(customerId) <= 0 && parseInt(productId) <= 0 && !reportType) {
-        ShowNotification(3, "Please select Report Type: Product Wise or Customer Wise.");
-        return;
-    }
-
-    var url = '@Url.Action("SalevsSaleReturnReportList", "Sale", new { area = "DMS" })'
-        + '?customerId='   + customerId
+    var url = '@Url.Action("SaleOrdervsSaleReportList", "Sale", new { area = "DMS" })'
+        + '?customerId=' + customerId
         + '&customerName=' + encodeURIComponent(customerName)
         + '&productId=' + productId
         + '&productName=' + encodeURIComponent(productName)
         + '&saleId=' + saleId
-        + '&saleReturnId=' + saleReturnId
-        + '&fromDate='     + fromDate
-        + '&toDate='       + toDate
-        + '&isSummary='    + isSummary
-        + '&reportType='   + reportType;
+        + '&saleOrderId=' + saleOrderId
+        + '&fromDate=' + fromDate
+        + '&toDate=' + toDate
+        + '&isSummary=' + isSummary;
 
     window.open(url, "_blank");
 }
-
-// Show/hide Report Type dropdown based on selections
-function toggleReportTypeVisibility() {
-    var isSummary = $("#IsSummary").is(":checked");
-    var hasProduct = parseInt($("#ProductId").val() || 0) > 0;
-    var hasCustomer = parseInt($("#CustomerId").val() || 0) > 0;
-
-    if (isSummary && !hasProduct && !hasCustomer) {
-        $("#reportTypeWrapper").show();
-    } else {
-        $("#reportTypeWrapper").hide();
-        $("#ReportType").val("");
-    }
-}
-
-        $(document).on("switchChange.bootstrapSwitch change", "#IsSummary", toggleReportTypeVisibility);
     </script>
 
 }

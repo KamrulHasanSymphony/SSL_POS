@@ -1224,7 +1224,18 @@ namespace ShampanPOS.Repo
                 throw e;
             }
         }
-
+        public ResultVM GetNewProductModal(CommonVM param)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                var data = httpRequestHelper.PostData("api/Common/GetNewProductModal", authModel, JsonConvert.SerializeObject(param));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                return result;
+            }
+            catch (Exception e) { throw e; }
+        }
 
         public ResultVM GetStatusList(CommonVM model)
         {
@@ -1797,6 +1808,19 @@ namespace ShampanPOS.Repo
         }
 
 
+
+        public ResultVM GetSaleOrderModal(CommonVM param)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+                AuthModel authModel = new AuthModel { token = ClaimNames.token };
+                var data = httpRequestHelper.PostData("api/Common/GetSaleOrderModal", authModel, JsonConvert.SerializeObject(param));
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+                return result;
+            }
+            catch (Exception e) { throw e; }
+        }
 
     }
 }
