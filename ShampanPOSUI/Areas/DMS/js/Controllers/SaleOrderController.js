@@ -106,6 +106,61 @@
         });
 
 
+        let barcodeTimer = null;
+
+        $(document).on("keyup", "#barcodeInput", function () {
+
+            clearTimeout(barcodeTimer);
+
+            var code = $(this).val().trim();
+            if (!code) return;
+
+            barcodeTimer = setTimeout(function () {
+
+                $.ajax({
+                    url: "/Common/Common/GetProductByBarcode",
+                    type: "GET",
+                    data: { code: code },
+                    success: function (res) {
+
+                        if (!res || !res.ProductId) {
+                            ShowNotification(3, "Product not found");
+                            return;
+                        }
+
+                        AddProductToGrid(res);
+
+                        $("#barcodeInput").val("");
+                    }
+                });
+
+            }, 300);
+        });
+
+
+
+        //$(document).on("change", "#barcodeInput", function () {
+        //    var code = $(this).val().trim();
+
+        //    if (!code) return;
+
+        //    $.ajax({
+        //        url: "/Common/Common/GetProductByBarcode",
+        //        type: "GET",
+        //        data: { code: code },
+        //        success: function (res) {
+
+        //            if (!res || !res.ProductId) {
+        //                ShowNotification(3, "Product not found");
+        //                return;
+        //            }
+
+        //            AddProductToGrid(res);
+        //            $("#barcodeInput").val("");
+        //        }
+        //    });
+        //});
+
 
 
         $('.btnsave').click(function (e) {
@@ -325,7 +380,32 @@
         // Initialize the grid
         $("#saleOrderDetails").kendoGrid({
             dataSource: detailsGridDataSource,
-            toolbar: [{ name: "create", text: "Add" }],
+            //toolbar: [{ name: "create", text: "Add" }],
+            toolbar: [
+                { name: "create", text: "Add" },
+
+                {
+                    template: function () {
+
+                        return `
+                <div style="display:flex; align-items:center; gap:5px; margin-left:10px;">
+
+                    <div style="position:relative; width:200px;">
+
+                        <input type="text"
+                               id="barcodeInput"
+                               class="k-textbox"
+                               placeholder="Barcode"
+                               style="width:100%; padding-right:30px;" />
+
+                    </div>
+
+                </div>
+            `;
+                    }
+                }
+            ],
+
             editable: {
                 mode: "incell",
                 createAt: "bottom"
@@ -836,6 +916,146 @@
 
         });
     };
+
+
+    //function AddProductToGrid(res) {
+
+    //    var grid = $("#saleOrderDetails").data("kendoGrid");
+
+    //    grid.dataSource.add({
+    //        ProductId: res.ProductId,
+    //        ProductName: res.ProductName,
+    //        UOMId: res.UOMId,
+    //        UOMName: res.UOMName,
+    //        Quantity: 1,
+    //        UnitRate: res.SalesPrice,
+    //        SubTotal: res.SalesPrice,
+    //        SD: res.SDRate,
+    //        VATRate: res.VATRate,
+    //        SDAmount: 0,
+    //        VATAmount: 0,
+    //        LineTotal: res.SalesPrice
+    //    });
+
+    //    grid.refresh();
+    //}
+
+
+
+
+    function AddProductToGrid(res) {
+
+        var grid = $("#saleOrderDetails").data("kendoGrid");
+
+        var data = grid.dataSource.data();
+
+        // 🔥 CHECK EXISTING PRODUCT
+        var existing = data.find(x => x.ProductId == res.ProductId);
+
+        if (existing) {
+
+            // ✔ increase quantity only
+            var qty = (existing.Quantity || 0) + 1;
+            existing.set("Quantity", qty);
+
+            // ✔ recalc
+            var subTotal = qty * existing.UnitRate;
+
+            var sdAmount = (subTotal * (existing.SD || 0)) / 100;
+            var vatAmount = ((subTotal + sdAmount) * (existing.VATRate || 0)) / 100;
+
+            var lineTotal = subTotal + sdAmount + vatAmount;
+
+            existing.set("SubTotal", subTotal);
+            existing.set("SDAmount", sdAmount);
+            existing.set("VATAmount", vatAmount);
+            existing.set("LineTotal", lineTotal);
+
+            grid.refresh();
+            return; // 🚨 stop here
+        }
+
+        // =========================
+        // 🆕 NEW PRODUCT ADD (your existing code)
+        // =========================
+
+        var subTotal = res.SalesPrice * 1;
+
+        var sdAmount = (subTotal * (res.SDRate || 0)) / 100;
+        var vatAmount = ((subTotal + sdAmount) * (res.VATRate || 0)) / 100;
+
+        var lineTotal = subTotal + sdAmount + vatAmount;
+
+        grid.dataSource.add({
+            ProductId: res.ProductId,
+            ProductName: res.ProductName,
+            UOMId: res.UOMId,
+            UOMName: res.UOMName,
+
+            Quantity: 1,
+            UnitRate: res.SalesPrice,
+
+            SubTotal: subTotal,
+            SD: res.SDRate,
+            SDAmount: sdAmount,
+
+            VATRate: res.VATRate,
+            VATAmount: vatAmount,
+            LineTotal: lineTotal,
+
+            CompletedQty: 0,
+            RemainQty: 0
+        });
+
+        grid.refresh();
+    }
+
+
+
+
+
+
+    //function AddProductToGrid(res) {
+
+    //    var grid = $("#saleOrderDetails").data("kendoGrid");
+
+    //    var subTotal = res.SalesPrice * 1;
+
+    //    var sdAmount = (subTotal * (res.SDRate || 0)) / 100;
+    //    var vatAmount = ((subTotal + sdAmount) * (res.VATRate || 0)) / 100;
+
+    //    var lineTotal = subTotal + sdAmount + vatAmount;
+
+    //    grid.dataSource.add({
+    //        ProductId: res.ProductId,
+    //        ProductName: res.ProductName,
+    //        UOMId: res.UOMId,
+    //        UOMName: res.UOMName,
+
+    //        Quantity: 1,
+    //        UnitRate: res.SalesPrice,
+
+    //        SubTotal: subTotal,
+
+    //        SD: res.SDRate,
+    //        SDAmount: sdAmount,
+
+    //        VATRate: res.VATRate,
+    //        VATAmount: vatAmount,
+
+    //        LineTotal: lineTotal,
+
+    //        CompletedQty: 0,
+    //        RemainQty: 0
+    //    });
+
+    //    grid.refresh();
+
+    //    // 🔥 IMPORTANT: footer update
+    //    //updateGridFooter();
+    //}
+
+
 
 
     function itemSelectorEditor(container, options) {

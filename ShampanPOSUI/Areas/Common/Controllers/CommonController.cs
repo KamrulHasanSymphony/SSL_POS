@@ -1493,6 +1493,11 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 List<ProductDataVM> lst = new List<ProductDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = productGroupId;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
                 ResultVM result = _repo.GetProductModal(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -1507,6 +1512,43 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
+
+        [HttpGet]
+        public ActionResult GetProductByBarcode(string code)
+        {
+            try
+            {
+                CommonVM param = new CommonVM();
+                param.Value = code;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+                ResultVM result = _repo.GetProductByBarcode(param);
+
+                ProductDataVM product = null;
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    product = JsonConvert.DeserializeObject<ProductDataVM>(
+                        result.DataVM.ToString()
+                    );
+                }
+
+                return Json(product, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
 
 
         [HttpGet]
