@@ -177,7 +177,11 @@ namespace ShampanPOS.Models
         public decimal? SaleReturnQty { get; set; }
         public decimal? SaleReturnAmount { get; set; }
         public int? SaleReturnId { get; set; }
-
+        public string? SaleNo { get; set; }
+        public string? SaleOrderNo { get; set; }
+        public decimal? SaleOrderQty { get; set; }
+        public decimal? SaleOrderTotalAmount { get; set; }
+        public decimal? RemainQty { get; set; }
         public int? SaleId { get; set; }
 
         public List<SaleDetailVM> saleDetailsList { get; set; }

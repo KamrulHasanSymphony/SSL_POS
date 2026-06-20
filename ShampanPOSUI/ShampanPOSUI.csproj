@@ -2835,6 +2835,8 @@
     <Content Include="Areas\DMS\Views\SaleOrder\SaleOrderStatusIndex.cshtml" />
     <Content Include="Areas\DMS\Views\SaleOrder\Reports\SaleOrderStatusReport.cshtml" />
     <Content Include="Areas\DMS\Views\Sale\SaleOrdervsSaleReportIndex.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\Reports\SaleOrdervsSaleSummary.cshtml" />
+    <Content Include="Areas\DMS\Views\Sale\Reports\SaleOrdervsSaleDetails.cshtml" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all-vsdoc.js" />
     <None Include="Content\assets\kendoUI2021\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Content\assets\kendoUI2021\kendo\kendo.all.min.js" />
