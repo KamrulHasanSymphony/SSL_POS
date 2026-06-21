@@ -1869,10 +1869,23 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<DepositDataVM> lst = new List<DepositDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = bankId;
                 param.Value2 = bankAccountId;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetDepositModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                 {
