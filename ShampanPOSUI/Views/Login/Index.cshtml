@@ -5,46 +5,469 @@
 }
 
 <style>
-
-    .input-group-wrapper {
-        position: relative;
-        margin-bottom: 25px;
+    html, body {
+        height: 100%;
+        overflow-y: auto;
     }
 
-    .validation-msg {
+    body {
+        background: #f4f6fb;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+    }
+
+    .wrapper {
+        position: static;
+        min-height: initial
+    }
+
+    .pos-login-wrapper {
+        width: 100%;
+        max-width: 1400px;
+        min-height: 400px;
+        background: #fff;
+        border-radius: 28px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        box-shadow: 0 15px 60px rgba(0, 0, 0, .08);
+    }
+
+    .left-panel {
+        background: #f8faff;
+        padding: 20px 80px 0 80px;
+        
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .brand-icon img {
+        max-width: 100%;
+    }
+
+    .brand-icon {
+        max-width: 125px;
+        margin: 0 auto 8px auto;
+    }
+
+    .brand-text h2 {
+        margin: 0;
+        font-size: 55px;
+        font-weight: 800;
+        color: #07153a;
+    }
+
+    .brand-text span {
+        color: #2563eb;
+        font-weight: 700;
+        font-size: 22px;
+    }
+
+    .login-box h1 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #061430;
+        margin-bottom: 12px;
+    }
+
+    .welcome-text, .sub-title {
+        color: #667085;
+        font-size: 18px;
+        margin: 24px 0;
+    }
+
+    .feature-item {
+        display: flex;
+        gap: 18px;
+        margin-bottom: 17px;
+    }
+
+    .feature-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #eaf1ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #2563eb;
+        font-size: 24px
+    }
+
+    .feature-item h5 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #101828;
+    }
+
+    .feature-item p {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #667085;
+    }
+
+    .pos-image {
+        text-align: center;
+        margin-top: 40px;
+    }
+
+        .pos-image img {
+            max-width: 350px;
+        }
+
+    .right-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 55px 80px;
+    }
+
+    .left-panel h1, .login-content h2 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #061430;
+        margin-bottom: 12px;
+    }
+
+    .login-content {
+        max-width: 520px;
+        margin: 0 auto 0;
+    }
+
+        .login-content h2 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #07153a;
+        }
+
+        .login-content label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+    .custom-input {
+        height: 55px;
+        border: 1px solid #d7dfef;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        margin-bottom: 18px;
+    }
+
+        .custom-input i:first-child {
+            color: #94a3b8;
+            margin-right: 12px;
+        }
+
+        .custom-input .form-control {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0;
+        }
+
+    .togglePassword {
+        cursor: pointer;
+        color: #94a3b8;
+    }
+
+    .remember-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+    }
+
+    .login-btn {
+        width: 100%;
+        border: none;
+        height: 58px;
+        border-radius: 14px;
+        background: #2563eb;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s linear
+    }
+
+        .login-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient( 120deg, transparent, rgba(255, 255, 255, 0.4), transparent );
+            transform: skewX(-20deg);
+        }
+
+        .login-btn:hover::before {
+            animation: shine 0.8s ease;
+        }
+
+    @@keyframes shine {
+        100% {
+            left: 130%;
+        }
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.3);
+    }
+
+    .divider {
+        text-align: center;
+        margin: 25px 0;
+        position: relative;
+    }
+
+        .divider:before,
+        .divider:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 42%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider:before {
+            left: 0;
+        }
+
+        .divider:after {
+            right: 0;
+        }
+
+    .google-btn {
+        width: 100%;
+        height: 58px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 14px;
+        font-weight: 600;
+    }
+
+        .google-btn img {
+            width: 24px;
+            margin-right: 10px;
+        }
+
+    .register-link {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+        .register-link a {
+            font-weight: 700;
+        }
+
+    @@media(max-width:991px) {
+
+        .pos-login-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .left-panel {
+            display: none;
+        }
+
+        .right-panel {
+            padding: 30px;
+        }
+    }
+
+    .device-section {
         position: absolute;
         left: 0;
-        top: 100%;
-        font-size: 14px;
-        margin-top: 2px;
-        color: red;
-    }
-    .footer-logo {
-        margin-top: 8px; 
-        text-align: center;
+        bottom: 0;
+        width: 100%;
     }
 
-        .footer-logo img {
-            height: 52px; 
-            display: inline-block;
+    .device-bg {
+       
+        height: 236px;
+        background: #edf4ff;
+        border-radius: 350px 350px 0 0;
+        margin: auto;
+    }
+
+    .device-image {
+        position: absolute;
+        left: 50%;
+        bottom: 5px;
+        transform: translateX(-50%);
+        max-width: 310px;
+    }
+
+    .custom-error-alert {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        border-radius: 10px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+        animation: shake 0.5s ease-in-out;
+    }
+
+        .custom-error-alert i {
+            font-size: 18px;
         }
+
+    @@keyframes shake {
+        0% {
+            transform: translateX(0);
+        }
+
+        10% {
+            transform: translateX(-8px);
+        }
+
+        20% {
+            transform: translateX(8px);
+        }
+
+        30% {
+            transform: translateX(-8px);
+        }
+
+        40% {
+            transform: translateX(8px);
+        }
+
+        50% {
+            transform: translateX(-5px);
+        }
+
+        60% {
+            transform: translateX(5px);
+        }
+
+        70% {
+            transform: translateX(-3px);
+        }
+
+        80% {
+            transform: translateX(3px);
+        }
+
+        90% {
+            transform: translateX(-1px);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .custom-error-alert svg {
+        flex-shrink: 0;
+    }
+
+    .custom-error-alert svg {
+        color: #dc3545;
+        margin-right: 10px
+    }
+    .loginLeftBottom {
+        position: relative;
+        min-height: 233px;
+        width: 100%;
+    }
 </style>
 
 <!DOCTYPE html>
 <html lang="en">
 
-<body class="hold-transition login-page">
-    <div class="login-box">
-        <div class="card">
-            <div class="card-header text-center">
-                <a href="https://www.symphonysofttech.com/" target="_blank">
-                    <img src="~/Content/AdminLte/dist/img/osaka-logo.jpg" alt="Company Logo" class="logo">
-                </a>
+<body class="">
+
+    <div class="pos-login-wrapper">
+
+        <!-- LEFT SIDE -->
+        <div class="left-panel">
+
+            <div class="brand">
+                <div class="brand-icon">
+                    <img src="~/Content/AdminLte/dist/img/CompanyLogo.png" class="CompanyLogo" alt="">
+
+                </div>
             </div>
 
-            <h5 style="font-weight:800;font-size:18px;padding-top:7px;"> POINT OF SALES  </h5>
+            <h1>Welcome Back!</h1>
 
-            <div class="card-body login-card-body">
+            <p class="welcome-text">
+                Sign in to access your POS dashboard
+            </p>
+
+            <div class="feature-list">
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+
+                    <div>
+                        <h5>Real-time Analytics</h5>
+                        <p>Track sales, inventory and performance in real-time.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+
+                    <div>
+                        <h5>Manage Your Business</h5>
+                        <p>Handle products, customers, sales and more with ease.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+
+                    <div>
+                        <h5>Secure & Reliable</h5>
+                        <p>Your data is protected with enterprise-grade security.</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="loginLeftBottom">
+                <div class="device-section">
+
+                    <div class="device-bg"></div>
+
+                    <img src="~/Content/AdminLte/dist/img/pos-machine.png" class="device-image" alt="">
+
+                </div>
+            </div>
+            
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="right-panel">
+
+            <div class="login-content">
+
+                <h2>Sign In</h2>
+
+                <p class="sub-title">
+                    Enter your credentials to access your account
+                </p>
 
                 @using (Html.BeginForm("Index", "Login", FormMethod.Post))
                 {
@@ -52,161 +475,108 @@
 
                     @Html.HiddenFor(model => model.returnUrl)
                     @Html.HiddenFor(model => model.dbName)
+                    if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-danger custom-error-alert mt-3">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="20"
+                                 height="20"
+                                 fill="currentColor"
+                                 viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                            </svg>
+                            @Model.Message
+                        </div>
+                    }
+                    <label>Email Address</label>
+
+                    <div class="custom-input">
+                        <i class="far fa-envelope"></i>
+
+                        @Html.TextBoxFor(model => model.UserName,
+                        new
+                        {
+                            @class = "form-control",
+                            placeholder = "Enter your email"
+                        })
+                    </div>
+
+                    @Html.ValidationMessageFor(model => model.UserName,
+                    "", new { @class = "text-danger" })
+
+
+
+                    <label>Password</label>
+
+                    <div class="custom-input password-box">
+
+                        <i class="fas fa-lock"></i>
+
+                        @Html.TextBoxFor(model => model.Password,
+                        new
+                        {
+                            @class = "form-control",
+                            type = "password",
+                            placeholder = "Enter your password"
+                        })
+
+                        <i class="fas fa-eye togglePassword"></i>
+
+                    </div>
+
+                    @Html.ValidationMessageFor(model => model.Password,
+                    "", new { @class = "text-danger" })
+
+                    <div class="remember-row">
+
+                        <div>
+                            <input type="checkbox">
+                            Remember me
+                        </div>
+
+                        @*<a href="#">Forgot Password?</a>*@
+
+                    </div>
+
 
                     @*<div class="input-group mb-3">
-                @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @placeholder = "User Name" })
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-user"></i></span>
-                </div>
-            </div>
-            @Html.ValidationMessageFor(model => model.UserName)
-
-            <div class="input-group mb-3">
-                @Html.TextBoxFor(model => model.Password, new { @class = "form-control", type = "password", @placeholder = "Password" })
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-key"></i></span>
-                </div>
-            </div>
-            @Html.ValidationMessageFor(model => model.Password)*@
-
-
-
-
-
-
-
-
-            
-
-
-
-
-                    <div class="input-group-wrapper">
-                <div class="input-group mb-1">
-                    @Html.TextBoxFor(model => model.UserName,
-                        new { @class = "form-control", @placeholder = "User Name" })
-
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="fa fa-user"></i>
-                        </span>
-                    </div>
-                </div>
-
-                @Html.ValidationMessageFor(model => model.UserName, "",
-                    new { @class = "text-danger validation-msg" })
-            </div>
-
-
-                    <div class="input-group-wrapper">
-                        <div class="input-group mb-1">
-                            @Html.TextBoxFor(model => model.Password,
-                                new
-                                     {
-                                    @class = "form-control",
-                                    type = "password",
-                                    @placeholder = "Password"
-                                })
-
+                            <select id="CompanyId" name="CompanyId" class="form-control">
+                                @foreach (var item in Model.CompanyInfos)
+                                {
+                                    <option value="@item.CompanyId">@item.CompanyName</option>
+                                }
+                            </select>
                             <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <i class="fas fa-key"></i>
-                                </span>
+                                <span class="input-group-text"><i class="fas fa-building"></i></span>
                             </div>
-                        </div>
-
-                        @Html.ValidationMessageFor(model => model.Password, "",
-                            new { @class = "text-danger validation-msg" })
-                    </div>
-
-
-
-                    @*<div class="input-group mb-3">
-                        <select id="CompanyId" name="CompanyId" class="form-control">
-                            @foreach (var item in Model.CompanyInfos)
-                            {
-                                <option value="@item.CompanyId">@item.CompanyName</option>
-                            }
-                        </select>
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-building"></i></span>
-                        </div>
-                    </div>*@
-
-
-
-
-
-
-
-
-
-
-
+                        </div>*@
                     @*@Html.ValidationMessageFor(model => model.Message)*@
 
 
-                    <div class="text-center">
-                        @if (!string.IsNullOrEmpty(Model.Message))
-                        {
-                            <div class="alert alert-danger">
-                                @Model.Message
-                            </div>
-                        }
+                    <button type="submit" class="login-btn">
+                        Sign In
+                    </button>
+
+                    @*<div class="divider">
+                        <span>or</span>
                     </div>
 
-                    <div class="clearfix"></div>
+                    <button type="button" class="google-btn">
+                        <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png">
+                        Sign in with Google
+                    </button>*@
 
-                    <div class="row">
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block">Log In</button>
-                        </div>
+                    <div class="register-link">
+                        Don't have an account?
+                        <a href="@Url.Action("RegistrationCreate","Registration",new { area="SetUp"})">
+                            Create Account
+                        </a>
                     </div>
-
-
-
-                    @*<div class="row mt-2 justify-content-center">
-                <div class="col-6 text-center">
-                    <a href="@Url.Action("SignUpCreate", "SignUp", new { area = "SetUp" })" style="text-decoration: underline; color: blue; cursor: pointer;">
-                        Create an Account
-                    </a>
-                </div>
-            </div>*@
-
-                    <div class="row mt-2 justify-content-center">
-                        <div class="col-6 text-center">
-                            <a href="@Url.Action("RegistrationCreate", "Registration", new { area = "SetUp" })" style="text-decoration: underline; color: blue; cursor: pointer;">
-                                Create an Account
-                            </a>
-                        </div>
-                    </div>
-
-
-
-                    @*<button type="button" title="Sign Up" data-url="/SetUp/UserProfile/Create" onclick="GoTo(this)" class="button NewButton addNewButton">
-                New
-            </button>*@
                 }
+
             </div>
+
         </div>
-
-        <div class="row footer-logo">
-            <div class="col-md-12 text-center">
-                <a href="https://www.symphonysofttech.com/" target="_blank">
-                    <img src="~/Content/AdminLte/dist/img/logo.png"
-                         alt="Symphony Logo">
-                </a>
-            </div>
-        </div>
-
-
-        @*<div class="row" style="text-align:left !important;">
-            <div class="col-md-2">
-                <a href="https://www.symphonysofttech.com/" target="_blank">
-                    <img src="~/Content/AdminLte/dist/img/logo.png" alt="Symphony Logo" class="logo" height="30">
-                </a>
-            </div>
-        </div>*@
 
     </div>
 
@@ -222,8 +592,8 @@
 <script>
 
     $(document).ready(function () {
-        $(".fa-key").on("click", function () {
-             
+        $(".togglePassword").on("click", function () {
+            debugger
             let passwordInput = $("#Password");
             let type = passwordInput.attr("type") === "password" ? "text" : "password";
             passwordInput.attr("type", type);
@@ -233,5 +603,3 @@
     });
 
 </script>
-
-
