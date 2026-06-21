@@ -838,35 +838,7 @@ function PrintSaleReport() {
         + '&isSummary=' + isSummary;
 
     window.open(url, "_blank");
-}    @*function PrintSaleReport() {
-
-    var customerId = $("#CustomerId").val() || 0;
-    var customerName = $("#CustomerName").val() || "";
-
-    var productId = $("#ProductId").val() || 0;
-    var productName = $("#ProductName").val() || "";
-
-    var saleId = $("#SaleId").val() || 0;
-    var saleOrderId = $("#SaleOrderId").val() || 0;
-
-    var fromDate = $("#FromDate").val() || "";
-    var toDate = $("#ToDate").val() || "";
-
-    var isSummary = $("#IsSummary").is(":checked");
-
-    var url = '@Url.Action("SaleOrdervsSaleReportList", "Sale", new { area = "DMS" })'
-        + '?customerId=' + customerId
-        + '&customerName=' + encodeURIComponent(customerName)
-        + '&productId=' + productId
-        + '&productName=' + encodeURIComponent(productName)
-        + '&saleId=' + saleId
-        + '&saleOrderId=' + saleOrderId
-        + '&fromDate=' + fromDate
-        + '&toDate=' + toDate
-        + '&isSummary=' + isSummary;
-
-    window.open(url, "_blank");
-}*@
+}   
     </script>
 
 }
