@@ -1974,12 +1974,23 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
-                int branchId = Convert.ToInt32(Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0");
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
 
                 List<ProductVM> lst = new List<ProductVM>();
                 CommonVM param = new CommonVM();
                 param.Value = groupId;   // group filter (optional)
-                param.Value2 = branchId.ToString();  // BranchId — Session থেকে
+
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetNewProductModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                     lst = JsonConvert.DeserializeObject<List<ProductVM>>(result.DataVM.ToString());
