@@ -106,9 +106,22 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company ID session is missing." }, JsonRequestBehavior.AllowGet);
+                }
                 List<ProductGroupVM> lst = new List<ProductGroupVM>();
                 CommonVM param = new CommonVM();
                 //param.Value = value;
+
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetProductGroupList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -170,24 +183,36 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-     
+
         [HttpGet]
         public ActionResult GetCustomerList(string value)
         {
             try
             {
-               // var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-        
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company ID session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<CustomerVM> lst = new List<CustomerVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
-                //param.BranchId = currentBranchId;
+
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetCustomerList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
                     lst = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
                 }
+
                 return Json(lst, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
@@ -338,9 +363,21 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<SupplierVM> lst = new List<SupplierVM>();
                 CommonVM param = new CommonVM();
-                param.Value = value;
+                param.Value = value; 
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
                 ResultVM result = _repo.GetSupplierList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -629,9 +666,22 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<SupplierGroupVM> lst = new List<SupplierGroupVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetSupplierGroupList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -1493,6 +1543,11 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 List<ProductDataVM> lst = new List<ProductDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = productGroupId;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
                 ResultVM result = _repo.GetProductModal(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -1507,6 +1562,43 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
+
+        [HttpGet]
+        public ActionResult GetProductByBarcode(string code)
+        {
+            try
+            {
+                CommonVM param = new CommonVM();
+                param.Value = code;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+                ResultVM result = _repo.GetProductByBarcode(param);
+
+                ProductDataVM product = null;
+
+                if (result.Status == "Success" && result.DataVM != null)
+                {
+                    product = JsonConvert.DeserializeObject<ProductDataVM>(
+                        result.DataVM.ToString()
+                    );
+                }
+
+                return Json(product, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
 
 
         [HttpGet]
@@ -1613,10 +1705,24 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 CommonVM param = new CommonVM
                 {
                     Value = supplierId
                 };
+
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
 
                 ResultVM result = _repo.GetPurchaseModal(param);
 
@@ -1656,9 +1762,22 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
                 List<PurchaseOrderDataVM> lst = new List<PurchaseOrderDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = supplierId;
+
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetPurchaseOrderModal(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -1678,9 +1797,22 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<BankInformationVM> lst = new List<BankInformationVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetBankIdList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -1701,10 +1833,23 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<BankAccountDataVM> lst = new List<BankAccountDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = bankId;
                 param.Value2 = null;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetBankAccountModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                 {
@@ -1724,10 +1869,23 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<DepositDataVM> lst = new List<DepositDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = bankId;
                 param.Value2 = bankAccountId;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetDepositModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                 {
@@ -1747,10 +1905,23 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<WithdrawalDataVM> lst = new List<WithdrawalDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = bankId;
                 param.Value2 = bankAccountId;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetWithdrawalModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                 {
@@ -1770,9 +1941,22 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<CustomerVM> lst = new List<CustomerVM>();
                 CommonVM param = new CommonVM();
                 param.Value = groupId;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetCustomerModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                     lst = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
@@ -1813,9 +1997,21 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<SupplierVM> lst = new List<SupplierVM>();
                 CommonVM param = new CommonVM();
                 param.Value = groupId;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
                 ResultVM result = _repo.GetSupplierModal(param);
                 if (result.Status == "Success" && result.DataVM != null)
                     lst = JsonConvert.DeserializeObject<List<SupplierVM>>(result.DataVM.ToString());
@@ -1834,9 +2030,22 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<PurchaseReturnDataVM> lst = new List<PurchaseReturnDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = supplierId;
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetPurchaseReturnModal(param);
 
                 if (result.Status == "Success" && result.DataVM != null)

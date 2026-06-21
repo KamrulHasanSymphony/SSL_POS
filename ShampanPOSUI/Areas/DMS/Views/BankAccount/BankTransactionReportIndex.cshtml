@@ -560,6 +560,8 @@
                                 Code: { type: "string" },
                                 TransactionDate: { type: "date" },
                                 TotalDepositAmount: { type: "number" },
+                                ToBankAccountId: { type: "number" },
+                                BankId: { type: "number" }, 
                                 AccountNo: { type: "string" },
                                 AccountName: { type: "string" },
                                 BankName: { type: "string" },
@@ -594,9 +596,9 @@
 
         function LoadDepositBankAccountCombo() {
             $("#DepositBankAccountId").kendoComboBox({
-                dataTextField: "AccountName",
-                dataValueField: "Id",
-                placeholder: "Filter by Account",
+                dataTextField: "BankName",  
+                dataValueField: "BankId",    
+                placeholder: "Filter by Bank",  
                 filter: "contains",
                 dataSource: {
                     transport: { read: "/Common/Common/GetDepositModal" }
@@ -608,12 +610,18 @@
 
         function applyDepositAccountFilter() {
             var combo = $("#DepositBankAccountId").data("kendoComboBox");
-            var accountId = combo ? combo.value() : "";
+            var bankId = combo ? combo.value() : ""; 
             var grid = $("#depositGrid").data("kendoGrid");
+
             if (!grid) return;
-            if (!accountId) { grid.dataSource.filter([]); return; }
+
+            if (!bankId) {
+                grid.dataSource.filter([]);
+                return;
+            }
+
             grid.dataSource.filter({
-                field: "ToBankAccountId", operator: "eq", value: parseInt(accountId)
+                field: "BankId", operator: "eq", value: parseInt(bankId)
             });
         }
 
@@ -673,6 +681,7 @@
                                 Code: { type: "string" },
                                 TransactionDate: { type: "date" },
                                 TotalDepositAmount: { type: "number" },
+                                FromBankAccountId: { type: "number" },
                                 AccountNo: { type: "string" },
                                 AccountName: { type: "string" },
                                 BankName: { type: "string" },
@@ -707,12 +716,14 @@
 
         function LoadWithdrawalBankAccountCombo() {
             $("#WithdrawalBankAccountId").kendoComboBox({
-                dataTextField: "AccountName",
-                dataValueField: "Id",
-                placeholder: "Filter by Account",
+                dataTextField: "BankName",  
+                dataValueField: "BankId",       
+                placeholder: "Filter by Bank",  
                 filter: "contains",
                 dataSource: {
-                    transport: { read: "/Common/Common/GetWithdrawalModal" }
+                    transport: {
+                        read: "/Common/Common/GetWithdrawalModal"
+                    }
                 },
                 change: applyWithdrawalAccountFilter,
                 select: applyWithdrawalAccountFilter
@@ -721,12 +732,18 @@
 
         function applyWithdrawalAccountFilter() {
             var combo = $("#WithdrawalBankAccountId").data("kendoComboBox");
-            var accountId = combo ? combo.value() : "";
+            var bankId = combo ? combo.value() : "";
             var grid = $("#withdrawalGrid").data("kendoGrid");
+
             if (!grid) return;
-            if (!accountId) { grid.dataSource.filter([]); return; }
+
+            if (!bankId) {
+                grid.dataSource.filter([]);
+                return;
+            }
+
             grid.dataSource.filter({
-                field: "FromBankAccountId", operator: "eq", value: parseInt(accountId)
+                field: "BankId", operator: "eq", value: parseInt(bankId)
             });
         }
 

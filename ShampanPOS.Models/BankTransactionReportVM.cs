@@ -143,6 +143,8 @@ namespace ShampanPOS.Models
         public decimal TotalDepositAmount { get; set; }
         [DisplayName("To Bank Account")]
         public int ToBankAccountId { get; set; }
+        [DisplayName("Bank")]
+        public int BankId { get; set; }
         [DisplayName("Account No")]
         public string AccountNo { get; set; }
         [DisplayName("Account Name")]
@@ -165,6 +167,8 @@ namespace ShampanPOS.Models
         public decimal TotalDepositAmount { get; set; }
         [DisplayName("From Bank Account")]
         public int FromBankAccountId { get; set; }
+        [DisplayName("Bank")]
+        public int BankId { get; set; }
         [DisplayName("Account No")]
         public string AccountNo { get; set; }
         [DisplayName("Account Name")]

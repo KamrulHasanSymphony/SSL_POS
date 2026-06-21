@@ -1,6 +1,7 @@
 ﻿@model List<ShampanPOS.Models.SaleReportVM>
+
 @{
-    ViewBag.Title = "Sale vs Sale Return Summary";
+    ViewBag.Title = "Sale Order vs Sale Summary";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     bool hasProduct = (ViewBag.ProductId != null && (int)ViewBag.ProductId > 0);
@@ -69,6 +70,7 @@
         display: flex;
         gap: 15px;
         flex-wrap: wrap;
+        margin-bottom: 20px;
     }
 
         .single-summary-card .box {
@@ -97,15 +99,13 @@
 
 <div class="report-box">
 
-    <!-- HEADER -->
     <table style="border:none;margin-bottom:10px;">
         <tr>
             <td style="width:140px;border:none;">
                 <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px;height:120px;" />
             </td>
             <td style="text-align:right;border:none;">
-                <h3 style="margin:0;"> @ViewBag.CompanyName </h3>
-                <div> @ViewBag.BranchName </div>
+                <h3 style="margin:0;">Symphony Softtech Limited</h3>
                 <div>69/1 Trhidara Tower</div>
                 <div>📞 01612264439</div>
                 <div>✉️ symphonysorftech1999@gamil.com</div>
@@ -114,7 +114,7 @@
     </table>
 
     <h2 style="text-align:center;border-bottom:1px solid #000;">
-        SALE VS SALE RETURN REPORT (SUMMARY)
+        SALE ORDER VS SALE REPORT (@(ViewBag.IsSummary == true ? "SUMMARY" : "DETAILS"))
     </h2>
 
     @using System.Globalization
@@ -136,6 +136,14 @@
 
         <div class="single-summary-card">
             <div class="box">
+                <div class="label">SO Qty</div>
+                <div class="value">@((first?.SaleOrderQty ?? 0))</div>
+            </div>
+            <div class="box">
+                <div class="label">SO Amount</div>
+                <div class="value">@((first?.SaleOrderTotalAmount ?? 0).ToString("N2", bd))</div>
+            </div>
+            <div class="box">
                 <div class="label">Sale Qty</div>
                 <div class="value">@((first?.SaleQty ?? 0))</div>
             </div>
@@ -144,18 +152,14 @@
                 <div class="value">@((first?.SaleAmount ?? 0).ToString("N2", bd))</div>
             </div>
             <div class="box">
-                <div class="label">Return Qty</div>
-                <div class="value">@((first?.SaleReturnQty ?? 0))</div>
-            </div>
-            <div class="box">
-                <div class="label">Return Amount</div>
-                <div class="value">@((first?.SaleReturnAmount ?? 0).ToString("N2", bd))</div>
+                <div class="label">Remain Qty</div>
+                <div class="value">@((first?.RemainQty ?? 0))</div>
             </div>
         </div>
     }
     else
     {
-        @* ===================== CASE B/C/D: breakdown table ===================== *@
+        @* ===================== CASE B/C/D: Breakdown Table ===================== *@
 
         if (hasProduct)
         {
@@ -174,11 +178,21 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>@(hasProduct ? "Customer" : "Product")</th>
+                        @if (!hasCustomer && !hasProduct)
+                        {
+                            <th>Customer</th>
+                            <th>Product</th>
+                        }
+                        else
+                        {
+                            <th>@(hasProduct ? "Customer" : "Product")</th>
+                        }
+                        <th>SO No</th>
+                        <th>SO Qty</th>
+                        <th>SO Amount</th>
                         <th>Sale Qty</th>
                         <th>Sale Amount</th>
-                        <th>Return Qty</th>
-                        <th>Return Amount</th>
+                        <th>Remain Qty</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -187,40 +201,52 @@
                         foreach (var item in Model)
                         {
                             <tr>
-                                <td>
-                                    @if (hasProduct)
-                                    {
-                                        @($"{item.CustomerName} ({item.CustomerCode})")
-                                    }
-                                    else
-                                    {
-                                        @($"{item.ProductName} ({item.ProductCode})")
-                                    }
-                                </td>
+                                @if (!hasCustomer && !hasProduct)
+                                {
+                                    <td>@($"{item.CustomerName} ({item.CustomerCode})")</td>
+                                    <td>@($"{item.ProductName} ({item.ProductCode})")</td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        @if (hasProduct)
+                                        {
+                                            @($"{item.CustomerName} ({item.CustomerCode})")
+                                        }
+                                        else
+                                        {
+                                            @($"{item.ProductName} ({item.ProductCode})")
+                                        }
+                                    </td>
+                                }
+                                <td>@item.Code</td>
+                                <td class="text-right">@item.SaleOrderQty</td>
+                                <td class="text-right">@((Model.Sum(x => x.SaleOrderTotalAmount) ?? 0).ToString("N2", bd))</td>
                                 <td class="text-right">@item.SaleQty</td>
-                                <td class="text-right">@((item.SaleAmount ?? 0).ToString("N2", bd))</td>
-                                <td class="text-right">@item.SaleReturnQty</td>
-                                <td class="text-right">@((item.SaleReturnAmount ?? 0).ToString("N2", bd))</td>
+                                <td class="text-right">@((Model.Sum(x => x.SaleAmount) ?? 0).ToString("N2", bd))</td>
+                                <td class="text-right">@item.RemainQty</td>
                             </tr>
                         }
 
-                        <tr style="font-weight:bold;background:#f1f1f1;">
-                            <td>Total</td>
-                            <td class="text-right">@Model.Sum(x => x.SaleQty)</td>
-                            <td class="text-right">@((Model.Sum(x => x.SaleAmount) ?? 0).ToString("N2", bd))</td>
-                            <td class="text-right">@Model.Sum(x => x.SaleReturnQty)</td>
-                            <td class="text-right">@((Model.Sum(x => x.SaleReturnAmount) ?? 0).ToString("N2", bd))</td>
-                        </tr>
+                <tr style="font-weight:bold;background:#f1f1f1;">
+                    <td colspan="@(!hasCustomer && !hasProduct ? 3 : 2)">Total</td>
+                    <td class="text-right">@Model.Sum(x => x.SaleOrderQty)</td>
+                    <td class="text-right">@((Model.Sum(x => x.SaleOrderTotalAmount) ?? 0).ToString("N2", bd))</td>
+                    <td class="text-right">@Model.Sum(x => x.SaleQty)</td>
+                    <td class="text-right">@((Model.Sum(x => x.SaleAmount) ?? 0).ToString("N2", bd))</td>
+                    <td class="text-right">@Model.Sum(x => x.RemainQty)</td>
+                </tr>
                     }
                     else
                     {
                         <tr>
-                            <td colspan="5" style="text-align:center;padding:20px;">No data found</td>
+                            <td colspan="@(!hasCustomer && !hasProduct ? 8 : 7)" style="text-align:center;padding:20px;">
+                                No purchase data found
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
     }
-
 </div>

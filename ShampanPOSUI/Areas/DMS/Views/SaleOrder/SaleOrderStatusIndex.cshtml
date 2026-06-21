@@ -164,7 +164,7 @@
             columns: [
                 { field: "Code", title: "Code", width: "120px" },
                 { field: "Name", title: "Name", width: "200px" },
-                { field: "ProductGroupName", title: "Group", width: "150px" }
+                { field: "CustomerGroupName", title: "Group", width: "150px" }
             ]
         });
         $("#customerGrid").off("dblclick").on("dblclick", "tr", function () {
@@ -181,7 +181,7 @@
             var groupMap = {};
             $.each(data, function (_, item) {
                 if (item.CustomerGroupId && !groupMap[item.CustomerGroupId])
-                    groupMap[item.CustomerGroupId] = { Id: item.CustomerGroupId, Name: item.GroupName };
+                    groupMap[item.CustomerGroupId] = { Id: item.CustomerGroupId, Name: item.CustomerGroupName };
             });
             var existing = $("#CustomerGroupFilter").data("kendoComboBox");
             if (existing) existing.destroy();
