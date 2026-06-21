@@ -9,163 +9,596 @@
 }
 
 <style>
-    .sslSave,
-    .sslUpdate {
-        min-width: 110px;
-        height: 40px;
-        font-size: 16px;
-        font-weight: 600;
-        border-radius: 4px;
+    html, body {
+        height: 100%;
+        overflow-y: auto;
     }
 
-        .sslSave i,
-        .sslUpdate i {
-            margin-right: 5px;
+    body {
+        background: #f4f6fb;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+    }
+
+    .wrapper {
+        position: static;
+        min-height: initial
+    }
+
+    .content-wrapper {
+        min-height: 400px !important
+    }
+
+    .pos-login-wrapper {
+        width: 100%;
+        max-width: 1400px;
+        min-height: 400px;
+        background: #fff;
+        border-radius: 28px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        box-shadow: 0 15px 60px rgba(0, 0, 0, .08);
+    }
+
+    .left-panel {
+        background: #f8faff;
+        padding: 20px 80px;
+        position: relative;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .brand-icon img {
+        max-width: 100%;
+    }
+
+    .brand-icon {
+        max-width: 125px;
+        margin: 0 auto 8px auto;
+    }
+
+    .brand-text h2 {
+        margin: 0;
+        font-size: 55px;
+        font-weight: 800;
+        color: #07153a;
+    }
+
+    .brand-text span {
+        color: #2563eb;
+        font-weight: 700;
+        font-size: 22px;
+    }
+
+    .login-box h1 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #061430;
+        margin-bottom: 12px;
+    }
+
+    .welcome-text, .sub-title {
+        color: #667085;
+        font-size: 18px;
+        margin: 24px 0;
+    }
+
+    .feature-item {
+        display: flex;
+        gap: 18px;
+        margin-bottom: 17px;
+    }
+
+    .feature-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #eaf1ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #2563eb;
+        font-size: 24px
+    }
+
+    .feature-item h5 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #101828;
+    }
+
+    .feature-item p {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #667085;
+    }
+
+    .pos-image {
+        text-align: center;
+        margin-top: 40px;
+    }
+
+        .pos-image img {
+            max-width: 350px;
         }
-    .address-textarea {
-        min-height: 60px !important;
-        resize: vertical;
+
+    .right-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 80px;
+    }
+
+    .left-panel h1, .login-content h2 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #061430;
+        margin-bottom: 12px;
+    }
+
+    .login-content {
+        max-width: 520px;
+        margin: 0 auto 0;
+    }
+
+        .login-content h2 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #07153a;
+        }
+
+        .login-content label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+    .custom-input {
+        height: 40px;
+        border: 1px solid #d7dfef;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        transition: all .3s ease;
+    }
+
+        .custom-input i:first-child {
+            color: #94a3b8;
+            margin-right: 12px;
+        }
+
+        .custom-input .form-control {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0;
+        }
+
+    .togglePassword {
+        cursor: pointer;
+        color: #94a3b8;
+    }
+
+    .remember-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+    }
+
+    .login-btn {
+        width: 100%;
+        border: none;
+        height: 58px;
+        border-radius: 14px;
+        background: #2563eb;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s linear
+    }
+
+
+
+        .login-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient( 120deg, transparent, rgba(255, 255, 255, 0.4), transparent );
+            transform: skewX(-20deg);
+        }
+
+        .login-btn:hover::before {
+            animation: shine 0.8s ease;
+        }
+
+    @@keyframes shine {
+        100% {
+            left: 130%;
+        }
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.3);
+    }
+
+    .divider {
+        text-align: center;
+        margin: 25px 0;
+        position: relative;
+    }
+
+        .divider:before,
+        .divider:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 42%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider:before {
+            left: 0;
+        }
+
+        .divider:after {
+            right: 0;
+        }
+
+    .google-btn {
+        width: 100%;
+        height: 58px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 14px;
+        font-weight: 600;
+    }
+
+        .google-btn img {
+            width: 24px;
+            margin-right: 10px;
+        }
+
+    .register-link {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+        .register-link a {
+            font-weight: 700;
+        }
+
+    @@media(max-width:991px) {
+
+        .pos-login-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .left-panel {
+            display: none;
+        }
+
+        .right-panel {
+            padding: 30px;
+        }
+    }
+
+    .device-section {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+
+    .device-bg {
+        width: 64%;
+        height: 236px;
+        background: #edf4ff;
+        border-radius: 350px 350px 0 0;
+        margin: auto;
+    }
+
+    .device-image {
+        position: absolute;
+        left: 50%;
+        bottom: 5px;
+        transform: translateX(-50%);
+        max-width: 310px;
+    }
+
+    .custom-textarea {
+        border: 1px solid #d7dfef;
+        border-radius: 14px;
+        padding: 15px 18px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 15px;
+        transition: all .3s ease;
+        background: #fff;
+    }
+
+        .custom-input:focus-within, .custom-textarea:focus-within {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37,99,235,.08);
+        }
+
+        .custom-textarea i {
+            color: #94a3b8;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        .custom-textarea textarea {
+            border: none !important;
+            box-shadow: none !important;
+            resize: none;
+            width: 100%;
+            padding: 0;
+            min-height: 80px;
+            background: transparent;
+        }
+
+    .code-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .code-input-box {
+        height: 40px !important;
+        border: 1px solid #d7dfef !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
+        font-size: 15px;
+        padding: 0 18px;
+        background: #fff;
+    }
+
+        .code-input-box:focus {
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 4px rgba(37,99,235,.08) !important;
+        }
+
+    .code-nav-btn {
+        color: #7fb77e;
+        font-size: 18px;
+        transition: .3s;
     }
 
 </style>
+<body class="">
 
-<div class="container-fluid">
-    <div class="row justify-content-center">
+    <div class="pos-login-wrapper">
 
-        <div class="col-lg-10 col-xl-8">
+        <!-- LEFT SIDE -->
+        <div class="left-panel">
 
-            <div class="card shadow-sm">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">Registration Info</h5>
-                </div>
-
-                <div class="card-body">
-
-                    <form id="frmEntry">
-
-                        @Html.HiddenFor(model => model.Id)
-                        @Html.HiddenFor(model => model.Operation)
-                        @Html.HiddenFor(model => model.Mode)
-                        @Html.HiddenFor(model => model.IsRegistration)
-
-                        <div class="card shadow-sm">
-                            <div class="card-body">
-
-                                <div class="form-row">
-
-                                    <div class="col-md-3 mb-3 codeWidth">
-                                        @Html.LabelFor(model => model.Code)
-                                        <div style="display:flex;align-items:center;">
-                                            <span id="btnPrevious" class="fa fa-backward" style="color:darkseagreen;"></span>&nbsp;
-                                            @Html.TextBoxFor(model => model.Code,
-                                                new
-                                                     {
-                                                    placeholder = "Code Auto Generate",
-                                                    @class = "csCode form-control form-control-sm",
-                                                    @readonly = "readonly"
-                                                })
-                                            &nbsp;
-                                            <span id="btnNext" class="fa fa-forward" style="color:darkseagreen;"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3 mb-3">
-                                        @Html.LabelFor(model => model.EmailAsLoginId)
-                                        @Html.TextBoxFor(model => model.EmailAsLoginId,
-                                            new { @class = "form-control form-control-sm" })
-                                        @Html.ValidationMessageFor(model => model.EmailAsLoginId)
-                                    </div>
-
-                                    <div class="col-md-3 mb-3">
-                                        @Html.LabelFor(model => model.Password)
-                                        @Html.PasswordFor(model => model.Password,
-                                            new
-                                                 {
-                                                @class = "form-control form-control-sm",
-                                                autocomplete = "off"
-                                            })
-                                        @Html.ValidationMessageFor(model => model.Password)
-                                    </div>
-
-                                    <div class="col-md-3 mb-3">
-                                        @Html.LabelFor(model => model.ConfirmPassword)
-                                        @Html.PasswordFor(model => model.ConfirmPassword,
-                                            new
-                                                 {
-                                                @class = "form-control form-control-sm",
-                                                autocomplete = "off"
-                                            })
-                                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
-                                    </div>
-
-                                </div>
-
-                                <div class="form-row">
-
-                                    <div class="col-md-3 mb-3">
-                                        @Html.LabelFor(model => model.FullName)
-                                        @Html.TextBoxFor(model => model.FullName,
-                                            new { @class = "form-control form-control-sm" })
-                                        @Html.ValidationMessageFor(model => model.FullName)
-                                    </div>
-
-                                    <div class="col-md-3 mb-3">
-                                        @Html.LabelFor(model => model.PhoneNumber)
-                                        @Html.TextBoxFor(model => model.PhoneNumber,
-                                            new { @class = "form-control form-control-sm" })
-                                    </div>
-
-                                    <div class="col-md-3 mb-3">
-                                        @Html.LabelFor(model => model.CompanyName)
-                                        @Html.TextBoxFor(model => model.CompanyName,
-                                            new { @class = "form-control form-control-sm" })
-                                        @Html.ValidationMessageFor(model => model.CompanyName)
-                                    </div>
-
-                                    <div class="col-md-3 mb-3">
-                                        @Html.LabelFor(model => model.CompanyAddress)
-                                        @Html.TextAreaFor(model => model.CompanyAddress,
-                                            new
-                                                 {
-                                                @class = "form-control form-control-sm",
-                                                rows = "2"
-                                            })
-                                        @Html.ValidationMessageFor(model => model.CompanyAddress)
-                                    </div>
-
-                                </div>
-
-
-                            </div>
-                        </div>
-
-                        <hr />
-
-                        <div class="text-left mt-3">
-
-                            <button type="button"
-                                    class="btn btn-success btn-sm btnsave sslSave px-4">
-                                <i class="fa fa-save mr-1"></i> Save
-                            </button>
-
-                            @*<button type="button"
-                                    class="btn btn-success btn-sm sslUpdate px-4"
-                                    style="display:none;">
-                                <i class="fa fa-edit mr-1"></i> Update
-                            </button>*@
-
-                        </div>
-
-                    </form>
+            <div class="brand">
+                <div class="brand-icon">
+                    <img src="~/Content/AdminLte/dist/img/CompanyLogo.png" class="CompanyLogo" alt="">
 
                 </div>
             </div>
 
+            <h1>Welcome Back!</h1>
+
+            <p class="welcome-text">
+                Sign in to access your POS dashboard
+            </p>
+
+            <div class="feature-list">
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+
+                    <div>
+                        <h5>Real-time Analytics</h5>
+                        <p>Track sales, inventory and performance in real-time.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+
+                    <div>
+                        <h5>Manage Your Business</h5>
+                        <p>Handle products, customers, sales and more with ease.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+
+                    <div>
+                        <h5>Secure & Reliable</h5>
+                        <p>Your data is protected with enterprise-grade security.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="device-section">
+
+                <div class="device-bg"></div>
+
+                <img src="~/Content/AdminLte/dist/img/pos-machine.png" class="device-image" alt="">
+
+            </div>
+
         </div>
 
-    </div>
-</div>
 
+        <!-- RIGHT SIDE -->
+
+
+        <div class="right-panel">
+
+            <div class="login-content">
+
+                <h2>Create Account</h2>
+
+                <p class="sub-title">
+                    Create your Shampan POS account
+                </p>
+
+                <form id="frmEntry">
+
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.Operation)
+                    @Html.HiddenFor(m => m.Mode)
+                    @Html.HiddenFor(m => m.IsRegistration)
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label>Code</label>
+
+                            <div class="code-wrapper">
+
+                                <span id="btnPrevious" class="fa fa-backward code-nav-btn"></span>
+
+                                @Html.TextBoxFor(model => model.Code,
+                                new
+                                {
+                                    placeholder = "Code Auto Generate",
+                                    @class = "form-control code-input-box",
+                                    @readonly = "readonly"
+                                })
+
+                                <span id="btnNext" class="fa fa-forward code-nav-btn"></span>
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <label>Full Name</label>
+                            <div class="custom-input">
+                                <i class="fas fa-user"></i>
+                                @Html.TextBoxFor(m => m.FullName,
+                                new { @class = "form-control", placeholder = "Enter full name" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.FullName)
+                        </div>
+
+                        <div class="col-md-6 my-2">
+                            @Html.LabelFor(model => model.EmailAsLoginId)
+                            <div class="custom-input">
+                                <i class="far fa-envelope"></i>
+                                @Html.TextBoxFor(m => m.EmailAsLoginId,
+                                new { @class = "form-control", placeholder = "Enter email" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.EmailAsLoginId)
+                        </div>
+
+                        <div class="col-md-6 my-2">
+                            @Html.LabelFor(model => model.PhoneNumber)
+                            <div class="custom-input">
+                                <i class="fas fa-phone"></i>
+                                @Html.TextBoxFor(m => m.PhoneNumber,
+                                new { @class = "form-control", placeholder = "Phone number" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 my-2">
+                            @Html.LabelFor(model => model.Password)
+                            <div class="custom-input">
+                                <i class="fas fa-lock"></i>
+                                @Html.PasswordFor(m => m.Password,
+                                new { @class = "form-control", placeholder = "Password" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Password)
+                        </div>
+                        <div class="col-md-6 my-2">
+                            @Html.LabelFor(model => model.ConfirmPassword)
+                            <div class="custom-input">
+                                <i class="fas fa-lock"></i>
+                                @Html.PasswordFor(m => m.ConfirmPassword,
+                                new { @class = "form-control", placeholder = "Confirm Password" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                        </div>
+                        <div class="col-md-6 my-2">
+                            @Html.LabelFor(model => model.CompanyName)
+                            <div class="custom-input">
+                                <i class="fas fa-building"></i>
+                                @Html.TextBoxFor(m => m.CompanyName,
+                                new { @class = "form-control", placeholder = "Company name" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CompanyName)
+                        </div>
+                        <div class="col-md-6 my-2">
+
+                            @Html.LabelFor(model => model.CompanyAddress)
+
+                            <div class="custom-textarea">
+
+                                <i class="fas fa-map-marker-alt"></i>
+
+                                @Html.TextAreaFor(m => m.CompanyAddress,
+                                new
+                                {
+                                    @class = "form-control",
+                                    rows = "3",
+                                    placeholder = "Enter company address"
+                                })
+
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CompanyAddress)
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                            class="login-btn btnsave sslSave mt-4">
+                        Create Account
+                    </button>
+
+                    @*<button type="button"
+                                class="btn btn-success btn-sm sslUpdate px-4"
+                                style="display:none;">
+                            <i class="fa fa-edit mr-1"></i> Update
+                        </button>*@
+                    <div class="register-link">
+
+                        Already have an account?
+
+                        <a href="@Url.Action("Index","Login", new {area =""})">
+                            Sign In
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+</body>
 @section scripts{
 
     <script src="~/Areas/Common/js/Services/CommonAjaxService.js"></script>
