@@ -176,12 +176,17 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
-               // var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-        
                 List<CustomerVM> lst = new List<CustomerVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
                 //param.BranchId = currentBranchId;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null? Session["CompanyId"].ToString(): "";
+
+                param.BranchId = Session["CurrentBranch"] != null? Session["CurrentBranch"].ToString(): "";
+
+
                 ResultVM result = _repo.GetCustomerList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -715,6 +720,11 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 List<PaymentTypeVM> lst = new List<PaymentTypeVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
+
+                // add company id from session
+                //param.CompanyId = Session["CompanyId"] != null
+                //    ? Session["CompanyId"].ToString()
+                //    : "";
                 ResultVM result = _repo.GetPaymentTypeList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -980,6 +990,14 @@ namespace ShampanPOSUI.Areas.Common.Controllers
             {
                 var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
                 param.BranchId = currentBranchId;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+
+                param.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "";
+
 
                 List<SaleOrderVM> lst = new List<SaleOrderVM>();
                 ResultVM result = _repo.GetSaleOrderList(param);
@@ -1498,6 +1516,9 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 param.CompanyId = Session["CompanyId"] != null
                     ? Session["CompanyId"].ToString()
                     : "";
+
+                param.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "";
+
                 ResultVM result = _repo.GetProductModal(param);
 
                 if (result.Status == "Success" && result.DataVM != null)

@@ -51,6 +51,40 @@
 
         });
 
+
+
+        let barcodeTimer = null;
+
+        $(document).on("keyup", "#barcodeInput", function () {
+
+            clearTimeout(barcodeTimer);
+
+            var code = $(this).val().trim();
+            if (!code) return;
+
+            barcodeTimer = setTimeout(function () {
+
+                $.ajax({
+                    url: "/Common/Common/GetProductByBarcode",
+                    type: "GET",
+                    data: { code: code },
+                    success: function (res) {
+
+                        if (!res || !res.ProductId) {
+                            ShowNotification(3, "Product not found");
+                            return;
+                        }
+
+                        AddProductToGrid(res);
+
+                        $("#barcodeInput").val("");
+                    }
+                });
+
+            }, 300);
+
+        });
+
         decimalPlace = $("#DecimalPlace").val() || 2;
         var getId = $("#Id").val() || 0;
         var getOperation = $("#Operation").val() || '';
@@ -520,7 +554,33 @@
 
         $("#saleDetails").kendoGrid({
             dataSource: saleDetails,
-            toolbar: [{ name: "create", text: "Add" }],
+            //toolbar: [{ name: "create", text: "Add" }],
+
+            toolbar: [
+                { name: "create", text: "Add" },
+
+                {
+                    template: function () {
+
+                        return `
+                <div style="display:flex; align-items:center; gap:5px; margin-left:10px;">
+
+                    <div style="position:relative; width:200px;">
+
+                        <input type="text"
+                               id="barcodeInput"
+                               class="k-textbox"
+                               placeholder="Barcode"
+                               style="width:100%; padding-right:30px;" />
+
+                    </div>
+
+                </div>
+            `;
+                    }
+                }
+            ],
+
             editable: { mode: "incell", createAt: "bottom" },
             save: function () {
                 var grid = this;
@@ -1233,6 +1293,68 @@
 
     };
 
+
+
+    function AddProductToGrid(res) {
+
+        var grid = $("#saleDetails").data("kendoGrid");
+
+        var data = grid.dataSource.data();
+
+        var existing = data.find(x => x.ProductId == res.ProductId);
+
+        if (existing) {
+
+            var qty = (existing.Quantity || 0) + 1;
+            existing.set("Quantity", qty);
+
+            var subTotal = qty * existing.UnitRate;
+
+            var sdAmount = (subTotal * (existing.SD || 0)) / 100;
+            var vatAmount = ((subTotal + sdAmount) * (existing.VATRate || 0)) / 100;
+
+            var lineTotal = subTotal + sdAmount + vatAmount;
+
+            existing.set("SubTotal", subTotal);
+            existing.set("SDAmount", sdAmount);
+            existing.set("VATAmount", vatAmount);
+            existing.set("LineTotal", lineTotal);
+
+            grid.refresh();
+            return;
+        }
+
+        var subTotal = res.SalesPrice * 1;
+
+        var sdAmount = (subTotal * (res.SDRate || 0)) / 100;
+        var vatAmount = ((subTotal + sdAmount) * (res.VATRate || 0)) / 100;
+
+        var lineTotal = subTotal + sdAmount + vatAmount;
+
+        grid.dataSource.add({
+            ProductId: res.ProductId,
+            ProductName: res.ProductName,
+            UOMId: res.UOMId,
+            UOMName: res.UOMName,
+            Quantity: 1,
+            UnitRate: res.SalesPrice,
+            SubTotal: subTotal,
+            SD: res.SDRate,
+            SDAmount: sdAmount,
+            VATRate: res.VATRate,
+            VATAmount: vatAmount,
+            LineTotal: lineTotal
+        });
+
+        grid.refresh();
+    }
+
+
+
+
+
+
+
     function itemSelectorEditor(container, options) {
         var wrapper = $('<div class="input-group input-group-sm full-width">').appendTo(container);
 
@@ -1248,7 +1370,7 @@
                     .append('<i class="fa fa-search"></i>')
                     .on("click", function () {
 
-                        OpenProductPopup(options.model); //eta banate hobe
+                        OpenProductPopup(options.model); 
                     })
             )
             .appendTo(wrapper);
@@ -1262,7 +1384,12 @@
         $.ajax({
             url: "/DMS/SaleOrder/GetSaleOrderList",
             type: "GET",
-            data: { saleOrderId: saleOrderId },
+            data: {
+                saleOrderId: saleOrderId
+                //companyId: $("#CompanyId").val(),
+                //branchId: $("#Branchs").data("kendoComboBox").value()
+            },
+
             success: function (data) {
 
                 if (!data || data.length === 0) {
@@ -1383,10 +1510,11 @@
             columns: [
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
-                { field: "BanglaName", title: "BanglaName", width: 200 },
+                { field: "Address", title: "Address", width: 150 },
+                { field: "Email", title: "Email", width: 150 }
             ],
             filter: "contains",
-            filterFields: ["Code", "Name", "BanglaName"],
+            filterFields: ["Code", "Name", "Address", "Email"],
             dataSource: {
                 transport: {
                     read: "/Common/Common/GetCustomerList"
@@ -1444,64 +1572,6 @@
         // 🔹 Optional: Paid Amount = Grand Total
         $(".trGrandTotalAmount").val(grandTotal.toFixed(dp));
     }
-
-
-    // ============================================================
-    // PRODUCT POPUP WINDOW (SEARCHABLE PRODUCT LIST)
-    // ============================================================
-
-    //function OpenProductPopup(detailRow) {
-    //    debugger;
-    //    var wnd = $("#saleDetailsWindow").kendoWindow({
-    //        width: "650px",
-    //        height: "450px",
-    //        title: "Select Product",
-    //        modal: true,
-    //        visible: false
-    //    }).data("kendoWindow");
-
-    //    wnd.center().open();
-
-    //    $("#saleDetailsGrid").kendoGrid({
-    //        dataSource: {
-    //            transport: {
-    //                read: {
-    //                    url: "/Common/Common/GetProductModal" // API for Product list
-    //                }
-    //            }
-    //        },
-    //        height: 380,
-    //        sortable: true,
-    //        filterable: true,
-    //        pageable: true,
-    //        selectable: "row",
-
-    //        columns: [
-    //            { field: "ProductId", title: "Product ID", hidden: true },
-    //            { field: "ProductName", title: "Product Name", width: 100 },
-    //            { field: "UOMId", hidden: true },
-    //            { field: "UOMName", title: "UOM", width: 100 },
-    //            //{ field: "HSCodeNo", title: "HS Code No", width: 80 },
-    //            { field: "ProductGroupId", title: "Product Group Id", width: 100 },
-    //            { field: "ProductGroupName", title: "Product Group Name", width: 100 },
-    //            { field: "PurchasePrice", title: "Purchase Price", width: 100 },
-    //            { field: "SalesPrice", title: "Sale Price", width: 100 },
-    //            { field: "VATRate", title: "VAT Rate", width: 100 },
-    //            { field: "SDRate", title: "SD Rate", width: 100 },
-    //        ]
-    //    });
-
-    //    // DOUBLE CLICK SELECT
-    //    $("#saleDetailsGrid").off("dblclick").on("dblclick", "tr", function () {
-
-    //        var grid = $("#saleDetailsGrid").data("kendoGrid");
-    //        var selectedItem = grid.dataItem($(this));
-    //        ApplyProductSelection(detailRow, selectedItem);
-    //        wnd.close();
-    //    });
-    //}
-
-
 
 
     function OpenProductPopup(detailRow) {

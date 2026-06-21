@@ -1073,7 +1073,7 @@
                     .append('<i class="fa fa-search"></i>')
                     .on("click", function () {
 
-                        OpenProductPopup(options.model); //eta banate hobe
+                        OpenProductPopup(options.model);
                     })
             )
             .appendTo(wrapper);

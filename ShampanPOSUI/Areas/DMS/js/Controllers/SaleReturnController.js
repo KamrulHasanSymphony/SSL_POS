@@ -61,6 +61,45 @@
         });
 
 
+
+        let barcodeTimer = null;
+
+        $(document).off("keyup", "#barcodeInput").on("keyup", "#barcodeInput", function () {
+
+            clearTimeout(barcodeTimer);
+
+            var code = $(this).val().trim();
+            if (!code || code.length < 3) return;
+
+            barcodeTimer = setTimeout(function () {
+
+                $.ajax({
+                    url: "/Common/Common/GetProductByBarcode",
+                    type: "GET",
+                    data: { code: code },
+                    success: function (res) {
+
+                        console.log("BARCODE RESPONSE:", res);
+
+                        if (!res || !res.ProductId) {
+                            ShowNotification(3, "Product not found");
+                            return;
+                        }
+
+                        AddProductToGrid(res);
+
+                        setTimeout(function () {
+                            $("#barcodeInput").val("");
+                        }, 50);
+                    }
+                });
+
+            }, 200);
+        });
+
+
+
+
         $('.btnsave').click(function (e) {
             e.preventDefault();  // Prevent default form submission
 
@@ -235,7 +274,34 @@
 
         $("#saleOrderDetails").kendoGrid({
             dataSource: detailsGridDataSource,
-            toolbar: [{ name: "create", text: "Add" }],
+            //toolbar: [{ name: "create", text: "Add" }],
+
+            toolbar: [
+                { name: "create", text: "Add" },
+
+                {
+                    template: function () {
+
+                        return `
+                <div style="display:flex; align-items:center; gap:5px; margin-left:10px;">
+
+                    <div style="position:relative; width:200px;">
+
+                        <input type="text"
+                               id="barcodeInput"
+                               class="k-textbox"
+                               placeholder="Barcode"
+                               style="width:100%; padding-right:30px;" />
+
+                    </div>
+
+                </div>
+            `;
+                    }
+                }
+            ],
+
+
             editable: {
                 mode: "incell",
                 createAt: "bottom"
@@ -634,6 +700,59 @@
     };
 
 
+
+    function AddProductToGrid(res) {
+
+        var grid = $("#saleOrderDetails").data("kendoGrid");
+
+        if (!grid) {
+            console.log("Grid not initialized");
+            return;
+        }
+
+        var data = grid.dataSource.data();
+
+        var existing = data.find(x => x.ProductId == res.ProductId);
+
+        if (existing) {
+
+            var qty = (existing.Quantity || 0) + 1;
+            existing.set("Quantity", qty);
+
+            var subTotal = qty * existing.UnitRate;
+            var sdAmount = (subTotal * (existing.SD || 0)) / 100;
+            var vatAmount = ((subTotal + sdAmount) * (existing.VATRate || 0)) / 100;
+
+            existing.set("SubTotal", subTotal);
+            existing.set("SDAmount", sdAmount);
+            existing.set("VATAmount", vatAmount);
+            existing.set("LineTotal", subTotal + sdAmount + vatAmount);
+
+            grid.refresh();
+            return;
+        }
+
+        // 🔥 FIX: NEW PRODUCT ADD (missing part)
+        grid.dataSource.add({
+            ProductId: res.ProductId,
+            ProductName: res.ProductName,
+            UOMId: res.UOMId,
+            UOMName: res.UOMName,
+            Quantity: 1,
+            UnitRate: res.SalesPrice,
+            SD: res.SDRate,
+            VATRate: res.VATRate,
+            SubTotal: res.SalesPrice,
+            SDAmount: (res.SalesPrice * (res.SDRate || 0)) / 100,
+            VATAmount: ((res.SalesPrice + ((res.SalesPrice * (res.SDRate || 0)) / 100)) * (res.VATRate || 0)) / 100,
+            LineTotal: 0
+        });
+
+        grid.refresh();
+    }
+
+
+
     function itemSelectorEditor(container, options) {
         var wrapper = $('<div class="input-group input-group-sm full-width">').appendTo(container);
 
@@ -821,11 +940,12 @@
             columns: [
                 { field: "Code", title: "Code", width: 100 },
                 { field: "Name", title: "Name", width: 150 },
-                { field: "BanglaName", title: "BanglaName", width: 200 },
+                { field: "Address", title: "Address", width: 150 },
+                { field: "Email", title: "Email", width: 150 }
             ],
 
             filter: "contains",
-            filterFields: ["Code", "Name", "BanglaName"],
+            filterFields: ["Code", "Name", "Address", "Email"],
 
             dataSource: {
                 transport: {
