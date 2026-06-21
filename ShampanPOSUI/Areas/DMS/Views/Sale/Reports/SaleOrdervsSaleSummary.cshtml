@@ -4,9 +4,9 @@
     ViewBag.Title = "Sale Order vs Sale Summary";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    bool isSummary = ViewBag.IsSummary != null && (bool)ViewBag.IsSummary;
-}
-
+    bool hasProduct = (ViewBag.ProductId != null && (int)ViewBag.ProductId > 0);
+    bool hasCustomer = (ViewBag.CustomerId != null && (int)ViewBag.CustomerId > 0);
+    bool singleCombo = hasProduct && hasCustomer;
 }
 
 <style>
@@ -30,8 +30,7 @@
         font-size: 13px;
     }
 
-        table th,
-        table td {
+        table th, table td {
             border: 1px solid #777;
             padding: 6px;
         }
@@ -54,26 +53,59 @@
         float: right;
         margin-bottom: 10px;
     }
+
+    .info-block {
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+        .info-block h4 {
+            margin: 0 0 10px 0;
+        }
+
+    .single-summary-card {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+        .single-summary-card .box {
+            flex: 1;
+            min-width: 150px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+            .single-summary-card .box .label {
+                font-size: 12px;
+                color: #666;
+            }
+
+            .single-summary-card .box .value {
+                font-size: 18px;
+                font-weight: bold;
+                margin-top: 4px;
+            }
 </style>
 
-<button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">
-    Print
-</button>
+<button onclick="window.print()" class="sslPrint" style="float:right;margin:20px;">Print</button>
 
 <div class="report-box">
 
-    <!-- HEADER -->
     <table style="border:none;margin-bottom:10px;">
         <tr>
             <td style="width:140px;border:none;">
-                <img src="~/Content/AdminLte/dist/img/logo.png"
-                     style="width:230px;height:120px;" />
+                <img src="~/Content/AdminLte/dist/img/logo.png" style="width:230px;height:120px;" />
             </td>
-
             <td style="text-align:right;border:none;">
-            <td style="text-align:right;border:none;">
-                <h3 style="margin:0;">  @ViewBag.CompanyName </h3>
-                 <div>  @ViewBag.BranchName </div>
+                <h3 style="margin:0;">Symphony Softtech Limited</h3>
                 <div>69/1 Trhidara Tower</div>
                 <div>📞 01612264439</div>
                 <div>✉️ symphonysorftech1999@gamil.com</div>
@@ -81,110 +113,140 @@
         </tr>
     </table>
 
-    <!-- TITLE -->
     <h2 style="text-align:center;border-bottom:1px solid #000;">
-        SALE ORDER VS SALE REPORT (@(isSummary ? "SUMMARY" : "DETAILS"))
+        SALE ORDER VS SALE REPORT (@(ViewBag.IsSummary == true ? "SUMMARY" : "DETAILS"))
     </h2>
 
     @using System.Globalization
     @{
         var bd = new CultureInfo("en-IN");
+        var first = Model != null && Model.Any() ? Model.First() : null;
     }
 
-    <div class="table-responsive">
-        <table class="table table-bordered">
+    @* ===================== CASE A: Product + Customer both selected ===================== *@
+    @if (singleCombo)
+    {
+        <div class="info-block">
+            <h4>
+                Customer: @(first != null ? $"{first.CustomerName} ({first.CustomerCode})" : "N/A")
+                &nbsp;|&nbsp;
+                Product: @(first != null ? $"{first.ProductName} ({first.ProductCode})" : "N/A")
+            </h4>
+        </div>
 
-            <thead>
-                <tr>
-                    <th>Customer</th>
+        <div class="single-summary-card">
+            <div class="box">
+                <div class="label">SO Qty</div>
+                <div class="value">@((first?.SaleOrderQty ?? 0))</div>
+            </div>
+            <div class="box">
+                <div class="label">SO Amount</div>
+                <div class="value">@((first?.SaleOrderTotalAmount ?? 0).ToString("N2", bd))</div>
+            </div>
+            <div class="box">
+                <div class="label">Sale Qty</div>
+                <div class="value">@((first?.SaleQty ?? 0))</div>
+            </div>
+            <div class="box">
+                <div class="label">Sale Amount</div>
+                <div class="value">@((first?.SaleAmount ?? 0).ToString("N2", bd))</div>
+            </div>
+            <div class="box">
+                <div class="label">Remain Qty</div>
+                <div class="value">@((first?.RemainQty ?? 0))</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        @* ===================== CASE B/C/D: Breakdown Table ===================== *@
 
-                    <th>Product</th>
+        if (hasProduct)
+        {
+            <div class="info-block">
+                <h4>Product: @(first != null ? $"{first.ProductName} ({first.ProductCode})" : ViewBag.ProductName)</h4>
+            </div>
+        }
+        else if (hasCustomer)
+        {
+            <div class="info-block">
+                <h4>Customer: @(first != null ? $"{first.CustomerName} ({first.CustomerCode})" : ViewBag.CustomerName)</h4>
+            </div>
+        }
 
-                    <th>SO No</th>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        @if (!hasCustomer && !hasProduct)
+                        {
+                            <th>Customer</th>
+                            <th>Product</th>
+                        }
+                        else
+                        {
+                            <th>@(hasProduct ? "Customer" : "Product")</th>
+                        }
+                        <th>SO No</th>
+                        <th>SO Qty</th>
+                        <th>SO Amount</th>
+                        <th>Sale Qty</th>
+                        <th>Sale Amount</th>
+                        <th>Remain Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                @if (!hasCustomer && !hasProduct)
+                                {
+                                    <td>@($"{item.CustomerName} ({item.CustomerCode})")</td>
+                                    <td>@($"{item.ProductName} ({item.ProductCode})")</td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        @if (hasProduct)
+                                        {
+                                            @($"{item.CustomerName} ({item.CustomerCode})")
+                                        }
+                                        else
+                                        {
+                                            @($"{item.ProductName} ({item.ProductCode})")
+                                        }
+                                    </td>
+                                }
+                                <td>@item.Code</td>
+                                <td class="text-right">@item.SaleOrderQty</td>
+                                <td class="text-right">@((Model.Sum(x => x.SaleOrderTotalAmount) ?? 0).ToString("N2", bd))</td>
+                                <td class="text-right">@item.SaleQty</td>
+                                <td class="text-right">@((Model.Sum(x => x.SaleAmount) ?? 0).ToString("N2", bd))</td>
+                                <td class="text-right">@item.RemainQty</td>
+                            </tr>
+                        }
 
-                    <th>SO Qty</th>
-                    <th>SO Amount</th>
-
-                    <th>Sale Qty</th>
-                    <th>Sale Amount</th>
-
-                    <th>Remain Qty</th>
+                <tr style="font-weight:bold;background:#f1f1f1;">
+                    <td colspan="@(!hasCustomer && !hasProduct ? 3 : 2)">Total</td>
+                    <td class="text-right">@Model.Sum(x => x.SaleOrderQty)</td>
+                    <td class="text-right">@((Model.Sum(x => x.SaleOrderTotalAmount) ?? 0).ToString("N2", bd))</td>
+                    <td class="text-right">@Model.Sum(x => x.SaleQty)</td>
+                    <td class="text-right">@((Model.Sum(x => x.SaleAmount) ?? 0).ToString("N2", bd))</td>
+                    <td class="text-right">@Model.Sum(x => x.RemainQty)</td>
                 </tr>
-            </thead>
-
-            <tbody>
-
-                @if (Model != null && Model.Any())
-                {
-                    foreach (var item in Model)
+                    }
+                    else
                     {
                         <tr>
-
-                            <td>
-                                @item.CustomerName (@item.CustomerCode)
+                            <td colspan="@(!hasCustomer && !hasProduct ? 8 : 7)" style="text-align:center;padding:20px;">
+                                No purchase data found
                             </td>
-
-                            <td>
-                                @item.ProductName (@item.ProductCode)
-                            </td>
-
-                            <td>
-                                @item.SaleOrderNo
-                            </td>
-
-                            <td class="text-right">
-                                @item.SaleOrderQty
-                            </td>
-
-                            <td class="text-right">@((Model.Sum(x => x.SaleOrderTotalAmount) ?? 0).ToString("N2", bd))</td>
-
-
-                            <td class="text-right">
-                                @item.SaleQty
-                            </td>
-
-                            <td class="text-right">@((Model.Sum(x => x.SaleAmount) ?? 0).ToString("N2", bd))</td>
-
-                            <td class="text-right">
-                                @item.RemainQty
-                            </td>
-
                         </tr>
                     }
-
-                    <!-- TOTAL ROW -->
-            <tr style="font-weight:bold;background:#f1f1f1;">
-
-                <td colspan="3">
-                    Total
-                </td>
-
-                <td class="text-right">  @Model.Sum(x => x.SaleOrderQty) </td>
-
-                <td class="text-right">@((Model.Sum(x => x.SaleOrderTotalAmount) ?? 0).ToString("N2", bd))</td>
-
-                <td class="text-right">
-                    @Model.Sum(x => x.SaleQty)
-                </td>
-
-                <td class="text-right">@((Model.Sum(x => x.SaleAmount) ?? 0).ToString("N2", bd))</td>
-
-                <td class="text-right"> @Model.Sum(x => x.RemainQty) </td>
-
-            </tr>
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="8" style="text-align:center;">
-                            No sale data found
-                        </td>
-                    </tr>
-                }
-
-            </tbody>
-
-        </table>
-    </div>
-
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
