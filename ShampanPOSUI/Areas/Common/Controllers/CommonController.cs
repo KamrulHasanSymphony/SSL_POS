@@ -170,24 +170,36 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-     
+
         [HttpGet]
         public ActionResult GetCustomerList(string value)
         {
             try
             {
-               // var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-        
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company ID session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<CustomerVM> lst = new List<CustomerVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
-                //param.BranchId = currentBranchId;
+
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
+
                 ResultVM result = _repo.GetCustomerList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
                     lst = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
                 }
+
                 return Json(lst, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
