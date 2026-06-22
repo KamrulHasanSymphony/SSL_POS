@@ -101,7 +101,7 @@
             columns: [
                 { field: "Code",      title: "Code",  width: "120px" },
                 { field: "Name",      title: "Name",  width: "200px" },
-                { field: "GroupName", title: "Group", width: "150px" }
+                { field: "CustomerGroupName", title: "Group", width: "150px" }
             ]
         });
 
@@ -117,9 +117,9 @@
         $.getJSON("/Common/Common/GetCustomerModal", function (data) {
             var groupMap = {};
             $.each(data, function (_, item) {
-                if (item.CustomerGroupId && item.GroupName && !groupMap[item.CustomerGroupId])
+                if (item.CustomerGroupId && item.CustomerGroupName && !groupMap[item.CustomerGroupId])
                     groupMap[item.CustomerGroupId] = {
-                        Id: item.CustomerGroupId, Name: item.GroupName
+                        Id: item.CustomerGroupId, Name: item.CustomerGroupName
                     };
             });
             var groupList = Object.values(groupMap);

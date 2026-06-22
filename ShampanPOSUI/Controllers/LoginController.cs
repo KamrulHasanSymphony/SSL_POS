@@ -69,30 +69,30 @@ namespace ShampanPOSUI.Controllers
         public ActionResult Index()
         {
             LoginResource loginModel = new LoginResource();
-            List<CompanyInfo> companyInfos = new List<CompanyInfo>();
+            //List<CompanyInfo> companyInfos = new List<CompanyInfo>();
             try
             {
-                _companyRepo = new CompanyProfileRepo();
-                CommonVM commonVM = new CommonVM();
-                CompanyInfo companyInfo = new CompanyInfo();
-                //SessionClear();
+                //_companyRepo = new CompanyProfileRepo();
+                //CommonVM commonVM = new CommonVM();
+                //CompanyInfo companyInfo = new CompanyInfo();
+                SessionClear();
 
-                var result = _companyRepo.List(commonVM);
+                //var result = _companyRepo.List(commonVM);
 
-                if (result != null && result.Status == "Success" && result.DataVM != null)
-                {
-                    var data = JsonConvert.DeserializeObject<List<CompanyInfo>>(result.DataVM.ToString());
+                //if (result != null && result.Status == "Success" && result.DataVM != null)
+                //{
+                //    var data = JsonConvert.DeserializeObject<List<CompanyInfo>>(result.DataVM.ToString());
 
-                    foreach (var item in data)
-                    {
-                        companyInfo = new CompanyInfo();
-                        companyInfo.CompanyId = item.Id;
-                        companyInfo.CompanyName = item.CompanyName;
-                        companyInfos.Add(companyInfo);
-                    }
-                }
+                //    foreach (var item in data)
+                //    {
+                //        companyInfo = new CompanyInfo();
+                //        companyInfo.CompanyId = item.Id;
+                //        companyInfo.CompanyName = item.CompanyName;
+                //        companyInfos.Add(companyInfo);
+                //    }
+                //}
 
-                loginModel.CompanyInfos = companyInfos;
+                //loginModel.CompanyInfos = companyInfos;
 
                 loginModel.Message = TempData["ErrorMessage"]?.ToString();
 
@@ -110,13 +110,16 @@ namespace ShampanPOSUI.Controllers
             catch (Exception ex)
             {
                 Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
-                CompanyInfo selectOption = new CompanyInfo
-                {
-                    CompanyId = 0,
-                    CompanyName = "--Select Company--"
-                };
-                companyInfos.Add(selectOption);
-                loginModel.CompanyInfos = companyInfos;
+                //CompanyInfo selectOption = new CompanyInfo
+                //{
+                //    CompanyId = 0,
+                //    CompanyName = "--Select Company--"
+                //};
+                //companyInfos.Add(selectOption);
+                //loginModel.CompanyInfos = companyInfos;
+
+                loginModel.Message = "Something went wrong!";
+
                 return View(loginModel);
             }
         }
@@ -125,15 +128,15 @@ namespace ShampanPOSUI.Controllers
         public async Task<ActionResult> Index(LoginResource model)
         
         {
-            _companyRepo = new CompanyProfileRepo();
+            //_companyRepo = new CompanyProfileRepo();
             _userRepo = new UserProfileRepo();
-            List<CompanyInfo> companyInfos = new List<CompanyInfo>();
+            //List<CompanyInfo> companyInfos = new List<CompanyInfo>();
             List<UserProfileVM> userInfos = new List<UserProfileVM>();
             try
             {
                 _repo = new CommonRepo();
                 CommonVM commonVM = new CommonVM();
-                CompanyInfo companyInfo = new CompanyInfo();
+                //CompanyInfo companyInfo = new CompanyInfo();
                 UserProfileVM userInfo = new UserProfileVM();
 
                 var userName = model.UserName;
@@ -188,23 +191,29 @@ namespace ShampanPOSUI.Controllers
                 }
 
 
-                var companyResult = _companyRepo.List(commonVM);
+               // var companyResult = _companyRepo.List(commonVM);
 
-                if (companyResult != null && companyResult.Status == "Success" && companyResult.DataVM != null)
-                {
-                    var data = JsonConvert.DeserializeObject<List<CompanyInfo>>(companyResult.DataVM.ToString());
+               // if (companyResult != null && companyResult.Status == "Success" && companyResult.DataVM != null)
+               // {
+               //     var data = JsonConvert.DeserializeObject<List<CompanyInfo>>(companyResult.DataVM.ToString());
 
-                    foreach (var item in data)
-                    {
-                        companyInfo = new CompanyInfo();
-                        companyInfo.CompanyId = item.Id;
-                        companyInfo.CompanyName = item.CompanyName;
-                        //companyInfo.CompanyName = "Bata";
-                        companyInfos.Add(companyInfo);
-                    }
-                }
+               //     foreach (var item in data)
+               //     { 
+               //         companyInfo = new CompanyInfo();
+               //         companyInfo.CompanyId = item.Id;
+               //         companyInfo.CompanyName = item.CompanyName;
+               //         //companyInfo.CompanyName = "Bata";
+               //         companyInfos.Add(companyInfo);
+               //     }
+               // }
 
-               model.CompanyInfos = companyInfos;
+               //model.CompanyInfos = companyInfos;
+
+
+
+
+
+
 
                 //if (string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
                 //{
