@@ -1635,6 +1635,14 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 CommonVM param = new CommonVM();
                 param.Value = productGroupId; // 🔥 pass value
 
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+
+                param.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "";
+
+
                 ResultVM result = _repo.ProductModal(param); // ✅ correct call
 
                 if (result.Status == "Success" && result.DataVM != null)
