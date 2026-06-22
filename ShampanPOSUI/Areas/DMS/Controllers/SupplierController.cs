@@ -403,52 +403,17 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             return View();
         }
 
-
-        //public ActionResult supplierReport(int? groupId, string supplierCode, string supplierName)
-        //{
-        //    //reportVM rVm=new reportVM();
-        //    string byGroup = groupId?.ToString() ?? "All";
-        //    List<SupplierVM> vmList = new List<SupplierVM>();
-
-        //    SupplierVM param = new SupplierVM();
-
-
-        //    if (groupId.HasValue) { param.Id = groupId.Value; }
-        //    param.Code = string.IsNullOrEmpty(supplierCode) ? "" : supplierCode;
-        //    param.Name = string.IsNullOrEmpty(supplierName) ? "" : supplierName;
-
-        //    ResultVM result = _repo.GetSupplierByCategory(param);
-
-
-        //    if (result.Status == "Success" && result.DataVM != null)
-        //    {
-        //        vmList = JsonConvert.DeserializeObject<List<SupplierVM>>(result.DataVM.ToString());
-
-        //        foreach (var item in vmList)
-        //        {
-        //            item.ByGroup = byGroup;
-        //        }
-        //    }
-
-        //    return View("SupplierListReport", vmList);
-        //}
         public ActionResult supplierReport(int? groupId, string supplierCode, string supplierName)
         {
-            if (Session["CurrentBranch"] == null)
+            if (Session["CurrentBranch"] == null || Session["CompanyId"] == null)
             {
-                return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
-            }
-
-            if (Session["CompanyId"] == null)
-            {
-                return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                return Json(new { Status = "Error", Message = "Session is missing." }, JsonRequestBehavior.AllowGet);
             }
 
             string byGroup = groupId?.ToString() ?? "All";
             List<SupplierVM> vmList = new List<SupplierVM>();
 
             SupplierVM param = new SupplierVM();
-
             param.BranchId = Convert.ToInt32(Session["CurrentBranch"]);
             param.CompanyId = Convert.ToInt32(Session["CompanyId"]);
 
@@ -457,28 +422,27 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 param.Id = groupId.Value;
             }
 
-            param.Code = string.IsNullOrEmpty(supplierCode) ? "" : supplierCode;
-            param.Name = string.IsNullOrEmpty(supplierName) ? "" : supplierName;
+            param.Code = string.IsNullOrWhiteSpace(supplierCode) ? null : supplierCode.Trim();
+            param.Name = string.IsNullOrWhiteSpace(supplierName) ? null : supplierName.Trim();
 
             ResultVM result = _repo.GetSupplierByCategory(param);
 
             if (result != null && result.Status == "Success" && result.DataVM != null)
             {
-                vmList = result.DataVM as List<SupplierVM>;
-
-                // vmList = JsonConvert.DeserializeObject<List<SupplierVM>>(result.DataVM.ToString());
-
-                if (vmList != null)
+                try
                 {
+                    string jsonString = result.DataVM.ToString();
+                    vmList = JsonConvert.DeserializeObject<List<SupplierVM>>(jsonString) ?? new List<SupplierVM>();
+
                     foreach (var item in vmList)
                     {
                         item.ByGroup = byGroup;
                     }
                 }
+                catch { vmList = new List<SupplierVM>(); }
             }
 
             return View("SupplierListReport", vmList);
         }
-
     }
 }
