@@ -1690,32 +1690,49 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         public ActionResult ProductReport(int? groupId, string productCode, string productName)
         {
-            //reportVM rVm=new reportVM();
+            if (Session["CurrentBranch"] == null || Session["CompanyId"] == null)
+            {
+                return Json(new { Status = "Error", Message = "Session is missing." }, JsonRequestBehavior.AllowGet);
+            }
+
             string byGroup = groupId?.ToString() ?? "All";
             List<ProductVM> vmList = new List<ProductVM>();
 
             ProductVM param = new ProductVM();
+            param.BranchId = Convert.ToInt32(Session["CurrentBranch"]);
+            param.CompanyId = Convert.ToInt32(Session["CompanyId"]);
 
+            if (groupId.HasValue)
+            {
+                param.Id = groupId.Value;
+            }
 
-            if (groupId.HasValue) { param.Id = groupId.Value; }
-            param.Code = string.IsNullOrEmpty(productCode) ? "" : productCode;
-            param.Name = string.IsNullOrEmpty(productName) ? "" : productName;
+            param.Code = string.IsNullOrWhiteSpace(productCode) ? null : productCode.Trim();
+            param.Name = string.IsNullOrWhiteSpace(productName) ? null : productName.Trim();
 
             ResultVM result = _repo.GetProductByCategory(param);
 
-
-            if (result.Status == "Success" && result.DataVM != null)
+            if (result != null && result.Status == "Success" && result.DataVM != null)
             {
-                vmList = JsonConvert.DeserializeObject<List<ProductVM>>(result.DataVM.ToString());
-
-                foreach (var item in vmList)
+                try
                 {
-                    item.ByGroup = byGroup;
+                    string jsonString = result.DataVM.ToString();
+                    vmList = JsonConvert.DeserializeObject<List<ProductVM>>(jsonString) ?? new List<ProductVM>();
+
+                    foreach (var item in vmList)
+                    {
+                        item.ByGroup = byGroup;
+                    }
+                }
+                catch
+                {
+                    vmList = new List<ProductVM>();
                 }
             }
 
             return View("ProductListReport", vmList);
         }
+
 
         [HttpGet]
         public ActionResult FromMasterItem()
