@@ -1232,6 +1232,13 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 List<PurchaseOrderVM> lst = new List<PurchaseOrderVM>();
                 CommonVM param = new CommonVM();
 
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+
+                param.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "";
+
                 ResultVM result = _repo.GetPurchaseOrderList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -1653,6 +1660,14 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 List<ProductDataVM> lst = new List<ProductDataVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+
+                param.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "";
+
                 ResultVM result = _repo.GetProductModalPurchase(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
