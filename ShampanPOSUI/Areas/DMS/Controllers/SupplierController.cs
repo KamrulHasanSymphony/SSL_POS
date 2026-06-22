@@ -404,35 +404,81 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+        //public ActionResult supplierReport(int? groupId, string supplierCode, string supplierName)
+        //{
+        //    //reportVM rVm=new reportVM();
+        //    string byGroup = groupId?.ToString() ?? "All";
+        //    List<SupplierVM> vmList = new List<SupplierVM>();
+
+        //    SupplierVM param = new SupplierVM();
+
+
+        //    if (groupId.HasValue) { param.Id = groupId.Value; }
+        //    param.Code = string.IsNullOrEmpty(supplierCode) ? "" : supplierCode;
+        //    param.Name = string.IsNullOrEmpty(supplierName) ? "" : supplierName;
+
+        //    ResultVM result = _repo.GetSupplierByCategory(param);
+
+
+        //    if (result.Status == "Success" && result.DataVM != null)
+        //    {
+        //        vmList = JsonConvert.DeserializeObject<List<SupplierVM>>(result.DataVM.ToString());
+
+        //        foreach (var item in vmList)
+        //        {
+        //            item.ByGroup = byGroup;
+        //        }
+        //    }
+
+        //    return View("SupplierListReport", vmList);
+        //}
         public ActionResult supplierReport(int? groupId, string supplierCode, string supplierName)
         {
-            //reportVM rVm=new reportVM();
+            if (Session["CurrentBranch"] == null)
+            {
+                return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (Session["CompanyId"] == null)
+            {
+                return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+            }
+
             string byGroup = groupId?.ToString() ?? "All";
             List<SupplierVM> vmList = new List<SupplierVM>();
 
             SupplierVM param = new SupplierVM();
 
+            param.BranchId = Convert.ToInt32(Session["CurrentBranch"]);
+            param.CompanyId = Convert.ToInt32(Session["CompanyId"]);
 
-            if (groupId.HasValue) { param.Id = groupId.Value; }
+            if (groupId.HasValue)
+            {
+                param.Id = groupId.Value;
+            }
+
             param.Code = string.IsNullOrEmpty(supplierCode) ? "" : supplierCode;
             param.Name = string.IsNullOrEmpty(supplierName) ? "" : supplierName;
 
             ResultVM result = _repo.GetSupplierByCategory(param);
 
-
-            if (result.Status == "Success" && result.DataVM != null)
+            if (result != null && result.Status == "Success" && result.DataVM != null)
             {
-                vmList = JsonConvert.DeserializeObject<List<SupplierVM>>(result.DataVM.ToString());
+                vmList = result.DataVM as List<SupplierVM>;
 
-                foreach (var item in vmList)
+                // vmList = JsonConvert.DeserializeObject<List<SupplierVM>>(result.DataVM.ToString());
+
+                if (vmList != null)
                 {
-                    item.ByGroup = byGroup;
+                    foreach (var item in vmList)
+                    {
+                        item.ByGroup = byGroup;
+                    }
                 }
             }
 
             return View("SupplierListReport", vmList);
         }
-
 
     }
 }

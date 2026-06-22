@@ -44,12 +44,11 @@
         box-shadow: 0 15px 60px rgba(0, 0, 0, .08);
     }
 
+    
     .left-panel {
         background: #f8faff;
-        padding: 20px 80px;
-        position: relative;
+        padding: 20px 80px 0 80px;
     }
-
     .brand {
         display: flex;
         align-items: center;
@@ -136,7 +135,21 @@
         justify-content: center;
         padding: 30px 80px;
     }
-
+    @@media(max-width: 1250px){
+        .right-panel{
+            padding: 30px 40px !important;
+        }
+        .left-panel {
+            background: #f8faff;
+            padding: 20px 40px 0 40px;
+        }
+    }
+    @@media(max-width: 425px) {
+        body, .right-panel {
+            padding: 30px 10px !important;
+        }
+    }
+   
     .left-panel h1, .login-content h2 {
         font-size: 36px;
         font-weight: 800;
@@ -305,7 +318,7 @@
     }
 
     .device-bg {
-        width: 64%;
+        
         height: 236px;
         background: #edf4ff;
         border-radius: 350px 350px 0 0;
@@ -379,7 +392,11 @@
         font-size: 18px;
         transition: .3s;
     }
-
+    .loginLeftBottom {
+        position: relative;
+        min-height: 233px;
+        width: 100%;
+    }
 </style>
 <body class="">
 
@@ -438,12 +455,14 @@
 
             </div>
 
-            <div class="device-section">
+            <div class="loginLeftBottom">
+                <div class="device-section">
 
-                <div class="device-bg"></div>
+                    <div class="device-bg"></div>
 
-                <img src="~/Content/AdminLte/dist/img/pos-machine.png" class="device-image" alt="">
+                    <img src="~/Content/AdminLte/dist/img/pos-machine.png" class="device-image" alt="">
 
+                </div>
             </div>
 
         </div>
