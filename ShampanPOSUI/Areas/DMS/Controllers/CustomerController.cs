@@ -350,43 +350,88 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         public ActionResult CustomerReport(int? groupId, string customerCode, string customerName)
         {
-            //reportVM rVm=new reportVM();
+            if (Session["CurrentBranch"] == null || Session["CompanyId"] == null)
+            {
+                return Json(new { Status = "Error", Message = "Session is missing." }, JsonRequestBehavior.AllowGet);
+            }
+
             string byGroup = groupId?.ToString() ?? "All";
             List<CustomerVM> vmList = new List<CustomerVM>();
 
             CustomerVM param = new CustomerVM();
+            param.BranchId = Convert.ToInt32(Session["CurrentBranch"]);
+            param.CompanyId = Convert.ToInt32(Session["CompanyId"]);
 
+            if (groupId.HasValue)
+            {
+                param.Id = groupId.Value;
+            }
 
-            if (groupId.HasValue) { param.Id = groupId.Value; }
-            param.Code = string.IsNullOrEmpty(customerCode) ? "" : customerCode;
-            param.Name = string.IsNullOrEmpty(customerName) ? "" : customerName;
+            param.Code = string.IsNullOrWhiteSpace(customerCode) ? null : customerCode.Trim();
+            param.Name = string.IsNullOrWhiteSpace(customerName) ? null : customerName.Trim();
 
             ResultVM result = _repo.GetCustomerByCategory(param);
 
-
-            if (result.Status == "Success" && result.DataVM != null)
+            if (result != null && result.Status == "Success" && result.DataVM != null)
             {
-                vmList = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
-
-                foreach (var item in vmList)
+                try
                 {
-                    item.ByGroup = byGroup;
+                    string jsonString = result.DataVM.ToString();
+                    vmList = JsonConvert.DeserializeObject<List<CustomerVM>>(jsonString) ?? new List<CustomerVM>();
+
+                    foreach (var item in vmList)
+                    {
+                        item.ByGroup = byGroup;
+                    }
+                }
+                catch
+                {
+                    vmList = new List<CustomerVM>();
                 }
             }
 
-            //string Group = vmList.FirstOrDefault().CustomerGroupName;
-
-            // if(param.Id==0)
-            //{rvm.Group="All"}else {
-            //if(vmList.count>0)
-            //rvm.Group=vmList.FirstOrDefault().CustomerGroupName;
-            //}
-
-            //if(string.isnullorwhitespace(customerCode)){rvm.Code="All"} else{rvm.Code=customerCode}
-            //rVm.customerList=vmList;
-
             return View("CustomersReport", vmList);
         }
+
+        //public ActionResult CustomerReport(int? groupId, string customerCode, string customerName)
+        //{
+        //    //reportVM rVm=new reportVM();
+        //    string byGroup = groupId?.ToString() ?? "All";
+        //    List<CustomerVM> vmList = new List<CustomerVM>();
+
+        //    CustomerVM param = new CustomerVM();
+
+
+        //    if (groupId.HasValue) { param.Id = groupId.Value; }
+        //    param.Code = string.IsNullOrEmpty(customerCode) ? "" : customerCode;
+        //    param.Name = string.IsNullOrEmpty(customerName) ? "" : customerName;
+
+        //    ResultVM result = _repo.GetCustomerByCategory(param);
+
+
+        //    if (result.Status == "Success" && result.DataVM != null)
+        //    {
+        //        vmList = JsonConvert.DeserializeObject<List<CustomerVM>>(result.DataVM.ToString());
+
+        //        foreach (var item in vmList)
+        //        {
+        //            item.ByGroup = byGroup;
+        //        }
+        //    }
+
+        //    //string Group = vmList.FirstOrDefault().CustomerGroupName;
+
+        //    // if(param.Id==0)
+        //    //{rvm.Group="All"}else {
+        //    //if(vmList.count>0)
+        //    //rvm.Group=vmList.FirstOrDefault().CustomerGroupName;
+        //    //}
+
+        //    //if(string.isnullorwhitespace(customerCode)){rvm.Code="All"} else{rvm.Code=customerCode}
+        //    //rVm.customerList=vmList;
+
+        //    return View("CustomersReport", vmList);
+        //}
 
         //[HttpPost]
         //public ActionResult Delete(CustomerVM vm)

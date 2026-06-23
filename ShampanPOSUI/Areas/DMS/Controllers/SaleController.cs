@@ -1374,17 +1374,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             return View(vm);
         }
-        public ActionResult SaleOrdervsSaleReportList(
-    int? customerId,
-    string fromDate,
-    string toDate,
-    bool isSummary,
-    int? productId,
-    int? saleId,
-    int? saleOrderId,
-    string customerName,
-    string productName,
-    int? companyId)
+        public ActionResult SaleOrdervsSaleReportList( int? customerId, string fromDate, string toDate, bool isSummary, int? productId, int? saleId, int? saleOrderId, string customerName, string productName,  int? companyId)
         {
             List<SaleReportVM> vmList = new List<SaleReportVM>();
             var company = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "0";
