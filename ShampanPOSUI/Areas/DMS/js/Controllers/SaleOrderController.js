@@ -556,7 +556,7 @@
                             }
                         });
                     }
-                },                
+                },
                 {
                     field: "SDAmount",
                     title: "SD Amount",
@@ -682,7 +682,7 @@
                     title: "Action",
                     width: 35
                 }
-               
+
             ],
             change: function () {
                 var grid = this;
@@ -727,7 +727,7 @@
             $("#RoundUp").val(decimalPart.toFixed(2));
             $("#FinalPayable").val(Math.floor(lineTotal));
 
-         
+
         }
 
         $('#details').on('blur', ".td-CtnQuantity", function (event) {
@@ -869,7 +869,7 @@
                 ShowNotification(3, "Please select a customer first.");
                 return;
             }
-            
+
         });
 
         $("#indexSearch").on('click', function () {
@@ -1558,7 +1558,7 @@
                 var finalRate = formatNumber(result.data.DiscountRateBasedOnTotalPrice);
                 var finalDiscountAmt = formatNumber(result.data.DiscountAmount);
 
-       
+
                 if (finalRate == null || finalRate == "NaN") { //Rate
                     $(".trFinalInvoiceDiscount").val(0);
                 }
@@ -1639,12 +1639,11 @@
         $("#partialModal").modal("hide");
         originalRow.closest("td").find("input").data("touched", false).focus();
     };
-
     var GetGridDataList = function () {
         var branchId = $("#Branchs").data("kendoComboBox").value();
-        var IsPosted = $('#IsPosted').val();
         var FromDate = $('#FromDate').val();
         var ToDate = $('#ToDate').val();
+        debugger;
         var gridDataSource = new kendo.data.DataSource({
             type: "json",
             serverPaging: true,
@@ -1659,7 +1658,7 @@
                     type: "POST",
                     dataType: "json",
                     cache: false,
-                    data: { branchId: branchId, isPost: IsPosted, fromDate: FromDate, toDate: ToDate }
+                    data: { branchId: branchId, fromDate: FromDate, toDate: ToDate }
                 },
                 parameterMap: function (options) {
                     if (options.sort) {
@@ -1813,6 +1812,7 @@
                     return options;
                 }
             },
+
             batch: true,
             schema: {
                 data: "Items",
@@ -1996,11 +1996,10 @@
                             footerTemplate: "#= kendo.toString(sum, 'n2') #"
                         },
                         { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 }
-                      /*  { field: "IsFixedVAT", hidden: true, title: "Is Fixed VAT", sortable: true, width: 100 },*/
+                        /*  { field: "IsFixedVAT", hidden: true, title: "Is Fixed VAT", sortable: true, width: 100 },*/
                     ]
                 });
             },
-
             excel: {
                 fileName: "Sale Order.xlsx",
                 filterable: true
@@ -2017,32 +2016,32 @@
 
                         if (dataItem.IsCompleted) {
                             return `
-            <a href="#" class="btn btn-primary btn-sm mr-2 edit edit-sale-order">
-                <i class="fas fa-pencil-alt"></i>
-            </a>`
-        
+                    <a href="#" class="btn btn-primary btn-sm mr-2 edit edit-sale-order">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>`
+
                         } else {
                             return `
-            <a href="/DMS/SaleOrder/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
-                <i class="fas fa-pencil-alt"></i>
-            </a>
+                    <a href="/DMS/SaleOrder/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
 
-             <a href="/DMS/SaleOrder/getReport/${dataItem.Id}" 
-              class="btn btn-success btn-sm mr-2 getReport" 
-              title="Report">
-               <i class="fas fa-file-alt"></i>
-                      </a>
+                     <a href="/DMS/SaleOrder/getReport/${dataItem.Id}"
+                      class="btn btn-success btn-sm mr-2 getReport"
+                      title="Report">
+                       <i class="fas fa-file-alt"></i>
+                              </a>
 
 
-            `
-   
+                    `
+
                         }
                     }
                 },
 
                 { field: "Id", width: 50, hidden: true, sortable: true },
                 { field: "Code", title: "Code", sortable: true, width: 200 },
-            
+
                 { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
                 {
                     field: "PostStatus", title: "Status", sortable: true, width: 130,
@@ -2060,7 +2059,7 @@
                         }
                     }
                 },
-                
+
                 {
                     field: "OrderDate", title: "Order Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(OrderDate), "yyyy-MM-dd") #',
                     filterable:
@@ -2075,7 +2074,7 @@
                         ui: "datepicker"
                     }
                 },
-         
+
 
                 { field: "DeliveryAddress", title: "DeliveryAddress", sortable: true, width: 200 },
                 { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 250 },
@@ -2098,13 +2097,471 @@
             }
         });
     };
+    //var GetGridDataList = function () {
+    //    var branchId = $("#Branchs").data("kendoComboBox").value();
+    //    var IsPosted = $('#IsPosted').val();
+    //    var FromDate = $('#FromDate').val();
+    //    var ToDate = $('#ToDate').val();
+    //    var gridDataSource = new kendo.data.DataSource({
+    //        type: "json",
+    //        serverPaging: true,
+    //        serverSorting: true,
+    //        serverFiltering: true,
+    //        allowUnsort: true,
+    //        autoSync: true,
+    //        pageSize: 10,
+    //        transport: {
+    //            read: {
+    //                url: "/DMS/SaleOrder/GetGridData",
+    //                type: "POST",
+    //                dataType: "json",
+    //                cache: false,
+    //                data: { branchId: branchId, isPost: IsPosted, fromDate: FromDate, toDate: ToDate }
+    //            },
+    //            parameterMap: function (options) {
+    //                if (options.sort) {
+    //                    options.sort.forEach(function (param) {
+    //                        if (param.field === "Id") {
+    //                            param.field = "H.Id";
+    //                        }
+    //                        if (param.field === "Code") {
+    //                            param.field = "H.Code";
+    //                        }
+    //                        if (param.field === "CustomerName") {
+    //                            param.field = "C.Name";
+    //                        }
+
+    //                        if (param.field === "DeliveryAddress") {
+    //                            param.field = "H.DeliveryAddress";
+    //                        }
+    //                        if (param.field === "TransactionType") {
+    //                            param.field = "H.TransactionType";
+    //                        }
+    //                        if (param.field === "BranchName") {
+    //                            param.field = "Br.Name";
+    //                        }
+    //                        if (param.field === "Comments") {
+    //                            param.field = "H.Comments";
+    //                        }
+    //                        if (param.field === "OrderDate" && param.value) {
+    //                            param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+    //                            param.field = "H.OrderDate";
+    //                        }
+    //                        if (param.field === "DeliveryDate" && param.value) {
+    //                            param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+    //                            param.field = "H.DeliveryDate";
+    //                        }
+    //                        if (param.field === "Status") {
+    //                            let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+
+    //                            if (statusValue.startsWith("y")) {
+    //                                param.value = 1;
+    //                            } else if (statusValue.startsWith("n")) {
+    //                                param.value = 0;
+    //                            } else {
+    //                                param.value = null;
+    //                            }
+
+    //                            param.field = "H.IsCompleted";
+    //                            param.operator = "eq";
+    //                        }
+    //                        if (param.field === "PostStatus") {
+    //                            let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+
+    //                            if (statusValue.startsWith("y")) {
+    //                                param.value = 1;
+    //                            } else if (statusValue.startsWith("n")) {
+    //                                param.value = 0;
+    //                            }
+    //                            else if (statusValue == "1") {
+    //                                param.value = 1;
+    //                            }
+    //                            else if (statusValue == "0") {
+    //                                param.value = 0;
+    //                            }
+    //                            else {
+    //                                param.value = null;
+    //                            }
+
+    //                            param.field = "H.IsPost";
+    //                            param.operator = "eq";
+    //                        }
+
+    //                    });
+    //                }
+
+    //                if (options.filter && options.filter.filters) {
+    //                    options.filter.filters.forEach(function (param) {
+    //                        if (param.field === "Id") {
+    //                            param.field = "H.Id";
+    //                        }
+    //                        if (param.field === "Code") {
+    //                            param.field = "H.Code";
+    //                        }
+    //                        if (param.field === "CustomerName") {
+    //                            param.field = "C.Name";
+    //                        }
+    //                        if (param.field === "DeliveryAddress") {
+    //                            param.field = "H.DeliveryAddress";
+    //                        }
+    //                        if (param.field === "TransactionType") {
+    //                            param.field = "H.TransactionType";
+    //                        }
+    //                        if (param.field === "BranchName") {
+    //                            param.field = "Br.Name";
+    //                        }
+    //                        if (param.field === "Comments") {
+    //                            param.field = "H.Comments";
+    //                        }
+
+    //                        if (param.field === "OrderDate" && param.value) {
+    //                            param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+    //                            param.field = "CONVERT(VARCHAR(10), H.OrderDate, 120)";
+    //                        }
+    //                        if (param.field === "DeliveryDate" && param.value) {
+    //                            param.value = kendo.toString(new Date(param.value), "yyyy-MM-dd");
+    //                            param.field = "CONVERT(VARCHAR(10), H.DeliveryDate, 120)";
+    //                        }
+
+    //                        if (param.field === "Status") {
+    //                            let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+
+    //                            if (statusValue.startsWith("y")) {
+    //                                param.value = 1;
+    //                            } else if (statusValue.startsWith("n")) {
+    //                                param.value = 0;
+    //                            }
+    //                            else if (statusValue == "1") {
+    //                                param.value = 1;
+    //                            }
+    //                            else if (statusValue == "0") {
+    //                                param.value = 0;
+    //                            }
+    //                            else {
+    //                                param.value = null;
+    //                            }
+
+    //                            param.field = "H.IsCompleted";
+    //                            param.operator = "eq";
+    //                        }
+    //                        if (param.field === "PostStatus") {
+    //                            let statusValue = param.value ? param.value.toString().trim().toLowerCase() : "";
+
+    //                            if (statusValue.startsWith("y")) {
+    //                                param.value = 1;
+    //                            } else if (statusValue.startsWith("n")) {
+    //                                param.value = 0;
+    //                            }
+    //                            else if (statusValue == "1") {
+    //                                param.value = 1;
+    //                            }
+    //                            else if (statusValue == "0") {
+    //                                param.value = 0;
+    //                            }
+    //                            else {
+    //                                param.value = null;
+    //                            }
+
+    //                            param.field = "H.IsPost";
+    //                            param.operator = "eq";
+    //                        }
+    //                    });
+    //                }
+    //                return options;
+    //            }
+    //        },
+    //        batch: true,
+    //        schema: {
+    //            data: "Items",
+    //            total: "TotalCount"
+    //        },
+    //        model: {
+
+    //            fields: {
+    //                InvoiceDateTime: { type: "date" },
+    //                DeliveryDate: { type: "date" },
+    //                GrandTotalAmount: { type: "number" },
+    //                GrandTotalSDAmount: { type: "number" },
+    //                GrandTotalVATAmount: { type: "number" }
+    //            }
+    //        }
+    //        ,
+    //        aggregate: [
+    //            { field: "GrandTotalAmount", aggregate: "sum" },
+    //            { field: "GrandTotalSDAmount", aggregate: "sum" },
+    //            { field: "GrandTotalVATAmount", aggregate: "sum" }
+    //        ]
+    //    });
+
+    //    $("#GridDataList").kendoGrid({
+    //        dataSource: gridDataSource,
+    //        pageable: {
+    //            refresh: true,
+    //            serverPaging: true,
+    //            serverFiltering: true,
+    //            serverSorting: true,
+    //            pageSizes: [10, 20, 50, "all"]
+    //        },
+    //        noRecords: true,
+    //        messages: {
+    //            noRecords: "No Record Found!"
+    //        },
+    //        scrollable: true,
+    //        filterable: {
+    //            extra: true,
+    //            operators: {
+    //                string: {
+    //                    startswith: "Starts with",
+    //                    endswith: "Ends with",
+    //                    contains: "Contains",
+    //                    doesnotcontain: "Does not contain",
+    //                    eq: "Is equal to",
+    //                    neq: "Is not equal to",
+    //                    gt: "Is greater than",
+    //                    lt: "Is less than"
+    //                }
+    //            }
+    //        },
+    //        sortable: true,
+    //        resizable: true,
+    //        reorderable: true,
+    //        groupable: true,
+    //        toolbar: ["excel", "pdf", "search"],
+    //        search: ["Code", "CustomerName", "SalePersonName", "RouteName", "CurrencyName", "DeliveryAddress", "TransactionType", "BranchName", "Comments", "InvoiceDateTime", "DeliveryDate", "GrandTotalAmount", "GrandTotalSDAmount", "GrandTotalVATAmount"],
+    //        detailInit: function (e) {
+    //            $("<div/>").appendTo(e.detailCell).kendoGrid({
+    //                dataSource: {
+    //                    type: "json",
+    //                    serverPaging: true,
+    //                    serverSorting: true,
+    //                    serverFiltering: true,
+    //                    allowUnsort: true,
+    //                    pageSize: 10,
+    //                    aggregate: [
+    //                        { field: "Quantity", aggregate: "sum" },
+    //                        { field: "UnitRate", aggregate: "average" },  // ✅ Corrected to "average"
+    //                        { field: "SubTotal", aggregate: "sum" },
+    //                        { field: "SD", aggregate: "average" },        // ✅ Corrected to "average"
+    //                        { field: "SDAmount", aggregate: "sum" },
+    //                        { field: "VATRate", aggregate: "average" },   // ✅ Corrected to "average"
+    //                        { field: "VATAmount", aggregate: "sum" },
+    //                        { field: "LineTotal", aggregate: "sum" }
+    //                    ],
+    //                    transport: {
+    //                        read: {
+    //                            url: "/DMS/SaleOrder/GetSaleOrderDetailDataById",
+    //                            type: "GET",
+    //                            dataType: "json",
+    //                            cache: false,
+    //                            data: { masterId: e.data.Id }
+    //                        },
+    //                        parameterMap: function (options) {
+    //                            return options;
+    //                        }
+    //                    },
+    //                    batch: true,
+    //                    schema: {
+    //                        data: "Items",
+    //                        total: "TotalCount"
+    //                    },
+    //                    requestEnd: function (e) {
+    //                        console.log("Response Data:", e.response); // Log server response
+    //                    }
+    //                },
+    //                scrollable: false,
+    //                sortable: true,
+    //                pageable: false,
+    //                noRecords: true,
+    //                messages: {
+    //                    noRecords: "No Record Found!"
+    //                },
+    //                columns: [
+    //                    { field: "Id", hidden: true, width: 50 },
+    //                    { field: "ProductName", title: "Product Name", sortable: true, width: 120, footerTemplate: "Total:" },
+    //                    {
+    //                        field: "Quantity",
+    //                        title: "Quantity",
+    //                        sortable: true,
+    //                        width: 100,
+    //                        aggregates: ["sum"],
+    //                        format: "{0:n2}",
+    //                        attributes: { style: "text-align: right;" },
+    //                        footerTemplate: "#= kendo.toString(sum, 'n2') #"
+    //                    },
+    //                    {
+    //                        field: "UnitRate", hidden: true,
+    //                        title: "Unit Price",
+    //                        sortable: true,
+    //                        width: 100,
+    //                        aggregates: ["average"], // ✅ Fixed to "average"
+    //                        format: "{0:n2}"
+    //                    },
+    //                    {
+    //                        field: "SubTotal",
+    //                        title: "SubTotal",
+    //                        sortable: true,
+    //                        width: 100,
+    //                        aggregates: ["sum"],
+    //                        format: "{0:n2}",
+    //                        attributes: { style: "text-align: right;" },
+    //                        footerTemplate: "#= kendo.toString(sum, 'n2') #"
+    //                    },
+    //                    {
+    //                        field: "SD",
+    //                        title: "SD Rate",
+    //                        sortable: true,
+    //                        width: 100,
+    //                        aggregates: ["average"], // ✅ Fixed to "average"
+    //                        format: "{0:n2}"
+    //                    },
+    //                    {
+    //                        field: "SDAmount",
+    //                        title: "SD Amount",
+    //                        sortable: true,
+    //                        width: 100,
+    //                        aggregates: ["sum"],
+    //                        format: "{0:n2}",
+    //                        attributes: { style: "text-align: right;" },
+    //                        footerTemplate: "#= kendo.toString(sum, 'n2') #"
+    //                    },
+    //                    {
+    //                        field: "VATRate",
+    //                        title: "VAT Rate",
+    //                        sortable: true,
+    //                        width: 100,
+    //                        aggregates: ["average"], // ✅ Fixed to "average"
+    //                        format: "{0:n2}"
+    //                    },
+    //                    {
+    //                        field: "VATAmount",
+    //                        title: "VAT Amount",
+    //                        sortable: true,
+    //                        width: 100,
+    //                        aggregates: ["sum"],
+    //                        format: "{0:n2}",
+    //                        attributes: { style: "text-align: right;" },
+    //                        footerTemplate: "#= kendo.toString(sum, 'n2') #"
+    //                    },
+    //                    {
+    //                        field: "LineTotal",
+    //                        title: "Total",
+    //                        sortable: true,
+    //                        width: 100,
+    //                        aggregates: ["sum"],
+    //                        format: "{0:n2}",
+    //                        attributes: { style: "text-align: right;" },
+    //                        footerTemplate: "#= kendo.toString(sum, 'n2') #"
+    //                    },
+    //                    { field: "VatType", hidden: true, title: "Vat Type", sortable: true, width: 100 }
+    //                  /*  { field: "IsFixedVAT", hidden: true, title: "Is Fixed VAT", sortable: true, width: 100 },*/
+    //                ]
+    //            });
+    //        },
+
+    //        excel: {
+    //            fileName: "Sale Order.xlsx",
+    //            filterable: true
+    //        },
+    //        columns: [
+    //            {
+    //                selectable: true, width: 40
+    //            },
+    //            {
+    //                title: "Action",
+    //                width: 130,
+    //                template: function (dataItem) {
+
+
+    //                    if (dataItem.IsCompleted) {
+    //                        return `
+    //        <a href="#" class="btn btn-primary btn-sm mr-2 edit edit-sale-order">
+    //            <i class="fas fa-pencil-alt"></i>
+    //        </a>`
+
+    //                    } else {
+    //                        return `
+    //        <a href="/DMS/SaleOrder/Edit/${dataItem.Id}" class="btn btn-primary btn-sm mr-2 edit">
+    //            <i class="fas fa-pencil-alt"></i>
+    //        </a>
+
+    //         <a href="/DMS/SaleOrder/getReport/${dataItem.Id}" 
+    //          class="btn btn-success btn-sm mr-2 getReport" 
+    //          title="Report">
+    //           <i class="fas fa-file-alt"></i>
+    //                  </a>
+
+
+    //        `
+
+    //                    }
+    //                }
+    //            },
+
+    //            { field: "Id", width: 50, hidden: true, sortable: true },
+    //            { field: "Code", title: "Code", sortable: true, width: 200 },
+
+    //            { field: "CustomerName", title: "Customer Name", sortable: true, width: 200 },
+    //            {
+    //                field: "PostStatus", title: "Status", sortable: true, width: 130,
+    //                filterable: {
+    //                    ui: function (element) {
+    //                        element.kendoDropDownList({
+    //                            dataSource: [
+    //                                { text: "Y", value: "1" },
+    //                                { text: "N", value: "0" }
+    //                            ],
+    //                            dataTextField: "text",
+    //                            dataValueField: "value",
+    //                            optionLabel: "Select Option"
+    //                        });
+    //                    }
+    //                }
+    //            },
+
+    //            {
+    //                field: "OrderDate", title: "Order Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(OrderDate), "yyyy-MM-dd") #',
+    //                filterable:
+    //                {
+    //                    ui: "datepicker"
+    //                }
+    //            },
+    //            {
+    //                field: "DeliveryDate", title: "Delivery Date", sortable: true, width: 150, template: '#= kendo.toString(kendo.parseDate(DeliveryDate), "yyyy-MM-dd") #',
+    //                filterable:
+    //                {
+    //                    ui: "datepicker"
+    //                }
+    //            },
+
+
+    //            { field: "DeliveryAddress", title: "DeliveryAddress", sortable: true, width: 200 },
+    //            { field: "Comments", title: "Comments", sortable: true, hidden: true, width: 250 },
+    //            { field: "BranchName", title: "Branch Name", sortable: true, hidden: true },
+
+    //        ],
+    //        editable: false,
+    //        selectable: "multiple row",
+    //        navigatable: true,
+    //        columnMenu: true
+    //    });
+
+    //    $("#GridDataList").on("click", ".k-header .k-checkbox", function () {
+    //        var isChecked = $(this).is(":checked");
+    //        var grid = $("#GridDataList").data("kendoGrid");
+    //        if (isChecked) {
+    //            grid.tbody.find(".k-checkbox").prop("checked", true);
+    //        } else {
+    //            grid.tbody.find(".k-checkbox").prop("checked", false);
+    //        }
+    //    });
+    //};
 
     function save($table) {
         debugger;
 
         var isDropdownValid2 = CommonService.validateDropdown("#CustomerId", "#titleError2", "Customer is required");
 
-        var isDropdownValid =  isDropdownValid2;
+        var isDropdownValid = isDropdownValid2;
         var validator = $("#frmEntry").validate();
         var model = serializeInputs("frmEntry");
 
@@ -2260,7 +2717,7 @@
 
 
     function processDone(result) {
-     
+
         var grid = $('#GridDataList').data('kendoGrid');
         if (grid) {
             grid.dataSource.read();

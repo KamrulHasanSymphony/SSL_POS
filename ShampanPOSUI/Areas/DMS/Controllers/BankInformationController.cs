@@ -54,6 +54,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
                 model.BranchId = Convert.ToInt32(currentBranchId);
+                model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
 
                 model.LastModifiedBy = Session["UserId"].ToString();
                 model.LastModifiedOn = DateTime.Now.ToString();
@@ -182,6 +183,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //this
+
                 result = _repo.GetGridData(options);
 
                 if (result.Status == "Success" && result.DataVM != null)

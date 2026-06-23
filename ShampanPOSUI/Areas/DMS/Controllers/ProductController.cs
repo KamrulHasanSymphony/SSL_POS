@@ -308,7 +308,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             try
             {
 
-                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //this
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //CompanyId from Session
 
                 result = _repo.GetGridData(options);
 
