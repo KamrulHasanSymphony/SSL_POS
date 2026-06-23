@@ -776,9 +776,22 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         {
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
                 List<PaymentTypeVM> lst = new List<PaymentTypeVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
+
+                param.BranchId = Session["CurrentBranch"].ToString();
+                param.CompanyId = Session["CompanyId"].ToString();
 
                 // add company id from session
                 //param.CompanyId = Session["CompanyId"] != null
