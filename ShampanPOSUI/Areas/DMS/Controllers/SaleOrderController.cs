@@ -358,20 +358,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             }
         }
 
-
         [HttpPost]
-        public JsonResult GetGridData(GridOptions options, string branchId, string isPost, string fromDate, string toDate)
+        public JsonResult GetGridData(GridOptions options, string branchId, string fromDate, string toDate)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new SaleOrderRepo();
             try
             {
-
-                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //this
-
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
                 options.vm.BranchId = branchId == "0" ? "" : branchId;
                 options.vm.FromDate = fromDate;
-                options.vm.IsPost = isPost;
                 options.vm.ToDate = toDate;
                 result = _repo.GetGridData(options);
 
@@ -394,6 +390,41 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+        //[HttpPost]
+        //public JsonResult GetGridData(GridOptions options, string branchId, string isPost, string fromDate, string toDate)
+        //{
+        //    ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
+        //    _repo = new SaleOrderRepo();
+        //    try
+        //    {
+
+        //        options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //this
+
+        //        options.vm.BranchId = branchId == "0" ? "" : branchId;
+        //        options.vm.FromDate = fromDate;
+        //        options.vm.IsPost = isPost;
+        //        options.vm.ToDate = toDate;
+        //        result = _repo.GetGridData(options);
+
+        //        if (result.Status == "Success" && result.DataVM != null)
+        //        {
+        //            var gridData = JsonConvert.DeserializeObject<GridEntity<SaleOrderVM>>(result.DataVM.ToString());
+
+        //            return Json(new
+        //            {
+        //                Items = gridData.Items,
+        //                TotalCount = gridData.TotalCount
+        //            }, JsonRequestBehavior.AllowGet);
+        //        }
+
+        //        return Json(new { Error = true, Message = "No data found." }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+        //        return Json(new { Error = true, Message = e.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
 
         [HttpPost]
         public JsonResult GetOrderNoWiseGridData(GridOptions options, string branchId, string fromDate, string toDate)

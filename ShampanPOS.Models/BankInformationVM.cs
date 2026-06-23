@@ -82,7 +82,7 @@ namespace ShampanPOS.Models
         [Display(Name = "IsActive")]
         public bool IsActive { get; set; }
         public int? BranchId { get; set; }
-
+        public int? CompanyId { get; set; }
 
     }
 }
