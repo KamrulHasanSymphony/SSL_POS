@@ -657,6 +657,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 PurchaseOrderVM vm = new PurchaseOrderVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
+
                 ResultVM result = _repo.GetPurchaseOrderReport(param);
 
                 if (result.Status == "Success" && result.DataVM != null)

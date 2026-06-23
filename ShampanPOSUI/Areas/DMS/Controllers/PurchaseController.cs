@@ -969,9 +969,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             try
             {
+                var companyId = Session["CompanyId"];
+
                 PurchaseVM vm = new PurchaseVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
+                param.CompanyId = companyId.ToString();
+
                 ResultVM result = _repo.GetPurchaseReport(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -982,8 +986,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 {
                     vm = new PurchaseVM();
                 }
-
-
+                //var cname = "Symphony Softtech Ltd";
+                //vm.CompanyName = cname;
+                //return View("Reports/PurchaseReport", vm);
                 return View("PurchaseReport", vm);
             }
             catch (Exception e)
