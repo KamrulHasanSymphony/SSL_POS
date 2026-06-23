@@ -149,7 +149,8 @@
 
     $(document).ready(function () {
 
-        //getSupplierId = $("#SupplierId").val() || 0;
+        getSupplierId = $("#SupplierId").val() || 0;
+        getSupplierGroupId = $("#SupplierGroupId").val() || 0;
         $("[data-bootstrap-switch]").bootstrapSwitch();
 
         GetSupplierComboBox();
@@ -436,10 +437,12 @@
                 }
             },
             placeholder: "Select Supplier",
-
+            value: "",
             dataBound: function () {
-                if (getSupplierId) {
+                if (getSupplierId && getSupplierId != 0 && getSupplierId != "0") {
                     this.value(parseInt(getSupplierId));
+                } else {
+                    this.value("");
                 }
             }
         });
