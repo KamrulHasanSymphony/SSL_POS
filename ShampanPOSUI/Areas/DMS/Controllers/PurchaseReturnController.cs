@@ -401,6 +401,9 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //this
+
                 options.vm.BranchId = branchId == "0" ? "" : branchId;
                 options.vm.IsPost = isPost;
                 options.vm.FromDate = fromDate;
