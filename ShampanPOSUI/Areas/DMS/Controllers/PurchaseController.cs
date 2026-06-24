@@ -986,7 +986,6 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 }
                 //var cname = "Symphony Softtech Ltd";
                 //vm.CompanyName = cname;
-                //return View("Reports/PurchaseReport", vm);
                 return View("PurchaseReport", vm);
             }
             catch (Exception e)
