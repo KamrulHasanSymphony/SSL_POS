@@ -201,7 +201,24 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+
+                options.vm.BranchId = Session["CurrentBranch"].ToString();
+                options.vm.CompanyId = Session["CompanyId"].ToString();
+
+
+
                 result = _repo.GetGridData(options);
+
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {

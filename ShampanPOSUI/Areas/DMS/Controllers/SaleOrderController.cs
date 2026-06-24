@@ -464,6 +464,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             _repo = new SaleOrderRepo();
             try
             {
+
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
                 options.vm.BranchId = branchId == "0" ? "" : branchId;
                 options.vm.FromDate = fromDate;
                 options.vm.ToDate = toDate;

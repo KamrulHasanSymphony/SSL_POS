@@ -203,32 +203,64 @@ namespace ShampanPOS.Repo
         //        throw e;
         //    }
         //}
+
+
+
+
+
+
         public ResultVM GetDetailsGridData(GridOptions options)
         {
             try
             {
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-
-                #region Invoke API 
-
-                var data = httpRequestHelper.PostData("api/SaleOrder/GetDetailsGridData", authModel, JsonConvert.SerializeObject(options,
-                    new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    }));
-
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-
-                #endregion                
-
-                return result;
+                CommonModel.AuthModel auth = new CommonModel.AuthModel
+                {
+                    token = ClaimNames.token
+                };
+                string value = httpRequestHelper.PostData("api/SaleOrder/GetDetailsGridData", auth, JsonConvert.SerializeObject(options, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                }));
+                return JsonConvert.DeserializeObject<ResultVM>(value);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw e;
+                throw ex;
             }
         }
+
+
+
+
+
+
+        //public ResultVM GetDetailsGridData(GridOptions options)
+        //{
+        //    try
+        //    {
+        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
+
+        //        #region Invoke API 
+
+        //        var data = httpRequestHelper.PostData("api/SaleOrder/GetDetailsGridData", authModel, JsonConvert.SerializeObject(options,
+        //            new JsonSerializerSettings
+        //            {
+        //                NullValueHandling = NullValueHandling.Ignore
+        //            }));
+
+        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+
+        //        #endregion                
+
+        //        return result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
 
         public ResultVM SaleOrderList(CommonVM model)
         {

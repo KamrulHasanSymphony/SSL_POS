@@ -467,7 +467,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 options.vm.IsPost = isPost;
                 options.vm.FromDate = fromDate;
                 options.vm.ToDate = toDate;
-                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
+                //options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
 
                 result = _repo.GetGridData(options);
 
@@ -499,6 +499,8 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //this
+
                 options.vm.BranchId = branchId == "0" ? "" : branchId;
                 options.vm.IsPost = isPost;
                 options.vm.FromDate = fromDate;
