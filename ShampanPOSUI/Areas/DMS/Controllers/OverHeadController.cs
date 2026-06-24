@@ -52,8 +52,20 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 try
                 {
-                    var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-                    model.BranchId = Convert.ToInt32(currentBranchId);
+
+                    if (Session["CurrentBranch"] == null)
+                    {
+                        return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                    }
+
+                    if (Session["CompanyId"] == null)
+                    {
+                        return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                    }
+
+
+                    model.BranchId = Convert.ToInt32(Session["CurrentBranch"].ToString());
+                    model.CompanyId = Convert.ToInt32(Session["CompanyId"].ToString());
 
                     model.LastModifiedBy = Session["UserId"].ToString();
                     model.LastModifiedOn = DateTime.Now.ToString();
@@ -157,6 +169,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             return Json(result);  // Return the result to the front-end
         }
+
 
 
         [HttpGet]
