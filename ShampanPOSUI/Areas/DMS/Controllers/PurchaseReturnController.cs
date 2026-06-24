@@ -589,9 +589,14 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             try
             {
+
+                var companyId = Session["CompanyId"];
+
                 PurchaseReturnVM vm = new PurchaseReturnVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
+                param.CompanyId = companyId.ToString();
+
                 ResultVM result = _repo.GetPurchaseReturnReport(param);
 
                 if (result.Status == "Success" && result.DataVM != null)

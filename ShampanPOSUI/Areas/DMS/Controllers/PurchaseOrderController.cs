@@ -654,9 +654,12 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         {
             try
             {
+                var companyId = Session["CompanyId"];
+
                 PurchaseOrderVM vm = new PurchaseOrderVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
+                param.CompanyId = companyId.ToString();
 
                 ResultVM result = _repo.GetPurchaseOrderReport(param);
 
