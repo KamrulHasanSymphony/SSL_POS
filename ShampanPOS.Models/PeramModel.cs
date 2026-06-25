@@ -26,6 +26,8 @@ namespace ShampanPOS.Models
         public int? startRec { get; set; }
         public int? pageSize { get; set; }
 
+        public string Value { get; set; }
+
     }
 
 
