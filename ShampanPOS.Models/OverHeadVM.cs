@@ -60,6 +60,7 @@ namespace ShampanPOS.Models
         [Display(Name = "Status")]
         public string? Status { get; set; }
         public int? BranchId { get; set; }
+        public int? CompanyId { get; set; }
 
 
     }

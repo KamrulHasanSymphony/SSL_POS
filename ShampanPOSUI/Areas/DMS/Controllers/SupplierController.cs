@@ -277,14 +277,32 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetGridData(GridOptions options)
+        public JsonResult GetGridData(GridOptions options, string branchId)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new SupplierRepo();
 
             try
             {
-                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : ""; //this
+
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                options.vm.BranchId = Session["CurrentBranch"].ToString();
+                options.vm.CompanyId = Session["CompanyId"].ToString();
+
+
+
+                //options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
+                //options.vm.BranchId = branchId == "0" ? "" : branchId;
+
                 result = _repo.GetGridData(options);
 
                 if (result.Status == "Success" && result.DataVM != null)

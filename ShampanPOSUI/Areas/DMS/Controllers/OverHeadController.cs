@@ -52,8 +52,20 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 try
                 {
-                    var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
-                    model.BranchId = Convert.ToInt32(currentBranchId);
+
+                    if (Session["CurrentBranch"] == null)
+                    {
+                        return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                    }
+
+                    if (Session["CompanyId"] == null)
+                    {
+                        return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                    }
+
+
+                    model.BranchId = Convert.ToInt32(Session["CurrentBranch"].ToString());
+                    model.CompanyId = Convert.ToInt32(Session["CompanyId"].ToString());
 
                     model.LastModifiedBy = Session["UserId"].ToString();
                     model.LastModifiedOn = DateTime.Now.ToString();
@@ -159,6 +171,7 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
 
+
         [HttpGet]
         public ActionResult Edit(string id)
         {
@@ -201,7 +214,24 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+
+                options.vm.BranchId = Session["CurrentBranch"].ToString();
+                options.vm.CompanyId = Session["CompanyId"].ToString();
+
+
+
                 result = _repo.GetGridData(options);
+
 
                 if (result.Status == "Success" && result.DataVM != null)
                 {
