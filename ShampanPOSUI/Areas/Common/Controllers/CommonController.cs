@@ -1583,6 +1583,14 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 List<MasterItemVM> lst = new List<MasterItemVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+
+                //param.BranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "";
+
                 ResultVM result = _repo.GetItemList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)

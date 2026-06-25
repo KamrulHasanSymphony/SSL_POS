@@ -398,18 +398,36 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
         [HttpPost]
-        public JsonResult GetGridData(GridOptions options)
+        public JsonResult GetGridData(GridOptions options, string branchId, string fromDate, string toDate)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new PaymentRepo();
 
             try
             {
-                //options.vm.BranchId = branchId == "0" ? "" : branchId;
-                //options.vm.IsPost = isPost;
-                //options.vm.FromDate = fromDate;
-                //options.vm.ToDate = toDate;
-                //options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
+
+
+                if (Session["CurrentBranch"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                options.vm.BranchId = Session["CurrentBranch"].ToString();
+                options.vm.CompanyId = Session["CompanyId"].ToString();
+
+                DateTime currentDate = DateTime.Now;
+                DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+                DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+                firstDayOfMonth = firstDayOfMonth.AddMonths(-5);
+                options.vm.FromDate = "2000/01/01";//firstDayOfMonth.ToString("yyyy/MM/dd");
+                options.vm.ToDate = lastDayOfMonth.ToString("yyyy/MM/dd");
+
+
 
                 result = _repo.GetGridData(options);
 

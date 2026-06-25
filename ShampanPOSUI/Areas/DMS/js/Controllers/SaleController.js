@@ -56,11 +56,15 @@
         let barcodeTimer = null;
 
         $(document).on("keyup", "#barcodeInput", function () {
-
+            debugger;
             clearTimeout(barcodeTimer);
 
             var code = $(this).val().trim();
             if (!code) return;
+
+            if (code.length <= 5) {
+                return; // hitting controller 
+            }
 
             barcodeTimer = setTimeout(function () {
 
