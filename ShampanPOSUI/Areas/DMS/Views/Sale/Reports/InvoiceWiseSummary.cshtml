@@ -129,15 +129,15 @@
                         <td>@item.CustomerName</td>
                         <td class="text-right">@item.Quantity</td>
                         <td class="text-right">
-                            @((item.SubTotal).ToString("N2", bd))
+                            @((item.SubTotal))
                         </td>
 
                         <td class="text-right">
-                            @((item.SDAmount).ToString("N2", bd))
+                            @((item.SDAmount))
                         </td>
 
                         <td class="text-right">
-                            @((item.VATAmount).ToString("N2", bd))
+                            @((item.VATAmount))
                         </td>
                         <td class="text-right">
                             <b>@((item.LineTotal ?? 0).ToString("N2", bd))</b>
@@ -152,13 +152,13 @@
                         <td></td>
                         <td class="text-right">@Model.Sum(x => x.Quantity)</td>
                         <td class="text-right">
-                            @(Model.Sum(x => x.SubTotal).ToString("N2", bd))
+                            @(Model.Sum(x => x.SubTotal))
                         </td>
                         <td class="text-right">
-                            @(Model.Sum(x => x.SDAmount).ToString("N2", bd))
+                            @(Model.Sum(x => x.SDAmount))
                         </td>
                         <td class="text-right">
-                            @(Model.Sum(x => x.VATAmount).ToString("N2", bd))
+                            @(Model.Sum(x => x.VATAmount))
                         </td>
                         <td class="text-right">
                             @(Model.Sum(x => x.LineTotal ?? 0).ToString("N2", bd))
@@ -168,7 +168,7 @@
             else
             {
                 <tr>
-                    <td colspan="7" style="text-align:center;">
+                    <td colspan="8" style="text-align:center;">
                         No data found
                     </td>
                 </tr>
