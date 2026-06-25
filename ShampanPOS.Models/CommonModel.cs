@@ -22,6 +22,9 @@ namespace ShampanPOS.Models
             public string Expires_in { get; set; }
 
             public AspNetUsersVM userInfo { get; set; }
+
+
+            public string CompanyId { get; set; }
         }
     }
 }

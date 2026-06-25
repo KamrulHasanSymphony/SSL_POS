@@ -1416,24 +1416,58 @@ namespace ShampanPOS.Repo
             }
         }
 
+        //public ResultVM GetItemList(CommonVM model)
+        //{
+        //    try
+        //    {
+        //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
+        //        #region Invoke API
+        //        var data = httpRequestHelper.PostData("api/Common/GetItemList", authModel, JsonConvert.SerializeObject(model));
+        //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+        //        #endregion
+
+        //        return result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
+
+
         public ResultVM GetItemList(CommonVM model)
         {
             try
             {
                 HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Common/GetItemList", authModel, JsonConvert.SerializeObject(model));
+
+                AuthModel authModel = new AuthModel
+                {
+                    token = ClaimNames.token,
+                    CompanyId = model.CompanyId   // 🔥 FIX ADDED
+                };
+
+                var data = httpRequestHelper.PostData(
+                    "api/Common/GetItemList",
+                    authModel,
+                    JsonConvert.SerializeObject(model)
+                );
+
                 ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw; // 🔥 better than throw e
             }
         }
+
+
+
+
+
 
         public ResultVM GetMasterItemGroupList(CommonVM model)
         {
