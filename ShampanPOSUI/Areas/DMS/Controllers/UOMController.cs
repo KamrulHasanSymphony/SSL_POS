@@ -48,13 +48,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             {
                 try
                 {
+
                     if (model.Operation.ToLower() == "add")
                     {
                         model.CreatedBy = Session["UserId"].ToString();
                         model.CreatedOn = DateTime.Now.ToString();
                         model.CreatedFrom = Ordinary.GetLocalIpAddress();
 
-						resultVM = _repo.Insert(model);
+                        model.CompanyId = Convert.ToInt32(Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "");
+
+                        resultVM = _repo.Insert(model);
 
                         if (resultVM.Status == ResultStatus.Success.ToString())
                         {
@@ -242,6 +245,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             try
             {
+                if (Session["CompanyId"] == null)
+                {
+                    return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+                }
+
+                options.vm.CompanyId = Session["CompanyId"].ToString();
+
                 result = _repo.GetGridData(options);
 
                 if (result.Status == "Success" && result.DataVM != null)

@@ -35,7 +35,8 @@
             }
 
             var invoicePicker = $(".kendoInvoiceDateTime").kendoDateTimePicker({
-                format: "yyyy-MM-dd HH:mm",
+                value: new Date(),
+                format: "yyyy-MM-dd",
                 change: validateDates,
                 close: validateDates
             }).data("kendoDateTimePicker");

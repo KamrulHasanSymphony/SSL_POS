@@ -1030,41 +1030,58 @@
                     title: "CreditCardId",
                     hidden: true
                 },
+
                 {
-                    field: "CreditCardName",
+                    field: "CreditCardId",
                     title: "Payment Type",
                     width: 150,
+                    template: "#= CreditCardName ? CreditCardName : '' #",
                     editor: function (container, options) {
 
-                        $('<input required />')
+                        $('<input required name="CreditCardId" />')
                             .appendTo(container)
                             .kendoMultiColumnComboBox({
                                 dataTextField: "Name",
                                 dataValueField: "Id",
                                 valuePrimitive: true,
-                                autoBind: false,
+                                autoBind: true,
                                 placeholder: "Select Payment Type",
+                                filter: "contains",
+                                filterFields: ["Code", "Name", "BanglaName", "Address"],
+                                height: 400,
+
                                 dataSource: {
                                     transport: {
-                                        read: "/Common/Common/GetPaymentTypeList"
+                                        read: {
+                                            url: "/Common/Common/GetBankIdList",
+                                            dataType: "json"
+                                        }
                                     }
                                 },
+
                                 columns: [
-                                    { field: "Name", title: "Payment Type", width: 150 }
+                                    { field: "Code", title: "Code", width: 100 },
+                                    { field: "Name", title: "Name", width: 150 },
+                                    { field: "BanglaName", title: "Bangla Name", width: 150 },
+                                    { field: "Address", title: "Address", width: 150 }
                                 ],
-                                filter: "contains",
-                                filterFields: ["Name"],
-                                height: 400,
+
+                                dataBound: function () {
+                                    if (options.model.CreditCardId) {
+                                        this.value(options.model.CreditCardId);
+                                    }
+                                },
 
                                 select: function (e) {
                                     var dataItem = this.dataItem(e.item.index());
 
-                                    options.model.set("CreditCardId", dataItem.Id);
-                                    options.model.set("CreditCardName", dataItem.Name);
+                                    if (dataItem) {
+                                        options.model.set("CreditCardId", dataItem.Id);
+                                        options.model.set("CreditCardName", dataItem.Name);
+                                    }
                                 },
 
                                 change: function () {
-                                    var value = this.value();
                                     var dataItem = this.dataItem();
 
                                     if (dataItem) {
@@ -1072,12 +1089,65 @@
                                         options.model.set("CreditCardName", dataItem.Name);
                                     } else {
                                         options.model.set("CreditCardId", null);
-                                        options.model.set("CreditCardName", null);
+                                        options.model.set("CreditCardName", "");
                                     }
                                 }
                             });
                     }
-                },
+                },                //{
+                //    field: "CreditCardName",
+                //    title: "Payment Type",
+                //    width: 150,
+                //    editor: function (container, options) {
+
+                //        $('<input required />')
+                //            .appendTo(container)
+                //            .kendoMultiColumnComboBox({
+                //                dataTextField: "Name",
+                //                dataValueField: "Id",
+                //                valuePrimitive: true,
+                //                autoBind: false,
+                //                placeholder: "Select Payment Type",
+                //                value: "",
+
+                //                dataSource: {
+                //                    transport: {
+                //                        read: "/Common/Common/GetBankIdList"
+                //                    }
+                //                },
+                //                columns: [
+                //                    { field: "Code", title: "Code", width: 100 },
+                //                    { field: "Name", title: "Name", width: 150 },
+                //                    { field: "BanglaName", title: "Bangla Name", width: 150 },
+                //                    { field: "Address", title: "Address", width: 150 },
+                //                ],
+                //                filter: "contains",
+                //                filterFields: ["Code", "Name", "BanglaName", "Address"],
+                //                height: 400,
+
+
+                //                select: function (e) {
+                //                    var dataItem = this.dataItem(e.item.index());
+
+                //                    options.model.set("CreditCardId", dataItem.Id);
+                //                    options.model.set("CreditCardName", dataItem.Name);
+                //                },
+
+                //                change: function () {
+                //                    var value = this.value();
+                //                    var dataItem = this.dataItem();
+
+                //                    if (dataItem) {
+                //                        options.model.set("CreditCardId", dataItem.Id);
+                //                        options.model.set("CreditCardName", dataItem.Name);
+                //                    } else {
+                //                        options.model.set("CreditCardId", null);
+                //                        options.model.set("CreditCardName", null);
+                //                    }
+                //                }
+                //            });
+                //    }
+                //},
                 
                 {
                     field: "CardTotal",

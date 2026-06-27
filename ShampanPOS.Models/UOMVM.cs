@@ -34,6 +34,8 @@ namespace ShampanPOS.Models
         public string? Status { get; set; }
 
         public string?[] IDs { get; set; }
+        public int? CompanyId { get; set; }
+
     }
 
 
