@@ -247,6 +247,11 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 CommonVM param = new CommonVM();
                 param.Value = value;
 
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+
                 ResultVM result = _repo.GetProductList(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -1630,6 +1635,12 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 List<MasterSupplierVM> lst = new List<MasterSupplierVM>();
                 CommonVM param = new CommonVM();
                 param.Value = value;
+
+                // add company id from session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "";
+
                 ResultVM result = _repo.GetSupplierListByGroup(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
