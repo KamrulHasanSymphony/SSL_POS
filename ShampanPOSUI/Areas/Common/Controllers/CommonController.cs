@@ -240,17 +240,18 @@ namespace ShampanPOSUI.Areas.Common.Controllers
         [HttpGet]
         public ActionResult GetProductList(string value)
         {
-
             try
             {
                 List<ProductNewVM> lst = new List<ProductNewVM>();
-                CommonVM param = new CommonVM();
-                param.Value = value;
 
-                // add company id from session
-                param.CompanyId = Session["CompanyId"] != null
-                    ? Session["CompanyId"].ToString()
-                    : "";
+                CommonVM param = new CommonVM
+                {
+                    Value = value ?? "",
+
+                    CompanyId = Session["CompanyId"] != null
+                        ? Session["CompanyId"].ToString()
+                        : "0"
+                };
 
                 ResultVM result = _repo.GetProductList(param);
 
@@ -258,6 +259,7 @@ namespace ShampanPOSUI.Areas.Common.Controllers
                 {
                     lst = JsonConvert.DeserializeObject<List<ProductNewVM>>(result.DataVM.ToString());
                 }
+
                 return Json(lst, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)

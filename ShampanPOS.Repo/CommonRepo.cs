@@ -298,57 +298,57 @@ namespace ShampanPOS.Repo
             }
         }
 
-        public ResultVM GetProductList(CommonVM model)
-        {
-            try
-            {
-                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-                AuthModel authModel = new AuthModel { token = ClaimNames.token };
-                #region Invoke API
-                var data = httpRequestHelper.PostData("api/Common/ProductList", authModel, JsonConvert.SerializeObject(model));
-                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
-                #endregion                
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-
-
-
-
-
         //public ResultVM GetProductList(CommonVM model)
         //{
         //    try
         //    {
         //        HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
-
-        //        AuthModel authModel = new AuthModel
-        //        {
-        //            token = ClaimNames.token,
-        //            CompanyId = model.CompanyId   // 🔥 FIX ADDED
-        //        };
-
-        //        var data = httpRequestHelper.PostData(
-        //            "api/Common/ProductList",
-        //            authModel,
-        //            JsonConvert.SerializeObject(model)
-        //        );
-
+        //        AuthModel authModel = new AuthModel { token = ClaimNames.token };
+        //        #region Invoke API
+        //        var data = httpRequestHelper.PostData("api/Common/ProductList", authModel, JsonConvert.SerializeObject(model));
         //        ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+        //        #endregion                
 
         //        return result;
         //    }
-        //    catch (Exception)
+        //    catch (Exception e)
         //    {
-        //        throw; // 🔥 better than throw e
+        //        throw e;
         //    }
         //}
+
+
+
+
+
+
+        public ResultVM GetProductList(CommonVM model)
+        {
+            try
+            {
+                HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+
+                AuthModel authModel = new AuthModel
+                {
+                    token = ClaimNames.token,
+                    CompanyId = model.CompanyId   // 🔥 FIX ADDED
+                };
+
+                var data = httpRequestHelper.PostData(
+                    "api/Common/ProductList",
+                    authModel,
+                    JsonConvert.SerializeObject(model)
+                );
+
+                ResultVM result = JsonConvert.DeserializeObject<ResultVM>(data);
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw; // 🔥 better than throw e
+            }
+        }
 
 
 

@@ -31,16 +31,21 @@ namespace ShampanPOS.Models
         [StringLength(500, ErrorMessage = "Full Name cannot exceed 500 characters.")]
         public string FullName { get; set; }
 
+
         [Display(Name = "Phone Number")]
         [StringLength(15, ErrorMessage = "Phone Number cannot exceed 15 characters.")]
         [Phone(ErrorMessage = "Invalid Phone Number.")]
         public string? PhoneNumber { get; set; }
 
+
+        [Required]
         [Display(Name = "Email as Login ID")]
         [StringLength(200, ErrorMessage = "Email cannot exceed 200 characters.")]
         [EmailAddress(ErrorMessage = "Invalid Email Address.")]
         public string? EmailAsLoginId { get; set; }
 
+
+        [Required]
         [Display(Name = "Password")]
         [MinLength(6, ErrorMessage = "The password must be at least 6 characters long.")]
         //[StringLength(200, ErrorMessage = "Password cannot exceed 200 characters.")]
