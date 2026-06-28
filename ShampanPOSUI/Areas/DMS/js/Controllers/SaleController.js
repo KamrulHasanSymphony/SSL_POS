@@ -1035,7 +1035,7 @@
                     field: "CreditCardId",
                     title: "Payment Type",
                     width: 150,
-                    template: "#= CreditCardName ? CreditCardName : '' #",
+                    template: "#= data.CreditCardName ? data.CreditCardName : '' #",
                     editor: function (container, options) {
 
                         $('<input required name="CreditCardId" />')
