@@ -831,13 +831,18 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
 
         [HttpPost]
-        public JsonResult FromPurchaseGridData(GridOptions options)
+        public JsonResult FromPurchaseGridData(GridOptions options, string branchId)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new PurchaseRepo();
 
             try
             {
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+
+                options.vm.BranchId = currentBranchId.ToString();
+
                 result = _repo.FromPurchaseGridData(options);
 
                 if (result.Status == "Success" && result.DataVM != null)
