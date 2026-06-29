@@ -213,6 +213,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 SaleOrderVM vm = new SaleOrderVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
+
+                // CompanyId and BranchId from Session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "0";
+
+                param.BranchId = Session["CurrentBranch"] != null
+                    ? Session["CurrentBranch"].ToString()
+                    : "0";
+
                 ResultVM result = _repo.List(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
@@ -554,13 +564,19 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
         [HttpPost]
-        public JsonResult FromSaleOrderGridData(GridOptions options)
+        public JsonResult FromSaleOrderGridData(GridOptions options,string branchId/*, string fromDate, string toDate*/)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new SaleOrderRepo();
 
             try
             {
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+                
+                options.vm.BranchId = currentBranchId.ToString();
+                //options.vm.FromDate = fromDate;
+                //options.vm.ToDate = toDate;
                 result = _repo.FromSaleOrderGridData(options);
 
                 if (result.Status == "Success" && result.DataVM != null)

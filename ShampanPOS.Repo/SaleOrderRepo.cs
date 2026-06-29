@@ -329,11 +329,12 @@ namespace ShampanPOS.Repo
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
+
 
         public Stream ReportPreview(CommonVM model)
         {

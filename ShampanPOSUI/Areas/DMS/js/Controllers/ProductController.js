@@ -408,6 +408,10 @@
                             if (param.field === "Name") {
                                 param.field = "H.Name";
                             }
+                            if (param.field === "BarCode") {
+                                param.field = "H.BarCode";
+                            }
+
                             if (param.field === "Description") {
                                 param.field = "H.Description";
                             }
@@ -461,6 +465,9 @@
                             }
                             if (param.field === "Name") {
                                 param.field = "H.Name";
+                            }
+                            if (param.field === "BarCode") {
+                                param.field = "H.BarCode";
                             }
                             if (param.field === "Description") {
                                 param.field = "H.Description";
@@ -557,7 +564,7 @@
             groupable: true,
             toolbar: ["excel", "pdf", "search"],
             search: {
-                fields: ["Code", "Name", "Description", "ProductGroupName", "SDRate", "VATRate", "PurchasePrice","SalePrice"]
+                fields: ["Code", "Name","BarCode", "Description", "ProductGroupName", "SDRate", "VATRate", "PurchasePrice","SalePrice"]
             },
             excel: {
                 fileName: "Products.xlsx",
@@ -692,6 +699,7 @@
                 { field: "ProductGroupName", title: "Group Name", sortable: true, width: 200 },
                 { field: "Code", title: "Code", width: 150, sortable: true },
                 { field: "Name", title: "Name", sortable: true, width: 200 },
+                { field: "BarCode", title: "BarCode", width: 150, sortable: true },
                 { field: "UOMId", title: "UOM", sortable: true, width: 130 },
                 { field: "Description", title: "Description", sortable: true, width: 200, hidden: true },
                 { field: "SalePrice", title: "Sale Price", sortable: true, width: 120 },
