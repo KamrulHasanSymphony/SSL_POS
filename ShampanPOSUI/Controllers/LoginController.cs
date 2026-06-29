@@ -125,7 +125,7 @@ namespace ShampanPOSUI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(LoginResource model)
+        public async Task<ActionResult> xxxIndex(LoginResource model)
         
         {
             //_companyRepo = new CompanyProfileRepo();
@@ -341,6 +341,99 @@ namespace ShampanPOSUI.Controllers
             }
 
         }
+
+
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> Index(LoginResource model)
+
+        {
+            _userRepo = new UserProfileRepo();
+            List<UserProfileVM> userInfos = new List<UserProfileVM>();
+            try
+            {
+                _repo = new CommonRepo();
+                CommonVM commonVM = new CommonVM();
+                UserProfileVM userInfo = new UserProfileVM();
+
+                var userName = model.UserName;
+                commonVM.Name = userName;
+
+
+
+                var result = _repo.SignInAuthentication(model);
+
+                if (result != null && result.Status == "Success")
+                {
+                    AuthModel tokens = JsonConvert.DeserializeObject<AuthModel>(result.Data.ToString());
+                    ClaimNames.token = tokens.token.ToString();
+
+                    UserProfileVM userProfile = result.DataVM != null
+                        ? JsonConvert.DeserializeObject<UserProfileVM>(result.DataVM.ToString())
+                        : null;
+
+                    var companyName = userProfile?.CompanyName ?? Session["CompanyName"]?.ToString() ?? ""; 
+                    var companyId = userProfile != null ? userProfile.CompanyId.ToString() : Session["CompanyId"]?.ToString() ?? "0"; 
+                    var branchId = userProfile != null ? userProfile.BranchId.ToString() : Session["BranchId"]?.ToString() ?? "0";
+                    var branchName = userProfile?.BranchName ?? Session["BranchName"]?.ToString() ?? "";
+
+                    // Create a new ClaimsIdentity
+                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName));
+                    identity.AddClaim(new Claim(ClaimNames.UserId, model.UserName));
+         
+                    identity.AddClaim(new Claim(ClaimNames.CompanyId, companyId));
+                    identity.AddClaim(new Claim(ClaimNames.CompanyName, companyName));
+
+
+                    identity.AddClaim(new Claim(ClaimNames.BranchId, branchId));
+                    identity.AddClaim(new Claim(ClaimNames.BranchName, branchName));
+
+
+                    var authenticationManager = HttpContext.GetOwinContext().Authentication;
+                    authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
+
+
+                    Session["UserImage"] = userProfile.ImagePath;
+                    Session["UserHashId"] = userProfile.Id;
+
+                    Session["UserId"] = model.UserName;
+                    Session["UserName"] = model.UserName;
+
+                    Session["CompanyId"] = companyId;
+                    Session["CompanyName"] = companyName;
+
+
+                    Session["BranchId"] = branchId;
+                    Session["BranchName"] = branchName;
+                    return RedirectToAction("Index", "Home", new { area = "Common", branchChange = false });
+                }
+                
+
+                else
+                {
+                    TempData["ErrorMessage"] = "Wrong user name or password!";
+
+                    return RedirectToAction("Index");
+                }
+            }
+       
+
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+
+                TempData["ErrorMessage"] = "Wrong user name or password!";
+
+                return RedirectToAction("Index");
+            }
+
+        }
+
+
+
 
 
         private ActionResult RedirectToLocal(string returnUrl)
