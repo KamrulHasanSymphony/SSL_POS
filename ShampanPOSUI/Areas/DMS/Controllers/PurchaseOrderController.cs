@@ -529,13 +529,19 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
         }
 
         [HttpPost]
-        public JsonResult FromPurchaseOrderGridData(GridOptions options)
+        public JsonResult FromPurchaseOrderGridData(GridOptions options, string branchId)
         {
             ResultVM result = new ResultVM { Status = "Fail", Message = "Error", ExMessage = null, Id = "0", DataVM = null };
             _repo = new PurchaseOrderRepo();
 
             try
             {
+
+                options.vm.CompanyId = Session["CompanyId"] != null ? Session["CompanyId"].ToString() : "";
+                var currentBranchId = Session["CurrentBranch"] != null ? Session["CurrentBranch"].ToString() : "0";
+
+                options.vm.BranchId = currentBranchId.ToString();
+
                 result = _repo.FromPurchaseOrderGridData(options);
 
                 if (result.Status == "Success" && result.DataVM != null)
