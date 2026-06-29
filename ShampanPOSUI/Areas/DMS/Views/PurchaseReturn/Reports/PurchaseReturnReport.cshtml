@@ -155,7 +155,7 @@
 
                         @if (!isSummary)
                         {
-                            <td class="text-right">@((item.UnitPrice ?? 0).ToString("N2", bd))</td>
+                            <td class="text-right">@((item.UnitPrice).ToString("N2", bd))</td>
                             <td class="text-right">@((item.SubTotal ?? 0).ToString("N2", bd))</td>
                             <td class="text-right">@((item.SDAmount ?? 0).ToString("N2", bd))</td>
                             <td class="text-right">@((item.VATAmount ?? 0).ToString("N2", bd))</td>
