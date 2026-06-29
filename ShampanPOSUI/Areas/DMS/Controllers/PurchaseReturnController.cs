@@ -870,6 +870,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
         public ActionResult ReportList(int? supplierId, string fromDate, string toDate, string purchaseFromDate, string purchaseToDate, string reportType, bool isSummary, int? productId, string supplierCode, string supplierName, string productName)
         {
+            if (Session["CurrentBranch"] == null)
+            {
+                return Json(new { Status = "Error", Message = "Current Branch session is missing." }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (Session["CompanyId"] == null)
+            {
+                return Json(new { Status = "Error", Message = "Company session is missing." }, JsonRequestBehavior.AllowGet);
+            }
+
             List<PurchaseReturnReportVM> vmList = new List<PurchaseReturnReportVM>();
 
             PurchaseReturnReportVM param = new PurchaseReturnReportVM();
@@ -903,6 +913,10 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             param.SupplierName = string.IsNullOrEmpty(supplierName)
                 ? ""
                 : supplierName;
+            param.BranchId = Convert.ToInt32(Session["CurrentBranch"].ToString());
+
+            param.CompanyId = Convert.ToInt32(Session["CompanyId"].ToString());
+
 
             ResultVM result = _repo.GetPurchaseReturnByList(param);
 
