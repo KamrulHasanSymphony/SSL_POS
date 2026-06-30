@@ -203,6 +203,16 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
                 PurchaseOrderVM vm = new PurchaseOrderVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
+
+                // CompanyId and BranchId from Session
+                param.CompanyId = Session["CompanyId"] != null
+                    ? Session["CompanyId"].ToString()
+                    : "0";
+
+                param.BranchId = Session["CurrentBranch"] != null
+                    ? Session["CurrentBranch"].ToString()
+                    : "0";
+
                 ResultVM result = _repo.List(param);
 
                 if (result.Status == "Success" && result.DataVM != null)
