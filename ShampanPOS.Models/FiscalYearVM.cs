@@ -40,7 +40,8 @@ namespace ShampanPOS.Models
         public string? Operation { get; set; }
         public string? Status { get; set; }
         public string?[] IDs { get; set; }
-        
+        public int? YearPeriod { get; set; }
+
         public List<FiscalYearDetailVM> fiscalYearDetails { get; set; }
         public FiscalYearVM()
         {

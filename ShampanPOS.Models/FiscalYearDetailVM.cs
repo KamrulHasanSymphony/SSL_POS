@@ -50,6 +50,8 @@ namespace ShampanPOS.Models
         [Display(Name = "Last Modified On")]
         [DataType(DataType.DateTime)]
         public string? LastModifiedOn { get; set; }
+      
+
     }
 
 

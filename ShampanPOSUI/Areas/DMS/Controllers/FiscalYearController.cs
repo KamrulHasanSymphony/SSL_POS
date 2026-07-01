@@ -40,19 +40,26 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             string yearStartDate = "";
 
+
+
             int year;
 
             var companyId = Session["CompanyId"];
             param.Id = companyId.ToString();
             ResultVM companyData =  _repo.List(param);
+
+
             if (companyData.Status == "Success" && companyData.DataVM != null)
             {
                 companyVm = JsonConvert.DeserializeObject<List<CompanyProfileVM>>(companyData.DataVM.ToString()).FirstOrDefault();
-                //yearStartDate = companyVm.FYearStart;
-                 year = DateTime.ParseExact(yearStartDate, "yyyy-MM-dd", null).Year;
-                vm.YearStart = yearStartDate;
+                //year = DateTime.ParseExact(yearStartDate, "yyyy-MM-dd", null).Year;
+                //vm.YearStart = yearStartDate;             
+                //vm.Year = year;
 
-                //vm.YearPeriod =Convert.ToInt32( Convert.ToDateTime( vm.YearStart).ToString("yyyyMM"));
+                DateTime fyStart = companyVm.FYearStart.Value;
+                year = fyStart.Year;
+                yearStartDate = fyStart.ToString("yyyy-MM-dd");
+                vm.YearStart = yearStartDate;
                 vm.Year = year;
             }
             else
@@ -62,24 +69,11 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
 
             List<FiscalYearDetailVM> detailVMs = new List<FiscalYearDetailVM>();
             FiscalYearDetailVM dvm;
-            //for (int i = 0; i <= 12; i++)
-            //{
-            //    dvm = new FiscalYearDetailVM();
-            //        var month =Convert.ToDateTime( vm.YearStart).ToString("MM");
-            //        var day =Convert.ToDateTime( vm.YearStart).ToString("dd");
-            //    dvm.MonthStart =Convert.ToDateTime( year + "/" + month + "/" + day).AddMonths(i).ToString("dd-MMM-yyyy");
-                
-            //    DateTime originalDate = Convert.ToDateTime(dvm.MonthStart);
-            //    DateTime lastDateOfMonth = new DateTime(originalDate.Year, originalDate.Month, DateTime.DaysInMonth(originalDate.Year, originalDate.Month));
-            //    dvm.MonthEnd = lastDateOfMonth.ToString("dd-MMM-yyyy");
-            //    dvm.MonthId = Convert.ToInt32( originalDate.ToString("yyyyMM"));
-            //    dvm.Year = year;
-            //    detailVMs.Add(dvm);
-            //}
+            
             vm.fiscalYearDetails = detailVMs;            
             vm = DesignFiscalYear(vm);
             vm.Operation = "add";
-            //vm.Year = year;
+
             return View("Create", vm);
         }
         private FiscalYearVM DesignFiscalYear(FiscalYearVM model)
