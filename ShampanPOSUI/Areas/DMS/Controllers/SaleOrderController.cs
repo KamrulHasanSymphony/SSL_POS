@@ -887,13 +887,13 @@ namespace ShampanPOSUI.Areas.DMS.Controllers
             try
             {
                 var companyId = Session["CompanyId"];
-                var branchId = Session["BranchId"];
+                //var branchId = Session["BranchId"];
 
                 SaleOrderVM vm = new SaleOrderVM();
                 CommonVM param = new CommonVM();
                 param.Id = id;
                 param.CompanyId = companyId.ToString();
-                param.BranchId = branchId.ToString();
+                //param.BranchId = branchId.ToString();
 
                 ResultVM result = _repo.GetSaleOrderReport(param);
 
